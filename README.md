@@ -10,6 +10,20 @@ On a new machine:
 sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply 4444JPP
 ```
 
+## 🗂️ File Organization
+
+This dotfiles repo includes a comprehensive file organization system:
+
+- **[ORGANIZATION_QUICKSTART.md](ORGANIZATION_QUICKSTART.md)** - Get started in 5 minutes
+- **[ORGANIZATION_STRATEGY.md](ORGANIZATION_STRATEGY.md)** - Complete strategy and architecture
+- **Helper command:** `file-org` - Inventory, clean, and organize files
+
+**Key features:**
+- ✅ XDG Base Directory compliance
+- ✅ External drive integration with stable symlinks
+- ✅ Contextual file organization (know what files are and why)
+- ✅ Multi-OS support (macOS, Linux)
+
 ## 1Password Integration
 
 This dotfiles setup uses 1Password CLI to securely manage secrets. The following items need to be created in your 1Password "Personal" vault:
