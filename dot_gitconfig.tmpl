@@ -1,0 +1,24 @@
+[safe]
+	directory = /Volumes/4444-iivii
+	directory = /Volumes/4444-iivii/ivi374forivi3ivi3/workspace
+	directory = /Volumes/4444-iivii/ivi374forivi3ivi3
+[filter "lfs"]
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f
+[user]
+	email = {{ .email }}
+	name = {{ .name }}
+[core]
+	hooksPath = /Users/4jp/.config/git/hooks
+
+# GitHub token from 1Password
+# Requires: 1Password item titled "GitHub Token" with field "token"
+#
+# To enable, add template syntax like this (remove spaces in brackets):
+#   { {- if (onepasswordItemFields "GitHub Token") } }
+#   [github]
+#   	user = { { .name } }
+#   	token = { { (onepasswordItemFields "GitHub Token").token.value } } # allow-secret
+#   { {- end } }

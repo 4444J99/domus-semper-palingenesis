@@ -1,0 +1,18 @@
+# SSH Config managed by chezmoi
+# Using 1Password SSH agent
+
+Host *
+	IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+	AddKeysToAgent yes
+	UseKeychain yes
+
+Host github.com
+	HostName github.com
+	User git
+	IdentitiesOnly yes
+
+Host *.compute.amazonaws.com
+	User ec2-user
+	IdentitiesOnly yes
+
+# Add more hosts as needed
