@@ -1,0 +1,37 @@
+# Environment Configuration
+# Managed by chezmoi
+# Source this from .zshrc for environment variables
+
+# User Information
+export USER_NAME="{{ .name }}"
+export USER_EMAIL="{{ .email }}"
+
+# XDG Base Directories
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_STATE_HOME="$HOME/.local/state"
+export XDG_CACHE_HOME="$HOME/.cache"
+
+{{- if eq .chezmoi.os "darwin" }}
+# macOS: External Drive
+if [ -d "/Volumes/4444-iivii" ]; then
+  export EXTERNAL_DRIVE="/Volumes/4444-iivii"
+  export WORKSPACE="$EXTERNAL_DRIVE/ivi374forivi3ivi3/workspace"
+  export TOOLCHAINS="$EXTERNAL_DRIVE/ivi374forivi3ivi3/toolchains"
+fi
+{{- end }}
+
+# Editor
+export EDITOR="nvim"
+export VISUAL="nvim"
+
+# Project Directories
+export PROJECTS_DIR="$HOME/Projects"
+export ACTIVE_PROJECTS="$PROJECTS_DIR/Active"
+export ARCHIVE_PROJECTS="$PROJECTS_DIR/Archive"
+
+# Go
+export GOPATH="$HOME/go"
+
+# Context System
+export FILE_CONTEXT_DIR="$HOME/.local/share/file-context"

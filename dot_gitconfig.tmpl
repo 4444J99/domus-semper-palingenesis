@@ -11,7 +11,8 @@
 	email = {{ .email }}
 	name = {{ .name }}
 [core]
-	hooksPath = /Users/4jp/.config/git/hooks
+	hooksPath = {{ .chezmoi.homeDir }}/.config/git/hooks
+	excludesfile = {{ .chezmoi.homeDir }}/.gitignore_global
 
 # GitHub token from 1Password
 # Requires: 1Password item titled "GitHub Token" with field "token"
