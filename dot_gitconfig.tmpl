@@ -15,11 +15,7 @@
 	excludesfile = {{ .chezmoi.homeDir }}/.gitignore_global
 
 # GitHub token from 1Password
-# Requires: 1Password item titled "GitHub Token" with field "token"
-#
-# To enable, add template syntax like this (remove spaces in brackets):
-#   { {- if (onepasswordItemFields "GitHub Token") } }
-#   [github]
-#   	user = { { .name } }
-#   	token = { { (onepasswordItemFields "GitHub Token").token.value } } # allow-secret
-#   { {- end } }
+# Using existing 1Password item: master-org-token-110525
+[github]
+	user = {{ .name }}
+	token = {{ onepasswordRead "op://Personal/master-org-token-110525/token" }} # allow-secret
