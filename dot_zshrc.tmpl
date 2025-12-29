@@ -9,30 +9,49 @@ if [[ "$PWD" == "/" ]]; then
   cd ~
 fi
 
+{{- if eq .chezmoi.os "darwin" }}
+# macOS: iTerm2 shell integration
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
-# The following lines have been added by Docker Desktop to enable Docker CLI completions.
-fpath=(/Users/4jp/.docker/completions $fpath)
+# Docker CLI completions (macOS)
+fpath=({{ .chezmoi.homeDir }}/.docker/completions $fpath)
+{{- end }}
+
+# Shell completions
 autoload -Uz compinit
 compinit
-# End of Docker CLI completions
 
-# Homebrew
+# Homebrew (OS-specific paths)
+{{- if eq .chezmoi.os "darwin" }}
+{{- if eq .chezmoi.arch "arm64" }}
+# macOS ARM64 (Apple Silicon)
 export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH"
 export PATH="/opt/homebrew/opt/file-formula/bin:$PATH"
+{{- else }}
+# macOS Intel
+export PATH="/usr/local/bin:/usr/local/sbin:$PATH"
+{{- end }}
+{{- else if eq .chezmoi.os "linux" }}
+# Linux Homebrew
+export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
+{{- end }}
 
-# Ruby (Homebrew)
+{{- if eq .chezmoi.os "darwin" }}
+# Ruby (Homebrew - macOS)
 export PATH="/opt/homebrew/opt/ruby/bin:/opt/homebrew/lib/ruby/gems/3.4.0/bin:$PATH"
 export LDFLAGS="-L/opt/homebrew/opt/ruby/lib"
 export CPPFLAGS="-I/opt/homebrew/opt/ruby/include"
 export PKG_CONFIG_PATH="/opt/homebrew/opt/ruby/lib/pkgconfig"
+{{- end }}
 
 # Go
 export GOPATH=$HOME/go
 export PATH=$PATH:$GOPATH/bin
 
-# Toolchains (External Volume)
+{{- if eq .chezmoi.os "darwin" }}
+# Toolchains (External Volume - macOS only)
 export PATH=$PATH:/Volumes/4444-iivii/ivi374forivi3ivi3/toolchains/bin
+{{- end }}
 
 # Gemini CLI Configuration
 export GEMINI_CLI=1
@@ -40,12 +59,9 @@ if [ -f "$HOME/.config/op/secrets.zsh" ]; then
   source "$HOME/.config/op/secrets.zsh"
 fi
 
-# The next line updates PATH for the Google Cloud SDK.
-if [ -f '/Users/4jp/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/4jp/google-cloud-sdk/path.zsh.inc'; fi
+# Google Cloud SDK
+if [ -f '{{ .chezmoi.homeDir }}/google-cloud-sdk/path.zsh.inc' ]; then . '{{ .chezmoi.homeDir }}/google-cloud-sdk/path.zsh.inc'; fi
+if [ -f '{{ .chezmoi.homeDir }}/google-cloud-sdk/completion.zsh.inc' ]; then . '{{ .chezmoi.homeDir }}/google-cloud-sdk/completion.zsh.inc'; fi
 
-# The next line enables shell command completion for gcloud.
-if [ -f '/Users/4jp/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/4jp/google-cloud-sdk/completion.zsh.inc'; fi
-
-# Created by `pipx` on 2025-12-28 17:35:24
-export PATH="$PATH:/Users/4jp/.local/bin"
+# pipx local bin
 export PATH="$HOME/.local/bin:$PATH"

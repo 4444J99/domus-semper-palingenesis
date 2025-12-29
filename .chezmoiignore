@@ -1,0 +1,24 @@
+# OS-specific files to ignore
+
+# Ignore macOS-specific files on non-macOS systems
+{{ if ne .chezmoi.os "darwin" }}
+Library/
+.config/iterm2/
+{{ end }}
+
+# Ignore Linux-specific files on non-Linux systems
+{{ if ne .chezmoi.os "linux" }}
+.config/i3/
+.config/sway/
+{{ end }}
+
+# Ignore work-specific files on personal machines
+{{ if not .is_work }}
+work_scripts/
+{{ end }}
+
+# Always ignore these
+.DS_Store
+*.swp
+*.swo
+*~
