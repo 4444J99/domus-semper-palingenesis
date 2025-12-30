@@ -1,0 +1,88 @@
+#!/bin/bash
+# Post-installation setup script
+# Creates essential directories and symlinks
+
+set -e
+
+echo "📁 Setting up directory structure..."
+
+# XDG Base Directories
+mkdir -p ~/.config
+mkdir -p ~/.local/{bin,share,state}
+mkdir -p ~/.cache
+
+# Project directories
+mkdir -p ~/Projects/{Active,Archive}
+mkdir -p ~/Documents/{Work,Personal,Archive,Notes}
+
+# Context system
+mkdir -p ~/.local/share/file-context/{manifests,links}
+mkdir -p ~/.local/share/file-context/links/{by-type,by-project,by-year,by-status}
+
+# SSH
+mkdir -p ~/.ssh/sockets
+chmod 700 ~/.ssh
+[ -d ~/.ssh/sockets ] && chmod 700 ~/.ssh/sockets
+
+# Git hooks directory
+mkdir -p ~/.config/git/hooks
+
+echo "✅ Directory structure created"
+
+{{- if eq .chezmoi.os "darwin" }}
+# macOS: External drive setup
+if [ -d "/Volumes/4444-iivii" ]; then
+  echo "🔗 Setting up external drive symlinks..."
+
+  # Main External symlink
+  if [ ! -e ~/External ]; then
+    ln -sf /Volumes/4444-iivii ~/External
+    echo "  ✅ ~/External → /Volumes/4444-iivii"
+  fi
+
+  # Workspace symlink
+  if [ -d /Volumes/4444-iivii/ivi374forivi3ivi3/workspace ] && [ ! -e ~/Projects/ivi374 ]; then
+    ln -sf /Volumes/4444-iivii/ivi374forivi3ivi3/workspace ~/Projects/ivi374
+    echo "  ✅ ~/Projects/ivi374 → workspace"
+  fi
+
+  # Toolchains symlink
+  if [ -d /Volumes/4444-iivii/ivi374forivi3ivi3/toolchains ] && [ ! -e ~/.local/share/toolchains ]; then
+    ln -sf /Volumes/4444-iivii/ivi374forivi3ivi3/toolchains ~/.local/share/toolchains
+    echo "  ✅ ~/.local/share/toolchains → toolchains"
+  fi
+else
+  echo "⚠️  External drive not connected - symlinks will be created when drive is mounted"
+fi
+{{- end }}
+
+# Verify essential tools
+echo ""
+echo "🔍 Verifying installation..."
+
+if command -v git &> /dev/null; then
+  echo "  ✅ Git: $(git --version)"
+else
+  echo "  ❌ Git not found"
+fi
+
+if command -v op &> /dev/null; then
+  echo "  ✅ 1Password CLI: $(op --version)"
+else
+  echo "  ⚠️  1Password CLI not found"
+fi
+
+if command -v zsh &> /dev/null; then
+  echo "  ✅ Zsh: $(zsh --version)"
+else
+  echo "  ❌ Zsh not found"
+fi
+
+echo ""
+echo "🎉 Setup complete!"
+echo ""
+echo "Next steps:"
+echo "  1. Sign in to 1Password CLI: op signin"
+echo "  2. Create AWS/GitHub items in 1Password if needed"
+echo "  3. Reload shell: exec zsh"
+echo "  4. Verify aliases work: cms (chezmoi status)"

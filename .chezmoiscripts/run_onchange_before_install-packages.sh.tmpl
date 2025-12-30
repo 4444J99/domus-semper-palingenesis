@@ -1,0 +1,101 @@
+#!/bin/bash
+# Bootstrap script for new machine setup
+# Runs when packages.txt changes
+
+set -e
+
+echo "🚀 Installing essential packages..."
+
+{{- if eq .chezmoi.os "darwin" }}
+# macOS: Check if Homebrew is installed
+if ! command -v brew &> /dev/null; then
+  echo "📦 Installing Homebrew..."
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+  {{- if eq .chezmoi.arch "arm64" }}
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+  {{- else }}
+  eval "$(/usr/local/bin/brew shellenv)"
+  {{- end }}
+fi
+
+# Install essential packages
+echo "📦 Installing essential Homebrew packages..."
+brew install \
+  git \
+  gh \
+  1password-cli \
+  zsh \
+  neovim \
+  tmux \
+  fzf \
+  ripgrep \
+  jq \
+  node \
+  python3 \
+  go
+
+# Install optional but recommended
+echo "📦 Installing recommended packages..."
+brew install --cask \
+  1password \
+  iterm2 \
+  visual-studio-code
+
+{{- else if eq .chezmoi.os "linux" }}
+# Linux: Use apt/yum based on distro
+if command -v apt-get &> /dev/null; then
+  echo "📦 Using apt-get package manager..."
+  sudo apt-get update
+  sudo apt-get install -y \
+    git \
+    zsh \
+    neovim \
+    tmux \
+    fzf \
+    ripgrep \
+    jq \
+    curl \
+    wget \
+    build-essential \
+    python3 \
+    python3-pip \
+    nodejs \
+    npm
+
+  # Install 1Password CLI
+  curl -sS https://downloads.1password.com/linux/keys/1password.asc | \
+    sudo gpg --dearmor --output /usr/share/keyrings/1password-archive-keyring.gpg
+  echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/1password-archive-keyring.gpg] https://downloads.1password.com/linux/debian/$(dpkg --print-architecture) stable main" | \
+    sudo tee /etc/apt/sources.list.d/1password.list
+  sudo apt-get update && sudo apt-get install -y 1password-cli
+
+elif command -v yum &> /dev/null; then
+  echo "📦 Using yum package manager..."
+  sudo yum install -y \
+    git \
+    zsh \
+    neovim \
+    tmux \
+    fzf \
+    ripgrep \
+    jq \
+    curl \
+    wget \
+    gcc \
+    make \
+    python3 \
+    python3-pip \
+    nodejs \
+    npm
+fi
+
+# Install Homebrew on Linux for additional packages
+if ! command -v brew &> /dev/null; then
+  echo "📦 Installing Homebrew on Linux..."
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+fi
+{{- end }}
+
+echo "✅ Essential packages installed!"
