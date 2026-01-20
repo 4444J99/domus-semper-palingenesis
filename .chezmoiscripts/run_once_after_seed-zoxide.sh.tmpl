@@ -1,0 +1,30 @@
+#!/bin/bash
+# Seed zoxide with common directories on new machine setup
+# This runs once after chezmoi apply
+
+{{- if lookPath "zoxide" }}
+echo "🗂️  Seeding zoxide with common directories..."
+
+# Core directories
+zoxide add "{{ .chezmoi.homeDir }}"
+zoxide add "{{ .chezmoi.homeDir }}/.config"
+zoxide add "{{ .chezmoi.homeDir }}/.local/share/chezmoi"
+zoxide add "{{ .chezmoi.homeDir }}/Downloads"
+zoxide add "{{ .chezmoi.homeDir }}/Desktop"
+zoxide add "{{ .chezmoi.homeDir }}/Documents"
+
+# Development directories (if they exist)
+[[ -d "{{ .chezmoi.homeDir }}/Projects" ]] && zoxide add "{{ .chezmoi.homeDir }}/Projects"
+[[ -d "{{ .chezmoi.homeDir }}/go/src" ]] && zoxide add "{{ .chezmoi.homeDir }}/go/src"
+[[ -d "{{ .chezmoi.homeDir }}/Developer" ]] && zoxide add "{{ .chezmoi.homeDir }}/Developer"
+
+{{- if eq .chezmoi.os "darwin" }}
+# macOS-specific
+[[ -d "/Volumes/4444-iivii" ]] && zoxide add "/Volumes/4444-iivii"
+[[ -d "/Volumes/4444-iivii/ivi374forivi3ivi3/workspace" ]] && zoxide add "/Volumes/4444-iivii/ivi374forivi3ivi3/workspace"
+{{- end }}
+
+echo "✅ Zoxide seeded with common directories"
+{{- else }}
+echo "⚠️  Zoxide not installed, skipping seed"
+{{- end }}
