@@ -229,16 +229,93 @@ alias pip='pip3'
 alias pip3='pip3.14'
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Homebrew & System Maintenance
+# System Maintenance & Cleanup
 # ─────────────────────────────────────────────────────────────────────────────
+
+# Show cache sizes before cleaning
+alias cache-sizes='echo "=== Package Manager Caches ===" && \
+  du -sh ~/Library/Caches/Homebrew 2>/dev/null || true && \
+  du -sh ~/.npm 2>/dev/null || true && \
+  du -sh ~/Library/Caches/pip 2>/dev/null || true && \
+  du -sh ~/.cache/uv 2>/dev/null || true && \
+  du -sh ~/.cache/trunk 2>/dev/null || true && \
+  du -sh ~/go/pkg 2>/dev/null || true && \
+  du -sh "${CARGO_HOME:-$HOME/.cargo}"/registry 2>/dev/null || true && \
+  command -v pnpm &>/dev/null && du -sh ~/Library/Caches/pnpm 2>/dev/null || true && \
+  echo "=== Browser & App Caches ===" && \
+  du -sh ~/Library/Caches/Google/Chrome 2>/dev/null || true && \
+  du -sh ~/.cache/puppeteer 2>/dev/null || true && \
+  du -sh ~/Library/Caches/ms-playwright 2>/dev/null || true && \
+  du -sh ~/.config/gcloud/virtenv 2>/dev/null || true && \
+  echo "=== Docker ===" && docker system df 2>/dev/null || echo "Docker not running"'
+
+# --- Individual Tool Cleanup ---
 
 alias brewup='brew update && brew upgrade && brew cleanup && brew doctor'
-
-# ─────────────────────────────────────────────────────────────────────────────
-# Docker Aliases
-# ─────────────────────────────────────────────────────────────────────────────
-
 alias docker-cleanup='docker system prune -a --volumes'
+
+# Package managers (conditional)
+command -v npm &>/dev/null && alias npm-clean='npm cache clean --force'
+command -v pnpm &>/dev/null && alias pnpm-clean='pnpm store prune'
+command -v pip3 &>/dev/null && alias pip-clean='pip3 cache purge'
+command -v uv &>/dev/null && alias uv-clean='uv cache clean'
+command -v go &>/dev/null && alias go-clean='go clean -cache -modcache -testcache'
+command -v cargo &>/dev/null && alias cargo-clean='rm -rf "${CARGO_HOME:-$HOME/.cargo}"/registry/cache'
+command -v trunk &>/dev/null && alias trunk-clean='trunk cache clean'
+
+# Browser & app caches
+alias chrome-clean='rm -rf ~/Library/Caches/Google/Chrome/Default/Cache ~/Library/Caches/Google/Chrome/Default/"Code Cache"'
+alias puppeteer-clean='rm -rf ~/.cache/puppeteer'
+alias playwright-clean='rm -rf ~/Library/Caches/ms-playwright'
+alias gcloud-clean='find ~/.config/gcloud/virtenv -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null; rm -f ~/.config/gcloud/*.db 2>/dev/null; echo "gcloud cache cleaned"'
+
+# --- Unified Maintenance ---
+
+maintain() {
+  echo "━━━ System Maintenance - $(date '+%Y-%m-%d %H:%M') ━━━"
+
+  echo "\n[1/9] Homebrew..."
+  command -v brew &>/dev/null && { brew update && brew upgrade && brew cleanup; } || echo "  Skipped"
+
+  echo "\n[2/9] npm cache..."
+  command -v npm &>/dev/null && npm cache clean --force || echo "  Skipped"
+
+  echo "\n[3/9] pnpm cache..."
+  command -v pnpm &>/dev/null && pnpm store prune || echo "  Skipped"
+
+  echo "\n[4/9] pip cache..."
+  command -v pip3 &>/dev/null && pip3 cache purge || echo "  Skipped"
+
+  echo "\n[5/9] uv cache..."
+  command -v uv &>/dev/null && uv cache prune --force || echo "  Skipped"
+
+  echo "\n[6/9] Go cache..."
+  command -v go &>/dev/null && go clean -cache -modcache -testcache || echo "  Skipped"
+
+  echo "\n[7/9] Trunk cache..."
+  command -v trunk &>/dev/null && trunk cache prune || echo "  Skipped"
+
+  echo "\n[8/9] gcloud cache..."
+  [[ -d ~/.config/gcloud/virtenv ]] && { find ~/.config/gcloud/virtenv -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null; echo "  Cleaned"; } || echo "  Skipped"
+
+  echo "\n[9/9] Misc caches (puppeteer, playwright)..."
+  rm -rf ~/.cache/puppeteer ~/Library/Caches/ms-playwright 2>/dev/null
+  echo "  Cleaned"
+
+  echo "\n━━━ Done! ━━━"
+  echo "Manual: 'docker-cleanup' (interactive), 'chrome-clean' (close Chrome first)"
+}
+
+# Quick cleanup (caches only, no upgrades)
+maintain-quick() {
+  echo "Quick cache cleanup..."
+  command -v npm &>/dev/null && npm cache clean --force
+  command -v pnpm &>/dev/null && pnpm store prune
+  command -v pip3 &>/dev/null && pip3 cache purge
+  command -v uv &>/dev/null && uv cache prune --force
+  rm -rf ~/.cache/puppeteer ~/Library/Caches/ms-playwright 2>/dev/null
+  echo "Done!"
+}
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Utility Aliases
