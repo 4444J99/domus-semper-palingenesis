@@ -1,0 +1,317 @@
+#!/usr/bin/env bash
+# ─────────────────────────────────────────────────────────────────────────────
+# chezmoi-recover - Backup recovery and reset tools for chezmoi
+# Managed by Chezmoi
+# ─────────────────────────────────────────────────────────────────────────────
+#
+# Commands:
+#   list              List available backups
+#   show <name>       Show contents of a backup
+#   restore <name>    Restore files from a backup
+#   reset             Force reset all managed files to source state
+#   clean             Remove old backups (keeps last 5)
+
+set -euo pipefail
+
+BACKUP_DIR="${HOME}/.local/share/chezmoi-health/backups"
+CHEZMOI_SOURCE="{{ .chezmoi.sourceDir }}"
+
+# Colors
+if [[ -t 1 ]]; then
+  RED='\033[0;31m'
+  GREEN='\033[0;32m'
+  YELLOW='\033[0;33m'
+  BLUE='\033[0;34m'
+  CYAN='\033[0;36m'
+  BOLD='\033[1m'
+  RESET='\033[0m'
+else
+  RED='' GREEN='' YELLOW='' BLUE='' CYAN='' BOLD='' RESET=''
+fi
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Commands
+# ─────────────────────────────────────────────────────────────────────────────
+
+cmd_list() {
+  echo ""
+  printf "${BOLD}Available Backups${RESET}\n"
+  echo ""
+
+  if [[ ! -d "${BACKUP_DIR}" ]]; then
+    echo "No backups found."
+    return 0
+  fi
+
+  local count=0
+  for backup in $(find "${BACKUP_DIR}" -maxdepth 1 -type d -name 'backup-*' -o -name 'merge-*' | sort -r); do
+    local name
+    name=$(basename "${backup}")
+
+    local file_count
+    file_count=$(find "${backup}" -type f | wc -l | tr -d ' ')
+
+    local size
+    size=$(du -sh "${backup}" 2>/dev/null | cut -f1)
+
+    # Extract timestamp from name
+    local timestamp
+    if [[ "${name}" =~ ^backup-([0-9]{8})-([0-9]{6})$ ]]; then
+      timestamp="${BASH_REMATCH[1]:0:4}-${BASH_REMATCH[1]:4:2}-${BASH_REMATCH[1]:6:2} ${BASH_REMATCH[2]:0:2}:${BASH_REMATCH[2]:2:2}:${BASH_REMATCH[2]:4:2}"
+    elif [[ "${name}" =~ ^merge-([0-9]{8})-([0-9]{6})$ ]]; then
+      timestamp="${BASH_REMATCH[1]:0:4}-${BASH_REMATCH[1]:4:2}-${BASH_REMATCH[1]:6:2} ${BASH_REMATCH[2]:0:2}:${BASH_REMATCH[2]:2:2}:${BASH_REMATCH[2]:4:2}"
+    else
+      timestamp="unknown"
+    fi
+
+    printf "  ${CYAN}%s${RESET}  %s  (%d files, %s)\n" "${name}" "${timestamp}" "${file_count}" "${size}"
+    count=$((count + 1))
+  done
+
+  if [[ ${count} -eq 0 ]]; then
+    echo "No backups found."
+  else
+    echo ""
+    echo "Total: ${count} backup(s)"
+    echo ""
+    echo "Commands:"
+    echo "  chezmoi-recover show <name>     Show backup contents"
+    echo "  chezmoi-recover restore <name>  Restore from backup"
+  fi
+}
+
+cmd_show() {
+  local name="${1:-}"
+
+  if [[ -z "${name}" ]]; then
+    echo "Usage: chezmoi-recover show <backup-name>"
+    echo "Run 'chezmoi-recover list' to see available backups."
+    return 1
+  fi
+
+  local backup_path="${BACKUP_DIR}/${name}"
+
+  if [[ ! -d "${backup_path}" ]]; then
+    echo "Backup not found: ${name}"
+    return 1
+  fi
+
+  echo ""
+  printf "${BOLD}Backup: ${name}${RESET}\n"
+  echo ""
+  echo "Files:"
+
+  find "${backup_path}" -type f | while read -r file; do
+    local rel_path="${file#${backup_path}/}"
+    local size
+    size=$(du -h "${file}" 2>/dev/null | cut -f1)
+    printf "  %s  (%s)\n" "${rel_path}" "${size}"
+  done
+}
+
+cmd_restore() {
+  local name="${1:-}"
+
+  if [[ -z "${name}" ]]; then
+    echo "Usage: chezmoi-recover restore <backup-name>"
+    echo "Run 'chezmoi-recover list' to see available backups."
+    return 1
+  fi
+
+  local backup_path="${BACKUP_DIR}/${name}"
+
+  if [[ ! -d "${backup_path}" ]]; then
+    echo "Backup not found: ${name}"
+    return 1
+  fi
+
+  echo ""
+  printf "${BOLD}Restoring from: ${name}${RESET}\n"
+  echo ""
+
+  local files
+  files=$(find "${backup_path}" -type f)
+  local count
+  count=$(echo "${files}" | grep -c . || echo 0)
+
+  echo "This will restore ${count} file(s) to their backed-up state."
+  echo ""
+  printf "${YELLOW}Warning: This will overwrite current files!${RESET}\n"
+  echo ""
+
+  read -p "Continue? [y/N] " -n 1 -r
+  echo ""
+
+  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    echo "Aborted."
+    return 0
+  fi
+
+  echo ""
+  echo "Restoring files..."
+
+  echo "${files}" | while read -r file; do
+    [[ -z "${file}" ]] && continue
+    local rel_path="${file#${backup_path}/}"
+    local target="${HOME}/${rel_path}"
+
+    # Create parent directory if needed
+    mkdir -p "$(dirname "${target}")"
+
+    # Copy file
+    cp "${file}" "${target}"
+    printf "  ${GREEN}✓${RESET} %s\n" "${rel_path}"
+  done
+
+  echo ""
+  printf "${GREEN}Restore complete.${RESET}\n"
+  echo ""
+  echo "Note: Your chezmoi source still has the newer version."
+  echo "Run 'chezmoi diff' to see differences."
+}
+
+cmd_reset() {
+  echo ""
+  printf "${BOLD}${RED}Force Reset All Managed Files${RESET}\n"
+  echo ""
+  echo "This will:"
+  echo "  1. Create a backup of all drifted files"
+  echo "  2. Force apply chezmoi source state to all managed files"
+  echo ""
+  printf "${YELLOW}Warning: All local modifications will be lost!${RESET}\n"
+  echo ""
+
+  # Show what will be affected
+  echo "Managed files:"
+  chezmoi managed --include=files 2>/dev/null | head -10
+  local total
+  total=$(chezmoi managed --include=files 2>/dev/null | wc -l | tr -d ' ')
+  [[ ${total} -gt 10 ]] && echo "  ... and $((total - 10)) more"
+  echo ""
+
+  read -p "Are you sure? Type 'RESET' to confirm: " -r
+  echo ""
+
+  if [[ "${REPLY}" != "RESET" ]]; then
+    echo "Aborted."
+    return 0
+  fi
+
+  # Create backup first
+  local backup_name="reset-$(date +%Y%m%d-%H%M%S)"
+  local backup_path="${BACKUP_DIR}/${backup_name}"
+  mkdir -p "${backup_path}"
+
+  echo "Creating backup: ${backup_name}"
+
+  chezmoi managed --include=files 2>/dev/null | while read -r file; do
+    local target="${HOME}/${file}"
+    if [[ -f "${target}" ]]; then
+      mkdir -p "${backup_path}/$(dirname "${file}")"
+      cp "${target}" "${backup_path}/${file}"
+    fi
+  done
+
+  echo "Applying chezmoi source state..."
+
+  if chezmoi apply --force; then
+    echo ""
+    printf "${GREEN}Reset complete.${RESET}\n"
+    echo "Backup saved to: ${backup_name}"
+  else
+    echo ""
+    printf "${RED}Reset failed!${RESET}\n"
+    echo "Backup available at: ${backup_name}"
+    return 1
+  fi
+}
+
+cmd_clean() {
+  local keep="${1:-5}"
+
+  echo ""
+  printf "${BOLD}Cleaning old backups${RESET}\n"
+  echo ""
+
+  if [[ ! -d "${BACKUP_DIR}" ]]; then
+    echo "No backups to clean."
+    return 0
+  fi
+
+  local count
+  count=$(find "${BACKUP_DIR}" -maxdepth 1 -type d \( -name 'backup-*' -o -name 'merge-*' -o -name 'reset-*' \) | wc -l | tr -d ' ')
+
+  if [[ ${count} -le ${keep} ]]; then
+    echo "Only ${count} backup(s) exist. Keeping all."
+    return 0
+  fi
+
+  local to_remove=$((count - keep))
+  echo "Removing ${to_remove} oldest backup(s) (keeping ${keep})..."
+  echo ""
+
+  find "${BACKUP_DIR}" -maxdepth 1 -type d \( -name 'backup-*' -o -name 'merge-*' -o -name 'reset-*' \) | sort | head -${to_remove} | while read -r dir; do
+    local name
+    name=$(basename "${dir}")
+    rm -rf "${dir}"
+    printf "  ${RED}✗${RESET} Removed: %s\n" "${name}"
+  done
+
+  echo ""
+  echo "Done."
+}
+
+cmd_help() {
+  echo ""
+  printf "${BOLD}chezmoi-recover${RESET} - Backup recovery tools\n"
+  echo ""
+  echo "Commands:"
+  echo "  list              List available backups"
+  echo "  show <name>       Show contents of a backup"
+  echo "  restore <name>    Restore files from a backup"
+  echo "  reset             Force reset all managed files to source state"
+  echo "  clean [n]         Remove old backups (keeps last n, default 5)"
+  echo ""
+  echo "Examples:"
+  echo "  chezmoi-recover list"
+  echo "  chezmoi-recover restore backup-20250120-143022"
+  echo "  chezmoi-recover clean 3"
+  echo ""
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Main
+# ─────────────────────────────────────────────────────────────────────────────
+
+main() {
+  local command="${1:-list}"
+  shift || true
+
+  case "${command}" in
+    list)
+      cmd_list
+      ;;
+    show)
+      cmd_show "$@"
+      ;;
+    restore)
+      cmd_restore "$@"
+      ;;
+    reset)
+      cmd_reset
+      ;;
+    clean)
+      cmd_clean "$@"
+      ;;
+    help|--help|-h)
+      cmd_help
+      ;;
+    *)
+      echo "Unknown command: ${command}"
+      cmd_help
+      return 1
+      ;;
+  esac
+}
+
+main "$@"

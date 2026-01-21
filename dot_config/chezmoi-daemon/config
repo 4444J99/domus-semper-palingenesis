@@ -1,0 +1,36 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Chezmoi Self-Heal Daemon Configuration
+# ─────────────────────────────────────────────────────────────────────────────
+# This file is sourced by chezmoi-daemon. Use bash syntax.
+
+# Auto-apply changes without confirmation (DANGEROUS - use with caution)
+# Default: false (safe mode - only notify on drift)
+AUTO_APPLY=false
+
+# Automatically pull from git remote before checking
+# Default: true
+AUTO_PULL=true
+
+# Send macOS notifications when drift is detected
+# Default: true
+NOTIFY_ON_DRIFT=true
+
+# Minimum seconds between daemon runs (prevents excessive checking)
+# Default: 3600 (1 hour)
+MIN_INTERVAL_SECONDS=3600
+
+# Only run when user has been idle for a while
+# Default: true
+ONLY_WHEN_IDLE=true
+
+# Idle threshold in seconds (how long user must be idle)
+# Default: 300 (5 minutes)
+IDLE_THRESHOLD_SECONDS=300
+
+# Maximum number of backups to keep before rotation
+# Default: 10
+MAX_BACKUPS=10
+
+# Number of consecutive failures before escalation notification
+# Default: 3
+FAILURE_ESCALATION_THRESHOLD=3

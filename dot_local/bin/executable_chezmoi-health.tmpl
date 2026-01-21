@@ -1,0 +1,398 @@
+#!/usr/bin/env bash
+# ─────────────────────────────────────────────────────────────────────────────
+# chezmoi-health - Health check and drift detection for chezmoi
+# Managed by Chezmoi
+# ─────────────────────────────────────────────────────────────────────────────
+#
+# Exit codes:
+#   0 - healthy (no drift, all systems operational)
+#   1 - drift detected (managed files differ from source)
+#   2 - error (critical failure, e.g., chezmoi not available)
+#   3 - needs-attention (non-critical issues requiring review)
+#
+# Usage:
+#   chezmoi-health           # Quick status check
+#   VERBOSE=1 chezmoi-health # Detailed output with drift details
+#   chezmoi-health --json    # JSON output only (for scripts)
+
+set -euo pipefail
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Configuration
+# ─────────────────────────────────────────────────────────────────────────────
+
+STATE_DIR="${HOME}/.local/share/chezmoi-health"
+STATE_FILE="${STATE_DIR}/last-check.json"
+CHEZMOI_SOURCE="{{ .chezmoi.sourceDir }}"
+VERBOSE="${VERBOSE:-0}"
+JSON_ONLY=0
+
+# Parse arguments
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --json)
+      JSON_ONLY=1
+      shift
+      ;;
+    --verbose|-v)
+      VERBOSE=1
+      shift
+      ;;
+    *)
+      shift
+      ;;
+  esac
+done
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Colors (disabled for non-interactive or JSON mode)
+# ─────────────────────────────────────────────────────────────────────────────
+
+if [[ -t 1 && $JSON_ONLY -eq 0 ]]; then
+  RED='\033[0;31m'
+  GREEN='\033[0;32m'
+  YELLOW='\033[0;33m'
+  BLUE='\033[0;34m'
+  CYAN='\033[0;36m'
+  BOLD='\033[1m'
+  RESET='\033[0m'
+else
+  RED='' GREEN='' YELLOW='' BLUE='' CYAN='' BOLD='' RESET=''
+fi
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Output helpers
+# ─────────────────────────────────────────────────────────────────────────────
+
+log_check() {
+  [[ $JSON_ONLY -eq 1 ]] && return
+  printf "${CYAN}[CHECK]${RESET} %s\n" "$1"
+}
+
+log_ok() {
+  [[ $JSON_ONLY -eq 1 ]] && return
+  printf "  ${GREEN}✓${RESET} %s\n" "$1"
+}
+
+log_warn() {
+  [[ $JSON_ONLY -eq 1 ]] && return
+  printf "  ${YELLOW}!${RESET} %s\n" "$1"
+}
+
+log_error() {
+  [[ $JSON_ONLY -eq 1 ]] && return
+  printf "  ${RED}✗${RESET} %s\n" "$1"
+}
+
+log_info() {
+  [[ $JSON_ONLY -eq 1 ]] && return
+  printf "  ${BLUE}→${RESET} %s\n" "$1"
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# State tracking (using temp file for bash 3 compatibility)
+# ─────────────────────────────────────────────────────────────────────────────
+
+DRIFT_FILES=""
+FINAL_EXIT=0
+CHECK_RESULTS_FILE=$(mktemp)
+trap 'rm -f "${CHECK_RESULTS_FILE}"' EXIT
+
+record_check() {
+  local name="$1"
+  local status="$2"
+  local message="${3:-}"
+  echo "${name}|${status}|${message}" >> "${CHECK_RESULTS_FILE}"
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Checks
+# ─────────────────────────────────────────────────────────────────────────────
+
+check_chezmoi_available() {
+  log_check "Chezmoi availability"
+
+  if ! command -v chezmoi &>/dev/null; then
+    log_error "chezmoi command not found"
+    record_check "chezmoi_available" "error" "not found"
+    return 2
+  fi
+
+  local version
+  version=$(chezmoi --version 2>/dev/null | head -1)
+  log_ok "chezmoi installed: ${version}"
+  record_check "chezmoi_available" "ok" "${version}"
+  return 0
+}
+
+check_source_repo() {
+  log_check "Source repository status"
+
+  if [[ ! -d "${CHEZMOI_SOURCE}" ]]; then
+    log_error "Source directory not found: ${CHEZMOI_SOURCE}"
+    record_check "source_repo" "error" "directory not found"
+    return 2
+  fi
+
+  if [[ ! -d "${CHEZMOI_SOURCE}/.git" ]]; then
+    log_warn "Source is not a git repository"
+    record_check "source_repo" "warn" "not a git repo"
+    return 3
+  fi
+
+  # Check for uncommitted changes
+  local git_status
+  git_status=$(cd "${CHEZMOI_SOURCE}" && git status --porcelain 2>/dev/null)
+
+  if [[ -n "${git_status}" ]]; then
+    local changed_count
+    changed_count=$(echo "${git_status}" | wc -l | tr -d ' ')
+    log_warn "Source has ${changed_count} uncommitted change(s)"
+    if [[ $VERBOSE -eq 1 ]]; then
+      echo "${git_status}" | head -5 | while read -r line; do
+        log_info "  ${line}"
+      done
+      [[ ${changed_count} -gt 5 ]] && log_info "  ... and $((changed_count - 5)) more"
+    fi
+    record_check "source_repo" "warn" "${changed_count} uncommitted changes"
+    return 3
+  fi
+
+  # Check if ahead/behind remote
+  local upstream
+  upstream=$(cd "${CHEZMOI_SOURCE}" && git rev-parse --abbrev-ref '@{upstream}' 2>/dev/null) || upstream=""
+
+  if [[ -n "${upstream}" ]]; then
+    local ahead behind
+    ahead=$(cd "${CHEZMOI_SOURCE}" && git rev-list --count '@{upstream}..HEAD' 2>/dev/null) || ahead=0
+    behind=$(cd "${CHEZMOI_SOURCE}" && git rev-list --count 'HEAD..@{upstream}' 2>/dev/null) || behind=0
+
+    if [[ ${behind} -gt 0 ]]; then
+      log_warn "Source is ${behind} commit(s) behind remote"
+      record_check "source_repo" "warn" "${behind} commits behind"
+      return 3
+    fi
+
+    if [[ ${ahead} -gt 0 ]]; then
+      log_info "Source is ${ahead} commit(s) ahead of remote"
+    fi
+  fi
+
+  log_ok "Source repository clean"
+  record_check "source_repo" "ok" "clean"
+  return 0
+}
+
+check_drift() {
+  log_check "Configuration drift"
+
+  local diff_output
+  diff_output=$(chezmoi diff 2>/dev/null) || true
+
+  if [[ -z "${diff_output}" ]]; then
+    log_ok "No drift detected"
+    record_check "drift" "ok" "no drift"
+    return 0
+  fi
+
+  # Count changed files
+  local changed_files
+  changed_files=$(echo "${diff_output}" | command grep -E '^\+\+\+ ' | wc -l | tr -d ' ')
+
+  [[ ${changed_files} -eq 0 ]] && changed_files=1  # At least 1 if there's any diff
+
+  log_warn "Drift detected in ${changed_files} file(s)"
+  DRIFT_FILES="${diff_output}"
+
+  if [[ $VERBOSE -eq 1 ]]; then
+    echo "${diff_output}" | command grep -E '^\+\+\+ ' | sed 's/^+++ b\///' | head -5 | while read -r file; do
+      log_info "  ${file}"
+    done
+  fi
+
+  record_check "drift" "drift" "${changed_files} files"
+  return 1
+}
+
+check_1password() {
+  log_check "1Password CLI"
+
+  if ! command -v op &>/dev/null; then
+    log_warn "1Password CLI not installed"
+    record_check "1password" "warn" "not installed"
+    return 3
+  fi
+
+  # Check if signed in (try to get current user)
+  if op whoami &>/dev/null 2>&1; then
+    local account
+    account=$(op whoami --format=json 2>/dev/null | jq -r '.email // "unknown"' 2>/dev/null) || account="authenticated"
+    log_ok "1Password signed in: ${account}"
+    record_check "1password" "ok" "${account}"
+    return 0
+  fi
+
+  log_info "1Password CLI not signed in (optional)"
+  record_check "1password" "info" "not signed in"
+  return 0  # Not critical
+}
+
+check_dependencies() {
+  log_check "Required dependencies"
+
+  local missing=""
+  local missing_count=0
+
+  # Critical dependencies
+  for cmd in git zsh; do
+    if ! command -v "${cmd}" &>/dev/null; then
+      missing="${missing} ${cmd}"
+      missing_count=$((missing_count + 1))
+    fi
+  done
+
+  # Optional but recommended
+  local optional_missing=""
+  for cmd in jq rg fzf; do
+    if ! command -v "${cmd}" &>/dev/null; then
+      optional_missing="${optional_missing} ${cmd}"
+    fi
+  done
+
+  if [[ ${missing_count} -gt 0 ]]; then
+    log_error "Missing required:${missing}"
+    record_check "dependencies" "error" "missing:${missing}"
+    return 2
+  fi
+
+  if [[ -n "${optional_missing}" ]]; then
+    log_info "Optional missing:${optional_missing}"
+  fi
+
+  log_ok "All required dependencies present"
+  record_check "dependencies" "ok" "all present"
+  return 0
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# State persistence
+# ─────────────────────────────────────────────────────────────────────────────
+
+write_state() {
+  mkdir -p "${STATE_DIR}"
+
+  local timestamp
+  timestamp=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+
+  local drift_status="none"
+  [[ -n "${DRIFT_FILES}" ]] && drift_status="detected"
+
+  # Build JSON from temp file
+  {
+    echo "{"
+    echo "  \"timestamp\": \"${timestamp}\","
+    echo "  \"exit_code\": ${FINAL_EXIT},"
+    echo "  \"status\": \"$(get_status_label ${FINAL_EXIT})\","
+    echo "  \"checks\": {"
+
+    local first=1
+    while IFS='|' read -r name status message; do
+      [[ -z "${name}" ]] && continue
+      [[ $first -eq 0 ]] && echo ","
+      first=0
+      printf '    "%s": {"status": "%s", "message": "%s"}' "${name}" "${status}" "${message}"
+    done < "${CHECK_RESULTS_FILE}"
+
+    echo ""
+    echo "  },"
+    echo "  \"drift\": \"${drift_status}\""
+    echo "}"
+  } > "${STATE_FILE}"
+}
+
+get_status_label() {
+  case "$1" in
+    0) echo "healthy" ;;
+    1) echo "drift" ;;
+    2) echo "error" ;;
+    3) echo "needs-attention" ;;
+    *) echo "unknown" ;;
+  esac
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Summary output
+# ─────────────────────────────────────────────────────────────────────────────
+
+print_summary() {
+  [[ $JSON_ONLY -eq 1 ]] && return
+
+  echo ""
+  printf "${BOLD}━━━ Summary ━━━${RESET}\n"
+
+  case $FINAL_EXIT in
+    0)
+      printf "${GREEN}${BOLD}✓ HEALTHY${RESET} - All checks passed\n"
+      ;;
+    1)
+      printf "${YELLOW}${BOLD}! DRIFT${RESET} - Configuration drift detected\n"
+      printf "  Run ${CYAN}chezmoi diff${RESET} to see changes\n"
+      printf "  Run ${CYAN}chezmoi apply${RESET} to sync\n"
+      ;;
+    2)
+      printf "${RED}${BOLD}✗ ERROR${RESET} - Critical issues found\n"
+      ;;
+    3)
+      printf "${YELLOW}${BOLD}! ATTENTION${RESET} - Non-critical issues need review\n"
+      ;;
+  esac
+
+  echo ""
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Main
+# ─────────────────────────────────────────────────────────────────────────────
+
+main() {
+  [[ $JSON_ONLY -eq 0 ]] && echo ""
+  [[ $JSON_ONLY -eq 0 ]] && printf "${BOLD}Chezmoi Health Check${RESET} - $(date '+%Y-%m-%d %H:%M')\n"
+  [[ $JSON_ONLY -eq 0 ]] && echo ""
+
+  local exit_codes=""
+
+  # Run all checks, collect exit codes
+  check_chezmoi_available || exit_codes="${exit_codes} $?"
+  check_source_repo || exit_codes="${exit_codes} $?"
+  check_drift || exit_codes="${exit_codes} $?"
+  check_1password || exit_codes="${exit_codes} $?"
+  check_dependencies || exit_codes="${exit_codes} $?"
+
+  # Determine final exit code (highest severity wins)
+  FINAL_EXIT=0
+  for code in ${exit_codes}; do
+    # Priority: error (2) > drift (1) > needs-attention (3) > healthy (0)
+    if [[ $code -eq 2 ]]; then
+      FINAL_EXIT=2
+      break
+    elif [[ $code -eq 1 && $FINAL_EXIT -ne 2 ]]; then
+      FINAL_EXIT=1
+    elif [[ $code -eq 3 && $FINAL_EXIT -eq 0 ]]; then
+      FINAL_EXIT=3
+    fi
+  done
+
+  # Write state for other tools
+  write_state
+
+  # Output
+  if [[ $JSON_ONLY -eq 1 ]]; then
+    cat "${STATE_FILE}"
+  else
+    print_summary
+  fi
+
+  exit $FINAL_EXIT
+}
+
+main

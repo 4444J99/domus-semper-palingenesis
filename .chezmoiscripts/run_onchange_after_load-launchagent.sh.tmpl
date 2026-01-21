@@ -1,0 +1,48 @@
+#!/bin/bash
+# Load/reload the chezmoi self-heal launchd agent
+# Runs when the plist file changes
+
+{{- if eq .chezmoi.os "darwin" }}
+
+set -e
+
+PLIST_PATH="${HOME}/Library/LaunchAgents/com.chezmoi.self-heal.plist"
+LABEL="com.chezmoi.self-heal"
+
+echo "🔄 Managing chezmoi self-heal daemon..."
+
+# Ensure state directory exists
+mkdir -p "${HOME}/.local/share/chezmoi-health"
+
+# Unload if already loaded (ignore errors if not loaded)
+if launchctl list "${LABEL}" &>/dev/null; then
+  echo "  Unloading existing agent..."
+  launchctl unload "${PLIST_PATH}" 2>/dev/null || true
+fi
+
+# Load the agent
+if [[ -f "${PLIST_PATH}" ]]; then
+  echo "  Loading launchd agent..."
+  launchctl load "${PLIST_PATH}"
+
+  # Verify it's running
+  if launchctl list "${LABEL}" &>/dev/null; then
+    echo "  ✅ Agent loaded successfully"
+  else
+    echo "  ⚠️  Agent may not have started (check 'launchctl list | grep chezmoi')"
+  fi
+else
+  echo "  ⚠️  Plist not found at ${PLIST_PATH}"
+fi
+
+echo ""
+echo "Daemon management commands:"
+echo "  Status:  launchctl list | grep chezmoi"
+echo "  Stop:    launchctl unload ${PLIST_PATH}"
+echo "  Start:   launchctl load ${PLIST_PATH}"
+echo "  Logs:    tail -f ~/.local/share/chezmoi-health/daemon.log"
+echo ""
+
+{{- else }}
+echo "ℹ️  Skipping launchd setup (not macOS)"
+{{- end }}

@@ -220,6 +220,12 @@ alias cmcd='cd ~/.local/share/chezmoi'
 alias cmpush='cd ~/.local/share/chezmoi && git push'
 alias cmlog='cd ~/.local/share/chezmoi && git log --oneline -10'
 
+# Health & self-heal
+alias cmh='chezmoi-health'
+alias cmhv='VERBOSE=1 chezmoi-health'
+alias cmhj='chezmoi-health --json'
+alias cmr='chezmoi-recover'
+
 # ─────────────────────────────────────────────────────────────────────────────
 # Python Aliases
 # ─────────────────────────────────────────────────────────────────────────────

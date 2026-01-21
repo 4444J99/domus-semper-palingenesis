@@ -1,0 +1,42 @@
+#!/bin/bash
+# ─────────────────────────────────────────────────────────────────────────────
+# Git post-commit hook - Chezmoi integration
+# Managed by Chezmoi
+# ─────────────────────────────────────────────────────────────────────────────
+# Reminds user to run `chezmoi apply` after committing in the chezmoi source dir
+
+# Get the root of the current git repo
+REPO_ROOT=$(git rev-parse --show-toplevel 2>/dev/null) || exit 0
+
+# Chezmoi source directory
+CHEZMOI_SOURCE="${HOME}/.local/share/chezmoi"
+
+# Check if we're in the chezmoi source directory
+if [[ "${REPO_ROOT}" == "${CHEZMOI_SOURCE}" ]]; then
+  echo ""
+  echo "━━━ Chezmoi Self-Heal ━━━"
+  echo "Committed changes to dotfiles source."
+  echo ""
+
+  # Check if there's drift
+  if chezmoi diff --quiet 2>/dev/null; then
+    echo "✓ No drift - target files already match source"
+  else
+    echo "! Changes need to be applied to target files"
+    echo ""
+    echo "  Run: chezmoi apply"
+    echo "  Or:  chezmoi diff   (to preview changes)"
+    echo ""
+
+    # If CHEZMOI_AUTO_APPLY_ON_COMMIT is set, auto-apply
+    if [[ "${CHEZMOI_AUTO_APPLY_ON_COMMIT:-}" == "true" ]]; then
+      echo "Auto-applying (CHEZMOI_AUTO_APPLY_ON_COMMIT=true)..."
+      chezmoi apply --force
+      echo "✓ Changes applied"
+    fi
+  fi
+  echo "━━━━━━━━━━━━━━━━━━━━━━━━"
+  echo ""
+fi
+
+exit 0
