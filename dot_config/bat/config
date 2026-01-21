@@ -1,0 +1,22 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Bat Configuration - Managed by Chezmoi
+# ─────────────────────────────────────────────────────────────────────────────
+
+# Theme (Catppuccin Mocha is closest to Tokyo Night)
+# Run `bat --list-themes` to see available themes
+--theme="Catppuccin Mocha"
+
+# Show line numbers and git modifications
+--style="numbers,changes,header,grid"
+
+# Use 4 spaces for tabs
+--tabs=4
+
+# Enable syntax highlighting for man pages
+--decorations=always
+
+# Wrap long lines
+--wrap=auto
+
+# Paging (use less as pager)
+--pager="less -FR"

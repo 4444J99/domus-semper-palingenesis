@@ -25,23 +25,23 @@ $character"""
 # Right-side prompt
 right_format = """$time"""
 
-# Directory module
+# Directory module - Tokyo Night blue
 [directory]
 truncation_length = 4
 truncate_to_repo = true
-style = "bold cyan"
+style = "bold #7aa2f7"
 read_only = " 󰌾"
 home_symbol = "~"
 
-# Git branch
+# Git branch - Tokyo Night purple
 [git_branch]
 symbol = " "
-style = "bold purple"
+style = "bold #bb9af7"
 format = "on [$symbol$branch(:$remote_branch)]($style) "
 
-# Git status - compact indicators
+# Git status - Tokyo Night red for changes
 [git_status]
-style = "bold red"
+style = "bold #f7768e"
 format = '([\[$all_status$ahead_behind\]]($style) )'
 conflicted = "="
 ahead = "⇡${count}"
@@ -54,17 +54,17 @@ staged = "+${count}"
 renamed = "»${count}"
 deleted = "✘${count}"
 
-# Command duration (show for commands > 2s)
+# Command duration (show for commands > 2s) - Tokyo Night yellow
 [cmd_duration]
 min_time = 2000
 format = "took [$duration]($style) "
-style = "yellow"
+style = "#e0af68"
 
-# Character (prompt symbol)
+# Character (prompt symbol) - Tokyo Night colors
 [character]
-success_symbol = "[❯](bold green)"
-error_symbol = "[❯](bold red)"
-vimcmd_symbol = "[❮](bold green)"
+success_symbol = "[❯](bold #9ece6a)"
+error_symbol = "[❯](bold #f7768e)"
+vimcmd_symbol = "[❮](bold #9ece6a)"
 
 # Time (right prompt)
 [time]
@@ -73,38 +73,38 @@ format = "[$time]($style)"
 style = "dimmed white"
 time_format = "%H:%M"
 
-# Language/tool modules
+# Language/tool modules - Tokyo Night colors
 [python]
 symbol = " "
 format = "via [$symbol$pyenv_prefix($version )(\\($virtualenv\\) )]($style)"
-style = "yellow"
+style = "#e0af68"
 
 [nodejs]
 symbol = " "
 format = "via [$symbol($version )]($style)"
-style = "green"
+style = "#9ece6a"
 
 [golang]
 symbol = " "
 format = "via [$symbol($version )]($style)"
-style = "cyan"
+style = "#7dcfff"
 
 [rust]
 symbol = " "
 format = "via [$symbol($version )]($style)"
-style = "red"
+style = "#f7768e"
 
 [docker_context]
 symbol = " "
 format = "via [$symbol$context]($style) "
-style = "blue"
+style = "#7aa2f7"
 only_with_files = true
 detect_files = ["docker-compose.yml", "docker-compose.yaml", "Dockerfile"]
 
 [kubernetes]
 symbol = "☸ "
 format = '[$symbol$context( \($namespace\))]($style) '
-style = "blue"
+style = "#7aa2f7"
 disabled = false
 
 # Disable modules we don't need

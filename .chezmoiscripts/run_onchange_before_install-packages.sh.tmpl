@@ -33,15 +33,40 @@ brew install \
   jq \
   node \
   python3 \
-  go
+  go \
+  git-delta \
+  lazygit \
+  bat
 
 # Install optional but recommended (skip if already installed)
 echo "📦 Installing recommended packages..."
-for cask in 1password iterm2 visual-studio-code; do
-  if ! brew list --cask "$cask" &>/dev/null; then
-    brew install --cask "$cask" || echo "  ⚠️  Failed to install $cask (may need manual install)"
+
+# Function to check and install a cask
+install_cask() {
+  local cask="$1"
+  local app="$2"
+  if [[ -d "/Applications/$app" ]]; then
+    echo "  ✓ $app already installed"
+  elif brew list --cask "$cask" &>/dev/null; then
+    echo "  ✓ $cask already installed via Homebrew"
+  else
+    echo "  Installing $cask..."
+    brew install --cask "$cask" || echo "  ⚠️  Failed to install $cask"
   fi
-done
+}
+
+install_cask "1password" "1Password.app"
+install_cask "iterm2" "iTerm.app"
+install_cask "visual-studio-code" "Visual Studio Code.app"
+
+# Install terminal font
+echo "📦 Installing terminal fonts..."
+if brew list --cask font-jetbrains-mono-nerd-font &>/dev/null; then
+  echo "  ✓ JetBrains Mono Nerd Font already installed"
+else
+  echo "  Installing JetBrains Mono Nerd Font..."
+  brew install --cask font-jetbrains-mono-nerd-font || echo "  ⚠️  Failed to install font"
+fi
 
 {{- else if eq .chezmoi.os "linux" }}
 # Linux: Use apt/yum based on distro

@@ -1,0 +1,103 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Lazygit Configuration - Managed by Chezmoi
+# Theme: Tokyo Night
+# ─────────────────────────────────────────────────────────────────────────────
+
+gui:
+  # Use Nerd Font icons
+  nerdFontsVersion: "3"
+
+  # Window sizing
+  windowSize: "normal"
+  scrollHeight: 2
+  scrollPastBottom: true
+
+  # Mouse support
+  mouseEvents: true
+
+  # Show file icons
+  showFileIcons: true
+
+  # Show random tip
+  showRandomTip: false
+
+  # Border style
+  border: "rounded"
+
+  # Tokyo Night theme
+  theme:
+    activeBorderColor:
+      - "#7aa2f7"
+      - bold
+    inactiveBorderColor:
+      - "#3b4261"
+    searchingActiveBorderColor:
+      - "#e0af68"
+      - bold
+    optionsTextColor:
+      - "#7aa2f7"
+    selectedLineBgColor:
+      - "#33467c"
+    selectedRangeBgColor:
+      - "#33467c"
+    cherryPickedCommitBgColor:
+      - "#bb9af7"
+    cherryPickedCommitFgColor:
+      - "#1a1b26"
+    unstagedChangesColor:
+      - "#f7768e"
+    defaultFgColor:
+      - "#c0caf5"
+
+git:
+  # Use delta for diffs
+  paging:
+    colorArg: always
+    pager: delta --paging=never
+
+  # Auto-fetch (disabled by default for performance)
+  autoFetch: false
+  autoRefresh: true
+
+  # Show commit hash in commits panel
+  showCommitHash: true
+
+  # Pull behavior
+  pull:
+    mode: "rebase"
+
+os:
+  # Use nvim as editor
+  editPreset: "nvim"
+
+# Confirmation prompts
+notARepository: "prompt"
+promptToReturnFromSubprocess: false
+
+# Key bindings (vim-style is default, customize if needed)
+keybinding:
+  universal:
+    quit: "q"
+    quit-alt1: "<c-c>"
+    return: "<esc>"
+    scrollUpMain: "<pgup>"
+    scrollDownMain: "<pgdown>"
+    scrollUpMain-alt1: "K"
+    scrollDownMain-alt1: "J"
+    prevItem: "k"
+    nextItem: "j"
+    prevItem-alt: "<up>"
+    nextItem-alt: "<down>"
+    prevBlock: "h"
+    nextBlock: "l"
+    prevBlock-alt: "<left>"
+    nextBlock-alt: "<right>"
+    togglePanel: "<tab>"
+    refresh: "R"
+    optionMenu: "?"
+    confirm: "<enter>"
+    remove: "d"
+    new: "n"
+    edit: "e"
+    openFile: "o"
+    copyToClipboard: "y"
