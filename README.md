@@ -45,6 +45,7 @@ cmu          # alias for: chezmoi update
 - **External Drive Integration**: Auto-detection and symlink creation
 - **Shell Aliases**: Quick access to common chezmoi operations
 - **Auto-commit/Auto-push**: Automatic Git operations enabled
+- **Self-Healing Daemon**: Automatic drift detection, backup, and recovery (macOS)
 
 ### 🎯 Managed Configurations
 
@@ -78,6 +79,8 @@ cmu          # alias for: chezmoi update
 - `cmcd` - cd to dotfiles repo
 - `cmpush` - push changes to GitHub
 - `cmlog` - view recent commits
+- `cmh` - health check
+- `cmr` - recovery tool
 
 **File Organization:**
 - `file-org check-external` - Check external drive status
@@ -88,19 +91,29 @@ cmu          # alias for: chezmoi update
 
 ```
 ~/.local/share/chezmoi/          # Source state (this repo)
+├── .chezmoiscripts/             # Automation scripts
+│   ├── run_onchange_before_install-packages.sh.tmpl
+│   ├── run_once_after_setup-directories.sh.tmpl
+│   └── run_onchange_after_load-launchagent.sh.tmpl
 ├── dot_config/
 │   ├── git/
 │   │   ├── config.tmpl          # Git configuration
-│   │   └── ignore               # Global gitignore
-│   ├── environment.tmpl         # Environment variables
+│   │   ├── ignore               # Global gitignore
+│   │   └── hooks/               # Git hooks (post-commit, post-merge)
+│   ├── chezmoi-daemon/config    # Self-heal daemon settings
 │   └── kitty/
 │       └── kitty.conf.tmpl      # Terminal configuration
+├── dot_local/bin/               # User scripts
+│   ├── chezmoi-daemon           # Self-healing daemon
+│   ├── chezmoi-health           # Health check utility
+│   └── chezmoi-recover          # Backup recovery tool
 ├── dot_zshrc.tmpl               # Shell configuration
 ├── private_dot_aws/
 │   └── credentials.tmpl         # AWS credentials (1Password)
 ├── private_dot_ssh/
 │   └── private_config.tmpl      # SSH configuration
-└── run_once_before_*.sh.tmpl    # Setup scripts
+└── private_Library/LaunchAgents/
+    └── com.chezmoi.self-heal.plist  # macOS scheduled daemon
 ```
 
 ## 🔐 Security
@@ -173,6 +186,32 @@ Automatic symlink creation when `/Volumes/4444-iivii` is connected:
 
 See [EXTERNAL_DRIVE.md](EXTERNAL_DRIVE.md) for details.
 
+## 🔧 Self-Healing Daemon
+
+Automatic drift detection and recovery system (macOS):
+
+```bash
+# Check system health
+cmh              # Quick health check
+cmhv             # Verbose output
+cmhj             # JSON output for scripting
+
+# Recovery tools
+cmr list         # List available backups
+cmr restore <n>  # Restore from backup
+cmr reset        # Force reset to source state
+```
+
+**Features:**
+- Runs every 4 hours via launchd (only when idle)
+- Auto-pulls latest changes from Git
+- Detects configuration drift
+- Creates backups before any changes
+- macOS notifications on drift detection
+- Failure escalation after 3 consecutive errors
+
+**Configuration:** `~/.config/chezmoi-daemon/config`
+
 ## 🛠️ Customization
 
 ### Add New Machine
@@ -211,19 +250,18 @@ cma
 
 ## 📊 Statistics
 
-- **Managed Files**: 31+
-- **GitHub Commits**: 15+
+- **Managed Files**: 47
+- **Template Files**: 15
+- **Automation Scripts**: 7 (800+ lines)
 - **XDG Migrations**: 28 apps (~17GB)
-- **Dotfiles Reduced**: 59 → 52 (goal: ~25)
 - **Secrets in Git**: 0
 
 ## 🎯 Future Enhancements
 
-- [ ] Create bootstrap script for automated first-run
 - [ ] Add more AWS/cloud provider templates
-- [ ] Expand OS-specific configurations
-- [ ] Add browser extension manifest
-- [ ] Periodic health check script
+- [ ] Add browser extension sync
+- [ ] Add systemd daemon for Linux parity
+- [ ] Add pre-flight verification utility
 
 ## 🤝 Contributing
 
@@ -245,5 +283,5 @@ MIT
 
 ---
 
-**Last Updated**: 2025-12-29
+**Last Updated**: 2026-01-20
 **Repository**: [github.com/4444JPP/dotfiles](https://github.com/4444JPP/dotfiles)
