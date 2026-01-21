@@ -1,287 +1,175 @@
-# Dotfiles
-
-Personal dotfiles managed with [chezmoi](https://www.chezmoi.io/), featuring 1Password secret management, multi-OS support, and XDG Base Directory compliance.
-
-## 🚀 Quick Start
-
-### New Machine Setup
-
-Single command setup:
-
-```bash
-sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply 4444JPP
-```
-
-This will:
-- Install chezmoi
-- Clone this repository
-- Prompt for email and machine type (work/personal)
-- Fetch secrets from 1Password
-- Apply all configurations
-
-### Existing Machine
-
-```bash
-# Apply changes
-cma          # alias for: chezmoi apply
-
-# Preview changes
-cmd          # alias for: chezmoi diff
-
-# Edit a file
-cme ~/.zshrc # alias for: chezmoi edit
-
-# Update from GitHub
-cmu          # alias for: chezmoi update
-```
-
-## 📋 Features
-
-### ✅ Implemented
-
-- **Secret Management**: GitHub tokens, AWS credentials via 1Password (never in Git)
-- **Multi-OS Support**: macOS (ARM64/Intel) and Linux configurations
-- **XDG Compliance**: 28 apps organized in `~/.local/share/`
-- **External Drive Integration**: Auto-detection and symlink creation
-- **Shell Aliases**: Quick access to common chezmoi operations
-- **Auto-commit/Auto-push**: Automatic Git operations enabled
-- **Self-Healing Daemon**: Automatic drift detection, backup, and recovery (macOS)
-
-### 🎯 Managed Configurations
-
-- **Shell**: `.zshrc` with OS-specific paths and Homebrew setup
-- **Git**: XDG-compliant config at `~/.config/git/config`
-- **SSH**: 1Password SSH agent integration with connection reuse
-- **AWS**: Template-based credentials (activate with 1Password items)
-- **Environment**: Centralized variables in `~/.config/environment`
-
-## 📚 Documentation
-
-### Core Guides
-
-| Document | Purpose |
-|----------|---------|
-| [1PASSWORD_SETUP.md](1PASSWORD_SETUP.md) | Secret management configuration |
-| [EXTERNAL_DRIVE.md](EXTERNAL_DRIVE.md) | External drive integration guide |
-| [ORGANIZATION_STRATEGY.md](ORGANIZATION_STRATEGY.md) | File organization architecture (3-layer system) |
-| [ORGANIZATION_QUICKSTART.md](ORGANIZATION_QUICKSTART.md) | 5-minute quick start guide |
-| [DOTFILES_CLEANUP.md](DOTFILES_CLEANUP.md) | Dotfile migration strategy (59→25 goal) |
-| [PLUGINS.md](PLUGINS.md) | Claude Code plugins reference |
-
-### Quick Reference
-
-**Chezmoi Aliases:**
-- `cm` - chezmoi
-- `cma` - chezmoi apply
-- `cmd` - chezmoi diff
-- `cme` - chezmoi edit
-- `cms` - chezmoi status
-- `cmcd` - cd to dotfiles repo
-- `cmpush` - push changes to GitHub
-- `cmlog` - view recent commits
-- `cmh` - health check
-- `cmr` - recovery tool
-
-**File Organization:**
-- `file-org check-external` - Check external drive status
-- `file-org inventory` - Generate file inventory
-- `file-org clean-root` - List files in home root
-
-## 🗂️ Structure
-
-```
-~/.local/share/chezmoi/          # Source state (this repo)
-├── .chezmoiscripts/             # Automation scripts
-│   ├── run_onchange_before_install-packages.sh.tmpl
-│   ├── run_once_after_setup-directories.sh.tmpl
-│   └── run_onchange_after_load-launchagent.sh.tmpl
-├── dot_config/
-│   ├── git/
-│   │   ├── config.tmpl          # Git configuration
-│   │   ├── ignore               # Global gitignore
-│   │   └── hooks/               # Git hooks (post-commit, post-merge)
-│   ├── chezmoi-daemon/config    # Self-heal daemon settings
-│   └── kitty/
-│       └── kitty.conf.tmpl      # Terminal configuration
-├── dot_local/bin/               # User scripts
-│   ├── chezmoi-daemon           # Self-healing daemon
-│   ├── chezmoi-health           # Health check utility
-│   └── chezmoi-recover          # Backup recovery tool
-├── dot_zshrc.tmpl               # Shell configuration
-├── private_dot_aws/
-│   └── credentials.tmpl         # AWS credentials (1Password)
-├── private_dot_ssh/
-│   └── private_config.tmpl      # SSH configuration
-└── private_Library/LaunchAgents/
-    └── com.chezmoi.self-heal.plist  # macOS scheduled daemon
-```
-
-## 🔐 Security
-
-### Secrets Management
-
-All secrets managed via 1Password:
-- GitHub token: `master-org-token-110525` <!-- allow-secret -->
-- AWS credentials: Create "AWS Personal" item (see [1PASSWORD_SETUP.md](1PASSWORD_SETUP.md))
-- SSH keys: Managed by 1Password SSH agent
-
-**Zero secrets in Git repository.**
-
-### Secret Template Example
-
-```ini
-# In ~/.config/git/config.tmpl
-[github]
-  token = {{ onepasswordRead "op://Personal/master-org-token-110525/token" }} # allow-secret
-```
-
-## 🖥️ Multi-OS Support
-
-### macOS-specific
-- Homebrew paths (ARM64 vs Intel)
-- iTerm2 shell integration
-- 1Password SSH agent path
-- External drive auto-detection
-
-### Linux-specific
-- Alternative Homebrew path
-- Different 1Password SSH agent location
-- Conditional package installs
-
-### Template Example
-
-```bash
-{{- if eq .chezmoi.os "darwin" }}
-export PATH="/opt/homebrew/bin:$PATH"  # macOS ARM64
-{{- else if eq .chezmoi.os "linux" }}
-export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"  # Linux
-{{- end }}
-```
-
-## 📦 XDG Base Directory Compliance
-
-28 applications migrated to XDG locations with backward-compatible symlinks:
-
-**AI/ML Tools** (~5.8GB):
-- claude, gemini, ollama, antigravity
-- codex, cloudbase-mcp, mcp-auth
-- aitk, jules, genkit, my-father-mother
-
-**IDE/Dev Tools** (~13GB):
-- vscode, vscode-insiders, cursor
-- gitkraken, dropbox, vs-kubernetes
-- copilot, codestream, quokka, wallaby
-
-All apps still work via symlinks at original locations.
-
-## 🔄 External Drive
-
-Automatic symlink creation when `/Volumes/4444-iivii` is connected:
-
-```bash
-~/External              → /Volumes/4444-iivii
-~/Projects/ivi374       → External/ivi374forivi3ivi3/workspace
-~/.local/share/toolchains → External/ivi374forivi3ivi3/toolchains
-```
-
-See [EXTERNAL_DRIVE.md](EXTERNAL_DRIVE.md) for details.
-
-## 🔧 Self-Healing Daemon
-
-Automatic drift detection and recovery system (macOS):
-
-```bash
-# Check system health
-cmh              # Quick health check
-cmhv             # Verbose output
-cmhj             # JSON output for scripting
-
-# Recovery tools
-cmr list         # List available backups
-cmr restore <n>  # Restore from backup
-cmr reset        # Force reset to source state
-```
-
-**Features:**
-- Runs every 4 hours via launchd (only when idle)
-- Auto-pulls latest changes from Git
-- Detects configuration drift
-- Creates backups before any changes
-- macOS notifications on drift detection
-- Failure escalation after 3 consecutive errors
-
-**Configuration:** `~/.config/chezmoi-daemon/config`
-
-## 🛠️ Customization
-
-### Add New Machine
-
-1. Run chezmoi init
-2. Answer prompts (email, work/personal)
-3. Create 1Password items for secrets
-4. Run `chezmoi apply`
-
-### Add New Secret
-
-1. Create 1Password item
-2. Edit template:
-   ```bash
-   cme ~/.aws/credentials
-   ```
-3. Add onepasswordRead reference:
-   ```ini
-   aws_access_key_id = {{ onepasswordRead "op://Personal/AWS Personal/access_key_id" }}
-   ```
-4. Apply: `cma`
-
-### Add New Configuration
-
-```bash
-# Add existing file
-chezmoi add ~/.someconfig
-
-# Edit template
-cme ~/.someconfig
-
-# Add template variables if needed
-# Apply
-cma
-```
-
-## 📊 Statistics
-
-- **Managed Files**: 47
-- **Template Files**: 15
-- **Automation Scripts**: 7 (800+ lines)
-- **XDG Migrations**: 28 apps (~17GB)
-- **Secrets in Git**: 0
-
-## 🎯 Future Enhancements
-
-- [ ] Add more AWS/cloud provider templates
-- [ ] Add browser extension sync
-- [ ] Add systemd daemon for Linux parity
-- [ ] Add pre-flight verification utility
-
-## 🤝 Contributing
-
-This is a personal dotfiles repository, but feel free to:
-- Fork for your own use
-- Open issues for suggestions
-- Submit PRs for improvements
-
-## 📝 License
-
-MIT
-
-## 🔗 Resources
-
-- [Chezmoi Documentation](https://www.chezmoi.io/)
-- [XDG Base Directory Spec](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html)
-- [1Password CLI](https://developer.1password.com/docs/cli/)
-- [Dotfiles Best Practices](https://dotfiles.github.io/)
-
----
-
-**Last Updated**: 2026-01-20
-**Repository**: [github.com/4444JPP/dotfiles](https://github.com/4444JPP/dotfiles)
+─────┬──────────────────────────────────────────────────────────────────────────
+     │ STDIN
+─────┼──────────────────────────────────────────────────────────────────────────
+   1 │ # Dotfiles
+   2 │ 
+   3 │ ## The Problem
+   4 │ 
+   5 │ Setting up a new machine is painful. Secrets end up in Git. Configurations drift across devices. Terminal tools each have their own color schemes. When something breaks, there's no recovery path.
+   6 │ 
+   7 │ ## The Approach
+   8 │ 
+   9 │ This repository uses [chezmoi](https://www.chezmoi.io/) to solve dotfile management with three core principles:
+  10 │ 
+  11 │ 1. **Zero secrets in Git** — All credentials pulled from 1Password at apply time
+  12 │ 2. **Template everything** — One source, multiple OS/machine configurations
+  13 │ 3. **Self-healing** — Automatic drift detection, backup, and recovery
+  14 │ 
+  15 │ ## The Outcome
+  16 │ 
+  17 │ - **One command** sets up a new machine with all tools, configs, and secrets
+  18 │ - **Unified terminal experience** with Tokyo Night theme across Kitty, tmux, fzf, lazygit, delta, and starship
+  19 │ - **Automatic recovery** from configuration drift via launchd daemon
+  20 │ - **17GB of apps** organized into XDG-compliant directories
+  21 │ 
+  22 │ ---
+  23 │ 
+  24 │ ## Quick Start
+  25 │ 
+  26 │ ### New Machine
+  27 │ 
+  28 │ ```bash
+  29 │ sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply 4444JPP
+  30 │ ```
+  31 │ 
+  32 │ This installs chezmoi, clones the repo, prompts for config, fetches secrets from 1Password, and applies everything.
+  33 │ 
+  34 │ ### Daily Use
+  35 │ 
+  36 │ ```bash
+  37 │ cma          # Apply changes (chezmoi apply)
+  38 │ cmd          # Preview changes (chezmoi diff)
+  39 │ cme ~/.zshrc # Edit a file (chezmoi edit)
+  40 │ cmu          # Update from GitHub (chezmoi update)
+  41 │ cmh          # Health check
+  42 │ cmr          # Recovery tool
+  43 │ ```
+  44 │ 
+  45 │ ---
+  46 │ 
+  47 │ ## What's Managed
+  48 │ 
+  49 │ ### Terminal Hyperdrive (Tokyo Night Theme)
+  50 │ 
+  51 │ Unified color palette (`#1a1b26` background, `#7aa2f7` blue, `#bb9af7` purple) across:
+  52 │ 
+  53 │ | Tool | Config | Features |
+  54 │ |------|--------|----------|
+  55 │ | **Kitty** | `~/.config/kitty/kitty.conf` | JetBrains Mono Nerd Font, macOS keybindings, splits |
+  56 │ | **tmux** | `~/.config/tmux/tmux.conf` | TPM auto-install, session persistence, vim navigation |
+  57 │ | **fzf** | In `.zshrc` | Themed picker with Nerd Font glyphs |
+  58 │ | **lazygit** | `~/.config/lazygit/config.yml` | Delta pager, nvim editor, Nerd Font icons |
+  59 │ | **bat** | `~/.config/bat/config` | Syntax highlighting, line numbers, git changes |
+  60 │ | **delta** | In git config | Colored diffs with Tokyo Night syntax theme |
+  61 │ | **starship** | `~/.config/starship.toml` | Prompt with language indicators |
+  62 │ 
+  63 │ ### Shell & Git
+  64 │ 
+  65 │ - **zsh**: Modern CLI aliases (eza, bat, ripgrep), tool initializations, FZF integration
+  66 │ - **git**: Delta pager, 1Password token, sensible defaults, useful aliases
+  67 │ 
+  68 │ ### Secrets (via 1Password)
+  69 │ 
+  70 │ - GitHub token for git operations
+  71 │ - AWS credentials (opt-in)
+  72 │ - SSH keys via 1Password agent
+  73 │ 
+  74 │ ### Self-Healing Daemon (macOS)
+  75 │ 
+  76 │ Runs every 4 hours:
+  77 │ - Pulls latest changes from Git
+  78 │ - Detects configuration drift
+  79 │ - Creates backups before changes
+  80 │ - Sends macOS notifications on issues
+  81 │ 
+  82 │ ```bash
+  83 │ cmh              # Health check
+  84 │ cmhv             # Verbose output
+  85 │ cmr list         # List backups
+  86 │ cmr restore <n>  # Restore from backup
+  87 │ ```
+  88 │ 
+  89 │ ---
+  90 │ 
+  91 │ ## Repository Structure
+  92 │ 
+  93 │ ```
+  94 │ ~/.local/share/chezmoi/
+  95 │ ├── .chezmoiscripts/           # Automation (install packages, setup dirs, load daemon)
+  96 │ ├── dot_config/
+  97 │ │   ├── kitty/kitty.conf       # Terminal (Tokyo Night, 230 lines)
+  98 │ │   ├── tmux/tmux.conf         # Multiplexer (TPM, session persistence)
+  99 │ │   ├── lazygit/config.yml     # Git TUI (delta, nvim, themed)
+ 100 │ │   ├── bat/config             # Cat replacement (syntax, line numbers)
+ 101 │ │   ├── git/config.tmpl        # Git (delta pager, 1Password token)
+ 102 │ │   ├── starship.toml          # Prompt (Tokyo Night colors)
+ 103 │ │   └── chezmoi-daemon/config  # Self-heal settings
+ 104 │ ├── dot_local/bin/             # Scripts (daemon, health, recover)
+ 105 │ ├── dot_zshrc.tmpl             # Shell (aliases, FZF theme, tool init)
+ 106 │ ├── private_dot_aws/           # AWS credentials (1Password)
+ 107 │ ├── private_dot_ssh/           # SSH config (1Password agent)
+ 108 │ └── private_Library/LaunchAgents/  # macOS daemon
+ 109 │ ```
+ 110 │ 
+ 111 │ ---
+ 112 │ 
+ 113 │ ## Multi-OS Support
+ 114 │ 
+ 115 │ Templates handle differences automatically:
+ 116 │ 
+ 117 │ ```bash
+ 118 │ {{- if eq .chezmoi.os "darwin" }}
+ 119 │ export PATH="/opt/homebrew/bin:$PATH"  # macOS ARM64
+ 120 │ {{- else if eq .chezmoi.os "linux" }}
+ 121 │ export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
+ 122 │ {{- end }}
+ 123 │ ```
+ 124 │ 
+ 125 │ - **macOS**: Homebrew paths (ARM64/Intel), 1Password SSH agent, external drive detection
+ 126 │ - **Linux**: Linuxbrew paths, alternative agent locations
+ 127 │ 
+ 128 │ ---
+ 129 │ 
+ 130 │ ## Adding New Configurations
+ 131 │ 
+ 132 │ ### Add a file
+ 133 │ 
+ 134 │ ```bash
+ 135 │ chezmoi add ~/.someconfig
+ 136 │ cme ~/.someconfig  # Edit if needed
+ 137 │ cma                # Apply
+ 138 │ ```
+ 139 │ 
+ 140 │ ### Add a secret
+ 141 │ 
+ 142 │ 1. Create item in 1Password
+ 143 │ 2. Reference in template:
+ 144 │    ```ini
+ 145 │    token = {{ onepasswordRead "op://Personal/MyItem/token" }}
+ 146 │    ```
+ 147 │ 3. Apply: `cma`
+ 148 │ 
+ 149 │ ---
+ 150 │ 
+ 151 │ ## Statistics
+ 152 │ 
+ 153 │ | Metric | Value |
+ 154 │ |--------|-------|
+ 155 │ | Managed files | 50+ |
+ 156 │ | Template files | 15 |
+ 157 │ | XDG migrations | 28 apps (~17GB) |
+ 158 │ | Secrets in Git | 0 |
+ 159 │ | Kitty config | 230 lines (was 111KB) |
+ 160 │ 
+ 161 │ ---
+ 162 │ 
+ 163 │ ## Resources
+ 164 │ 
+ 165 │ - [Chezmoi Documentation](https://www.chezmoi.io/)
+ 166 │ - [1Password CLI](https://developer.1password.com/docs/cli/)
+ 167 │ - [Tokyo Night Theme](https://github.com/folke/tokyonight.nvim)
+ 168 │ 
+ 169 │ ---
+ 170 │ 
+ 171 │ **Last Updated**: 2026-01-21
+─────┴──────────────────────────────────────────────────────────────────────────
