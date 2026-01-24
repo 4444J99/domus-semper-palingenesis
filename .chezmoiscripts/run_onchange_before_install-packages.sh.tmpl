@@ -39,7 +39,7 @@ brew install \
   bat \
   lolcat \
   navi \
-  tealdeer
+  tlrc
 
 # pywal (Python package for image-based color themes)
 # Use pipx to avoid PEP 668 externally-managed-environment issues
@@ -49,7 +49,7 @@ if ! command -v pipx &>/dev/null; then
 fi
 pipx install pywal 2>/dev/null || pipx upgrade pywal 2>/dev/null || true
 
-# Initialize tealdeer cache
+# Initialize tlrc cache
 command -v tldr &>/dev/null && tldr --update || true
 
 # Install optional but recommended (skip if already installed)
