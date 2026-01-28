@@ -1,0 +1,62 @@
+# AGENTS.md - Universal AI Agent Instructions
+
+This file provides instructions for AI coding assistants working on this project.
+Compatible with: GitHub Copilot, OpenAI Codex, Google Gemini, Cursor, Claude Code.
+
+## Project Overview
+
+<!-- Describe your project here -->
+[PROJECT_NAME] is a [DESCRIPTION].
+
+## Tech Stack
+
+<!-- List your technologies -->
+- Language: [LANGUAGE]
+- Framework: [FRAMEWORK]
+- Build Tool: [BUILD_TOOL]
+- Test Framework: [TEST_FRAMEWORK]
+
+## Code Style & Conventions
+
+### General
+
+- Use clear, descriptive variable and function names
+- Keep functions small and focused (single responsibility)
+- Write self-documenting code; comments explain "why", not "what"
+- Prefer composition over inheritance
+
+### File Organization
+
+- Group related functionality together
+- Keep files focused and reasonably sized (<400 lines)
+- Use consistent file naming conventions
+
+### Error Handling
+
+- Handle errors explicitly; don't ignore them
+- Use appropriate error types for the language
+- Provide helpful error messages
+
+## Testing
+
+- Write tests for new functionality
+- Maintain existing test coverage
+- Test edge cases and error conditions
+- Use descriptive test names
+
+## Git Workflow
+
+- Commit messages: imperative mood, <72 chars for title
+- Keep commits atomic and focused
+- Reference issues in commit messages where applicable
+
+## Project-Specific Notes
+
+<!-- Add project-specific instructions here -->
+
+## Do Not
+
+- Do not commit secrets, API keys, or credentials
+- Do not commit large binary files
+- Do not break existing functionality without discussion
+- Do not ignore linter warnings

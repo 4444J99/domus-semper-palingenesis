@@ -1,0 +1,45 @@
+---
+description: TypeScript-specific conventions
+globs: ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx"]
+---
+
+# TypeScript Conventions
+
+## Variables & Types
+
+- Prefer `const` over `let`; never use `var`
+- Use TypeScript strict mode
+- Provide explicit types for function parameters and return values
+- Use interfaces for object shapes; use types for unions/intersections
+
+## Functions
+
+- Use arrow functions for callbacks
+- Use async/await over raw Promises
+- Prefer named exports over default exports
+- Keep functions pure when possible
+
+## Imports
+
+- Use ES modules (import/export)
+- Group imports: external, then internal, then relative
+- Use absolute imports when configured
+
+## React (if applicable)
+
+- Use functional components with hooks
+- Keep components small and focused
+- Use TypeScript for props (no PropTypes)
+- Prefer controlled components
+
+## Error Handling
+
+- Use try/catch for async operations
+- Create custom error types when needed
+- Never catch and ignore errors
+
+## Formatting
+
+- Use Prettier for consistent formatting
+- Keep lines under 100 characters
+- Use consistent semicolons (prefer with)

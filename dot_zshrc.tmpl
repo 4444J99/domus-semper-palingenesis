@@ -165,12 +165,33 @@ if command -v mise &>/dev/null; then
 fi
 
 # ─────────────────────────────────────────────────────────────────────────────
+# NVM (Node Version Manager) - Lazy Load
+# ─────────────────────────────────────────────────────────────────────────────
+
+export NVM_DIR="$HOME/.nvm"
+
+# Lazy load NVM - only initialize when node/npm/npx/nvm is first called
+if [[ -d "$NVM_DIR" ]]; then
+  # Placeholder functions that load NVM on first use
+  _nvm_load() {
+    unset -f nvm node npm npx 2>/dev/null
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+  }
+
+  nvm() { _nvm_load && nvm "$@"; }
+  node() { _nvm_load && node "$@"; }
+  npm() { _nvm_load && npm "$@"; }
+  npx() { _nvm_load && npx "$@"; }
+fi
+
+# ─────────────────────────────────────────────────────────────────────────────
 # Color Theme Tools
 # ─────────────────────────────────────────────────────────────────────────────
 
 # pywal - restore colors on shell startup
 if command -v wal &>/dev/null && [[ -f "$HOME/.cache/wal/sequences" ]]; then
-  (cat ~/.cache/wal/sequences &)
+  (cat ~/.cache/wal/sequences > /dev/tty 2>/dev/null &)
   [[ -f "$HOME/.cache/wal/colors.sh" ]] && source "$HOME/.cache/wal/colors.sh"
 fi
 

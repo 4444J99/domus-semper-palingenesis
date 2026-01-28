@@ -1,0 +1,56 @@
+---
+description: Shell scripting conventions
+globs: ["**/*.sh", "**/*.bash", "**/*.zsh", "**/Makefile"]
+---
+
+# Shell Script Conventions
+
+## Shebang & Safety
+
+```bash
+#!/usr/bin/env bash
+set -euo pipefail
+```
+
+- Use `bash` for portability or `zsh` for zsh-specific features
+- Always include safety flags in scripts
+- Use `shellcheck` for linting
+
+## Variables
+
+- Quote variables: `"$var"` not `$var`
+- Use `${var}` for clarity in strings
+- Prefer lowercase for local variables
+- Use UPPERCASE for environment/exported variables
+
+## Conditionals
+
+- Use `[[` over `[` for conditionals
+- Use `(( ))` for arithmetic comparisons
+- Prefer `&&` and `||` for simple conditionals
+
+## Functions
+
+```bash
+my_function() {
+    local arg1="$1"
+    # function body
+}
+```
+
+- Use `local` for function-scoped variables
+- Return exit codes, not string output
+- Use `printf` over `echo` for portability
+
+## Error Handling
+
+- Check command success: `if ! command; then ...`
+- Use `trap` for cleanup on exit
+- Provide helpful error messages to stderr
+
+## Style
+
+- Use 4 spaces for indentation
+- Keep lines under 100 characters
+- Use blank lines to separate logical sections
+- Comment complex logic

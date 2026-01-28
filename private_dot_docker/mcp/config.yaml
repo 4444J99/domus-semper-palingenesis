@@ -1,0 +1,18 @@
+markitdown:
+  paths: []
+filesystem:
+  paths:
+    - /Users/4jp/Workspace
+    - /Users/4jp/Documents
+    - /Users/4jp/Downloads
+    - /Users/4jp/Desktop
+desktop-commander:
+  paths:
+    - /Users/4jp
+dockerhub:
+  username: ajpadavano
+git:
+  paths:
+    - /Users/4jp/Workspace
+cloud-run-mcp:
+  credentials_path: /Users/4jp/.config/gcloud/application_default_credentials.json
