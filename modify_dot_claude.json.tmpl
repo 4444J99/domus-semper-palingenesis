@@ -1,0 +1,56 @@
+#!/usr/bin/env python3
+"""
+Chezmoi modify script for ~/.claude.json
+
+Merges desired MCP servers into the existing Claude Code config without
+overwriting dynamic runtime data (numStartups, tipsHistory, projects, etc.)
+"""
+import json
+import sys
+
+# Read existing config from stdin (provided by chezmoi)
+existing_content = sys.stdin.read().strip()
+
+if existing_content:
+    try:
+        config = json.loads(existing_content)
+    except json.JSONDecodeError:
+        config = {}
+else:
+    config = {}
+
+# Ensure mcpServers key exists
+if "mcpServers" not in config:
+    config["mcpServers"] = {}
+
+# Define the MCP servers we want to ensure are configured
+# These will be merged into the existing config
+desired_servers = {
+    "MCP_DOCKER": {
+        "command": "docker",
+        "args": ["mcp", "gateway", "run"]
+    },
+    "github": {
+        "command": "docker",
+        "args": [
+            "run", "-i", "--rm",
+            "-e", "GITHUB_PERSONAL_ACCESS_TOKEN",
+            "ghcr.io/github/github-mcp-server"
+        ],
+        "env": {
+            "GITHUB_PERSONAL_ACCESS_TOKEN": "{{ onepasswordRead "op://Personal/master-org-token-110525/token" }}"
+        }
+    },
+    "jupyter": {
+        "command": "jupyter-mcp-server",
+        "args": []
+    }
+}
+
+# Merge desired servers into existing config
+# This preserves any user-added servers while ensuring our required servers exist
+for server_name, server_config in desired_servers.items():
+    config["mcpServers"][server_name] = server_config
+
+# Output the modified config
+print(json.dumps(config, indent=2))

@@ -1,0 +1,76 @@
+#!/bin/bash
+# Setup VS Code extensions and Cline MCP config
+# Runs when manifest.yaml vscode section changes
+
+set -e
+
+{{- if eq .chezmoi.os "darwin" }}
+
+echo "Setting up VS Code extensions and MCP configs..."
+
+# Check if VS Code is installed
+if command -v code &>/dev/null; then
+  echo "Installing VS Code extensions..."
+
+  # Install Continue extension
+  code --install-extension continue.continue 2>/dev/null || echo "  Continue may already be installed"
+
+  # Install Cline extension
+  code --install-extension saoudrizwan.claude-dev 2>/dev/null || echo "  Cline may already be installed"
+
+  echo "VS Code extensions installed"
+else
+  echo "VS Code not found, skipping extension installation"
+fi
+
+# Setup Cline MCP config
+# Cline stores config in VS Code globalStorage which is tricky to manage
+CLINE_SETTINGS_DIR="$HOME/Library/Application Support/Code/User/globalStorage/saoudrizwan.claude-dev/settings"
+
+if [[ -d "$HOME/Library/Application Support/Code/User/globalStorage/saoudrizwan.claude-dev" ]]; then
+  echo "Setting up Cline MCP servers..."
+  mkdir -p "$CLINE_SETTINGS_DIR"
+
+  # Create Cline MCP config if it doesn't exist or update if needed
+  CLINE_MCP_FILE="$CLINE_SETTINGS_DIR/cline_mcp_settings.json"
+
+  cat > "$CLINE_MCP_FILE" << 'CLINE_EOF'
+{
+  "mcpServers": {
+    "MCP_DOCKER": {
+      "command": "docker",
+      "args": ["mcp", "gateway", "run"],
+      "disabled": false,
+      "alwaysAllow": []
+    },
+    "github": {
+      "command": "docker",
+      "args": [
+        "run", "-i", "--rm",
+        "-e", "GITHUB_PERSONAL_ACCESS_TOKEN",
+        "ghcr.io/github/github-mcp-server"
+      ],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "{{ onepasswordRead "op://Personal/master-org-token-110525/token" }}"
+      },
+      "disabled": false,
+      "alwaysAllow": []
+    },
+    "jupyter": {
+      "command": "jupyter-mcp-server",
+      "args": [],
+      "disabled": false,
+      "alwaysAllow": []
+    }
+  }
+}
+CLINE_EOF
+
+  echo "Cline MCP config created at $CLINE_MCP_FILE"
+else
+  echo "Cline extension not yet initialized. Install Cline and open VS Code once, then re-run chezmoi apply"
+fi
+
+{{- end }}
+
+echo "VS Code MCP setup complete"

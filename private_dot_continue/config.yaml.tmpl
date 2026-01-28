@@ -1,0 +1,17 @@
+models:
+  - title: Claude Sonnet
+    provider: anthropic
+    model: claude-sonnet-4-20250514
+    apiKey: "${ANTHROPIC_API_KEY}"
+
+mcpServers:
+  - name: MCP_DOCKER
+    command: docker
+    args: ["mcp", "gateway", "run"]
+  - name: github
+    command: docker
+    args: ["run", "-i", "--rm", "-e", "GITHUB_PERSONAL_ACCESS_TOKEN", "ghcr.io/github/github-mcp-server"]
+    env:
+      GITHUB_PERSONAL_ACCESS_TOKEN: "{{ onepasswordRead "op://Personal/master-org-token-110525/token" }}"
+  - name: jupyter
+    command: jupyter-mcp-server
