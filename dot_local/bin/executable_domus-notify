@@ -129,7 +129,7 @@ add_to_batch() {
 
   # Simple lock
   local lock_acquired=0
-  for i in {1..5}; do
+  for _ in {1..5}; do
     if mkdir "${BATCH_LOCK}" 2>/dev/null; then
       lock_acquired=1
       break

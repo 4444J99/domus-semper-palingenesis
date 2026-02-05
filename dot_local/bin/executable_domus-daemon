@@ -38,7 +38,6 @@ TELEMETRY_DIR="${STATE_DIR}/telemetry"
 # Defaults
 ONLY_WHEN_IDLE=true
 IDLE_THRESHOLD_SECONDS=300  # 5 minutes
-MIN_INTERVAL_SECONDS=3600   # 1 hour
 MAX_LOG_SIZE=1048576        # 1MB
 
 # Runtime flags

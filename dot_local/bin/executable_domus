@@ -28,7 +28,6 @@ DOMUS_VERSION="1.0.0"
 CONFIG_DIR="${HOME}/.config/domus"
 STATE_DIR="${HOME}/.local/state/domus"
 MANIFEST="${CONFIG_DIR}/manifest.yaml"
-LOCAL_CONFIG="${CONFIG_DIR}/local.yaml"
 BIN_DIR="${HOME}/.local/bin"
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -36,14 +35,14 @@ BIN_DIR="${HOME}/.local/bin"
 # ─────────────────────────────────────────────────────────────────────────────
 
 if [[ -t 1 ]]; then
-  RED='\033[0;31m'
-  GREEN='\033[0;32m'
-  YELLOW='\033[0;33m'
-  BLUE='\033[0;34m'
-  CYAN='\033[0;36m'
-  DIM='\033[0;90m'
-  BOLD='\033[1m'
-  RESET='\033[0m'
+  RED=$'\033[0;31m'
+  GREEN=$'\033[0;32m'
+  YELLOW=$'\033[0;33m'
+  BLUE=$'\033[0;34m'
+  CYAN=$'\033[0;36m'
+  DIM=$'\033[0;90m'
+  BOLD=$'\033[1m'
+  RESET=$'\033[0m'
 else
   RED='' GREEN='' YELLOW='' BLUE='' CYAN='' DIM='' BOLD='' RESET=''
 fi
@@ -53,20 +52,20 @@ fi
 # ─────────────────────────────────────────────────────────────────────────────
 
 die() {
-  printf "${RED}error:${RESET} %s\n" "$1" >&2
+  printf '%serror:%s %s\n' "$RED" "$RESET" "$1" >&2
   exit 2
 }
 
 info() {
-  printf "${BLUE}::${RESET} %s\n" "$1"
+  printf '%s::%s %s\n' "$BLUE" "$RESET" "$1"
 }
 
 success() {
-  printf "${GREEN}✓${RESET} %s\n" "$1"
+  printf '%s✓%s %s\n' "$GREEN" "$RESET" "$1"
 }
 
 warn() {
-  printf "${YELLOW}!${RESET} %s\n" "$1"
+  printf '%s!%s %s\n' "$YELLOW" "$RESET" "$1"
 }
 
 check_deps() {
@@ -175,50 +174,50 @@ cmd_status() {
   fi
 
   echo ""
-  printf "${BOLD}Domus Status${RESET} ${DIM}$(date '+%Y-%m-%d %H:%M')${RESET}\n"
+  printf '%sDomus Status%s %s%s%s\n' "$BOLD" "$RESET" "$DIM" "$(date '+%Y-%m-%d %H:%M')" "$RESET"
   echo ""
 
   local exit_code=0
 
   # Chezmoi status
-  printf "${CYAN}[dotfiles]${RESET} "
+  printf '%s[dotfiles]%s ' "$CYAN" "$RESET"
   if command -v chezmoi &>/dev/null; then
     local drift
     drift=$(chezmoi diff 2>/dev/null | head -1) || drift=""
     if [[ -z "$drift" ]]; then
-      printf "${GREEN}✓${RESET} synced\n"
+      printf '%s✓%s synced\n' "$GREEN" "$RESET"
     else
-      printf "${YELLOW}!${RESET} drift detected\n"
+      printf '%s!%s drift detected\n' "$YELLOW" "$RESET"
       exit_code=1
     fi
   else
-    printf "${DIM}○${RESET} chezmoi not found\n"
+    printf '%s○%s chezmoi not found\n' "$DIM" "$RESET"
   fi
 
   # Package status
-  printf "${CYAN}[packages]${RESET} "
+  printf '%s[packages]%s ' "$CYAN" "$RESET"
   if [[ -x "${BIN_DIR}/domus-packages" ]]; then
     local pkg_status
     pkg_status=$("${BIN_DIR}/domus-packages" status --quiet 2>/dev/null || true)
     case "$pkg_status" in
-      synced) printf "${GREEN}✓${RESET} synced\n" ;;
-      drift) printf "${YELLOW}!${RESET} drift detected\n"; exit_code=1 ;;
-      *) printf "${DIM}○${RESET} unknown\n" ;;
+      synced) printf '%s✓%s synced\n' "$GREEN" "$RESET" ;;
+      drift) printf '%s!%s drift detected\n' "$YELLOW" "$RESET"; exit_code=1 ;;
+      *) printf '%s○%s unknown\n' "$DIM" "$RESET" ;;
     esac
   else
-    printf "${DIM}○${RESET} not configured\n"
+    printf '%s○%s not configured\n' "$DIM" "$RESET"
   fi
 
   # Sort status
-  printf "${CYAN}[sorting]${RESET}  "
+  printf '%s[sorting]%s  ' "$CYAN" "$RESET"
   if pgrep -qf "domus-sort.*--watch" 2>/dev/null; then
-    printf "${GREEN}✓${RESET} watching\n"
+    printf '%s✓%s watching\n' "$GREEN" "$RESET"
   else
-    printf "${DIM}○${RESET} idle\n"
+    printf '%s○%s idle\n' "$DIM" "$RESET"
   fi
 
   # Shell startup
-  printf "${CYAN}[shell]${RESET}    "
+  printf '%s[shell]%s    ' "$CYAN" "$RESET"
   local telemetry="${STATE_DIR}/telemetry/shell-startup.jsonl"
   if [[ -f "$telemetry" ]]; then
     local last_ms
@@ -232,26 +231,26 @@ cmd_status() {
       fi
 
       if [[ $last_ms -le $target_ms ]]; then
-        printf "${GREEN}✓${RESET} ${last_ms}ms (target: ${target_ms}ms)\n"
+        printf '%s✓%s %sms (target: %sms)\n' "$GREEN" "$RESET" "$last_ms" "$target_ms"
       elif [[ $last_ms -le $warning_ms ]]; then
-        printf "${YELLOW}!${RESET} ${last_ms}ms (target: ${target_ms}ms)\n"
+        printf '%s!%s %sms (target: %sms)\n' "$YELLOW" "$RESET" "$last_ms" "$target_ms"
       else
-        printf "${RED}✗${RESET} ${last_ms}ms (target: ${target_ms}ms)\n"
+        printf '%s✗%s %sms (target: %sms)\n' "$RED" "$RESET" "$last_ms" "$target_ms"
         exit_code=1
       fi
     else
-      printf "${DIM}○${RESET} no data\n"
+      printf '%s○%s no data\n' "$DIM" "$RESET"
     fi
   else
-    printf "${DIM}○${RESET} not tracked\n"
+    printf '%s○%s not tracked\n' "$DIM" "$RESET"
   fi
 
   echo ""
 
   if [[ $exit_code -eq 0 ]]; then
-    printf "${GREEN}${BOLD}All systems healthy${RESET}\n"
+    printf '%s%sAll systems healthy%s\n' "$GREEN" "$BOLD" "$RESET"
   else
-    printf "${YELLOW}${BOLD}Issues detected${RESET} - run 'domus apply' to sync\n"
+    printf '%s%sIssues detected%s - run '\''domus apply'\'' to sync\n' "$YELLOW" "$BOLD" "$RESET"
   fi
   echo ""
 
@@ -403,8 +402,6 @@ cmd_perf() {
     esac
   done
 
-  local telemetry_dir="${STATE_DIR}/telemetry"
-
   case "$subcmd" in
     shell)
       cmd_perf_shell "$json_mode"
@@ -442,7 +439,7 @@ cmd_perf_shell() {
   fi
 
   echo ""
-  printf "${BOLD}Shell Startup Times${RESET} ${DIM}(last 10)${RESET}\n"
+  printf '%sShell Startup Times%s %s(last 10)%s\n' "$BOLD" "$RESET" "$DIM" "$RESET"
   echo ""
 
   local target_ms=200
@@ -461,11 +458,11 @@ cmd_perf_shell() {
     [[ $ms -gt $target_ms ]] && color="$YELLOW"
     [[ $ms -gt $warning_ms ]] && color="$RED"
 
-    printf "  ${DIM}%s${RESET}  ${color}%4dms${RESET}\n" "$ts" "$ms"
+    printf '  %s%s%s  %s%4dms%s\n' "$DIM" "$ts" "$RESET" "$color" "$ms" "$RESET"
   done
 
   echo ""
-  printf "  Target: ${GREEN}≤${target_ms}ms${RESET}  Warning: ${YELLOW}>${target_ms}ms${RESET}  Critical: ${RED}>${warning_ms}ms${RESET}\n"
+  printf '  Target: %s≤%sms%s  Warning: %s>%sms%s  Critical: %s>%sms%s\n' "$GREEN" "$target_ms" "$RESET" "$YELLOW" "$target_ms" "$RESET" "$RED" "$warning_ms" "$RESET"
   echo ""
 }
 
@@ -492,14 +489,14 @@ cmd_perf_daemon() {
   fi
 
   echo ""
-  printf "${BOLD}Daemon Run Times${RESET} ${DIM}(last 10)${RESET}\n"
+  printf '%sDaemon Run Times%s %s(last 10)%s\n' "$BOLD" "$RESET" "$DIM" "$RESET"
   echo ""
 
   tail -10 "$telemetry" | while read -r line; do
     local ts ms
     ts=$(echo "$line" | grep -o '"timestamp":"[^"]*"' | cut -d'"' -f4)
     ms=$(echo "$line" | grep -o '"ms":[0-9]*' | grep -o '[0-9]*')
-    printf "  ${DIM}%s${RESET}  %dms\n" "$ts" "$ms"
+    printf '  %s%s%s  %dms\n' "$DIM" "$ts" "$RESET" "$ms"
   done
   echo ""
 }
@@ -530,7 +527,7 @@ EOF
   fi
 
   echo ""
-  printf "${BOLD}Performance Summary${RESET}\n"
+  printf '%sPerformance Summary%s\n' "$BOLD" "$RESET"
   echo ""
 
   cmd_perf_shell 0
@@ -549,43 +546,43 @@ cmd_doctor() {
   local exit_code=0
 
   echo ""
-  printf "${BOLD}Domus Doctor${RESET} ${DIM}$(date '+%Y-%m-%d %H:%M')${RESET}\n"
+  printf '%sDomus Doctor%s %s%s%s\n' "$BOLD" "$RESET" "$DIM" "$(date '+%Y-%m-%d %H:%M')" "$RESET"
   echo ""
 
   # 1. Shell startup time trend
-  printf "${CYAN}[startup]${RESET}  "
+  printf '%s[startup]%s  ' "$CYAN" "$RESET"
   local telemetry="${STATE_DIR}/telemetry/shell-startup.jsonl"
   if [[ -f "$telemetry" ]]; then
     local avg_ms
     avg_ms=$(tail -10 "$telemetry" | grep -o '"ms":[0-9]*' | grep -o '[0-9]*' | awk '{s+=$1; n++} END {if(n>0) print int(s/n); else print 0}')
     if [[ $avg_ms -le 200 ]]; then
-      printf "${GREEN}✓${RESET} avg ${avg_ms}ms (last 10)\n"
+      printf '%s✓%s avg %sms (last 10)\n' "$GREEN" "$RESET" "$avg_ms"
     elif [[ $avg_ms -le 500 ]]; then
-      printf "${YELLOW}!${RESET} avg ${avg_ms}ms (last 10) - above 200ms target\n"
+      printf '%s!%s avg %sms (last 10) - above 200ms target\n' "$YELLOW" "$RESET" "$avg_ms"
     else
-      printf "${RED}✗${RESET} avg ${avg_ms}ms (last 10) - above 500ms warning\n"
+      printf '%s✗%s avg %sms (last 10) - above 500ms warning\n' "$RED" "$RESET" "$avg_ms"
       exit_code=1
     fi
   else
-    printf "${DIM}○${RESET} no telemetry data\n"
+    printf '%s○%s no telemetry data\n' "$DIM" "$RESET"
   fi
 
   # 2. Package drift
-  printf "${CYAN}[packages]${RESET} "
+  printf '%s[packages]%s ' "$CYAN" "$RESET"
   if [[ -x "${BIN_DIR}/domus-packages" ]]; then
     local pkg_status
     pkg_status=$("${BIN_DIR}/domus-packages" status --quiet 2>/dev/null || echo "unknown")
     case "$pkg_status" in
-      synced) printf "${GREEN}✓${RESET} in sync with manifest\n" ;;
-      drift) printf "${YELLOW}!${RESET} drift detected\n"; exit_code=1 ;;
-      *) printf "${DIM}○${RESET} unable to check\n" ;;
+      synced) printf '%s✓%s in sync with manifest\n' "$GREEN" "$RESET" ;;
+      drift) printf '%s!%s drift detected\n' "$YELLOW" "$RESET"; exit_code=1 ;;
+      *) printf '%s○%s unable to check\n' "$DIM" "$RESET" ;;
     esac
   else
-    printf "${DIM}○${RESET} domus-packages not available\n"
+    printf '%s○%s domus-packages not available\n' "$DIM" "$RESET"
   fi
 
   # 3. LaunchAgent status
-  printf "${CYAN}[daemons]${RESET}  "
+  printf '%s[daemons]%s  ' "$CYAN" "$RESET"
   if [[ "$(uname)" == "Darwin" ]]; then
     local agents_ok=0
     local agents_missing=0
@@ -597,72 +594,72 @@ cmd_doctor() {
       fi
     done
     if [[ $agents_missing -eq 0 ]]; then
-      printf "${GREEN}✓${RESET} ${agents_ok}/3 agents loaded\n"
+      printf '%s✓%s %s/3 agents loaded\n' "$GREEN" "$RESET" "$agents_ok"
     else
-      printf "${YELLOW}!${RESET} ${agents_ok}/3 agents loaded (${agents_missing} missing)\n"
+      printf '%s!%s %s/3 agents loaded (%s missing)\n' "$YELLOW" "$RESET" "$agents_ok" "$agents_missing"
       exit_code=1
     fi
   else
-    printf "${DIM}○${RESET} not macOS\n"
+    printf '%s○%s not macOS\n' "$DIM" "$RESET"
   fi
 
   # 4. Disk space
-  printf "${CYAN}[disk]${RESET}     "
+  printf '%s[disk]%s     ' "$CYAN" "$RESET"
   local disk_pct
   disk_pct=$(df -h / | awk 'NR==2 {gsub(/%/,"",$5); print $5}')
   if [[ $disk_pct -lt 80 ]]; then
-    printf "${GREEN}✓${RESET} ${disk_pct}%% used\n"
+    printf '%s✓%s %s%% used\n' "$GREEN" "$RESET" "$disk_pct"
   elif [[ $disk_pct -lt 90 ]]; then
-    printf "${YELLOW}!${RESET} ${disk_pct}%% used\n"
+    printf '%s!%s %s%% used\n' "$YELLOW" "$RESET" "$disk_pct"
   else
-    printf "${RED}✗${RESET} ${disk_pct}%% used - disk nearly full\n"
+    printf '%s✗%s %s%% used - disk nearly full\n' "$RED" "$RESET" "$disk_pct"
     exit_code=1
   fi
 
   # 5. 1Password CLI
-  printf "${CYAN}[1password]${RESET}"
+  printf '%s[1password]%s' "$CYAN" "$RESET"
   if command -v op &>/dev/null; then
     if op whoami &>/dev/null 2>&1; then
-      printf " ${GREEN}✓${RESET} authenticated\n"
+      printf ' %s✓%s authenticated\n' "$GREEN" "$RESET"
     else
-      printf " ${YELLOW}!${RESET} installed but not signed in\n"
+      printf ' %s!%s installed but not signed in\n' "$YELLOW" "$RESET"
     fi
   else
-    printf " ${DIM}○${RESET} not installed\n"
+    printf ' %s○%s not installed\n' "$DIM" "$RESET"
   fi
 
   # 6. Chezmoi health (quick check)
-  printf "${CYAN}[chezmoi]${RESET}  "
+  printf '%s[chezmoi]%s  ' "$CYAN" "$RESET"
   if command -v chezmoi &>/dev/null; then
     local drift
     drift=$(chezmoi diff 2>/dev/null | head -1) || drift=""
     if [[ -z "$drift" ]]; then
-      printf "${GREEN}✓${RESET} no drift\n"
+      printf '%s✓%s no drift\n' "$GREEN" "$RESET"
     else
-      printf "${YELLOW}!${RESET} drift detected\n"
+      printf '%s!%s drift detected\n' "$YELLOW" "$RESET"
       exit_code=1
     fi
   else
-    printf "${RED}✗${RESET} chezmoi not found\n"
+    printf '%s✗%s chezmoi not found\n' "$RED" "$RESET"
     exit_code=1
   fi
 
   # 7. Telemetry integrity
-  printf "${CYAN}[telemetry]${RESET}"
+  printf '%s[telemetry]%s' "$CYAN" "$RESET"
   local telem_dir="${STATE_DIR}/telemetry"
   if [[ -d "$telem_dir" ]]; then
     local telem_files
-    telem_files=$(ls "$telem_dir"/*.jsonl 2>/dev/null | wc -l | tr -d ' ')
-    printf " ${GREEN}✓${RESET} ${telem_files} data file(s)\n"
+    telem_files=$(find "$telem_dir" -maxdepth 1 -name '*.jsonl' 2>/dev/null | wc -l | tr -d ' ')
+    printf ' %s✓%s %s data file(s)\n' "$GREEN" "$RESET" "$telem_files"
   else
-    printf " ${DIM}○${RESET} no telemetry directory\n"
+    printf ' %s○%s no telemetry directory\n' "$DIM" "$RESET"
   fi
 
   echo ""
   if [[ $exit_code -eq 0 ]]; then
-    printf "${GREEN}${BOLD}All systems healthy${RESET}\n"
+    printf '%s%sAll systems healthy%s\n' "$GREEN" "$BOLD" "$RESET"
   else
-    printf "${YELLOW}${BOLD}Issues detected${RESET} - review items above\n"
+    printf '%s%sIssues detected%s - review items above\n' "$YELLOW" "$BOLD" "$RESET"
   fi
   echo ""
 
