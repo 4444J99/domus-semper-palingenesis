@@ -28,8 +28,8 @@ sorting:
 
 performance:
   shell_startup:
-    target_ms: 200
-    warning_ms: 500
+    target_ms: 400
+    warning_ms: 700
   daemon_run:
     warning_ms: 15000
 

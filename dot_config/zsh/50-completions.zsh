@@ -11,9 +11,15 @@ fpath=("$HOME/.config/zsh/completions" $fpath)
 # macOS: iTerm2 shell integration
 [[ -f "$HOME/.iterm2_shell_integration.zsh" ]] && source "$HOME/.iterm2_shell_integration.zsh"
 
-# Initialize completions
+# Initialize completions (cached via compdump, regenerated once per day)
 autoload -Uz compinit
-compinit
+_comp_cache="${XDG_CACHE_HOME:-$HOME/.cache}/zcompdump"
+if [[ -f "$_comp_cache" && $(date +'%j') == $(stat -f '%Sm' -t '%j' "$_comp_cache" 2>/dev/null) ]]; then
+  compinit -d "$_comp_cache" -C
+else
+  compinit -d "$_comp_cache"
+fi
+unset _comp_cache
 
 # Completion styling
 zstyle ':completion:*' menu select

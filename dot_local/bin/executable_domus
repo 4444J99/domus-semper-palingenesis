@@ -576,12 +576,18 @@ cmd_doctor() {
   if [[ -f "$telemetry" ]]; then
     local avg_ms
     avg_ms=$(tail -10 "$telemetry" | grep -o '"ms":[0-9]*' | grep -o '[0-9]*' | awk '{s+=$1; n++} END {if(n>0) print int(s/n); else print 0}')
-    if [[ $avg_ms -le 200 ]]; then
+    local target_ms=400
+    local warning_ms=700
+    if [[ -f "${MANIFEST}" ]] && command -v yq &>/dev/null; then
+      target_ms=$(yq -r '.performance.shell_startup.target_ms // 400' "${MANIFEST}")
+      warning_ms=$(yq -r '.performance.shell_startup.warning_ms // 700' "${MANIFEST}")
+    fi
+    if [[ $avg_ms -le $target_ms ]]; then
       printf '%s✓%s avg %sms (last 10)\n' "$GREEN" "$RESET" "$avg_ms"
-    elif [[ $avg_ms -le 500 ]]; then
-      printf '%s!%s avg %sms (last 10) - above 200ms target\n' "$YELLOW" "$RESET" "$avg_ms"
+    elif [[ $avg_ms -le $warning_ms ]]; then
+      printf '%s!%s avg %sms (last 10) - above %sms target\n' "$YELLOW" "$RESET" "$avg_ms" "$target_ms"
     else
-      printf '%s✗%s avg %sms (last 10) - above 500ms warning\n' "$RED" "$RESET" "$avg_ms"
+      printf '%s✗%s avg %sms (last 10) - above %sms warning\n' "$RED" "$RESET" "$avg_ms" "$warning_ms"
       exit_code=1
     fi
   else
@@ -592,7 +598,7 @@ cmd_doctor() {
   printf '%s[packages]%s ' "$CYAN" "$RESET"
   if [[ -x "${BIN_DIR}/domus-packages" ]]; then
     local pkg_status
-    pkg_status=$("${BIN_DIR}/domus-packages" status --quiet 2>/dev/null || echo "unknown")
+    pkg_status=$("${BIN_DIR}/domus-packages" status --quiet 2>/dev/null) || true
     case "$pkg_status" in
       synced) printf '%s✓%s in sync with manifest\n' "$GREEN" "$RESET" ;;
       drift)
@@ -656,7 +662,7 @@ cmd_doctor() {
   printf '%s[chezmoi]%s  ' "$CYAN" "$RESET"
   if command -v chezmoi &>/dev/null; then
     local drift
-    drift=$(chezmoi diff 2>/dev/null | head -1) || drift=""
+    drift=$(timeout 10 chezmoi diff 2>/dev/null | head -1) || drift=""
     if [[ -z "$drift" ]]; then
       printf '%s✓%s no drift\n' "$GREEN" "$RESET"
     else

@@ -85,6 +85,12 @@ ci-local: lint test fmt
     @gitleaks detect --config .gitleaks.toml --source . -v 2>/dev/null || echo "gitleaks not found (brew install gitleaks)"
     @echo "All CI checks passed"
 
+# Clear shell init caches (forces regeneration on next shell)
+cache-clear:
+    @rm -f "${XDG_CACHE_HOME:-$HOME/.cache}"/{starship,zoxide,atuin,direnv,mise,fzf}-zsh.zsh
+    @rm -f "${XDG_CACHE_HOME:-$HOME/.cache}"/zcompdump*
+    @echo "Shell caches cleared — next shell launch will regenerate"
+
 # Open dotfiles in editor
 edit:
     $EDITOR ~/dotfiles

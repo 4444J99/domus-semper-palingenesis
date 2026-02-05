@@ -32,8 +32,17 @@ packages:
       - yq
       - just
       - lazygit
+      - lazydocker
       - git-delta
       - git-absorb
+      - git-filter-repo
+      - git-gui
+      - git-secrets
+      - golangci-lint
+      - llvm
+      - nasm
+      - opencode
+      - procs
       # Development environments
       - go
       - rust
@@ -41,10 +50,18 @@ packages:
       - node
       - uv
       - pre-commit
+      - python@3.11
+      - python@3.13
+      - python@3.14
       # DevOps & containers
       - act
       - k9s
-      - lazydocker
+      - qemu
+      # AI tools
+      - block-goose-cli
+      - gemini-cli
+      - huggingface-cli
+      - kimi-cli
       # Security & code quality
       - gitleaks
       - ggshield
@@ -57,7 +74,11 @@ packages:
       - ffmpeg
       - rclone
       - qpdf
+      - pillow
+      - poppler
+      - tesseract
       # Shell & terminal
+      - bash
       - zsh
       - zsh-autosuggestions
       - zsh-completions
@@ -68,19 +89,159 @@ packages:
       - thefuck
       - carapace
       # Extras
+      - bats-core
       - btop
+      - coreutils
+      - dropbox-uploader
       - duf
       - entr
+      - fileicon
+      - flavours
+      - fresh-editor
       - fswatch
-      - navi
-      - tlrc
-      - lolcat
-      - coreutils
-      - ncdu
-      - micro
       - glow
+      - gron
       - htop
       - hyperfine
+      - lolcat
+      - markdown
+      - micro
+      - navi
+      - ncdu
+      - pipx
+      - progress
+      - pv
+      - tlrc
+      # Libraries & dependencies (auto-installed)
+      - ada-url
+      - aom
+      - autoconf
+      - automake
+      - brotli
+      - c-ares
+      - ca-certificates
+      - cairo
+      - capstone
+      - certifi
+      - cffi
+      - cryptography
+      - dav1d
+      - dtc
+      - file-formula
+      - fmt
+      - fontconfig
+      - form
+      - freetype
+      - fribidi
+      - gettext
+      - giflib
+      - glib
+      - gmp
+      - gnutls
+      - gpgme
+      - gpgmepp
+      - graphite2
+      - harfbuzz
+      - hdrhistogram_c
+      - highway
+      - icu4c@78
+      - imath
+      - jpeg-turbo
+      - jpeg-xl
+      - lame
+      - leptonica
+      - libarchive
+      - libassuan
+      - libavif
+      - libb2
+      - libdatrie
+      - libdeflate
+      - libevent
+      - libgcrypt
+      - libgit2
+      - libgpg-error
+      - libidn2
+      - libimagequant
+      - libksba
+      - libmagic
+      - libnghttp2
+      - libnghttp3
+      - libngtcp2
+      - libpng
+      - libraqm
+      - libslirp
+      - libssh
+      - libssh2
+      - libtasn1
+      - libthai
+      - libtiff
+      - libtommath
+      - libunistring
+      - libusb
+      - libuv
+      - libvmaf
+      - libvpx
+      - libx11
+      - libxau
+      - libxcb
+      - libxdmcp
+      - libxext
+      - libxrender
+      - libyaml
+      - little-cms2
+      - llhttp
+      - lpeg
+      - luajit
+      - luv
+      - lz4
+      - lzo
+      - m4
+      - mpdecimal
+      - mpfr
+      - ncurses
+      - nettle
+      - newt
+      - npth
+      - nspr
+      - nss
+      - oniguruma
+      - openexr
+      - openjpeg
+      - openjph
+      - openssl@3
+      - opus
+      - p11-kit
+      - pango
+      - pcre2
+      - pinentry
+      - pixman
+      - pkgconf
+      - popt
+      - pycparser
+      - pydantic
+      - readline
+      - rpds-py
+      - s-lang
+      - sdl2
+      - simdjson
+      - snappy
+      - sqlite
+      - svt-av1
+      - tcl-tk
+      - tree-sitter@0.25
+      - unbound
+      - unibilium
+      - usage
+      - utf8proc
+      - uvwasi
+      - vde
+      - webp
+      - x264
+      - x265
+      - xorgproto
+      - xz
+      - z3
+      - zstd
     casks:
       - kitty
       - 1password-cli
@@ -88,10 +249,14 @@ packages:
       - visual-studio-code@insiders
       - warp
       - claude-code
+      - codex
       - gcloud-cli
       - gitkraken-cli
       - block-goose
+      - klatexformula
       - mailmate
+      - ngrok
+      - plugdata
       - font-jetbrains-mono-nerd-font
 
   pipx:
@@ -102,9 +267,9 @@ packages:
   npm_global:
     - pnpm
     - "@anthropic-ai/mcpb"
+    - "@expo/ngrok"
     - "@google/gemini-cli"
     - "@trunkio/launcher"
-    - "@anthropic-ai/claude-code"
     - "@github/copilot"
     - "@githubnext/github-copilot-cli"
     - "@modelcontextprotocol/server-github"
@@ -180,8 +345,8 @@ sorting:
 
 performance:
   shell_startup:
-    target_ms: 200
-    warning_ms: 500
+    target_ms: 400
+    warning_ms: 700
     critical_ms: 1000
 
   daemon_run:

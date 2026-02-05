@@ -9,12 +9,24 @@ fi
 
 # Starship prompt
 if command -v starship &>/dev/null; then
-  eval "$(starship init zsh)"
+  _cache="${XDG_CACHE_HOME:-$HOME/.cache}/starship-zsh.zsh"
+  if [[ ! -f "$_cache" ]] || [[ "$(command -v starship)" -nt "$_cache" ]]; then
+    mkdir -p "${XDG_CACHE_HOME:-$HOME/.cache}"
+    starship init zsh > "$_cache" 2>/dev/null
+  fi
+  source "$_cache"
+  unset _cache
 fi
 
 # Zoxide (smart cd)
 if command -v zoxide &>/dev/null; then
-  eval "$(zoxide init zsh)"
+  _cache="${XDG_CACHE_HOME:-$HOME/.cache}/zoxide-zsh.zsh"
+  if [[ ! -f "$_cache" ]] || [[ "$(command -v zoxide)" -nt "$_cache" ]]; then
+    mkdir -p "${XDG_CACHE_HOME:-$HOME/.cache}"
+    zoxide init zsh > "$_cache" 2>/dev/null
+  fi
+  source "$_cache"
+  unset _cache
 fi
 
 # fzf (fuzzy finder)
@@ -24,6 +36,9 @@ if command -v fzf &>/dev/null; then
   if [[ ! -f "$_fzf_cache" ]] || [[ "$(command -v fzf)" -nt "$_fzf_cache" ]]; then
     mkdir -p "${XDG_CACHE_HOME:-$HOME/.cache}"
     fzf --zsh > "$_fzf_cache" 2>/dev/null
+    # Suppress "can't change option: zle" on fzf's option-restore eval lines
+    sed -i '' 's/eval $__fzf_key_bindings_options/eval $__fzf_key_bindings_options 2>\/dev\/null/' "$_fzf_cache"
+    sed -i '' 's/eval $__fzf_completion_options/eval $__fzf_completion_options 2>\/dev\/null/' "$_fzf_cache"
   fi
   source "$_fzf_cache"
   unset _fzf_cache
@@ -58,17 +73,35 @@ fi
 
 # Atuin (shell history)
 if command -v atuin &>/dev/null; then
-  eval "$(atuin init zsh)"
+  _cache="${XDG_CACHE_HOME:-$HOME/.cache}/atuin-zsh.zsh"
+  if [[ ! -f "$_cache" ]] || [[ "$(command -v atuin)" -nt "$_cache" ]]; then
+    mkdir -p "${XDG_CACHE_HOME:-$HOME/.cache}"
+    atuin init zsh > "$_cache" 2>/dev/null
+  fi
+  source "$_cache"
+  unset _cache
 fi
 
 # direnv (directory-specific environments)
 if command -v direnv &>/dev/null; then
-  eval "$(direnv hook zsh)"
+  _cache="${XDG_CACHE_HOME:-$HOME/.cache}/direnv-zsh.zsh"
+  if [[ ! -f "$_cache" ]] || [[ "$(command -v direnv)" -nt "$_cache" ]]; then
+    mkdir -p "${XDG_CACHE_HOME:-$HOME/.cache}"
+    direnv hook zsh > "$_cache" 2>/dev/null
+  fi
+  source "$_cache"
+  unset _cache
 fi
 
 # mise (tool version manager)
 if command -v mise &>/dev/null; then
-  eval "$(mise activate zsh)"
+  _cache="${XDG_CACHE_HOME:-$HOME/.cache}/mise-zsh.zsh"
+  if [[ ! -f "$_cache" ]] || [[ "$(command -v mise)" -nt "$_cache" ]]; then
+    mkdir -p "${XDG_CACHE_HOME:-$HOME/.cache}"
+    mise activate zsh > "$_cache" 2>/dev/null
+  fi
+  source "$_cache"
+  unset _cache
 fi
 
 # ─────────────────────────────────────────────────────────────────────────────
