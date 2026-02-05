@@ -49,20 +49,20 @@ fi
 # ─────────────────────────────────────────────────────────────────────────────
 
 die() {
-  printf "${RED}error:${RESET} %s\n" "$1" >&2
+  printf '%b' "${RED}error:${RESET} $1\n" >&2
   exit 2
 }
 
 info() {
-  printf "${BLUE}::${RESET} %s\n" "$1"
+  printf '%b' "${BLUE}::${RESET} $1\n"
 }
 
 success() {
-  printf "${GREEN}✓${RESET} %s\n" "$1"
+  printf '%b' "${GREEN}✓${RESET} $1\n"
 }
 
 warn() {
-  printf "${YELLOW}!${RESET} %s\n" "$1"
+  printf '%b' "${YELLOW}!${RESET} $1\n"
 }
 
 check_manifest() {
@@ -220,14 +220,14 @@ EOF
   fi
 
   echo ""
-  printf "${BOLD}Package Status${RESET}\n"
+  printf '%b' "${BOLD}Package Status${RESET}\n"
   echo ""
 
   if [[ "$status" == "synced" ]]; then
     success "All packages synced with manifest"
   else
     warn "Drift detected: ${total_missing} missing, ${total_extra} extra"
-    printf "  Run ${CYAN}domus packages diff${RESET} for details\n"
+    printf '%b' "  Run ${CYAN}domus packages diff${RESET} for details\n"
   fi
   echo ""
 
@@ -251,7 +251,7 @@ cmd_diff() {
 
   if [[ $json_mode -eq 0 ]]; then
     echo ""
-    printf "${BOLD}Package Drift Report${RESET}\n"
+    printf '%b' "${BOLD}Package Drift Report${RESET}\n"
     echo ""
   fi
 
@@ -263,21 +263,21 @@ cmd_diff() {
 
     [[ -z "$manifest_list" ]] && return
 
-    local missing=$(diff_missing "$manifest_list" "$installed_list")
-    local extra=$(diff_extra "$manifest_list" "$installed_list")
+    local missing; missing=$(diff_missing "$manifest_list" "$installed_list")
+    local extra; extra=$(diff_extra "$manifest_list" "$installed_list")
 
     if [[ -n "$missing" || -n "$extra" ]]; then
       has_drift=1
       if [[ $json_mode -eq 0 ]]; then
-        printf "${CYAN}[${name}]${RESET}\n"
+        printf '%b' "${CYAN}[${name}]${RESET}\n"
         if [[ -n "$missing" ]]; then
           echo "$missing" | while read -r pkg; do
-            [[ -n "$pkg" ]] && printf "  ${RED}− ${pkg}${RESET} (missing)\n"
+            [[ -n "$pkg" ]] && printf '%b' "  ${RED}− ${pkg}${RESET} (missing)\n"
           done
         fi
         if [[ -n "$extra" ]]; then
           echo "$extra" | while read -r pkg; do
-            [[ -n "$pkg" ]] && printf "  ${DIM}+ ${pkg}${RESET} (extra)\n"
+            [[ -n "$pkg" ]] && printf '%b' "  ${DIM}+ ${pkg}${RESET} (extra)\n"
           done
         fi
         echo ""
@@ -297,8 +297,8 @@ cmd_diff() {
     local json_output='{"drift": {'
 
     # Formulae
-    local m=$(diff_missing "$(get_manifest_formulae)" "$(get_installed_formulae)" | jq -R . | jq -s .)
-    local e=$(diff_extra "$(get_manifest_formulae)" "$(get_installed_formulae)" | jq -R . | jq -s .)
+    local m; m=$(diff_missing "$(get_manifest_formulae)" "$(get_installed_formulae)" | jq -R . | jq -s .)
+    local e; e=$(diff_extra "$(get_manifest_formulae)" "$(get_installed_formulae)" | jq -R . | jq -s .)
     json_output+='"formulae": {"missing": '"$m"', "extra": '"$e"'},'
 
     # Casks
@@ -347,7 +347,7 @@ cmd_apply() {
   local exit_code=0
 
   # Install missing homebrew formulae
-  local missing_formulae=$(diff_missing "$(get_manifest_formulae)" "$(get_installed_formulae)")
+  local missing_formulae; missing_formulae=$(diff_missing "$(get_manifest_formulae)" "$(get_installed_formulae)")
   if [[ -n "$missing_formulae" ]]; then
     echo "$missing_formulae" | while read -r pkg; do
       [[ -z "$pkg" ]] && continue
@@ -361,7 +361,7 @@ cmd_apply() {
   fi
 
   # Install missing homebrew casks
-  local missing_casks=$(diff_missing "$(get_manifest_casks)" "$(get_installed_casks)")
+  local missing_casks; missing_casks=$(diff_missing "$(get_manifest_casks)" "$(get_installed_casks)")
   if [[ -n "$missing_casks" ]]; then
     echo "$missing_casks" | while read -r pkg; do
       [[ -z "$pkg" ]] && continue
@@ -375,7 +375,7 @@ cmd_apply() {
   fi
 
   # Install missing pipx packages
-  local missing_pipx=$(diff_missing "$(get_manifest_pipx)" "$(get_installed_pipx)")
+  local missing_pipx; missing_pipx=$(diff_missing "$(get_manifest_pipx)" "$(get_installed_pipx)")
   if [[ -n "$missing_pipx" ]] && command -v pipx &>/dev/null; then
     echo "$missing_pipx" | while read -r pkg; do
       [[ -z "$pkg" ]] && continue
@@ -389,7 +389,7 @@ cmd_apply() {
   fi
 
   # Install missing npm global packages
-  local missing_npm=$(diff_missing "$(get_manifest_npm)" "$(get_installed_npm)")
+  local missing_npm; missing_npm=$(diff_missing "$(get_manifest_npm)" "$(get_installed_npm)")
   if [[ -n "$missing_npm" ]] && command -v npm &>/dev/null; then
     echo "$missing_npm" | while read -r pkg; do
       [[ -z "$pkg" ]] && continue
@@ -403,7 +403,7 @@ cmd_apply() {
   fi
 
   # Install missing cargo packages
-  local missing_cargo=$(diff_missing "$(get_manifest_cargo)" "$(get_installed_cargo)")
+  local missing_cargo; missing_cargo=$(diff_missing "$(get_manifest_cargo)" "$(get_installed_cargo)")
   if [[ -n "$missing_cargo" ]] && command -v cargo &>/dev/null; then
     echo "$missing_cargo" | while read -r pkg; do
       [[ -z "$pkg" ]] && continue
@@ -436,11 +436,11 @@ cmd_snapshot() {
 
   info "Creating package snapshot..."
 
-  local formulae=$(get_installed_formulae | jq -R . | jq -s .)
-  local casks=$(get_installed_casks | jq -R . | jq -s .)
-  local pipx=$(get_installed_pipx | jq -R . | jq -s .)
-  local npm=$(get_installed_npm | jq -R . | jq -s .)
-  local cargo=$(get_installed_cargo | jq -R . | jq -s .)
+  local formulae; formulae=$(get_installed_formulae | jq -R . | jq -s .)
+  local casks; casks=$(get_installed_casks | jq -R . | jq -s .)
+  local pipx; pipx=$(get_installed_pipx | jq -R . | jq -s .)
+  local npm; npm=$(get_installed_npm | jq -R . | jq -s .)
+  local cargo; cargo=$(get_installed_cargo | jq -R . | jq -s .)
 
   cat <<EOF > "$snapshot"
 {

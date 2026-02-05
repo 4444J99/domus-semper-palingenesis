@@ -39,11 +39,10 @@ if [[ -t 1 ]]; then
   GREEN='\033[0;32m'
   YELLOW='\033[0;33m'
   BLUE='\033[0;34m'
-  CYAN='\033[0;36m'
   DIM='\033[0;90m'
   RESET='\033[0m'
 else
-  RED='' GREEN='' YELLOW='' BLUE='' CYAN='' DIM='' RESET=''
+  RED='' GREEN='' YELLOW='' BLUE='' DIM='' RESET=''
 fi
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -51,7 +50,7 @@ fi
 # ─────────────────────────────────────────────────────────────────────────────
 
 die() {
-  printf "${RED}error:${RESET} %s\n" "$1" >&2
+  printf '%b' "${RED}error:${RESET} ${1}\n" >&2
   exit 2
 }
 
@@ -64,11 +63,11 @@ log() {
 
   if [[ -t 1 ]]; then
     case "$level" in
-      INFO) printf "${BLUE}::${RESET} %s\n" "$*" ;;
-      MOVE) printf "${GREEN}→${RESET} %s\n" "$*" ;;
-      SKIP) printf "${DIM}○${RESET} %s\n" "$*" ;;
-      WARN) printf "${YELLOW}!${RESET} %s\n" "$*" ;;
-      ERROR) printf "${RED}✗${RESET} %s\n" "$*" ;;
+      INFO) printf '%b' "${BLUE}::${RESET} ${*}\n" ;;
+      MOVE) printf '%b' "${GREEN}→${RESET} ${*}\n" ;;
+      SKIP) printf '%b' "${DIM}○${RESET} ${*}\n" ;;
+      WARN) printf '%b' "${YELLOW}!${RESET} ${*}\n" ;;
+      ERROR) printf '%b' "${RED}✗${RESET} ${*}\n" ;;
     esac
   fi
 }
@@ -196,7 +195,7 @@ file_matches_rule() {
   local file="$1"
   local rule_index="$2"
 
-  local filename dir ext age_days
+  local filename dir ext
 
   filename=$(basename "$file")
   dir=$(dirname "$file")
@@ -204,11 +203,16 @@ file_matches_rule() {
   ext="${ext,,}"  # lowercase
 
   # Get rule match criteria
-  local pattern=$(yq_clean ".sorting.rules[$rule_index].match.pattern" "${MANIFEST}")
-  local location=$(yq_clean ".sorting.rules[$rule_index].match.location" "${MANIFEST}")
-  local extensions=$(yq -r ".sorting.rules[$rule_index].match.extension[]" "${MANIFEST}" 2>/dev/null | tr '\n' '|' | sed 's/|$//')
-  local age_min=$(yq_clean ".sorting.rules[$rule_index].match.age_days_min" "${MANIFEST}")
-  local exclude_pattern=$(yq_clean ".sorting.rules[$rule_index].match.exclude_pattern" "${MANIFEST}")
+  local pattern
+  pattern=$(yq_clean ".sorting.rules[$rule_index].match.pattern" "${MANIFEST}")
+  local location
+  location=$(yq_clean ".sorting.rules[$rule_index].match.location" "${MANIFEST}")
+  local extensions
+  extensions=$(yq -r ".sorting.rules[$rule_index].match.extension[]" "${MANIFEST}" 2>/dev/null | tr '\n' '|' | sed 's/|$//')
+  local age_min
+  age_min=$(yq_clean ".sorting.rules[$rule_index].match.age_days_min" "${MANIFEST}")
+  local exclude_pattern
+  exclude_pattern=$(yq_clean ".sorting.rules[$rule_index].match.exclude_pattern" "${MANIFEST}")
 
   # Check location match
   if [[ -n "$location" ]]; then
@@ -220,7 +224,8 @@ file_matches_rule() {
 
   # Check pattern match
   if [[ -n "$pattern" ]]; then
-    # Use bash pattern matching
+    # Use bash pattern matching (glob is intentional)
+    # shellcheck disable=SC2053
     if [[ ! "$filename" == $pattern ]]; then
       return 1
     fi
@@ -236,7 +241,8 @@ file_matches_rule() {
   # Check age
   if [[ -n "$age_min" ]]; then
     local file_age
-    local now=$(date +%s)
+    local now
+    now=$(date +%s)
     local file_mtime
     file_mtime=$(stat -f '%m' "$file" 2>/dev/null || stat -c '%Y' "$file" 2>/dev/null)
     file_age=$(( (now - file_mtime) / 86400 ))
@@ -260,8 +266,10 @@ get_rule_action() {
   local rule_index="$1"
   local file="$2"
 
-  local move_to=$(yq_clean ".sorting.rules[$rule_index].action.move_to" "${MANIFEST}")
-  local rename=$(yq_clean ".sorting.rules[$rule_index].action.rename" "${MANIFEST}")
+  local move_to
+  move_to=$(yq_clean ".sorting.rules[$rule_index].action.move_to" "${MANIFEST}")
+  local rename
+  rename=$(yq_clean ".sorting.rules[$rule_index].action.rename" "${MANIFEST}")
 
   if [[ -z "$move_to" || "$move_to" == "null" ]]; then
     echo ""
