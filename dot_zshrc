@@ -27,28 +27,14 @@ fi
 # ─────────────────────────────────────────────────────────────────────────────
 # PATH Configuration
 # ─────────────────────────────────────────────────────────────────────────────
-
-{{- if eq .chezmoi.os "darwin" }}
-{{- if eq .chezmoi.arch "arm64" }}
 # macOS ARM64 (Apple Silicon) - Homebrew
 export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH"
 export PATH="/opt/homebrew/opt/file-formula/bin:$PATH"
-{{- else }}
-# macOS Intel - Homebrew
-export PATH="/usr/local/bin:/usr/local/sbin:$PATH"
-{{- end }}
-{{- else if eq .chezmoi.os "linux" }}
-# Linux Homebrew
-export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
-{{- end }}
-
-{{- if eq .chezmoi.os "darwin" }}
 # Ruby (Homebrew - macOS)
 export PATH="/opt/homebrew/opt/ruby/bin:/opt/homebrew/lib/ruby/gems/3.4.0/bin:$PATH"
 export LDFLAGS="-L/opt/homebrew/opt/ruby/lib"
 export CPPFLAGS="-I/opt/homebrew/opt/ruby/include"
 export PKG_CONFIG_PATH="/opt/homebrew/opt/ruby/lib/pkgconfig"
-{{- end }}
 
 # Go
 export GOPATH=$HOME/go
@@ -56,14 +42,11 @@ export PATH=$PATH:$GOPATH/bin
 
 # pipx local bin
 export PATH="$HOME/.local/bin:$PATH"
-
-{{- if eq .chezmoi.os "darwin" }}
 # Toolchains (External Volume - macOS only)
 # Graceful fallback if external drive not mounted
 if [[ -d "/Volumes/4444-iivii/ivi374forivi3ivi3/toolchains/bin" ]]; then
   export PATH=$PATH:/Volumes/4444-iivii/ivi374forivi3ivi3/toolchains/bin
 fi
-{{- end }}
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Environment Variables
@@ -81,14 +64,11 @@ export GEMINI_CLI=1
 # ─────────────────────────────────────────────────────────────────────────────
 # Shell Completions
 # ─────────────────────────────────────────────────────────────────────────────
-
-{{- if eq .chezmoi.os "darwin" }}
 # Docker CLI completions (macOS)
-fpath=({{ .chezmoi.homeDir }}/.docker/completions $fpath)
+fpath=(/Users/4jp/.docker/completions $fpath)
 
 # macOS: iTerm2 shell integration
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
-{{- end }}
 
 # Initialize completions
 autoload -Uz compinit
@@ -191,7 +171,7 @@ fi
 
 # pywal - restore colors on shell startup
 if command -v wal &>/dev/null && [[ -f "$HOME/.cache/wal/sequences" ]]; then
-  (cat ~/.cache/wal/sequences > /dev/tty 2>/dev/null &)
+  cat ~/.cache/wal/sequences
   [[ -f "$HOME/.cache/wal/colors.sh" ]] && source "$HOME/.cache/wal/colors.sh"
 fi
 
@@ -232,11 +212,11 @@ cht() {
 }
 
 # Google Cloud SDK
-if [[ -f '{{ .chezmoi.homeDir }}/google-cloud-sdk/path.zsh.inc' ]]; then
-  source '{{ .chezmoi.homeDir }}/google-cloud-sdk/path.zsh.inc'
+if [[ -f '/Users/4jp/google-cloud-sdk/path.zsh.inc' ]]; then
+  source '/Users/4jp/google-cloud-sdk/path.zsh.inc'
 fi
-if [[ -f '{{ .chezmoi.homeDir }}/google-cloud-sdk/completion.zsh.inc' ]]; then
-  source '{{ .chezmoi.homeDir }}/google-cloud-sdk/completion.zsh.inc'
+if [[ -f '/Users/4jp/google-cloud-sdk/completion.zsh.inc' ]]; then
+  source '/Users/4jp/google-cloud-sdk/completion.zsh.inc'
 fi
 
 # ─────────────────────────────────────────────────────────────────────────────
