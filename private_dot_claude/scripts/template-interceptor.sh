@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Template Interceptor for Claude Code
 # Intercepts Write operations for certain files and replaces content with official templates
 # Configurable via ~/.claude/templates/config.json

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Kitty Theme Switcher with fzf picker
 # Usage: theme-switcher.sh [theme-name]
 
