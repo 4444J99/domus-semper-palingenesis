@@ -15,8 +15,7 @@ else
   _DOMUS_SHELL_START_MS=$(($(date +%s) * 1000))
 fi
 
-# Ensure unique PATH entries
-typeset -U path PATH
+# Note: PATH deduplication (typeset -U) moved after all PATH modifications
 
 # Root Directory Guard
 if [[ "$PWD" == "/" ]]; then
@@ -65,10 +64,10 @@ export GEMINI_CLI=1
 # Shell Completions
 # ─────────────────────────────────────────────────────────────────────────────
 # Docker CLI completions (macOS)
-fpath=(/Users/4jp/.docker/completions $fpath)
+fpath=("$HOME/.docker/completions" $fpath)
 
 # macOS: iTerm2 shell integration
-test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+[[ -f "$HOME/.iterm2_shell_integration.zsh" ]] && source "$HOME/.iterm2_shell_integration.zsh"
 
 # Initialize completions
 autoload -Uz compinit
@@ -98,8 +97,14 @@ fi
 
 # fzf (fuzzy finder)
 if command -v fzf &>/dev/null; then
-  # Set up fzf key bindings and fuzzy completion
-  source <(fzf --zsh)
+  # Set up fzf key bindings and fuzzy completion (cached for faster startup)
+  _fzf_cache="${XDG_CACHE_HOME:-$HOME/.cache}/fzf-zsh.zsh"
+  if [[ ! -f "$_fzf_cache" ]] || [[ "$(command -v fzf)" -nt "$_fzf_cache" ]]; then
+    mkdir -p "${XDG_CACHE_HOME:-$HOME/.cache}"
+    fzf --zsh > "$_fzf_cache" 2>/dev/null
+  fi
+  source "$_fzf_cache"
+  unset _fzf_cache
 
   # Use fd for fzf if available (respects .gitignore)
   if command -v fd &>/dev/null; then
@@ -144,29 +149,22 @@ if command -v mise &>/dev/null; then
   eval "$(mise activate zsh)"
 fi
 
-# Python (Homebrew - unversioned commands) - must be after mise
-export PATH="/opt/homebrew/opt/python@3.11/libexec/bin:$PATH"
+# Python (Homebrew - follows latest via python@3 symlink)
+export PATH="/opt/homebrew/opt/python@3/libexec/bin:$PATH"
 
-# ─────────────────────────────────────────────────────────────────────────────
-# NVM (Node Version Manager) - Lazy Load
-# ─────────────────────────────────────────────────────────────────────────────
-
-export NVM_DIR="$HOME/.nvm"
-
-# Lazy load NVM - only initialize when node/npm/npx/nvm is first called
-if [[ -d "$NVM_DIR" ]]; then
-  # Placeholder functions that load NVM on first use
-  _nvm_load() {
-    unset -f nvm node npm npx 2>/dev/null
-    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
-  }
-
-  nvm() { _nvm_load && nvm "$@"; }
-  node() { _nvm_load && node "$@"; }
-  npm() { _nvm_load && npm "$@"; }
-  npx() { _nvm_load && npx "$@"; }
+# Anaconda / Conda
+if [[ -d "/opt/anaconda3" ]]; then
+  __conda_setup="$('/opt/anaconda3/bin/conda' 'shell.zsh' 'hook' 2>/dev/null)"
+  if [[ $? -eq 0 ]]; then
+    eval "$__conda_setup"
+  else
+    export PATH="/opt/anaconda3/bin:$PATH"
+  fi
+  unset __conda_setup
 fi
+
+# Deduplicate PATH entries (must be after all PATH modifications)
+typeset -U path PATH fpath FPATH
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Color Theme Tools
@@ -214,11 +212,11 @@ cht() {
 }
 
 # Google Cloud SDK
-if [[ -f '/Users/4jp/google-cloud-sdk/path.zsh.inc' ]]; then
-  source '/Users/4jp/google-cloud-sdk/path.zsh.inc'
+if [[ -f "$HOME/google-cloud-sdk/path.zsh.inc" ]]; then
+  source "$HOME/google-cloud-sdk/path.zsh.inc"
 fi
-if [[ -f '/Users/4jp/google-cloud-sdk/completion.zsh.inc' ]]; then
-  source '/Users/4jp/google-cloud-sdk/completion.zsh.inc'
+if [[ -f "$HOME/google-cloud-sdk/completion.zsh.inc" ]]; then
+  source "$HOME/google-cloud-sdk/completion.zsh.inc"
 fi
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -312,35 +310,54 @@ alias pip3='python3 -m pip'
 # ─────────────────────────────────────────────────────────────────────────────
 
 # Show cache sizes before cleaning
-alias cache-sizes='echo "=== Package Manager Caches ===" && \
-  du -sh ~/Library/Caches/Homebrew 2>/dev/null || true && \
-  du -sh ~/.npm 2>/dev/null || true && \
-  du -sh ~/Library/Caches/pip 2>/dev/null || true && \
-  du -sh ~/.cache/uv 2>/dev/null || true && \
-  du -sh ~/.cache/trunk 2>/dev/null || true && \
-  du -sh ~/go/pkg 2>/dev/null || true && \
-  du -sh "${CARGO_HOME:-$HOME/.cargo}"/registry 2>/dev/null || true && \
-  command -v pnpm &>/dev/null && du -sh ~/Library/Caches/pnpm 2>/dev/null || true && \
-  echo "=== Browser & App Caches ===" && \
-  du -sh ~/Library/Caches/Google/Chrome 2>/dev/null || true && \
-  du -sh ~/.cache/puppeteer 2>/dev/null || true && \
-  du -sh ~/Library/Caches/ms-playwright 2>/dev/null || true && \
-  du -sh ~/.config/gcloud/virtenv 2>/dev/null || true && \
-  echo "=== Docker ===" && docker system df 2>/dev/null || echo "Docker not running"'
+cache-sizes() {
+  echo "=== Package Manager Caches ==="
+  du -sh ~/Library/Caches/Homebrew 2>/dev/null || true
+  du -sh ~/.npm 2>/dev/null || true
+  du -sh ~/Library/Caches/pip 2>/dev/null || true
+  du -sh ~/.cache/uv 2>/dev/null || true
+  du -sh ~/.cache/trunk 2>/dev/null || true
+  du -sh ~/go/pkg 2>/dev/null || true
+  du -sh "${CARGO_HOME:-$HOME/.cargo}"/registry 2>/dev/null || true
+  command -v pnpm &>/dev/null && du -sh ~/Library/Caches/pnpm 2>/dev/null
+
+  echo ""
+  echo "=== Browser & App Caches ==="
+  du -sh ~/Library/Caches/Google/Chrome 2>/dev/null || true
+  du -sh ~/.cache/puppeteer 2>/dev/null || true
+  du -sh ~/Library/Caches/ms-playwright 2>/dev/null || true
+  du -sh ~/.config/gcloud/virtenv 2>/dev/null || true
+
+  echo ""
+  echo "=== Docker ==="
+  docker system df 2>/dev/null || echo "Docker not running"
+}
 
 # --- Individual Tool Cleanup ---
 
 alias brewup='brew update && brew upgrade && brew cleanup && brew doctor'
 alias docker-cleanup='docker system prune -a --volumes'
 
-# Package managers (conditional)
-command -v npm &>/dev/null && alias npm-clean='npm cache clean --force'
-command -v pnpm &>/dev/null && alias pnpm-clean='pnpm store prune'
-command -v pip3 &>/dev/null && alias pip-clean='pip3 cache purge'
-command -v uv &>/dev/null && alias uv-clean='uv cache clean'
-command -v go &>/dev/null && alias go-clean='go clean -cache -modcache -testcache'
-command -v cargo &>/dev/null && alias cargo-clean='rm -rf "${CARGO_HOME:-$HOME/.cargo}"/registry/cache'
-command -v trunk &>/dev/null && alias trunk-clean='trunk cache clean'
+# Package managers (check at runtime for portability)
+npm-clean() { command -v npm &>/dev/null && npm cache clean --force || echo "npm not found"; }
+pnpm-clean() { command -v pnpm &>/dev/null && pnpm store prune || echo "pnpm not found"; }
+yarn-clean() { command -v yarn &>/dev/null && yarn cache clean || echo "yarn not found"; }
+pip-clean() { command -v pip &>/dev/null && pip cache purge || echo "pip not found"; }
+uv-clean() { command -v uv &>/dev/null && uv cache clean || echo "uv not found"; }
+go-clean() { command -v go &>/dev/null && go clean -cache -modcache -testcache || echo "go not found"; }
+trunk-clean() { command -v trunk &>/dev/null && trunk cache clean || echo "trunk not found"; }
+
+# Cargo cache clean with confirmation (destructive)
+cargo-clean() {
+  local target="${CARGO_HOME:-$HOME/.cargo}/registry/cache"
+  if [[ -d "$target" ]]; then
+    echo "Will remove: $target"
+    du -sh "$target" 2>/dev/null
+    read -q "?Proceed? [y/N] " && echo && rm -rf "$target" && echo "Done."
+  else
+    echo "Cargo cache not found"
+  fi
+}
 
 # Browser & app caches
 alias chrome-clean='rm -rf ~/Library/Caches/Google/Chrome/Default/Cache ~/Library/Caches/Google/Chrome/Default/"Code Cache"'
