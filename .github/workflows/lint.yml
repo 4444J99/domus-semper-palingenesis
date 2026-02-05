@@ -14,18 +14,18 @@ jobs:
       - uses: actions/checkout@v4
       - name: Install ShellCheck
         run: sudo apt-get install -y shellcheck
-      - name: Run ShellCheck on scripts
-        run: |
-          # Find all shell scripts, strip chezmoi template syntax, then check
-          find . -name '*.sh.tmpl' -o -name 'executable_*' | while read -r file; do
-            echo "Checking: $file"
-            # Strip chezmoi template directives for shellcheck
-            sed -E 's/\{\{.*?\}\}//g; s/\{\{-.*?-\}\}//g' "$file" | \
-              shellcheck -x -s bash - || true
-          done
       - name: Run ShellCheck on non-template scripts
         run: |
           find dot_local/bin -name 'executable_*' ! -name '*.tmpl' -exec shellcheck -x {} +
+      - name: Run ShellCheck on template scripts
+        run: |
+          for file in $(find . -name '*.sh.tmpl' ! -path './.git/*'); do
+            echo "Checking: $file"
+            tmp=$(mktemp)
+            sed 's/{{[^}]*}}//g' "$file" > "$tmp"
+            shellcheck -x -s bash "$tmp" || exit 1
+            rm "$tmp"
+          done
 
   yamllint:
     name: YAML Lint
@@ -64,7 +64,7 @@ jobs:
       - name: Check shell formatting
         run: |
           export PATH="$HOME/.local/bin:$PATH"
-          find dot_local/bin -name 'executable_*' ! -name '*.tmpl' -exec shfmt -d -i 2 -ci {} + || true
+          find dot_local/bin -name 'executable_*' ! -name '*.tmpl' -exec shfmt -d -i 2 -ci {} +
 
   template-check:
     name: Template Validation
@@ -87,3 +87,24 @@ jobs:
             fi
           done
           echo "All templates have balanced delimiters"
+
+  bats:
+    name: BATS Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install BATS
+        run: sudo apt-get install -y bats
+      - name: Run BATS tests
+        run: bats tests/*.bats
+
+  gitleaks:
+    name: Secret Scanning
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITLEAKS_CONFIG: .gitleaks.toml

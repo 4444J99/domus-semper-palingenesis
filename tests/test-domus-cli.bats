@@ -3,7 +3,19 @@
 
 setup() {
   DOMUS="$BATS_TEST_DIRNAME/../dot_local/bin/executable_domus"
+  load 'test-helpers'
+  setup_test_env
+  # Put mock bin on PATH so domus finds mocked commands
+  export PATH="$BIN_DIR:$PATH"
 }
+
+teardown() {
+  teardown_test_env
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Help / Version / Unknown
+# ─────────────────────────────────────────────────────────────────────────────
 
 @test "domus --help exits 0" {
   run bash "$DOMUS" --help
@@ -24,8 +36,126 @@ setup() {
   [[ "$output" == *"USAGE"* ]]
 }
 
-@test "domus unknown command fails" {
+@test "domus unknown command fails with exit 2" {
   run bash "$DOMUS" nonexistent-command
   [ "$status" -eq 2 ]
   [[ "$output" == *"Unknown command"* ]]
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Status
+# ─────────────────────────────────────────────────────────────────────────────
+
+@test "domus status exits 0 with mocked environment" {
+  mock_chezmoi
+  mock_shell_telemetry
+  run bash "$DOMUS" status
+  # status may be 0 (healthy) or 1 (issues) depending on env
+  [[ "$status" -eq 0 || "$status" -eq 1 ]]
+  [[ "$output" == *"Domus Status"* ]]
+}
+
+@test "domus status --json produces valid JSON" {
+  mock_chezmoi
+  run bash "$DOMUS" status --json
+  [[ "$status" -eq 0 || "$status" -eq 1 ]]
+  # Validate JSON structure
+  echo "$output" | python3 -m json.tool > /dev/null 2>&1
+  [[ "$output" == *"timestamp"* ]]
+  [[ "$output" == *"dotfiles"* ]]
+}
+
+@test "domus (no args) defaults to status" {
+  mock_chezmoi
+  run bash "$DOMUS"
+  [[ "$status" -eq 0 || "$status" -eq 1 ]]
+  [[ "$output" == *"Domus Status"* ]]
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Perf
+# ─────────────────────────────────────────────────────────────────────────────
+
+@test "domus perf shell exits 0 with telemetry data" {
+  mock_shell_telemetry
+  run bash "$DOMUS" perf shell
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Shell Startup"* ]]
+}
+
+@test "domus perf shell warns with no data" {
+  run bash "$DOMUS" perf shell
+  [ "$status" -eq 1 ]
+  [[ "$output" == *"No shell startup data"* ]]
+}
+
+@test "domus perf daemon exits 0 with telemetry data" {
+  mock_daemon_telemetry
+  run bash "$DOMUS" perf daemon
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Daemon Run"* ]]
+}
+
+@test "domus perf daemon warns with no data" {
+  run bash "$DOMUS" perf daemon
+  [ "$status" -eq 1 ]
+  [[ "$output" == *"No daemon run data"* ]]
+}
+
+@test "domus perf (summary) exits cleanly" {
+  mock_shell_telemetry
+  mock_daemon_telemetry
+  run bash "$DOMUS" perf
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Performance Summary"* ]]
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Doctor
+# ─────────────────────────────────────────────────────────────────────────────
+
+@test "domus doctor exits without error" {
+  mock_chezmoi
+  mock_shell_telemetry
+  run bash "$DOMUS" doctor
+  # doctor exits 0 (healthy) or 1 (issues)
+  [[ "$status" -eq 0 || "$status" -eq 1 ]]
+  [[ "$output" == *"Domus Doctor"* ]]
+}
+
+@test "domus doctor checks disk space" {
+  mock_chezmoi
+  run bash "$DOMUS" doctor
+  [[ "$status" -eq 0 || "$status" -eq 1 ]]
+  [[ "$output" == *"[disk]"* ]]
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Apply (mocked)
+# ─────────────────────────────────────────────────────────────────────────────
+
+@test "domus apply --dry-run exits 0 with mocked chezmoi" {
+  mock_chezmoi
+  run bash "$DOMUS" apply --dry-run
+  [ "$status" -eq 0 ]
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Sort (delegates to domus-sort)
+# ─────────────────────────────────────────────────────────────────────────────
+
+@test "domus sort fails when domus-sort not found" {
+  run bash "$DOMUS" sort
+  [ "$status" -eq 2 ]
+  [[ "$output" == *"domus-sort not found"* ]]
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Packages (delegates to domus-packages)
+# ─────────────────────────────────────────────────────────────────────────────
+
+@test "domus packages fails when domus-packages not found" {
+  run bash "$DOMUS" packages status
+  [ "$status" -eq 2 ]
+  [[ "$output" == *"domus-packages not found"* ]]
 }

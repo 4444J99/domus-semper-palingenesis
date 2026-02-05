@@ -35,12 +35,12 @@ MAX_LOG_SIZE=1048576 # 1MB
 # ─────────────────────────────────────────────────────────────────────────────
 
 if [[ -t 1 ]]; then
-  RED='\033[0;31m'
-  GREEN='\033[0;32m'
-  YELLOW='\033[0;33m'
-  BLUE='\033[0;34m'
-  DIM='\033[0;90m'
-  RESET='\033[0m'
+  RED=$'\033[0;31m'
+  GREEN=$'\033[0;32m'
+  YELLOW=$'\033[0;33m'
+  BLUE=$'\033[0;34m'
+  DIM=$'\033[0;90m'
+  RESET=$'\033[0m'
 else
   RED='' GREEN='' YELLOW='' BLUE='' DIM='' RESET=''
 fi
@@ -50,7 +50,7 @@ fi
 # ─────────────────────────────────────────────────────────────────────────────
 
 die() {
-  printf '%b' "${RED}error:${RESET} ${1}\n" >&2
+  printf '%serror:%s %s\n' "$RED" "$RESET" "$1" >&2
   exit 2
 }
 
@@ -63,11 +63,11 @@ log() {
 
   if [[ -t 1 ]]; then
     case "$level" in
-      INFO) printf '%b' "${BLUE}::${RESET} ${*}\n" ;;
-      MOVE) printf '%b' "${GREEN}→${RESET} ${*}\n" ;;
-      SKIP) printf '%b' "${DIM}○${RESET} ${*}\n" ;;
-      WARN) printf '%b' "${YELLOW}!${RESET} ${*}\n" ;;
-      ERROR) printf '%b' "${RED}✗${RESET} ${*}\n" ;;
+      INFO) printf '%s::%s %s\n' "$BLUE" "$RESET" "$*" ;;
+      MOVE) printf '%s→%s %s\n' "$GREEN" "$RESET" "$*" ;;
+      SKIP) printf '%s○%s %s\n' "$DIM" "$RESET" "$*" ;;
+      WARN) printf '%s!%s %s\n' "$YELLOW" "$RESET" "$*" ;;
+      ERROR) printf '%s✗%s %s\n' "$RED" "$RESET" "$*" ;;
     esac
   fi
 }

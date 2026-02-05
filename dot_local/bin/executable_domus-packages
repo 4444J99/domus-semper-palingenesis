@@ -32,14 +32,14 @@ SNAPSHOT_DIR="${STATE_DIR}/snapshots"
 # ─────────────────────────────────────────────────────────────────────────────
 
 if [[ -t 1 ]]; then
-  RED='\033[0;31m'
-  GREEN='\033[0;32m'
-  YELLOW='\033[0;33m'
-  BLUE='\033[0;34m'
-  CYAN='\033[0;36m'
-  DIM='\033[0;90m'
-  BOLD='\033[1m'
-  RESET='\033[0m'
+  RED=$'\033[0;31m'
+  GREEN=$'\033[0;32m'
+  YELLOW=$'\033[0;33m'
+  BLUE=$'\033[0;34m'
+  CYAN=$'\033[0;36m'
+  DIM=$'\033[0;90m'
+  BOLD=$'\033[1m'
+  RESET=$'\033[0m'
 else
   RED='' GREEN='' YELLOW='' BLUE='' CYAN='' DIM='' BOLD='' RESET=''
 fi
@@ -49,20 +49,20 @@ fi
 # ─────────────────────────────────────────────────────────────────────────────
 
 die() {
-  printf '%b' "${RED}error:${RESET} $1\n" >&2
+  printf '%serror:%s %s\n' "$RED" "$RESET" "$1" >&2
   exit 2
 }
 
 info() {
-  printf '%b' "${BLUE}::${RESET} $1\n"
+  printf '%s::%s %s\n' "$BLUE" "$RESET" "$1"
 }
 
 success() {
-  printf '%b' "${GREEN}✓${RESET} $1\n"
+  printf '%s✓%s %s\n' "$GREEN" "$RESET" "$1"
 }
 
 warn() {
-  printf '%b' "${YELLOW}!${RESET} $1\n"
+  printf '%s!%s %s\n' "$YELLOW" "$RESET" "$1"
 }
 
 check_manifest() {
@@ -241,14 +241,14 @@ EOF
   fi
 
   echo ""
-  printf '%b' "${BOLD}Package Status${RESET}\n"
+  printf '%sPackage Status%s\n' "$BOLD" "$RESET"
   echo ""
 
   if [[ "$status" == "synced" ]]; then
     success "All packages synced with manifest"
   else
     warn "Drift detected: ${total_missing} missing, ${total_extra} extra"
-    printf '%b' "  Run ${CYAN}domus packages diff${RESET} for details\n"
+    printf '  Run %sdomus packages diff%s for details\n' "$CYAN" "$RESET"
   fi
   echo ""
 
@@ -275,7 +275,7 @@ cmd_diff() {
 
   if [[ $json_mode -eq 0 ]]; then
     echo ""
-    printf '%b' "${BOLD}Package Drift Report${RESET}\n"
+    printf '%sPackage Drift Report%s\n' "$BOLD" "$RESET"
     echo ""
   fi
 
@@ -295,15 +295,15 @@ cmd_diff() {
     if [[ -n "$missing" || -n "$extra" ]]; then
       has_drift=1
       if [[ $json_mode -eq 0 ]]; then
-        printf '%b' "${CYAN}[${name}]${RESET}\n"
+        printf '%s[%s]%s\n' "$CYAN" "$name" "$RESET"
         if [[ -n "$missing" ]]; then
           echo "$missing" | while read -r pkg; do
-            [[ -n "$pkg" ]] && printf '%b' "  ${RED}− ${pkg}${RESET} (missing)\n"
+            [[ -n "$pkg" ]] && printf '  %s− %s%s (missing)\n' "$RED" "$pkg" "$RESET"
           done
         fi
         if [[ -n "$extra" ]]; then
           echo "$extra" | while read -r pkg; do
-            [[ -n "$pkg" ]] && printf '%b' "  ${DIM}+ ${pkg}${RESET} (extra)\n"
+            [[ -n "$pkg" ]] && printf '  %s+ %s%s (extra)\n' "$DIM" "$pkg" "$RESET"
           done
         fi
         echo ""

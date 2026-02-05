@@ -1,0 +1,48 @@
+packages:
+  homebrew:
+    formulae:
+      - git
+      - jq
+    casks:
+      - kitty
+  pipx: []
+  npm_global: []
+  cargo: []
+
+sorting:
+  directories:
+    - ~/Downloads
+  rules:
+    - name: pdfs-to-documents
+      match:
+        extension: [pdf]
+        location: ~/Downloads
+      action:
+        move_to: ~/Documents/{year}/{month}
+    - name: images-to-pictures
+      match:
+        extension: [jpg, png, gif]
+        location: ~/Downloads
+      action:
+        move_to: ~/Pictures/{year}/{month}
+
+performance:
+  shell_startup:
+    target_ms: 200
+    warning_ms: 500
+  daemon_run:
+    warning_ms: 15000
+
+notifications:
+  quiet_hours:
+    start: "22:00"
+    end: "08:00"
+  levels:
+    silent:
+      - sorting.file_moved
+    quiet:
+      - packages.minor_drift
+    normal:
+      - health.drift_detected
+    urgent:
+      - health.critical_error

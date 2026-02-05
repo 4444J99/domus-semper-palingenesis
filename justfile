@@ -68,6 +68,23 @@ dry-run:
 perf:
     domus perf shell
 
+# Run security scans
+security:
+    @echo ":: Gitleaks"
+    @gitleaks detect --config .gitleaks.toml --source . -v 2>/dev/null || echo "gitleaks not found (brew install gitleaks)"
+    @echo ":: File permissions"
+    @find dot_local/bin -name 'executable_*' ! -perm -u+x -print | { read -r line && echo "Files missing +x: $line" || echo "All executables have correct permissions"; }
+
+# Run every check
+check-all: lint test fmt security
+    @echo "All checks passed"
+
+# Run full CI suite locally
+ci-local: lint test fmt
+    @echo ":: Gitleaks"
+    @gitleaks detect --config .gitleaks.toml --source . -v 2>/dev/null || echo "gitleaks not found (brew install gitleaks)"
+    @echo "All CI checks passed"
+
 # Open dotfiles in editor
 edit:
     $EDITOR ~/dotfiles

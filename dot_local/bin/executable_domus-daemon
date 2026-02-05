@@ -237,7 +237,7 @@ run_sorter() {
 
 main() {
   local start_time
-  start_time=$(date +%s%3N 2>/dev/null || echo $(($(date +%s) * 1000)))
+  start_time=$(($(date +%s) * 1000))
 
   log_rotate
   log "INFO" "Daemon started (force=${FORCE_RUN})"
@@ -266,7 +266,7 @@ main() {
 
   # Record telemetry
   local end_time
-  end_time=$(date +%s%3N 2>/dev/null || echo $(($(date +%s) * 1000)))
+  end_time=$(($(date +%s) * 1000))
   local duration=$((end_time - start_time))
 
   local status="ok"

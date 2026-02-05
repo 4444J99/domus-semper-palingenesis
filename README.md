@@ -147,6 +147,7 @@ j       # just (task runner)
 | [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) | How to add modules, packages, and agents |
 | [1PASSWORD_SETUP.md](1PASSWORD_SETUP.md) | Configure secret management |
 | [BACKUP_STRATEGY.md](BACKUP_STRATEGY.md) | Backup and recovery procedures |
+| [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) | Common issues and solutions |
 | [docs/EXTERNAL_DRIVE.md](docs/EXTERNAL_DRIVE.md) | External drive integration |
 | [docs/ORGANIZATION_STRATEGY.md](docs/ORGANIZATION_STRATEGY.md) | File organization system |
 
