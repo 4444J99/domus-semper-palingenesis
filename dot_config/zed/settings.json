@@ -1,0 +1,167 @@
+{
+  // ─────────────────────────────────────────────────────────────────────────────
+  // Theme & Appearance
+  // ─────────────────────────────────────────────────────────────────────────────
+  "theme": "Tokyo Night",
+  "icon_theme": "Material Icon Theme",
+
+  "ui_font_family": "SF Pro Display",
+  "ui_font_size": 14,
+
+  "buffer_font_family": "JetBrainsMono Nerd Font",
+  "buffer_font_size": 14,
+  "buffer_line_height": {
+    "custom": 1.6
+  },
+  "buffer_font_features": {
+    "calt": true,
+    "liga": true
+  },
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  // Editor
+  // ─────────────────────────────────────────────────────────────────────────────
+  "tab_size": 2,
+  "soft_wrap": "none",
+  "show_whitespaces": "boundary",
+  "cursor_blink": true,
+  "relative_line_numbers": false,
+  "show_wrap_guides": true,
+  "wrap_guides": [80, 120],
+  "scroll_beyond_last_line": "off",
+
+  "inlay_hints": {
+    "enabled": true,
+    "show_type_hints": true,
+    "show_parameter_hints": true,
+    "show_other_hints": true
+  },
+
+  // Auto-save on focus change
+  "autosave": {
+    "after_delay": {
+      "milliseconds": 1000
+    }
+  },
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  // Formatting
+  // ─────────────────────────────────────────────────────────────────────────────
+  "format_on_save": "on",
+  "remove_trailing_whitespace_on_save": true,
+  "ensure_final_newline_on_save": true,
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  // Git
+  // ─────────────────────────────────────────────────────────────────────────────
+  "git": {
+    "git_gutter": "tracked_files",
+    "inline_blame": {
+      "enabled": true,
+      "delay_ms": 500
+    }
+  },
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  // Terminal
+  // ─────────────────────────────────────────────────────────────────────────────
+  "terminal": {
+    "shell": {
+      "program": "/bin/zsh"
+    },
+    "font_family": "JetBrainsMono Nerd Font",
+    "font_size": 13,
+    "line_height": {
+      "custom": 1.4
+    },
+    "working_directory": "current_project_directory"
+  },
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  // File Tree
+  // ─────────────────────────────────────────────────────────────────────────────
+  "project_panel": {
+    "dock": "left",
+    "git_status": true,
+    "indent_size": 16,
+    "auto_fold_dirs": true,
+    "auto_reveal_entries": true,
+    "file_icons": true,
+    "folder_icons": true
+  },
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  // Assistant / AI
+  // ─────────────────────────────────────────────────────────────────────────────
+  "assistant": {
+    "default_model": {
+      "provider": "anthropic",
+      "model": "claude-sonnet-4-20250514"
+    },
+    "version": "2"
+  },
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  // Language-specific Settings
+  // ─────────────────────────────────────────────────────────────────────────────
+  "languages": {
+    "Python": {
+      "tab_size": 4,
+      "formatter": "language_server"
+    },
+    "Rust": {
+      "tab_size": 4,
+      "formatter": "language_server"
+    },
+    "Go": {
+      "tab_size": 4,
+      "hard_tabs": true,
+      "formatter": "language_server"
+    },
+    "Markdown": {
+      "soft_wrap": "editor_width",
+      "show_whitespaces": "none"
+    },
+    "JSON": {
+      "formatter": "prettier"
+    },
+    "JavaScript": {
+      "formatter": "prettier"
+    },
+    "TypeScript": {
+      "formatter": "prettier"
+    },
+    "TSX": {
+      "formatter": "prettier"
+    }
+  },
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  // LSP
+  // ─────────────────────────────────────────────────────────────────────────────
+  "lsp": {
+    "rust-analyzer": {
+      "initialization_options": {
+        "checkOnSave": {
+          "command": "clippy"
+        }
+      }
+    }
+  },
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  // Vim Mode (optional - uncomment to enable)
+  // ─────────────────────────────────────────────────────────────────────────────
+  // "vim_mode": true,
+  // "vim": {
+  //   "use_system_clipboard": "always"
+  // },
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  // Telemetry
+  // ─────────────────────────────────────────────────────────────────────────────
+  "telemetry": {
+    "diagnostics": false,
+    "metrics": false
+  }
+}

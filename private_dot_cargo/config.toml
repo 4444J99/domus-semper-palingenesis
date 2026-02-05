@@ -1,0 +1,32 @@
+[build]
+# Use all CPU cores
+jobs = -1
+
+[target.aarch64-apple-darwin]
+# Use lld linker for faster builds (requires: brew install llvm)
+# Uncomment if lld is installed:
+# rustflags = ["-C", "link-arg=-fuse-ld=lld"]
+
+[net]
+# Use git CLI for fetching (helps with SSH auth)
+git-fetch-with-cli = true
+# Retry on network errors
+retry = 3
+
+[registries.crates-io]
+# Use sparse protocol for faster index updates
+protocol = "sparse"
+
+[term]
+# Enable colored output
+color = "auto"
+# Show progress bars
+progress.when = "auto"
+
+[alias]
+# Common aliases
+b = "build"
+c = "check"
+t = "test"
+r = "run"
+d = "doc"

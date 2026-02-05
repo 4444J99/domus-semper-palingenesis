@@ -1,0 +1,40 @@
+#compdef domus
+
+# Domus completion
+# Auto-generated completion for domus CLI
+
+_domus() {
+    local -a commands
+    commands=(
+        'status:Show current dotfiles status'
+        'apply:Apply dotfiles changes'
+        'packages:Manage packages'
+        'help:Show help information'
+    )
+
+    local -a packages_subcommands
+    packages_subcommands=(
+        'diff:Show package differences'
+        'install:Install packages'
+        'list:List packages'
+    )
+
+    _arguments -C \
+        '1: :->command' \
+        '*:: :->args'
+
+    case $state in
+        command)
+            _describe -t commands 'domus command' commands
+            ;;
+        args)
+            case $words[1] in
+                packages)
+                    _describe -t subcommands 'packages subcommand' packages_subcommands
+                    ;;
+            esac
+            ;;
+    esac
+}
+
+_domus "$@"

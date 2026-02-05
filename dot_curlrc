@@ -1,0 +1,26 @@
+# Follow redirects
+--location
+
+# Fail silently on HTTP errors
+--fail
+
+# Show error messages
+--show-error
+
+# Use compression
+--compressed
+
+# Set user agent
+--user-agent "curl/8.0"
+
+# Connection timeout (seconds)
+--connect-timeout 10
+
+# Max time for operation (seconds)
+--max-time 300
+
+# Use HTTP/2 if available
+--http2
+
+# Enable progress bar for large files
+--progress-bar

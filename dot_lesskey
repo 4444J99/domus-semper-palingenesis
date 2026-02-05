@@ -1,0 +1,40 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Less Pager Keybindings
+# ─────────────────────────────────────────────────────────────────────────────
+
+#command
+# Navigation (vim-like)
+j forw-line
+k back-line
+d forw-scroll
+u back-scroll
+g goto-line
+G goto-end
+
+# Search
+/ forw-search
+? back-search
+n repeat-search
+N reverse-search
+
+# Quit
+q quit
+Q quit
+
+# File navigation (multiple files)
+:n next-file
+:p prev-file
+
+# Mark and goto
+m set-mark
+' goto-mark
+
+# Help
+h help
+
+#env
+# Enable color output
+LESS = -R
+
+# Show line numbers
+LESS = -N

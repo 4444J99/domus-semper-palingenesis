@@ -1,0 +1,16 @@
+# Security
+audit=true
+fund=false
+
+# Performance
+prefer-offline=true
+progress=false
+
+# Defaults
+save-exact=true
+engine-strict=true
+
+# Init defaults
+init-author-name=4jp
+init-license=MIT
+init-version=0.1.0

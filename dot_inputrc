@@ -1,0 +1,70 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Readline Configuration
+# ─────────────────────────────────────────────────────────────────────────────
+
+# Case-insensitive completion
+set completion-ignore-case on
+
+# Treat hyphens and underscores as equivalent
+set completion-map-case on
+
+# Show all completions on first tab (no bell)
+set show-all-if-ambiguous on
+
+# Show completions immediately if more than one
+set show-all-if-unmodified on
+
+# Color completions by file type
+set colored-stats on
+
+# Color completion prefix
+set colored-completion-prefix on
+
+# Add trailing slash to directories
+set mark-directories on
+
+# Add trailing slash to symlinked directories
+set mark-symlinked-directories on
+
+# Don't ring bell on completion
+set bell-style none
+
+# Show completion type with visible indicator
+set visible-stats on
+
+# Keep cursor position when scrolling through history
+set history-preserve-point on
+
+# Expand tilde to full home path
+set expand-tilde off
+
+# Allow 8-bit input (for UTF-8)
+set input-meta on
+set output-meta on
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Keybindings (Emacs mode - default)
+# ─────────────────────────────────────────────────────────────────────────────
+
+# Ctrl+Left/Right for word navigation
+"\e[1;5D": backward-word
+"\e[1;5C": forward-word
+
+# Alt+Left/Right for word navigation (macOS Terminal)
+"\e\e[D": backward-word
+"\e\e[C": forward-word
+
+# Ctrl+Backspace/Delete for word deletion
+"\e[3;5~": kill-word
+
+# Ctrl+Up/Down for history search
+"\e[1;5A": history-search-backward
+"\e[1;5B": history-search-forward
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Vi Mode (uncomment to enable)
+# ─────────────────────────────────────────────────────────────────────────────
+# set editing-mode vi
+# set show-mode-in-prompt on
+# set vi-cmd-mode-string "\1\e[2 q\2"
+# set vi-ins-mode-string "\1\e[6 q\2"

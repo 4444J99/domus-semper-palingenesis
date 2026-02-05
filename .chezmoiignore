@@ -31,6 +31,9 @@ work_scripts/
 *.swo
 *~
 
+# Documentation files in config dirs (don't apply to home directory)
+.config/zsh/completions/README.md
+
 # Repository documentation (don't apply to home directory)
 README.md
 .claude/README.md
