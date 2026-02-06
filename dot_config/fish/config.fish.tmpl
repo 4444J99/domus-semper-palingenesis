@@ -209,6 +209,7 @@ if status is-interactive
     abbr -a cm chezmoi
     abbr -a cma 'chezmoi apply'
     abbr -a cmd 'chezmoi diff'
+    abbr -a cmdf 'chezmoi diff | awk \'BEGIN{s=0} /^diff --git.*chezmoiscripts/{s=1;next} /^diff --git/{s=0} s==0{print}\''
     abbr -a cme 'chezmoi edit'
     abbr -a cms 'chezmoi status'
 

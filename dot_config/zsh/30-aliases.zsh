@@ -67,6 +67,7 @@ fi
 alias cm='chezmoi'
 alias cma='chezmoi apply'
 alias cmd='chezmoi diff'
+alias cmdf='chezmoi diff | awk '\''BEGIN{s=0} /^diff --git.*chezmoiscripts/{s=1;next} /^diff --git/{s=0} s==0{print}'\'''
 alias cme='chezmoi edit'
 alias cmu='chezmoi update'
 alias cms='chezmoi status'
