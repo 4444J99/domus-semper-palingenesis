@@ -37,7 +37,8 @@ if status is-interactive
 {{- end }}
 
     # Go
-    set -gx GOPATH $HOME/go
+    set -gx GOPATH $HOME/.local/share/go
+    set -gx GOMODCACHE $HOME/.cache/go/mod
     fish_add_path $GOPATH/bin
 
     # pipx local bin
@@ -356,6 +357,12 @@ if status is-interactive
     set -gx RUSTUP_HOME $XDG_DATA_HOME/rustup
     set -gx NODE_REPL_HISTORY $XDG_STATE_HOME/node_repl_history
     set -gx LESSHISTFILE $XDG_STATE_HOME/less/history
+    set -gx KUBECONFIG $XDG_CONFIG_HOME/kube/config
+    set -gx NPM_CONFIG_CACHE $XDG_CACHE_HOME/npm
+    set -gx CLOUDSDK_CONFIG $XDG_CONFIG_HOME/gcloud
+    set -gx CURL_HOME $XDG_CONFIG_HOME/curl
+    set -gx INPUTRC $XDG_CONFIG_HOME/readline/inputrc
+    set -gx LESSKEYIN $XDG_CONFIG_HOME/less/lesskey
 
     # ─────────────────────────────────────────────────────────────────────────
     # Startup Timing - Record (Domus Telemetry)

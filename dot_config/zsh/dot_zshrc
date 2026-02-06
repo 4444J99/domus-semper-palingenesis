@@ -16,7 +16,7 @@
 # ─────────────────────────────────────────────────────────────────────────────
 
 # Load all zsh config modules in order
-for config_file in ~/.config/zsh/[0-9]*.zsh(N); do
+for config_file in ${ZDOTDIR:-$HOME/.config/zsh}/[0-9]*.zsh(N); do
   source "$config_file"
 done
 unset config_file

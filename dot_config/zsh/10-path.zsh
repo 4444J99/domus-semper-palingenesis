@@ -13,7 +13,7 @@ export CPPFLAGS="-I/opt/homebrew/opt/ruby/include"
 export PKG_CONFIG_PATH="/opt/homebrew/opt/ruby/lib/pkgconfig"
 
 # Go
-export GOPATH=$HOME/go
+export GOPATH="${XDG_DATA_HOME:-$HOME/.local/share}/go"
 export PATH=$PATH:$GOPATH/bin
 
 # pipx local bin

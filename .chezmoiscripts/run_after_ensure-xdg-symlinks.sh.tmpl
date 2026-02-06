@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+# Ensure XDG symlinks for apps that insist on ~/.<app>
+# Idempotent: safe to run on every chezmoi apply
+set -euo pipefail
+
+apps=(
+  aitk
+  antigravity
+  cagent
+  claude-server-commander
+  cloudbase-mcp
+  codestream
+  codex
+  copilot
+  dropbox_bi
+  genkit
+  gitkraken
+  gk
+  jules
+  mcp-auth
+  metasystem
+  my-father-mother
+  ollama
+  quokka
+  redhat
+  swiftpm
+  thumbnails
+  vs-kubernetes
+  vscode
+  vscode-insiders
+  wallaby
+)
+
+changed=0
+
+for app in "${apps[@]}"; do
+  target="$HOME/.local/share/$app"
+  link="$HOME/.$app"
+
+  # Already a correct symlink — skip
+  if [[ -L "$link" && "$(readlink "$link")" == "$target" ]]; then
+    continue
+  fi
+
+  # Ensure target directory exists
+  mkdir -p "$target"
+
+  # Real directory exists — merge contents then remove
+  if [[ -d "$link" && ! -L "$link" ]]; then
+    rsync -a "$link/" "$target/"
+    rm -rf "$link"
+  fi
+
+  # Remove stale symlink or file
+  [[ -e "$link" || -L "$link" ]] && rm -f "$link"
+
+  ln -s "$target" "$link"
+  ((changed++)) || true
+done
+
+if ((changed > 0)); then
+  echo "🔗 Created/updated $changed XDG symlinks"
+fi

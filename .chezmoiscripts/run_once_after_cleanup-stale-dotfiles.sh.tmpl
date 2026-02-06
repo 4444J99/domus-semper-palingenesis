@@ -1,0 +1,72 @@
+#!/usr/bin/env bash
+# One-time removal of confirmed-unused dotfiles from home root
+set -euo pipefail
+
+echo "🧹 Cleaning stale dotfiles..."
+
+removed=0
+
+# Unused shell configs (conda init artifacts)
+for f in "$HOME/.tcshrc" "$HOME/.xonshrc" "$HOME/.bash_profile" \
+         "$HOME/.bash_history" "$HOME/.profile"; do
+  if [[ -f "$f" ]]; then
+    rm -f "$f"
+    echo "  🗑  Removed $(basename "$f")"
+    ((removed++)) || true
+  fi
+done
+
+# Old backups
+for f in "$HOME/.claude.json.backup"*; do
+  if [[ -e "$f" ]]; then
+    rm -f "$f"
+    echo "  🗑  Removed $(basename "$f")"
+    ((removed++)) || true
+  fi
+done
+if [[ -d "$HOME/.gemini.bak" ]]; then
+  rm -rf "$HOME/.gemini.bak"
+  echo "  🗑  Removed .gemini.bak"
+  ((removed++)) || true
+fi
+for d in "$HOME"/.vscode_extensions_backup_*; do
+  if [[ -d "$d" ]]; then
+    rm -rf "$d"
+    echo "  🗑  Removed $(basename "$d")"
+    ((removed++)) || true
+  fi
+done
+
+# Superseded files (env vars now redirect)
+for f in "$HOME/.node_repl_history" "$HOME/.boto"; do
+  if [[ -f "$f" ]]; then
+    rm -f "$f"
+    echo "  🗑  Removed $(basename "$f")"
+    ((removed++)) || true
+  fi
+done
+
+# Old zsh files (after migration script has copied history)
+if [[ -f "$HOME/.zsh_history" ]]; then
+  rm -f "$HOME/.zsh_history"
+  echo "  🗑  Removed .zsh_history"
+  ((removed++)) || true
+fi
+for f in "$HOME"/.zcompdump*; do
+  if [[ -e "$f" ]]; then
+    rm -f "$f"
+    echo "  🗑  Removed $(basename "$f")"
+    ((removed++)) || true
+  fi
+done
+if [[ -d "$HOME/.zsh_sessions" ]]; then
+  rm -rf "$HOME/.zsh_sessions"
+  echo "  🗑  Removed .zsh_sessions"
+  ((removed++)) || true
+fi
+
+if ((removed > 0)); then
+  echo "✅ Removed $removed stale items"
+else
+  echo "✅ No stale files found"
+fi

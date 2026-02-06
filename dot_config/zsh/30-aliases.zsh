@@ -116,7 +116,7 @@ alias dt='cd ~/Desktop'
 alias proj='cd ~/Projects'
 
 # Reload shell config
-alias reload='source ~/.zshrc'
+alias reload='source ${ZDOTDIR:-$HOME/.config/zsh}/.zshrc'
 
 # IP addresses
 alias myip='curl -s https://api.ipify.org && echo'

@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+# One-time migration: move zsh history, compdumps, GOPATH, kube to XDG locations
+set -euo pipefail
+
+echo "🔄 Migrating dotfiles to XDG locations..."
+
+# Ensure target directories exist
+mkdir -p "$HOME/.local/state/zsh"
+mkdir -p "$HOME/.local/share/go"
+mkdir -p "$HOME/.config/kube"
+
+# Migrate zsh history
+if [[ -f "$HOME/.zsh_history" && ! -f "$HOME/.local/state/zsh/history" ]]; then
+  cp "$HOME/.zsh_history" "$HOME/.local/state/zsh/history"
+  echo "  ✅ Copied .zsh_history → .local/state/zsh/history"
+fi
+
+# Remove old compdumps from home root
+for f in "$HOME"/.zcompdump*; do
+  [[ -e "$f" ]] && rm -f "$f" && echo "  🗑  Removed $(basename "$f")"
+done
+
+# Migrate GOPATH (~/go → ~/.local/share/go)
+if [[ -d "$HOME/go" && ! -L "$HOME/go" ]]; then
+  if [[ -z "$(ls -A "$HOME/.local/share/go" 2>/dev/null)" ]]; then
+    rsync -a "$HOME/go/" "$HOME/.local/share/go/"
+    rm -rf "$HOME/go"
+    echo "  ✅ Migrated ~/go → .local/share/go"
+  else
+    echo "  ⚠️  Both ~/go and .local/share/go exist — skipping GOPATH migration"
+  fi
+fi
+
+# Migrate kube config
+if [[ -f "$HOME/.kube/config" && ! -f "$HOME/.config/kube/config" ]]; then
+  cp "$HOME/.kube/config" "$HOME/.config/kube/config"
+  echo "  ✅ Copied .kube/config → .config/kube/config"
+fi
+
+echo "✅ XDG migration complete"

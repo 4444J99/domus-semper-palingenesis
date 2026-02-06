@@ -10,7 +10,7 @@ export VISUAL=nvim
 export GEMINI_CLI=1
 
 # ─────────────────────────────────────────────────────────────────────────────
-# XDG Base Directories
+# XDG Base Directories (canonical source: ~/.zshenv; duplicated here for safety)
 # ─────────────────────────────────────────────────────────────────────────────
 
 export XDG_CONFIG_HOME="$HOME/.config"
@@ -31,8 +31,27 @@ export NODE_REPL_HISTORY="$XDG_STATE_HOME/node_repl_history"
 export NPM_CONFIG_USERCONFIG="$XDG_CONFIG_HOME/npm/npmrc"
 export LESSHISTFILE="$XDG_STATE_HOME/less/history"
 
-# Go
-export GOPATH="$HOME/go"
+# Go (migrated from ~/go)
+export GOPATH="$XDG_DATA_HOME/go"
+export GOMODCACHE="$XDG_CACHE_HOME/go/mod"
+
+# Kubernetes
+export KUBECONFIG="$XDG_CONFIG_HOME/kube/config"
+
+# npm cache
+export NPM_CONFIG_CACHE="$XDG_CACHE_HOME/npm"
+
+# Google Cloud SDK
+export CLOUDSDK_CONFIG="$XDG_CONFIG_HOME/gcloud"
+
+# curl config dir
+export CURL_HOME="$XDG_CONFIG_HOME/curl"
+
+# readline
+export INPUTRC="$XDG_CONFIG_HOME/readline/inputrc"
+
+# less keybindings
+export LESSKEYIN="$XDG_CONFIG_HOME/less/lesskey"
 
 # Project directories
 export PROJECTS_DIR="$HOME/Projects"
