@@ -14,7 +14,7 @@ system_notes:
         - "No plaintext credentials"
         - "Use op read or 1Password loaders"
       references:
-        - "~/System/Guides/AGENTS.md"
+        - "~/dotfiles/docs/system-guides/AGENTS.md"
       tags: ["policy", "security", "agents", "critical"]
 
   workspace_docs:
@@ -67,12 +67,10 @@ system_notes:
 
 system_guides:
   - name: "System Guides"
-    path: "~/System/Guides/"
-    size: "~1.9GB"
+    path: "~/dotfiles/docs/system-guides/"
     type: "reference"
-    description: "General development conventions and workspace practices"
-    tags: ["guides", "reference", "large"]
-    notes: "Consider archiving to external drive"
+    description: "General development conventions and workspace practices (archived from ~/System/Guides/)"
+    tags: ["guides", "reference", "archived"]
 
 notes:
   documentation_health: "good"
@@ -81,6 +79,6 @@ notes:
 
   recommendations:
     - "Backup AGENTS.md to dotfiles repo (as template or doc)"
-    - "Archive ~/System/Guides/ to external drive"
+    - "System guides archived to ~/dotfiles/docs/system-guides/"
     - "Create ~/Documents/Notes/Architecture/ for architecture docs"
     - "Move architecture docs from ~/Workspace/ to ~/Documents/Notes/Architecture/"
