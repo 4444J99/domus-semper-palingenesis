@@ -61,4 +61,4 @@ for server_name, server_config in desired_servers.items():
     config["mcpServers"][server_name] = server_config
 
 # Output the modified config
-print(json.dumps(config, indent=2))
+print(json.dumps(config, indent=2, ensure_ascii=False))

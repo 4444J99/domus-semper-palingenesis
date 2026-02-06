@@ -44,6 +44,9 @@ if status is-interactive
     # Rust (rustup toolchain)
     fish_add_path $HOME/.local/share/cargo/bin
 
+    # Python (Homebrew - follows latest via python@3 symlink)
+    fish_add_path /opt/homebrew/opt/python@3/libexec/bin
+
     # pipx local bin
     fish_add_path $HOME/.local/bin
 
@@ -373,6 +376,10 @@ if status is-interactive
     set -gx JUPYTER_CONFIG_DIR $XDG_CONFIG_HOME/jupyter
     set -gx JUPYTER_DATA_DIR $XDG_DATA_HOME/jupyter
     set -gx TF_DATA_DIR $XDG_DATA_HOME/terraform
+    set -gx MACHINE_STORAGE_PATH $XDG_DATA_HOME/docker-machine
+    set -gx NPM_CONFIG_USERCONFIG $XDG_CONFIG_HOME/npm/npmrc
+    set -gx PROJECTS_DIR $HOME/Projects
+    set -gx FILE_CONTEXT_DIR $HOME/.local/share/file-context
 
     # ─────────────────────────────────────────────────────────────────────────
     # Startup Timing - Record (Domus Telemetry)
