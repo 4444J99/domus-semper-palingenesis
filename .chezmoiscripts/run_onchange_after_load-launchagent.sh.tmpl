@@ -89,9 +89,39 @@ load_agent \
   "com.4jp.naming-maintenance" \
   "naming-maintenance (4hr cloud hygiene)"
 
+# Load agents policy sync
+load_agent \
+  "${HOME}/Library/LaunchAgents/com.4jp.agents-policy-sync.plist" \
+  "com.4jp.agents-policy-sync" \
+  "agents-policy-sync (5min AGENTS.md sync)"
+
+# Load MCP env setter
+load_agent \
+  "${HOME}/Library/LaunchAgents/com.4jp.env.mcp.plist" \
+  "com.4jp.env.mcp" \
+  "env-mcp (set MCP_TOOLS_FILE)"
+
+# Load MCP servers
+load_agent \
+  "${HOME}/Library/LaunchAgents/com.4jp.mcp.servers.plist" \
+  "com.4jp.mcp.servers" \
+  "mcp-servers (stdio server hub)"
+
+# Load gmail labeler
+load_agent \
+  "${HOME}/Library/LaunchAgents/com.user.gmail_labeler.plist" \
+  "com.user.gmail_labeler" \
+  "gmail-labeler (daily 9am)"
+
+# Load mail automation (disabled by default)
+load_agent \
+  "${HOME}/Library/LaunchAgents/com.user.mail_automation.plist" \
+  "com.user.mail_automation" \
+  "mail-automation (daily 9am, disabled)"
+
 echo ""
 echo "Management commands:"
-echo "  Status:  launchctl list | grep -E 'chezmoi|domus|4jp'"
+echo "  Status:  launchctl list | grep -E 'chezmoi|domus|4jp|gmail|mail'"
 echo "  Logs:    tail -f ~/.local/state/domus/*.log"
 echo ""
 

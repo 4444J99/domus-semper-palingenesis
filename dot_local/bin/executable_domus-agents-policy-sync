@@ -1,0 +1,98 @@
+#!/usr/bin/env python3
+"""
+Ensure every AGENTS.md in ~/ references the global policy file.
+Walks the home directory, skipping cloud storage, containers, and
+common build artifacts. Inserts a notice line after the first heading.
+"""
+import os
+from pathlib import Path
+
+ROOT = Path.home()
+GLOBAL_REF = str(ROOT / "AGENTS.md")
+NOTICE_LINE = f"Global policy: {GLOBAL_REF} applies and cannot be overridden."
+
+EXCLUDE_PREFIXES = [
+    ROOT / "Library/CloudStorage",
+    ROOT / "Library/Containers",
+    ROOT / "Library/Group Containers",
+    ROOT / "Library/Application Support/Google",
+]
+
+PRUNE_DIRS = {
+    ".git",
+    "node_modules",
+    ".venv",
+    "venv",
+    "dist",
+    "build",
+    "target",
+    ".cache",
+    "__pycache__",
+}
+
+
+def is_excluded(path: Path) -> bool:
+    for prefix in EXCLUDE_PREFIXES:
+        try:
+            path.relative_to(prefix)
+            return True
+        except ValueError:
+            continue
+    return False
+
+
+def insert_notice(path: Path) -> bool:
+    text = path.read_text(encoding="utf-8", errors="replace")
+    if GLOBAL_REF in text or NOTICE_LINE in text:
+        return False
+
+    lines = text.splitlines()
+    insert_idx = 0
+
+    # Handle optional YAML front matter
+    if lines and lines[0].strip() == "---":
+        for i in range(1, len(lines)):
+            if lines[i].strip() == "---":
+                insert_idx = i + 1
+                break
+
+    # Insert after first non-empty line if no front matter found
+    if insert_idx == 0:
+        for i, line in enumerate(lines):
+            if line.strip():
+                insert_idx = i + 1
+                break
+
+    lines.insert(insert_idx, "")
+    lines.insert(insert_idx + 1, NOTICE_LINE)
+
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    return True
+
+
+def main() -> int:
+    updated = 0
+    for dirpath, dirnames, filenames in os.walk(ROOT):
+        path = Path(dirpath)
+        if is_excluded(path):
+            dirnames[:] = []
+            continue
+
+        dirnames[:] = [d for d in dirnames if d not in PRUNE_DIRS]
+
+        if "AGENTS.md" in filenames:
+            fpath = path / "AGENTS.md"
+            if str(fpath) == GLOBAL_REF:
+                continue
+            try:
+                if insert_notice(fpath):
+                    updated += 1
+            except Exception:
+                # Keep the sync resilient; skip files we can't read or write.
+                continue
+
+    return updated
+
+
+if __name__ == "__main__":
+    main()

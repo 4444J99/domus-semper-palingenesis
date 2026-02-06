@@ -1,0 +1,22 @@
+# Custom tools configuration
+# MCP servers for Codex/Claude-style clients. Commands run from ~/Workspace/mcp-servers.
+mcpServers:
+  filesystem:
+    command: npx
+    args:
+      - mcp-server-filesystem
+      - {{ .chezmoi.homeDir }}/Workspace
+    cwd: {{ .chezmoi.homeDir }}/Workspace/mcp-servers
+  sequential-thinking:
+    command: npx
+    args:
+      - mcp-server-sequential-thinking
+    cwd: {{ .chezmoi.homeDir }}/Workspace/mcp-servers
+  memory:
+    command: npx
+    args:
+      - mcp-server-memory
+    cwd: {{ .chezmoi.homeDir }}/Workspace/mcp-servers
+
+# Tooling placeholders (none defined yet)
+tools: []

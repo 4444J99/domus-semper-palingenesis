@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.4jp.mcp.servers</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/zsh</string>
+        <string>-lc</string>
+        <string>{{ .chezmoi.homeDir }}/Workspace/mcp-servers/start-all.sh</string>
+    </array>
+
+    <key>WorkingDirectory</key>
+    <string>{{ .chezmoi.homeDir }}/Workspace/mcp-servers</string>
+
+    <key>RunAtLoad</key>
+    <true/>
+
+    <key>KeepAlive</key>
+    <true/>
+
+    <!-- Background process settings -->
+    <key>ProcessType</key>
+    <string>Background</string>
+
+    <key>Nice</key>
+    <integer>10</integer>
+
+    <key>LowPriorityIO</key>
+    <true/>
+
+    <!-- Environment -->
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>MCP_FS_ROOTS</key>
+        <string>{{ .chezmoi.homeDir }}/Workspace</string>
+        <key>MCP_TOOLS_FILE</key>
+        <string>{{ .chezmoi.homeDir }}/.config/domus/tools.yaml</string>
+        <key>PATH</key>
+        <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:{{ .chezmoi.homeDir }}/.local/bin</string>
+        <key>HOME</key>
+        <string>{{ .chezmoi.homeDir }}</string>
+    </dict>
+
+    <!-- Logging -->
+    <key>StandardOutPath</key>
+    <string>{{ .chezmoi.homeDir }}/.local/state/domus/mcp-servers-stdout.log</string>
+    <key>StandardErrorPath</key>
+    <string>{{ .chezmoi.homeDir }}/.local/state/domus/mcp-servers-stderr.log</string>
+</dict>
+</plist>
