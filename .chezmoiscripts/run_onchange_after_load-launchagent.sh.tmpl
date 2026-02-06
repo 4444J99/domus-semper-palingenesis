@@ -11,6 +11,8 @@ echo "Managing launchd agents..."
 # Ensure state directories exist
 mkdir -p "${HOME}/.local/share/chezmoi-health"
 mkdir -p "${HOME}/.local/state/domus/telemetry"
+mkdir -p "${HOME}/.local/state/domus/normalize"
+mkdir -p "${HOME}/.local/state/domus/photo_sort"
 
 # Function to load/reload an agent
 load_agent() {
@@ -63,9 +65,33 @@ load_agent \
   "com.domus.sort" \
   "domus-sort (file watcher)"
 
+# Load desktop router agent
+load_agent \
+  "${HOME}/Library/LaunchAgents/com.4jp.desktop-router.plist" \
+  "com.4jp.desktop-router" \
+  "desktop-router (Desktop file watcher)"
+
+# Load home root guard agent
+load_agent \
+  "${HOME}/Library/LaunchAgents/com.4jp.home-root-guard.plist" \
+  "com.4jp.home-root-guard" \
+  "home-root-guard (15min home cleanup)"
+
+# Load downloads tidy agent
+load_agent \
+  "${HOME}/Library/LaunchAgents/com.4jp.downloads-tidy.plist" \
+  "com.4jp.downloads-tidy" \
+  "downloads-tidy (nightly 3:15am)"
+
+# Load naming maintenance agent
+load_agent \
+  "${HOME}/Library/LaunchAgents/com.4jp.naming-maintenance.plist" \
+  "com.4jp.naming-maintenance" \
+  "naming-maintenance (4hr cloud hygiene)"
+
 echo ""
 echo "Management commands:"
-echo "  Status:  launchctl list | grep -E 'chezmoi|domus'"
+echo "  Status:  launchctl list | grep -E 'chezmoi|domus|4jp'"
 echo "  Logs:    tail -f ~/.local/state/domus/*.log"
 echo ""
 

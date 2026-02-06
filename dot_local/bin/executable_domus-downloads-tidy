@@ -1,0 +1,143 @@
+#!/usr/bin/env python3
+"""
+Tidy ~/Downloads by moving older files into Downloads/Archive/YYYY-MM/<category>.
+Dry run by default; pass --apply to move.
+"""
+from __future__ import annotations
+
+import argparse
+import datetime as dt
+import os
+from pathlib import Path
+
+
+MULTI_EXT = [
+    "tar.gz",
+    "tar.xz",
+    "tar.bz2",
+    "tar.zst",
+    "tar.lz4",
+    "tar.lz",
+]
+
+
+CATEGORY_EXTS = {
+    "installers": {"dmg", "pkg", "mpkg"},
+    "archives": {"zip", "rar", "7z", "gz", "bz2", "xz", "tar", "tgz"},
+    "documents": {"pdf", "doc", "docx", "rtf", "txt", "md", "pages"},
+    "spreadsheets": {"xls", "xlsx", "csv", "numbers"},
+    "presentations": {"ppt", "pptx", "key"},
+    "images": {"png", "jpg", "jpeg", "heic", "gif", "tif", "tiff", "bmp", "webp"},
+    "videos": {"mp4", "mov", "m4v", "mkv", "avi"},
+    "audio": {"mp3", "wav", "m4a", "flac", "aiff"},
+    "fonts": {"ttf", "otf"},
+    "code": {"py", "js", "ts", "tsx", "jsx", "go", "rs", "java", "c", "cpp", "h", "sh", "ps1", "rb", "php"},
+}
+
+SKIP_EXTS = {"download", "part", "crdownload"}
+SKIP_NAMES = {"README.md"}
+
+
+def split_name(name: str) -> tuple[str, str]:
+    lower = name.lower()
+    for ext in MULTI_EXT:
+        dot_ext = f".{ext}"
+        if lower.endswith(dot_ext):
+            return name[: -len(dot_ext)], dot_ext
+    if "." in name:
+        stem, dot, ext = name.rpartition(".")
+        if stem:
+            return stem, f".{ext}"
+    return name, ""
+
+
+def category_for(name: str) -> str:
+    stem, ext = split_name(name)
+    ext = ext.lstrip(".").lower()
+    if ext in SKIP_EXTS:
+        return "skip"
+    for category, exts in CATEGORY_EXTS.items():
+        if ext in exts:
+            return category
+    return "other"
+
+
+def unique_dest(dest: Path) -> Path:
+    if not dest.exists():
+        return dest
+    stem, ext = split_name(dest.name)
+    counter = 1
+    while True:
+        candidate = dest.with_name(f"{stem}-dup-{counter}{ext}")
+        if not candidate.exists():
+            return candidate
+        counter += 1
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--root", default=str(Path.home() / "Downloads"))
+    parser.add_argument("--apply", action="store_true", help="Perform moves (default is dry run).")
+    parser.add_argument("--since-days", type=int, default=14, help="Only move files older than this many days.")
+    parser.add_argument("--log", default="", help="Optional log file path.")
+    args = parser.parse_args()
+
+    root = Path(args.root).expanduser().resolve()
+    if not root.exists():
+        raise SystemExit(f"Root not found: {root}")
+
+    now = dt.datetime.now(dt.timezone.utc)
+    cutoff = now - dt.timedelta(days=args.since_days)
+    archive_root = root / "Archive" / now.strftime("%Y-%m")
+
+    moved = 0
+    skipped_recent = 0
+    skipped = 0
+
+    log_path = Path(args.log).expanduser() if args.log else None
+    log_fh = open(log_path, "w", encoding="utf-8") if log_path else None
+
+    def log(line: str) -> None:
+        print(line)
+        if log_fh:
+            log_fh.write(line + "\n")
+
+    for path in root.iterdir():
+        if path.is_dir():
+            continue
+        if path.name.startswith("."):
+            continue
+        if path.name in SKIP_NAMES:
+            skipped += 1
+            log(f"[skip name] {path.name}")
+            continue
+
+        category = category_for(path.name)
+        if category == "skip":
+            skipped += 1
+            log(f"[skip temp] {path.name}")
+            continue
+
+        mtime = dt.datetime.fromtimestamp(path.stat().st_mtime, tz=dt.timezone.utc)
+        if mtime > cutoff:
+            skipped_recent += 1
+            log(f"[skip recent] {path.name}")
+            continue
+
+        dest_dir = archive_root / category
+        dest_dir.mkdir(parents=True, exist_ok=True)
+        dest = unique_dest(dest_dir / path.name)
+
+        if args.apply:
+            path.rename(dest)
+        action = "move" if args.apply else "would move"
+        log(f"[{action}] {path.name} -> {dest.relative_to(root)}")
+        moved += 1
+
+    log(f"Done. moved={moved}, skipped_recent={skipped_recent}, skipped_temp={skipped} ({'applied' if args.apply else 'dry run'}).")
+    if log_fh:
+        log_fh.close()
+
+
+if __name__ == "__main__":
+    main()

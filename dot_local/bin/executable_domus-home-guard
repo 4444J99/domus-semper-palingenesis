@@ -1,0 +1,147 @@
+#!/usr/bin/env python3
+"""
+Keep ~/ clean by moving new top-level items into contextual destinations.
+Default is dry run; use --apply to move.
+"""
+from __future__ import annotations
+
+import argparse
+from datetime import datetime
+from pathlib import Path
+import plistlib
+import subprocess
+
+HOME = Path.home()
+
+IMAGE_EXTS = {".png", ".jpg", ".jpeg", ".heic", ".gif", ".tif", ".tiff", ".bmp", ".webp"}
+VIDEO_EXTS = {".mov", ".mp4", ".m4v", ".avi", ".mkv", ".webm"}
+AUDIO_EXTS = {".mp3", ".wav", ".m4a", ".flac", ".aiff", ".aif", ".aac", ".ogg"}
+DOC_EXTS = {
+    ".pdf", ".txt", ".md", ".rtf", ".doc", ".docx", ".pages", ".numbers", ".key",
+    ".xls", ".xlsx", ".csv", ".tsv", ".ppt", ".pptx",
+}
+ARCHIVE_EXTS = {".zip", ".tar", ".gz", ".tgz", ".bz2", ".xz", ".7z", ".rar"}
+INSTALLER_EXTS = {".dmg", ".pkg"}
+
+ALLOW_NAMES = {
+    "Applications",
+    "Desktop",
+    "Documents",
+    "Downloads",
+    "Library",
+    "Movies",
+    "Music",
+    "Pictures",
+    "Public",
+    "System",
+    "Workspace",
+    "Dropbox",
+    "OneDrive",
+    "go",
+}
+
+
+def is_google_drive_alias(path: Path) -> bool:
+    return path.name.endswith(" - Google Drive")
+
+
+def unique_dest(dest: Path) -> Path:
+    if not dest.exists():
+        return dest
+    base = dest.parent
+    stem = dest.stem
+    suffix = dest.suffix
+    counter = 1
+    while True:
+        candidate = base / f"{stem}_{counter}{suffix}"
+        if not candidate.exists():
+            return candidate
+        counter += 1
+
+
+def is_repo_dir(path: Path) -> bool:
+    return (path / ".git").is_dir() or (path / ".git").is_file()
+
+
+def classify_file(path: Path, today: str) -> Path:
+    ext = path.suffix.lower()
+    month = datetime.now().strftime("%Y-%m")
+
+    if ext in IMAGE_EXTS:
+        return HOME / "Pictures" / "From-Downloads" / month / path.name
+    if ext in VIDEO_EXTS:
+        return HOME / "Movies" / "From-Home" / month / path.name
+    if ext in AUDIO_EXTS:
+        return HOME / "Music" / "From-Home" / month / path.name
+    if ext in DOC_EXTS:
+        return HOME / "Documents" / "Inbox" / path.name
+    if ext in INSTALLER_EXTS:
+        return HOME / "Downloads" / "Archive" / month / "installers" / path.name
+    if ext in ARCHIVE_EXTS:
+        return HOME / "Downloads" / "Archive" / month / "archives" / path.name
+
+    return HOME / "Documents" / "Inbox" / "home-root" / today / path.name
+
+
+def is_screen_locked() -> bool:
+    try:
+        data = subprocess.check_output(["/usr/sbin/ioreg", "-n", "Root", "-d1", "-a"])
+        plist = plistlib.loads(data)
+        users = plist[0].get("IOConsoleUsers", [])
+        for user in users:
+            if user.get("CGSSessionScreenIsLocked") is True:
+                return True
+        return False
+    except Exception:
+        return False
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--apply", action="store_true", help="Perform moves (default: dry run)")
+    parser.add_argument(
+        "--only-when-locked",
+        action="store_true",
+        help="Only run when the screen is locked.",
+    )
+    args = parser.parse_args()
+
+    today = datetime.now().strftime("%Y%m%d")
+    actions = []
+
+    if args.only_when_locked and not is_screen_locked():
+        return
+
+    for path in HOME.iterdir():
+        name = path.name
+        if name.startswith("."):
+            continue
+        if name in ALLOW_NAMES or is_google_drive_alias(path):
+            continue
+        if path.is_symlink():
+            # Leave symlinks alone unless explicitly handled elsewhere.
+            continue
+
+        if path.is_dir():
+            if is_repo_dir(path):
+                dest = HOME / "Workspace" / name
+            else:
+                dest = HOME / "Documents" / "Inbox" / "home-root" / today / name
+        else:
+            dest = classify_file(path, today)
+
+        dest = unique_dest(dest)
+        actions.append((path, dest))
+
+    if not actions:
+        return
+
+    for src, dest in actions:
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        if args.apply:
+            src.rename(dest)
+        print(f"{src} -> {dest} ({'moved' if args.apply else 'dry-run'})")
+
+
+if __name__ == "__main__":
+    main()

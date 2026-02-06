@@ -16,7 +16,7 @@ diff:
 # Run all linters
 lint:
     @echo ":: ShellCheck"
-    @find dot_local/bin -name 'executable_*' ! -name '*.tmpl' -exec shellcheck -x {} + 2>/dev/null || true
+    @find dot_local/bin -name 'executable_*' ! -name '*.tmpl' -exec sh -c 'head -1 "$1" | grep -q python || echo "$1"' _ {} \; | xargs shellcheck -x 2>/dev/null || true
     @echo ""
     @echo ":: YAML lint"
     @find . -name '*.yml' -o -name '*.yaml' | grep -v '.git/' | xargs yamllint -c .yamllint.yml 2>/dev/null || true
@@ -54,7 +54,7 @@ packages-diff:
 
 # Format shell scripts
 fmt:
-    @find dot_local/bin -name 'executable_*' ! -name '*.tmpl' -exec shfmt -w -i 2 -ci {} + 2>/dev/null || echo "shfmt not found (brew install shfmt)"
+    @find dot_local/bin -name 'executable_*' ! -name '*.tmpl' -exec sh -c 'head -1 "$1" | grep -q python || echo "$1"' _ {} \; | xargs shfmt -w -i 2 -ci 2>/dev/null || echo "shfmt not found (brew install shfmt)"
 
 # Validate templates
 template-check:

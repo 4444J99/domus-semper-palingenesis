@@ -1,0 +1,163 @@
+#!/usr/bin/env bash
+# Wrapper to run naming normalization and (optionally) photo sorting with logs.
+# Default mode is a dry run; pass --apply to enact changes.
+
+set -euo pipefail
+
+timestamp="$(date +%Y%m%d-%H%M%S)"
+log_root="${HOME}/.local/state/domus"
+normalize_log_dir="${log_root}/normalize"
+photo_log_dir="${log_root}/photo_sort"
+
+normalize_py="${HOME}/.local/bin/normalize-names"
+photo_py="${HOME}/.local/bin/photo-sort"
+
+apply=0
+include_gdrive=0
+with_photo=0
+keep_photo_names=0
+only_when_locked=0
+min_interval_hours=0
+last_run_file="${log_root}/naming-maintenance.last"
+
+usage() {
+  cat <<EOF
+Usage: $0 [--apply] [--include-gdrive] [--with-photo-sort] [--keep-photo-names] [--only-when-locked]
+
+Default: dry run for Dropbox, OneDrive, and iCloud targets (Docs/Media/Projects/Archive/Local/MEDIA_INTAKE-SORT).
+Options:
+  --apply             Perform changes (otherwise dry run).
+  --include-gdrive    Also run on Google Drive roots under ~/Library/CloudStorage (skips shared drives if not mounted).
+  --with-photo-sort   Run photo_sort on iCloud Photos 2025 inbox.
+  --keep-photo-names  Keep original filenames when running photo_sort (still moves files).
+  --only-when-locked  Skip run unless the screen is locked.
+  --min-interval-hours N  Skip run if last run was within N hours.
+EOF
+}
+
+is_screen_locked() {
+  /usr/bin/python3 - <<'PY'
+import plistlib
+import subprocess
+import sys
+
+try:
+    data = subprocess.check_output(["/usr/sbin/ioreg", "-n", "Root", "-d1", "-a"])
+    plist = plistlib.loads(data)
+    users = plist[0].get("IOConsoleUsers", [])
+    locked = any(u.get("CGSSessionScreenIsLocked") is True for u in users)
+    sys.exit(0 if locked else 1)
+except Exception:
+    sys.exit(1)
+PY
+}
+
+is_writable_dir() {
+  local dir="$1"
+  [[ -d "$dir" && -w "$dir" ]]
+}
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --apply) apply=1 ;;
+    --include-gdrive) include_gdrive=1 ;;
+    --with-photo-sort) with_photo=1 ;;
+    --keep-photo-names) keep_photo_names=1 ;;
+    --only-when-locked) only_when_locked=1 ;;
+    --min-interval-hours)
+      shift
+      min_interval_hours="${1:-0}"
+      ;;
+    -h|--help) usage; exit 0 ;;
+    *) echo "Unknown option: $1" >&2; usage; exit 1 ;;
+  esac
+  shift
+done
+
+mkdir -p "$normalize_log_dir" "$photo_log_dir"
+
+if [[ ! -f "$normalize_py" ]]; then
+  echo "normalize-names not found at $normalize_py" >&2
+  echo "  (placeholder scripts need to be created or sourced from Dropbox)" >&2
+  exit 1
+fi
+
+if (( with_photo )) && [[ ! -f "$photo_py" ]]; then
+  echo "photo-sort not found at $photo_py" >&2
+  echo "  (placeholder scripts need to be created or sourced from Dropbox)" >&2
+  exit 1
+fi
+if (( only_when_locked )) && ! is_screen_locked; then
+  echo "[skip] screen not locked"
+  exit 0
+fi
+if (( min_interval_hours > 0 )); then
+  now="$(date +%s)"
+  last=0
+  if [[ -f "$last_run_file" ]]; then
+    last="$(cat "$last_run_file" 2>/dev/null || echo 0)"
+  fi
+  if (( now - last < min_interval_hours * 3600 )); then
+    echo "[skip] last run within ${min_interval_hours}h"
+    exit 0
+  fi
+  echo "$now" > "$last_run_file"
+fi
+
+run_normalize() {
+  local label="$1"
+  local root="$2"
+  shift 2
+  local log_file="${normalize_log_dir}/${timestamp}-${label}.log"
+
+  if [[ ! -d "$root" ]]; then
+    echo "[skip missing] $root"
+    return
+  fi
+  if ! is_writable_dir "$root"; then
+    echo "[skip read-only] $root"
+    return
+  fi
+
+  echo "[normalize $label] $root -> $log_file"
+  python3 "$normalize_py" --root "$root" --move-conflicts --remove-zero ${apply:+--apply} "$@" | tee "$log_file"
+}
+
+run_photo_sort() {
+  local photo_root="$1"
+  if [[ ! -d "$photo_root" ]]; then
+    echo "[skip photo_sort missing] $photo_root"
+    return
+  fi
+  local log_file="${photo_log_dir}/${timestamp}-photos-2025-inbox.log"
+  local mode="dry_run"
+  if (( apply )); then
+    mode="apply"
+  fi
+  echo "[photo_sort ${mode}] $photo_root -> $log_file"
+  python3 "$photo_py" --root "$photo_root" --log "$log_file" ${apply:+--apply} ${keep_photo_names:+--keep-names}
+}
+
+dropbox_root="${HOME}/Library/CloudStorage/Dropbox"
+onedrive_root="${HOME}/OneDrive"
+icloud_root="${HOME}/Library/Mobile Documents/com~apple~CloudDocs"
+
+run_normalize "dropbox" "$dropbox_root"
+run_normalize "onedrive" "$onedrive_root"
+
+# Limit iCloud runs to safe targets (avoid Desktop/Documents/Downloads by design).
+for target in Docs Media Projects Archive Local MEDIA_INTAKE-SORT; do
+  run_normalize "icloud-${target}" "${icloud_root}/${target}"
+done
+
+if (( include_gdrive )); then
+  while IFS= read -r groot; do
+    run_normalize "gdrive-$(basename "$groot")" "$groot"
+  done < <(find "${HOME}/Library/CloudStorage" -maxdepth 1 -type d -name "GoogleDrive-*")
+fi
+
+if (( with_photo )); then
+  run_photo_sort "${icloud_root}/Media/Photos/2025/inbox"
+fi
+
+echo "Done. Mode: $([[ $apply -eq 1 ]] && echo apply || echo dry-run)."

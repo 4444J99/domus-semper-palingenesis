@@ -1,0 +1,62 @@
+# Breadcrumbs (home reorg)
+
+2025-12-19
+- Created `~/System/` with `Guides/`, `Logs/`, `Scripts/`, `Archive/`.
+- Moved `~/Logs` → `~/System/Logs`, `~/scripts` → `~/System/Scripts`, `~/Archive` → `~/System/Archive`.
+- Moved `~/vscode-insiders-backups` into `~/System/Archive/`.
+- Moved `~/tools.yaml` and `~/com.visualstudio.code-insiders.tunnel.plist` into `~/System/Config/`.
+- Consolidated repos into `~/Workspace/` (gamified-coach-interface, trade-perpetual-future, mcp-servers, mail_automation, cloudbase-mcp).
+- Moved loose files into `~/System/Archive/home-root-sweep-20251219/` (GEMINI.md, package-lock.json, desktop-mcp-backup.tgz).
+- Generated dotfiles inventory: `~/System/Archive/home-root-sweep-20251219/dotfiles-inventory.txt`.
+- Restored Google Drive symlinks in `~/` and updated LaunchAgent for desktop-router to `~/System/Scripts/desktop-router.sh`.
+- Updated `com.4jp.env.mcp.plist` to point at `~/System/Config/tools.yaml`.
+- Updated guide references to new `~/System/Logs` and `~/System/Scripts` paths.
+- Created initial scaffolding: `~/Documents/Inbox`, `~/Documents/Archive/2025`, `~/Downloads/Archive/2025-12`.
+- Added READMEs for `Documents/Inbox`, `Documents/Archive`, and `Downloads/Archive` to guide triage.
+- Updated `com.4jp.mcp.servers.plist` to use `~/Workspace/mcp-servers` and moved MCP logs to `~/System/Logs/`.
+- Moved desktop-router logs to `~/System/Logs/`.
+- Updated VS Code extensions LaunchAgents (disabled) to use `~/Workspace/gamified-coach-interface` and moved their logs to `~/System/Logs/`.
+- Added `~/Workspace/README.md` listing current repos.
+- Added `~/System/Guides/README.md` index for guide files.
+- Added `~/System/Archive/README.md` to document archive entries.
+- Added `~/System/Config/README.md` to document config files.
+- Reloaded LaunchAgents for `com.4jp.desktop-router`, `com.4jp.env.mcp`, and `com.4jp.mcp.servers`.
+- Added `~/System/Scripts/downloads-tidy.py` to archive older downloads by category (dry run by default).
+- Ran `downloads-tidy.py --apply --since-days 30` (moved 2 items into `Downloads/Archive/2025-12`; logs in `~/System/Logs/downloads-tidy-20251219-151043.log` and `~/System/Logs/downloads-tidy-20251219-151102.log`).
+- Moved root-level files from `~/Documents` into `~/Documents/Inbox` and cleared `~/Documents/.DS_Store`.
+- Moved `~/my--father-mother` → `~/Workspace/my--father-mother` and updated internal path references.
+- Moved `~/padavano-v-mdc--employment-lawsuit` → `~/Documents/Legal/padavano-v-mdc--employment-lawsuit`.
+- Moved `~/LaunchAgents.disabled` → `~/System/Config/LaunchAgents.disabled`.
+- Moved `~/dot-files` → `~/System/Archive/dot-files`.
+- Set Finder to hide hidden files (defaults `AppleShowAllFiles=false`; toggle with `Cmd+Shift+.`).
+- Removed `~/com.freron.MailMate` (MailMate data) and cleaned `~/.hidden`.
+- Cleared `~/Documents/Inbox` (moved HTML clippings to `~/Documents/Archive/2025/web-clippings` and text notes to `~/Documents/Archive/2025/notes`).
+- Downloads sweep: moved legal docs into `~/Documents/Legal/padavano-v-mdc--employment-lawsuit/` (communications, discovery, intake, schedules).
+- Downloads sweep: moved `tax-documents-120925` and tax notes into `~/Documents/Finance/Taxes/2025/`.
+- Downloads sweep: moved `enterprise-plugin` into `~/Workspace/enterprise-plugin` with related config/docs/agents/hooks.
+- Downloads sweep: moved project folders into `~/Documents/Projects/` (omni-dromenon, hokage-chess--believe-it!, unknown-tombs-lingusitics-atomized, synth-wave-modules) and `chat-gpt--export-121525` into `~/Documents/Archive/2025/exports/`.
+- Downloads sweep: moved images into `~/Pictures/From-Downloads/2025-12`, installers into `~/Downloads/Archive/2025-12/installers`, and notes into `~/Documents/Archive/2025/notes/downloads`.
+- Downloads sweep: moved `.github` into `~/System/Archive/downloads-sweep-20251219/` and renamed `# synth-wave-modules` → `synth-wave-modules`.
+- Removed orphan app leftovers in `~/Library` (43 items; log: `~/System/Logs/orphan-app-cleanup-20251219-154642.log`). Some removed items are extension containers; opening the related apps may re-create them.
+- Orphan cleanup pass 2 removed 24 items (log: `~/System/Logs/orphan-app-cleanup-2-20251219-154933.log`), including user LaunchAgents. Restored `com.4jp.*` LaunchAgents afterward.
+- Generated system sweep reports: `~/System/Logs/system-sweep-report-20251219-155636.md` (raw) and `~/System/Logs/system-sweep-report-refined-20251219-155833.md` (filtered).
+- Removed high-confidence user leftovers (`com.dropbox.client.crashpad`, `com.segment.storage.oai`, `io.sentry`). New Relic daemon removal needs sudo (log: `~/System/Logs/orphan-cleanup-action-20251219-160100.log`).
+- Generated refreshed report after New Relic removal: `~/System/Logs/system-sweep-report-refined-2-20251219-161247.md`.
+- Restored `com.user.gmail_labeler` LaunchAgent from `~/Workspace/mail_automation/` to `~/Library/LaunchAgents/`.
+- Applied Dropbox name normalization (`normalize_names.py --apply --move-conflicts`), renamed 15,112 items; log: `~/System/Logs/normalize/normalize-apply-dropbox-20251219-175107.log`.
+- Cloned `ivviiviivvi/input-keys-log` and placed it in `~/Workspace/input-keys-log`; updated `com.pyloggy.startup` to use the Workspace path.
+- Updated `com.user.gmail_labeler` to use `~/Workspace/mail_automation` and moved its logs to `~/System/Logs/mail_automation/`; removed stray `~/mail_automation` folder.
+- Added `com.4jp.home-root-guard` LaunchAgent to auto-move stray items from `~/` into Workspace/Inbox buckets.
+- Added `com.4jp.downloads-tidy` LaunchAgent to archive older downloads nightly (`--since-days 30`).
+- Updated home root guard to only run when the screen is locked (`--only-when-locked`).
+- Added `com.4jp.naming-maintenance` LaunchAgent to run cloud normalization only when locked (at most once per 24h).
+- Exported Pieces Desktop data to `~/Documents/Archive/2025/exports/pieces-desktop-20251219-202239/` (JSON + Markdown).
+- Created Pieces Desktop Settings UI flow index from screenshots: `~/Documents/Archive/2025/notes/pieces-desktop-ui-flows-20251219/` (also ingested into my--father-mother).
+- OCR'ed Pieces Settings screenshots to `~/Documents/Archive/2025/notes/pieces-desktop-ui-flows-20251219/ocr/` and aggregated at `~/Documents/Archive/2025/notes/pieces-desktop-ui-flows-20251219/ocr.md`.
+- Wrote parity spec at `~/Documents/Archive/2025/notes/pieces-desktop-ui-flows-20251219/parity-spec.md` and ingested into my--father-mother.
+- Added `mcp-urls` CLI to my--father-mother and documented it in `~/Workspace/my--father-mother/README.md`.
+- Added `settings`, `copilot`, `ml`, and `about` CLI commands to my--father-mother with a `/settings` API snapshot and copilot chat store.
+- Wired ML auto-context/LTM toggles into the watcher, updated README, and refreshed the parity spec.
+
+Notes
+- No photos or videos were deleted.

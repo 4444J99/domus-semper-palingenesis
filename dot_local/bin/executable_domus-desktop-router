@@ -1,0 +1,91 @@
+#!/usr/bin/env bash
+# Route loose files on ~/Desktop into categorized subfolders.
+# Triggered by WatchPaths LaunchAgent on Desktop changes.
+
+set -euo pipefail
+shopt -s nullglob
+export PATH="/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/usr/local/bin:${PATH:-}"
+
+desk="${HOME}/Desktop"
+targets=(
+  "Shortcuts"
+  "Screenshots"
+  "Screen Recordings"
+  "Documents"
+  "Logs"
+  "Inbox"
+)
+
+# Ensure destination folders exist
+for t in "${targets[@]}"; do
+  mkdir -p "${desk}/${t}"
+done
+
+unique_dest() {
+  local dest="$1"
+  local base="${dest%/*}"
+  local name="${dest##*/}"
+  local stem="${name%.*}"
+  local ext="${name##*.}"
+  local counter=1
+  while [ -e "$dest" ]; do
+    if [ "$ext" = "$name" ]; then
+      dest="${base}/${stem}_${counter}"
+    else
+      dest="${base}/${stem}_${counter}.${ext}"
+    fi
+    counter=$((counter + 1))
+  done
+  printf '%s\n' "$dest"
+}
+
+route_item() {
+  local path="$1"
+  local base="${path##*/}"
+
+  # Ignore our own target folders and dotfiles
+  case "$base" in
+    "Shortcuts"|"Screenshots"|"Screen Recordings"|"Documents"|"Logs"|"Inbox"|".DS_Store"|".localized")
+      return
+      ;;
+    Icon$'\r')
+      return
+      ;;
+  esac
+
+  # Determine destination
+  local dest_dir=""
+  if [ -d "$path" ] && [[ "$path" == *.app ]]; then
+    dest_dir="${desk}/Shortcuts/Other"
+    mkdir -p "$dest_dir"
+  else
+    local ext="${base##*.}"
+    ext="${ext,,}" # lowercase (bash)
+    case "$ext" in
+      png|jpg|jpeg|heic|tif|tiff|gif|bmp)
+        dest_dir="${desk}/Screenshots"
+        ;;
+      mov|mp4|m4v|avi|mkv)
+        dest_dir="${desk}/Screen Recordings"
+        ;;
+      pdf)
+        dest_dir="${desk}/Documents"
+        ;;
+      log|txt)
+        dest_dir="${desk}/Logs"
+        ;;
+      *)
+        dest_dir="${desk}/Inbox"
+        ;;
+    esac
+  fi
+
+  local dest="${dest_dir}/${base}"
+  dest="$(unique_dest "$dest")"
+  /bin/mv "$path" "$dest"
+}
+
+# Use shell globbing to avoid TCC blocking /usr/bin/find.
+for item in "$desk"/*; do
+  route_item "$item"
+done
