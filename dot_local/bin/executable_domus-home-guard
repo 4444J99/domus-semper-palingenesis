@@ -37,6 +37,10 @@ ALLOW_NAMES = {
     "Workspace",
     "Dropbox",
     "OneDrive",
+    "dotfiles",
+    "Finance",
+    "Legal",
+    "Projects",
     "go",
 }
 
