@@ -25,7 +25,11 @@ mkdir -p ~/.local/share/file-context/links/by-status/{active,archived,reference}
 mkdir -p ~/.local/state/zsh
 
 # XDG config directories for relocated dotfiles
-mkdir -p ~/.config/{curl,readline,less,kube,npm}
+mkdir -p ~/.config/{curl,readline,less,kube,npm,ipython,jupyter}
+
+# XDG data directories for apps migrated from ~/.<app>
+mkdir -p ~/.local/share/{gnupg,nvm,bun,jupyter,terraform}
+chmod 700 ~/.local/share/gnupg
 
 # Domus state directories
 mkdir -p ~/.local/state/domus/{telemetry,snapshots}

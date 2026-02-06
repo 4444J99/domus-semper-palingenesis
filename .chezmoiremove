@@ -4,3 +4,5 @@
 .inputrc
 .lesskey
 .npmrc
+.gitignore_global
+.viminfo

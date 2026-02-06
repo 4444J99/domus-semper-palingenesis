@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+# Migrate app data from ~/.<app> to XDG locations (Phase 2)
+# One-time: runs once per machine via chezmoi run_once
+set -euo pipefail
+
+log() { printf '  %s\n' "$*"; }
+
+migrate() {
+  local src="$1" dest="$2"
+  if [[ -d "$src" && ! -L "$src" ]]; then
+    mkdir -p "$dest"
+    rsync -a "$src/" "$dest/"
+    rm -rf "$src"
+    log "Migrated $src → $dest"
+  fi
+}
+
+echo "🔄 Migrating app data to XDG locations (Phase 2)..."
+
+# Apps with env vars already set (data never migrated)
+migrate "$HOME/.cargo"       "$HOME/.local/share/cargo"
+migrate "$HOME/.rustup"      "$HOME/.local/share/rustup"
+
+# Apps with new env vars from this release
+migrate "$HOME/.gnupg"       "$HOME/.local/share/gnupg"
+migrate "$HOME/.nvm"         "$HOME/.local/share/nvm"
+migrate "$HOME/.bun"         "$HOME/.local/share/bun"
+migrate "$HOME/.ipython"     "$HOME/.config/ipython"
+migrate "$HOME/.jupyter"     "$HOME/.config/jupyter"
+migrate "$HOME/.terraform.d" "$HOME/.local/share/terraform"
+
+# Set strict permissions on gnupg (required by gpg)
+if [[ -d "$HOME/.local/share/gnupg" ]]; then
+  chmod 700 "$HOME/.local/share/gnupg"
+fi
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Stale hidden file cleanup
+# ─────────────────────────────────────────────────────────────────────────────
+
+# Remove Claude CLI backup files
+for f in "$HOME"/.claude.json.backup.*; do
+  [[ -e "$f" ]] && rm -f "$f" && log "Removed $f"
+done
+
+echo "✅ XDG migration (Phase 2) complete"

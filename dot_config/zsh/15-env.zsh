@@ -53,6 +53,25 @@ export INPUTRC="$XDG_CONFIG_HOME/readline/inputrc"
 # less keybindings
 export LESSKEYIN="$XDG_CONFIG_HOME/less/lesskey"
 
+# GnuPG
+export GNUPGHOME="$XDG_DATA_HOME/gnupg"
+
+# nvm
+export NVM_DIR="$XDG_DATA_HOME/nvm"
+
+# Bun
+export BUN_INSTALL="$XDG_DATA_HOME/bun"
+
+# IPython
+export IPYTHONDIR="$XDG_CONFIG_HOME/ipython"
+
+# Jupyter
+export JUPYTER_CONFIG_DIR="$XDG_CONFIG_HOME/jupyter"
+export JUPYTER_DATA_DIR="$XDG_DATA_HOME/jupyter"
+
+# Terraform
+export TF_DATA_DIR="$XDG_DATA_HOME/terraform"
+
 # Project directories
 export PROJECTS_DIR="$HOME/Projects"
 
