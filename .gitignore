@@ -10,3 +10,6 @@
 # Environment-specific
 .envrc
 .direnv/
+
+# Tool-specific
+.serena/
