@@ -42,6 +42,7 @@ work_scripts/
 .pre-commit-config.yaml
 .gitleaks.toml
 justfile
+.serena/
 tests/
 
 # Repository documentation (don't apply to home directory)
