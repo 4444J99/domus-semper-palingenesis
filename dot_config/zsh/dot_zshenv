@@ -1,0 +1,4 @@
+# When ZDOTDIR is inherited (e.g. exec zsh), zsh reads $ZDOTDIR/.zshenv
+# instead of ~/.zshenv. Re-source the home .zshenv to ensure all early
+# env vars (XDG, SHELL_SESSIONS_DISABLE, HISTFILE) are set.
+source "${HOME}/.zshenv"
