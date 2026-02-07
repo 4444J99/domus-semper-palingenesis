@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+# Bridge Docker Desktop's ~/.docker into XDG-compliant $DOCKER_CONFIG
+# Docker Desktop manages cli-plugins and config.json at ~/.docker/,
+# but DOCKER_CONFIG is set to ~/.config/docker (15-env.zsh).
+# Symlink the Desktop-managed files so the CLI finds them at $DOCKER_CONFIG.
+
+set -euo pipefail
+
+{{- if ne .chezmoi.os "darwin" }}
+exit 0
+{{- end }}
+
+src="$HOME/.docker"
+dest="${XDG_CONFIG_HOME:-$HOME/.config}/docker"
+
+if [ ! -d "$src" ]; then
+  echo "⚠️  ~/.docker does not exist (Docker Desktop not installed?) — skipping"
+  exit 0
+fi
+
+mkdir -p "$dest"
+
+# Symlink cli-plugins (Docker Desktop manages this directory)
+if [ ! -e "$dest/cli-plugins" ]; then
+  ln -s "$src/cli-plugins" "$dest/cli-plugins"
+  echo "✅ Symlinked $dest/cli-plugins → $src/cli-plugins"
+fi
+
+# Symlink config.json (Docker Desktop manages this file)
+if [ ! -e "$dest/config.json" ]; then
+  ln -s "$src/config.json" "$dest/config.json"
+  echo "✅ Symlinked $dest/config.json → $src/config.json"
+fi
+
+# Symlink contexts (Docker Desktop manages this directory)
+if [ -d "$src/contexts" ] && [ ! -e "$dest/contexts" ]; then
+  ln -s "$src/contexts" "$dest/contexts"
+  echo "✅ Symlinked $dest/contexts → $src/contexts"
+fi
+
+echo "🐳 Docker XDG bridge complete"
