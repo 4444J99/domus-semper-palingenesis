@@ -117,8 +117,8 @@ ln -s ~/External/ivi374forivi3ivi3/workspace ~/Projects/ivi374
 cat > ~/.local/share/file-context/manifests/my-projects.yaml <<'EOF'
 projects:
   active:
-    - name: "dotfiles"
-      path: "~/Projects/Active/dotfiles"
+    - name: "domus-semper-palingenesis"
+      path: "~/Projects/Active/domus-semper-palingenesis"
       type: "system"
       priority: "critical"
       backup: "GitHub + ~/External/Archive/"

@@ -93,4 +93,4 @@ cache-clear:
 
 # Open dotfiles in editor
 edit:
-    $EDITOR ~/dotfiles
+    $EDITOR ~/domus-semper-palingenesis

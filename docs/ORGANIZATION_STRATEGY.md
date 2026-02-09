@@ -223,9 +223,9 @@ Files need context:
 # ~/.local/share/file-context/manifests/projects.yaml
 projects:
   active:
-    - name: "dotfiles"
-      path: "~/Documents/dotfiles"
-      external_backup: "~/External/Archive/dotfiles"
+    - name: "domus-semper-palingenesis"
+      path: "~/Documents/domus-semper-palingenesis"
+      external_backup: "~/External/Archive/domus-semper-palingenesis"
       type: "configuration"
       tags: ["system", "critical", "synced"]
 
@@ -270,7 +270,7 @@ Auto-organize files by creating categorized symlinks:
 ~/. local/share/file-context/links/
 ├── by-type/
 │   ├── code/
-│   │   ├── dotfiles -> ~/Documents/dotfiles
+│   │   ├── domus-semper-palingenesis -> ~/Documents/domus-semper-palingenesis
 │   │   └── ivi374 -> ~/External/workspace
 │   ├── docs/
 │   │   └── important -> ~/Documents/Work/Important/

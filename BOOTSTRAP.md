@@ -77,7 +77,7 @@ sh -c "$(curl -fsLS get.chezmoi.io)"
 ### Step 2: Initialize
 
 ```bash
-chezmoi init https://github.com/4444JPP/dotfiles.git
+chezmoi init https://github.com/4444J99/domus-semper-palingenesis.git
 ```
 
 You'll be prompted for:
@@ -183,7 +183,7 @@ On existing machines:
 cmu  # alias for: chezmoi update
 
 # Or manually:
-cmcd           # cd to dotfiles repo
+cmcd           # cd to domus-semper-palingenesis repo
 git pull
 chezmoi apply
 ```

@@ -71,9 +71,9 @@ alias cmdf='chezmoi diff | awk '\''BEGIN{s=0} /^diff --git.*chezmoiscripts/{s=1;
 alias cme='chezmoi edit'
 alias cmu='chezmoi update'
 alias cms='chezmoi status'
-alias cmcd='cd ~/dotfiles'
-alias cmpush='cd ~/dotfiles && git push'
-alias cmlog='cd ~/dotfiles && git log --oneline -10'
+alias cmcd='cd ~/domus-semper-palingenesis'
+alias cmpush='cd ~/domus-semper-palingenesis && git push'
+alias cmlog='cd ~/domus-semper-palingenesis && git log --oneline -10'
 
 # Health & self-heal
 alias cmh='chezmoi-health'

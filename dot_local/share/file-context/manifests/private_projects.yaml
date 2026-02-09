@@ -4,9 +4,9 @@
 
 projects:
   active:
-    - name: "dotfiles"
+    - name: "domus-semper-palingenesis"
       path: "~/.local/share/chezmoi"
-      github: "https://github.com/4444JPP/dotfiles"
+      github: "https://github.com/4444J99/domus-semper-palingenesis"
       type: "system-configuration"
       priority: "critical"
       storage: "local"

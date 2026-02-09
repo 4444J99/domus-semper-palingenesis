@@ -4,7 +4,7 @@
 
 ### 1. Git Repository (Primary)
 - All dotfiles version-controlled in this repo
-- Push regularly: `cmpush` or `cd ~/dotfiles && git push`
+- Push regularly: `cmpush` or `cd ~/domus-semper-palingenesis && git push`
 - Full history of every configuration change
 
 ### 2. Chezmoi Recovery Snapshots

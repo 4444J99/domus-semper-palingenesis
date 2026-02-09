@@ -14,7 +14,7 @@ system_notes:
         - "No plaintext credentials"
         - "Use op read or 1Password loaders"
       references:
-        - "~/dotfiles/docs/system-guides/AGENTS.md"
+        - "~/domus-semper-palingenesis/docs/system-guides/AGENTS.md"
       tags: ["policy", "security", "agents", "critical"]
 
   workspace_docs:
@@ -67,7 +67,7 @@ system_notes:
 
 system_guides:
   - name: "System Guides"
-    path: "~/dotfiles/docs/system-guides/"
+    path: "~/domus-semper-palingenesis/docs/system-guides/"
     type: "reference"
     description: "General development conventions and workspace practices (archived from ~/System/Guides/)"
     tags: ["guides", "reference", "archived"]
@@ -79,6 +79,6 @@ notes:
 
   recommendations:
     - "Backup AGENTS.md to dotfiles repo (as template or doc)"
-    - "System guides archived to ~/dotfiles/docs/system-guides/"
+    - "System guides archived to ~/domus-semper-palingenesis/docs/system-guides/"
     - "Create ~/Documents/Notes/Architecture/ for architecture docs"
     - "Move architecture docs from ~/Workspace/ to ~/Documents/Notes/Architecture/"
