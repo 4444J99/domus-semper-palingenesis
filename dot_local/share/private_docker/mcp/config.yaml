@@ -16,3 +16,6 @@ git:
     - /Users/4jp/Workspace
 cloud-run-mcp:
   credentials_path: /Users/4jp/.config/gcloud/application_default_credentials.json
+markdownify:
+  paths:
+    - ~/

@@ -41,7 +41,7 @@
       "showColor": true
     },
     "autoAccept": true,
-    "approvalMode": "plan"
+    "approvalMode": "default"
   },
   "ide": {
     "enabled": true
