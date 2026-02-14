@@ -12,6 +12,8 @@
 #   domus packages [diff|apply]  # Package management
 #   domus perf [shell]       # Performance report
 #   domus health             # Health check (wraps chezmoi-health)
+#   domus logs               # View system logs
+#   domus doctor             # Comprehensive system diagnostics
 #
 # Exit codes:
 #   0 - Success
@@ -24,11 +26,13 @@ set -euo pipefail
 # Configuration
 # ─────────────────────────────────────────────────────────────────────────────
 
-DOMUS_VERSION="1.0.0"
+DOMUS_VERSION="1.1.0"
 CONFIG_DIR="${HOME}/.config/domus"
 STATE_DIR="${HOME}/.local/state/domus"
 MANIFEST="${CONFIG_DIR}/manifest.yaml"
 BIN_DIR="${HOME}/.local/bin"
+LOG_FILE="${STATE_DIR}/domus.log"
+DEBUG_MODE=0
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Colors (disabled for non-interactive or piped output)
@@ -68,11 +72,25 @@ warn() {
   printf '%s!%s %s\n' "$YELLOW" "$RESET" "$1"
 }
 
+debug() {
+  if [[ $DEBUG_MODE -eq 1 ]]; then
+    printf '%sdebug:%s %s\n' "$DIM" "$RESET" "$1" >&2
+  fi
+}
+
+log() {
+  local level="${2:-INFO}"
+  mkdir -p "$(dirname "$LOG_FILE")"
+  printf '[%s] [%s] %s\n' "$(date -u +"%Y-%m-%dT%H:%M:%SZ")" "$level" "$1" >> "$LOG_FILE"
+}
+
 check_deps() {
+  local mandatory=("jq" "yq")
   local missing=()
-  for cmd in "$@"; do
-    if ! command -v "$cmd" &>/dev/null; then
-      missing+=("$cmd")
+  local dep
+  for dep in "${mandatory[@]}" "$@"; do
+    if ! command -v "$dep" &>/dev/null; then
+      missing+=("$dep")
     fi
   done
   if [[ ${#missing[@]} -gt 0 ]]; then
@@ -144,9 +162,14 @@ ${BOLD}COMMANDS${RESET}
     ${CYAN}health${RESET}              Chezmoi health check
         --json          Machine-readable output
 
+    ${CYAN}logs${RESET}                View system logs
+        -f, --follow    Tail logs
+        -n, --lines N   Number of lines (default: 50)
+
     ${CYAN}doctor${RESET}              Comprehensive system diagnostics
 
 ${BOLD}OPTIONS${RESET}
+    --debug             Show detailed execution trace
     -h, --help          Show this help
     -v, --version       Show version
 
@@ -324,18 +347,31 @@ cmd_apply() {
     esac
   done
 
+  # 1Password Pre-flight check
+  if [[ $packages_only -eq 0 ]]; then
+    debug "Checking 1Password authentication..."
+    if ! op whoami &>/dev/null; then
+      warn "1Password is not authenticated. Templates may fail to render."
+      info "Continuing in non-interactive mode. Sync might fail for templated files."
+      log "1Password not authenticated during apply" "WARN"
+    fi
+  fi
+
   local exit_code=0
 
   # Apply dotfiles
   if [[ $packages_only -eq 0 ]]; then
     info "Syncing dotfiles..."
+    log "Starting dotfiles sync"
     if [[ $dry_run -eq 1 ]]; then
       chezmoi diff 2>/dev/null || true
     else
       if chezmoi apply 2>/dev/null; then
         success "Dotfiles synced"
+        log "Dotfiles sync successful"
       else
         warn "Dotfiles sync had issues"
+        log "Dotfiles sync failed" "ERROR"
         exit_code=1
       fi
     fi
@@ -344,19 +380,23 @@ cmd_apply() {
   # Apply packages
   if [[ $dotfiles_only -eq 0 ]]; then
     info "Syncing packages..."
+    log "Starting packages sync"
     if [[ -x "${BIN_DIR}/domus-packages" ]]; then
       if [[ $dry_run -eq 1 ]]; then
         "${BIN_DIR}/domus-packages" diff
       else
         if "${BIN_DIR}/domus-packages" apply; then
           success "Packages synced"
+          log "Packages sync successful"
         else
           warn "Package sync had issues"
+          log "Packages sync failed" "ERROR"
           exit_code=1
         fi
       fi
     else
       warn "domus-packages not found, skipping"
+      log "domus-packages not found" "WARN"
     fi
   fi
 
@@ -563,6 +603,35 @@ cmd_health() {
   fi
 }
 
+cmd_logs() {
+  local lines=50
+  local follow=0
+
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      -f | --follow)
+        follow=1
+        shift
+        ;;
+      -n | --lines)
+        lines="$2"
+        shift 2
+        ;;
+      *) shift ;;
+    esac
+  done
+
+  if [[ ! -f "$LOG_FILE" ]]; then
+    die "Log file not found: $LOG_FILE"
+  fi
+
+  if [[ $follow -eq 1 ]]; then
+    tail -n "$lines" -f "$LOG_FILE"
+  else
+    tail -n "$lines" "$LOG_FILE"
+  fi
+}
+
 cmd_doctor() {
   local exit_code=0
 
@@ -701,8 +770,29 @@ cmd_doctor() {
 # ─────────────────────────────────────────────────────────────────────────────
 
 main() {
+  local args=()
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --debug)
+        DEBUG_MODE=1
+        shift
+        ;;
+      *)
+        args+=("$1")
+        shift
+        ;;
+    esac
+  done
+
+  set -- "${args[@]}"
   local cmd="${1:-status}"
-  shift 2>/dev/null || true
+  [[ $# -gt 0 ]] && shift
+
+  debug "Domus CLI version ${DOMUS_VERSION}"
+  debug "Command: $cmd"
+  debug "Arguments: $*"
+
+  check_deps
 
   case "$cmd" in
     -h | --help | help)
@@ -728,6 +818,9 @@ main() {
       ;;
     health)
       cmd_health "$@"
+      ;;
+    logs)
+      cmd_logs "$@"
       ;;
     doctor | doc)
       cmd_doctor "$@"

@@ -45,7 +45,7 @@ route_item() {
 
   # Ignore our own target folders and dotfiles
   case "$base" in
-    "Shortcuts"|"Screenshots"|"Screen Recordings"|"Documents"|"Logs"|"Inbox"|".DS_Store"|".localized")
+    "Shortcuts"|"Screenshots"|"Screen Recordings"|"Documents"|"Logs"|"Inbox"|"iterm-logs"|".DS_Store"|".localized")
       return
       ;;
     Icon$'\r')
