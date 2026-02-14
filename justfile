@@ -94,8 +94,12 @@ cache-clear:
 # Check docs don't reference removed functions
 doc-lint:
     @echo ":: Doc references"
-    @! grep -rn 'maintain()\|maintain-quick\|cache-sizes()' docs/ README.md 2>/dev/null || true
-    @echo "No stale references found"
+    @if grep -rn 'maintain()\|maintain-quick\|cache-sizes()' docs/ README.md 2>/dev/null; then \
+        echo "ERROR: Stale references found (see above)"; \
+        exit 1; \
+    else \
+        echo "No stale references found"; \
+    fi
 
 # Open dotfiles in editor
 edit:

@@ -34,39 +34,39 @@ fi
 # ─────────────────────────────────────────────────────────────────────────────
 
 extract_zsh_aliases() {
-  grep -E "^alias [a-zA-Z]" "$ZSH_ALIASES" 2>/dev/null |
+  { grep -E "^alias [a-zA-Z]" "$ZSH_ALIASES" 2>/dev/null || true; } |
     sed "s/^alias \([^=]*\)=.*/\1/" |
     sort -u
 }
 
 extract_zsh_abbreviations() {
-  grep -E "^abbr " "$ZSH_ALIASES" 2>/dev/null |
+  { grep -E "^abbr " "$ZSH_ALIASES" 2>/dev/null || true; } |
     sed "s/^abbr -a \([^ ]*\).*/\1/" |
     sort -u
 }
 
 extract_fish_aliases() {
-  grep -E "^\s*alias [a-zA-Z]" "$FISH_ALIASES" 2>/dev/null |
+  { grep -E "^\s*alias [a-zA-Z]" "$FISH_ALIASES" 2>/dev/null || true; } |
     sed "s/.*alias \([^ ]*\).*/\1/" |
     sort -u
 }
 
 extract_fish_abbreviations() {
-  grep -E "^\s*abbr -a " "$FISH_ALIASES" 2>/dev/null |
+  { grep -E "^\s*abbr -a " "$FISH_ALIASES" 2>/dev/null || true; } |
     sed "s/.*abbr -a \([^ ]*\).*/\1/" |
     sort -u
 }
 
 extract_zsh_functions() {
-  grep -E "^[a-zA-Z_][a-zA-Z0-9_-]*\(\)" "$ZSH_FUNCTIONS" 2>/dev/null |
-    sed "s/\(\).*//" |
+  { grep -E "^[a-zA-Z_][a-zA-Z0-9_-]*\(\)" "$ZSH_FUNCTIONS" 2>/dev/null || true; } |
+    sed 's/().*//' |
     sort -u
 }
 
 extract_fish_functions() {
-  grep -E "^\s*function [a-zA-Z_]" "$FISH_FUNCTIONS" 2>/dev/null |
+  { grep -E "^\s*function [a-zA-Z_]" "$FISH_FUNCTIONS" 2>/dev/null || true; } |
     sed "s/.*function \([^ ]*\).*/\1/" |
-    grep -v "^-" |
+    { grep -v "^-" || true; } |
     sort -u
 }
 

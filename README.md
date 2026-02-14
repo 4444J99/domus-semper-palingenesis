@@ -129,12 +129,19 @@ j       # just (task runner)
 │   ├── lazygit/            # Git TUI
 │   ├── bat/                # Cat replacement
 │   ├── git/                # Git + delta + hooks
-│   ├── fish/               # Fish shell config
+│   ├── fish/               # Fish shell config (full zsh parity)
+│   │   └── conf.d/         # 00-path, 10-env, 20-tools, 30-aliases,
+│   │                       # 40-functions, 50-theme, 90-telemetry
 │   ├── ai-context/         # AI assistant context
 │   ├── ai-instructions/    # Cursor/Copilot rules
 │   ├── starship.toml       # Prompt
 │   └── environment.tmpl    # XDG variables
 ├── dot_local/bin/           # domus CLI, daemons, health, packages, theme
+│   ├── domus-lib.sh        # Shared bash utilities
+│   └── domus_lib.py        # Shared Python utilities (unique_dest, etc.)
+├── tests/                   # 14 BATS + 5 pytest test files
+│   ├── render-tmpl.sh      # Render-then-test pipeline for .tmpl scripts
+│   └── test-helpers.bash   # Shared BATS fixtures and mocks
 ├── dot_zshrc               # Shell entry point (loads zsh/ modules)
 ├── private_dot_ssh/        # SSH via 1Password agent
 ├── private_dot_claude/     # Claude Code config
@@ -159,7 +166,7 @@ j       # just (task runner)
 
 <div align="center">
 
-**200+ managed files · 35 templates · 0 secrets in Git**
+**220+ managed files · 53 templates · 10 CI jobs · 0 secrets in Git**
 
 MIT · [chezmoi](https://chezmoi.io) · [Tokyo Night](https://github.com/folke/tokyonight.nvim)
 

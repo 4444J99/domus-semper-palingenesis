@@ -1,6 +1,6 @@
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0
+    rev: v6.0.0
     hooks:
       - id: trailing-whitespace
         exclude: '\.tmpl$'
@@ -13,7 +13,7 @@ repos:
       - id: check-merge-conflict
 
   - repo: https://github.com/koalaman/shellcheck-precommit
-    rev: v0.10.0
+    rev: v0.11.0
     hooks:
       - id: shellcheck
         args: ['-x']
@@ -21,19 +21,19 @@ repos:
         exclude: '\.tmpl$'
 
   - repo: https://github.com/scop/pre-commit-shfmt
-    rev: v3.10.0-1
+    rev: v3.12.0-2
     hooks:
       - id: shfmt
         args: ['-i', '2', '-ci']
         exclude: '\.tmpl$'
 
   - repo: https://github.com/adrienverge/yamllint
-    rev: v1.35.1
+    rev: v1.38.0
     hooks:
       - id: yamllint
         args: ['-c', '.yamllint.yml']
 
   - repo: https://github.com/gitleaks/gitleaks
-    rev: v8.22.1
+    rev: v8.30.0
     hooks:
       - id: gitleaks

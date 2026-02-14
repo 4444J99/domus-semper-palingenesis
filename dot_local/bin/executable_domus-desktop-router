@@ -30,9 +30,9 @@ unique_dest() {
   local counter=1
   while [ -e "$dest" ]; do
     if [ "$ext" = "$name" ]; then
-      dest="${base}/${stem}_${counter}"
+      dest="${base}/${stem}-${counter}"
     else
-      dest="${base}/${stem}_${counter}.${ext}"
+      dest="${base}/${stem}-${counter}.${ext}"
     fi
     counter=$((counter + 1))
   done
@@ -45,7 +45,7 @@ route_item() {
 
   # Ignore our own target folders and dotfiles
   case "$base" in
-    "Shortcuts"|"Screenshots"|"Screen Recordings"|"Documents"|"Logs"|"Inbox"|"iterm-logs"|".DS_Store"|".localized")
+    "Shortcuts" | "Screenshots" | "Screen Recordings" | "Documents" | "Logs" | "Inbox" | "iterm-logs" | ".DS_Store" | ".localized")
       return
       ;;
     Icon$'\r')
@@ -62,16 +62,16 @@ route_item() {
     local ext="${base##*.}"
     ext="${ext,,}" # lowercase (bash)
     case "$ext" in
-      png|jpg|jpeg|heic|tif|tiff|gif|bmp)
+      png | jpg | jpeg | heic | tif | tiff | gif | bmp)
         dest_dir="${desk}/Screenshots"
         ;;
-      mov|mp4|m4v|avi|mkv)
+      mov | mp4 | m4v | avi | mkv)
         dest_dir="${desk}/Screen Recordings"
         ;;
       pdf)
         dest_dir="${desk}/Documents"
         ;;
-      log|txt)
+      log | txt)
         dest_dir="${desk}/Logs"
         ;;
       *)

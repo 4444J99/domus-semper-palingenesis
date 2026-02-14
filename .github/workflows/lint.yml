@@ -111,6 +111,17 @@ jobs:
             grep -i python | cut -d: -f1 | \
             xargs -r ruff check --select E,F,W
 
+  pytest:
+    name: Python Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: pip install pytest
+      - run: python -m pytest tests/ -q
+
   doc-lint:
     name: Doc References
     runs-on: ubuntu-latest

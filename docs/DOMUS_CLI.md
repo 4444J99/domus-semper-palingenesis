@@ -25,6 +25,8 @@
 | `domus maintain --dry-run` | Preview what would run |
 | `domus logs` | View system logs |
 | `domus logs -f` | Tail system logs |
+| `domus shell-parity` | Compare zsh/fish config for drift |
+| `domus parity` | Alias for `shell-parity` |
 
 ## Shell Aliases
 

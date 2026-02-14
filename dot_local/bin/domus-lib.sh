@@ -59,6 +59,24 @@ check_manifest() {
   fi
 }
 
+# Verify required commands are available.
+# Usage: check_deps [extra_dep ...]
+# Always checks jq and yq, plus any additional deps passed as arguments.
+# shellcheck disable=SC2120
+check_deps() {
+  local mandatory=("jq" "yq")
+  local missing=()
+  local dep
+  for dep in "${mandatory[@]}" "$@"; do
+    if ! command -v "$dep" &>/dev/null; then
+      missing+=("$dep")
+    fi
+  done
+  if [[ ${#missing[@]} -gt 0 ]]; then
+    die "Missing dependencies: ${missing[*]}"
+  fi
+}
+
 # ─────────────────────────────────────────────────────────────────────────────
 # Log rotation
 # ─────────────────────────────────────────────────────────────────────────────

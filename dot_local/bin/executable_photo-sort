@@ -109,17 +109,9 @@ def get_file_date(path: Path) -> dt.datetime:
 
 
 def unique_dest(dest: Path) -> Path:
-    """Return a non-colliding path by appending -dup-N suffix."""
-    if not dest.exists():
-        return dest
-    stem = dest.stem
-    suffix = dest.suffix
-    counter = 1
-    while True:
-        candidate = dest.with_name(f"{stem}-dup-{counter}{suffix}")
-        if not candidate.exists():
-            return candidate
-        counter += 1
+    """Return a non-colliding path by appending -N suffix."""
+    from domus_lib import unique_dest as _unique_dest
+    return _unique_dest(dest)
 
 
 def main() -> None:

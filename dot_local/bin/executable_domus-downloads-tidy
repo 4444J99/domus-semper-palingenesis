@@ -63,12 +63,17 @@ def category_for(name: str) -> str:
 
 
 def unique_dest(dest: Path) -> Path:
+    """Return a non-colliding path by appending -N suffix.
+
+    Uses split_name for multi-extension support (.tar.gz etc),
+    delegates core logic to shared library convention.
+    """
     if not dest.exists():
         return dest
     stem, ext = split_name(dest.name)
     counter = 1
     while True:
-        candidate = dest.with_name(f"{stem}-dup-{counter}{ext}")
+        candidate = dest.with_name(f"{stem}-{counter}{ext}")
         if not candidate.exists():
             return candidate
         counter += 1

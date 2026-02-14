@@ -147,15 +147,15 @@ class TestUniqueDest:
             dest = Path(d) / "photo.jpg"
             dest.touch()
             result = unique_dest(dest)
-            assert result.name == "photo-dup-1.jpg"
+            assert result.name == "photo-1.jpg"
 
     def test_multiple_collisions(self):
         with tempfile.TemporaryDirectory() as d:
             dest = Path(d) / "photo.jpg"
             dest.touch()
-            (Path(d) / "photo-dup-1.jpg").touch()
+            (Path(d) / "photo-1.jpg").touch()
             result = unique_dest(dest)
-            assert result.name == "photo-dup-2.jpg"
+            assert result.name == "photo-2.jpg"
 
 
 # ─── CLI integration tests ───

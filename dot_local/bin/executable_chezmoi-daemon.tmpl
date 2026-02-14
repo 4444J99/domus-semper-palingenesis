@@ -108,13 +108,12 @@ log() {
 }
 
 log_rotate() {
-  # Keep log file under 1MB
+  # Keep log file under 1MB; preserve last 500 lines for context
   if [[ -f "${LOG_FILE}" ]]; then
     local size
     size=$(stat -f%z "${LOG_FILE}" 2>/dev/null || stat -c%s "${LOG_FILE}" 2>/dev/null || echo 0)
     if [[ ${size} -gt 1048576 ]]; then
-      mv "${LOG_FILE}" "${LOG_FILE}.old"
-      log "INFO" "Log rotated"
+      tail -500 "${LOG_FILE}" >"${LOG_FILE}.new" && mv "${LOG_FILE}.new" "${LOG_FILE}"
     fi
   fi
 }

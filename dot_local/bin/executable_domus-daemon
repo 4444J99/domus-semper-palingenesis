@@ -49,7 +49,10 @@ VERBOSE=0
 
 DOMUS_LIB="$(dirname "$0")/domus-lib.sh"
 # shellcheck source=domus-lib.sh
-source "$DOMUS_LIB" || { echo "error: domus-lib.sh not found" >&2; exit 2; }
+source "$DOMUS_LIB" || {
+  echo "error: domus-lib.sh not found" >&2
+  exit 2
+}
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Parse arguments
@@ -83,17 +86,11 @@ mkdir -p "${TELEMETRY_DIR}"
 log() {
   local level="$1"
   shift
-  local timestamp
-  timestamp=$(date '+%Y-%m-%d %H:%M:%S')
-  echo "[${timestamp}] [${level}] $*" >>"${LOG_FILE}"
+  domus_log "$LOG_FILE" "daemon" "$*" "$level"
 
   if [[ $VERBOSE -eq 1 ]] || [[ -t 1 ]]; then
     echo "[${level}] $*"
   fi
-}
-
-log_rotate() {
-  domus_log_rotate "$LOG_FILE"
 }
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -237,9 +234,9 @@ run_sorter() {
 
 main() {
   local start_time
-  start_time=$(($(date +%s) * 1000))
+  start_time=$(now_ms)
 
-  log_rotate
+  domus_log_rotate "$LOG_FILE"
   log "INFO" "Daemon started (force=${FORCE_RUN})"
 
   # Acquire lock
@@ -266,7 +263,7 @@ main() {
 
   # Record telemetry
   local end_time
-  end_time=$(($(date +%s) * 1000))
+  end_time=$(now_ms)
   local duration=$((end_time - start_time))
 
   local status="ok"

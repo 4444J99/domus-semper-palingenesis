@@ -53,17 +53,9 @@ def is_google_drive_alias(path: Path) -> bool:
 
 
 def unique_dest(dest: Path) -> Path:
-    if not dest.exists():
-        return dest
-    base = dest.parent
-    stem = dest.stem
-    suffix = dest.suffix
-    counter = 1
-    while True:
-        candidate = base / f"{stem}_{counter}{suffix}"
-        if not candidate.exists():
-            return candidate
-        counter += 1
+    """Return a non-colliding path by appending -N suffix."""
+    from domus_lib import unique_dest as _unique_dest
+    return _unique_dest(dest)
 
 
 def is_repo_dir(path: Path) -> bool:

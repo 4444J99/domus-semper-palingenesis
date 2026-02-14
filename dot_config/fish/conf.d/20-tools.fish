@@ -1,21 +1,36 @@
 # ─────────────────────────────────────────────────────────────────────────────
-# Tool Initializations
+# Tool Initializations (cached for fast startup)
 # ─────────────────────────────────────────────────────────────────────────────
 
 if status is-interactive
     # Starship prompt
     if command -q starship
-        starship init fish | source
+        set -l _cache (test -n "$XDG_CACHE_HOME"; and echo $XDG_CACHE_HOME; or echo $HOME/.cache)/starship-fish.fish
+        if not test -f $_cache; or test (command -s starship) -nt $_cache
+            mkdir -p (dirname $_cache)
+            starship init fish > $_cache 2>/dev/null
+        end
+        source $_cache
     end
 
     # Zoxide (smart cd)
     if command -q zoxide
-        zoxide init fish | source
+        set -l _cache (test -n "$XDG_CACHE_HOME"; and echo $XDG_CACHE_HOME; or echo $HOME/.cache)/zoxide-fish.fish
+        if not test -f $_cache; or test (command -s zoxide) -nt $_cache
+            mkdir -p (dirname $_cache)
+            zoxide init fish > $_cache 2>/dev/null
+        end
+        source $_cache
     end
 
     # fzf key bindings
     if command -q fzf
-        fzf --fish | source
+        set -l _cache (test -n "$XDG_CACHE_HOME"; and echo $XDG_CACHE_HOME; or echo $HOME/.cache)/fzf-fish.fish
+        if not test -f $_cache; or test (command -s fzf) -nt $_cache
+            mkdir -p (dirname $_cache)
+            fzf --fish > $_cache 2>/dev/null
+        end
+        source $_cache
 
         # Use fd for fzf if available
         if command -q fd
@@ -46,21 +61,58 @@ if status is-interactive
 
     # Atuin (shell history)
     if command -q atuin
-        atuin init fish | source
+        set -l _cache (test -n "$XDG_CACHE_HOME"; and echo $XDG_CACHE_HOME; or echo $HOME/.cache)/atuin-fish.fish
+        if not test -f $_cache; or test (command -s atuin) -nt $_cache
+            mkdir -p (dirname $_cache)
+            atuin init fish > $_cache 2>/dev/null
+        end
+        source $_cache
     end
 
     # direnv
     if command -q direnv
-        direnv hook fish | source
+        set -l _cache (test -n "$XDG_CACHE_HOME"; and echo $XDG_CACHE_HOME; or echo $HOME/.cache)/direnv-fish.fish
+        if not test -f $_cache; or test (command -s direnv) -nt $_cache
+            mkdir -p (dirname $_cache)
+            direnv hook fish > $_cache 2>/dev/null
+        end
+        source $_cache
     end
 
-    # mise (auto-activates in fish per Homebrew)
+    # mise (tool version manager)
     if command -q mise
-        mise activate fish | source
+        set -l _cache (test -n "$XDG_CACHE_HOME"; and echo $XDG_CACHE_HOME; or echo $HOME/.cache)/mise-fish.fish
+        if not test -f $_cache; or test (command -s mise) -nt $_cache
+            mkdir -p (dirname $_cache)
+            mise activate fish > $_cache 2>/dev/null
+        end
+        source $_cache
     end
 
-    # navi (interactive cheatsheet) - Ctrl+G
+    # navi (interactive cheatsheet) - Ctrl+G (lightweight, no caching needed)
     if command -q navi
         navi widget fish | source
+    end
+
+    # ─────────────────────────────────────────────────────────────────────────
+    # Lazy-loaded tools (deferred until first use to reduce startup time)
+    # ─────────────────────────────────────────────────────────────────────────
+
+    # Anaconda / Conda - lazy load on first `conda` call
+    if test -d /opt/anaconda3
+        function conda
+            functions -e conda
+            eval (/opt/anaconda3/bin/conda shell.fish hook)
+            conda $argv
+        end
+    end
+
+    # Google Cloud SDK - lazy load on first `gcloud` call
+    if test -d $HOME/google-cloud-sdk
+        function gcloud
+            functions -e gcloud
+            test -f $HOME/google-cloud-sdk/path.fish.inc; and source $HOME/google-cloud-sdk/path.fish.inc 2>/dev/null
+            gcloud $argv
+        end
     end
 end
