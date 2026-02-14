@@ -38,11 +38,18 @@ TELEMETRY_DIR="${STATE_DIR}/telemetry"
 # Defaults
 ONLY_WHEN_IDLE=true
 IDLE_THRESHOLD_SECONDS=300 # 5 minutes
-MAX_LOG_SIZE=1048576       # 1MB
 
 # Runtime flags
 FORCE_RUN=0
 VERBOSE=0
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Shared library
+# ─────────────────────────────────────────────────────────────────────────────
+
+DOMUS_LIB="$(dirname "$0")/domus-lib.sh"
+# shellcheck source=domus-lib.sh
+source "$DOMUS_LIB" || { echo "error: domus-lib.sh not found" >&2; exit 2; }
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Parse arguments
@@ -86,14 +93,7 @@ log() {
 }
 
 log_rotate() {
-  if [[ -f "${LOG_FILE}" ]]; then
-    local size
-    size=$(stat -f%z "${LOG_FILE}" 2>/dev/null || stat -c%s "${LOG_FILE}" 2>/dev/null || echo 0)
-    if [[ ${size} -gt ${MAX_LOG_SIZE} ]]; then
-      mv "${LOG_FILE}" "${LOG_FILE}.old"
-      log "INFO" "Log rotated"
-    fi
-  fi
+  domus_log_rotate "$LOG_FILE"
 }
 
 # ─────────────────────────────────────────────────────────────────────────────

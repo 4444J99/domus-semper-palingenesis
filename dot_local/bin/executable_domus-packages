@@ -28,48 +28,16 @@ MANIFEST="${CONFIG_DIR}/manifest.yaml"
 SNAPSHOT_DIR="${STATE_DIR}/snapshots"
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Colors
+# Shared library
 # ─────────────────────────────────────────────────────────────────────────────
 
-if [[ -t 1 ]]; then
-  RED=$'\033[0;31m'
-  GREEN=$'\033[0;32m'
-  YELLOW=$'\033[0;33m'
-  BLUE=$'\033[0;34m'
-  CYAN=$'\033[0;36m'
-  DIM=$'\033[0;90m'
-  BOLD=$'\033[1m'
-  RESET=$'\033[0m'
-else
-  RED='' GREEN='' YELLOW='' BLUE='' CYAN='' DIM='' BOLD='' RESET=''
-fi
+DOMUS_LIB="$(dirname "$0")/domus-lib.sh"
+# shellcheck source=domus-lib.sh
+source "$DOMUS_LIB" || { echo "error: domus-lib.sh not found" >&2; exit 2; }
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Helpers
+# Helpers (packages-specific)
 # ─────────────────────────────────────────────────────────────────────────────
-
-die() {
-  printf '%serror:%s %s\n' "$RED" "$RESET" "$1" >&2
-  exit 2
-}
-
-info() {
-  printf '%s::%s %s\n' "$BLUE" "$RESET" "$1"
-}
-
-success() {
-  printf '%s✓%s %s\n' "$GREEN" "$RESET" "$1"
-}
-
-warn() {
-  printf '%s!%s %s\n' "$YELLOW" "$RESET" "$1"
-}
-
-check_manifest() {
-  if [[ ! -f "${MANIFEST}" ]]; then
-    die "Manifest not found: ${MANIFEST}"
-  fi
-}
 
 check_yq() {
   if ! command -v yq &>/dev/null; then
@@ -381,7 +349,7 @@ cmd_apply() {
   local missing_formulae
   missing_formulae=$(diff_missing "$(get_manifest_formulae)" "$(get_installed_formulae)")
   if [[ -n "$missing_formulae" ]]; then
-    echo "$missing_formulae" | while read -r pkg; do
+    while read -r pkg; do
       [[ -z "$pkg" ]] && continue
       if [[ $dry_run -eq 1 ]]; then
         info "[dry-run] Would install formula: $pkg"
@@ -392,14 +360,14 @@ cmd_apply() {
           exit_code=1
         }
       fi
-    done
+    done <<< "$missing_formulae"
   fi
 
   # Install missing homebrew casks
   local missing_casks
   missing_casks=$(diff_missing "$(get_manifest_casks)" "$(get_installed_casks)")
   if [[ -n "$missing_casks" ]]; then
-    echo "$missing_casks" | while read -r pkg; do
+    while read -r pkg; do
       [[ -z "$pkg" ]] && continue
       if [[ $dry_run -eq 1 ]]; then
         info "[dry-run] Would install cask: $pkg"
@@ -410,14 +378,14 @@ cmd_apply() {
           exit_code=1
         }
       fi
-    done
+    done <<< "$missing_casks"
   fi
 
   # Install missing pipx packages
   local missing_pipx
   missing_pipx=$(diff_missing "$(get_manifest_pipx)" "$(get_installed_pipx)")
   if [[ -n "$missing_pipx" ]] && command -v pipx &>/dev/null; then
-    echo "$missing_pipx" | while read -r pkg; do
+    while read -r pkg; do
       [[ -z "$pkg" ]] && continue
       if [[ $dry_run -eq 1 ]]; then
         info "[dry-run] Would install pipx: $pkg"
@@ -428,14 +396,14 @@ cmd_apply() {
           exit_code=1
         }
       fi
-    done
+    done <<< "$missing_pipx"
   fi
 
   # Install missing npm global packages
   local missing_npm
   missing_npm=$(diff_missing "$(get_manifest_npm)" "$(get_installed_npm)")
   if [[ -n "$missing_npm" ]] && command -v npm &>/dev/null; then
-    echo "$missing_npm" | while read -r pkg; do
+    while read -r pkg; do
       [[ -z "$pkg" ]] && continue
       if [[ $dry_run -eq 1 ]]; then
         info "[dry-run] Would install npm: $pkg"
@@ -446,14 +414,14 @@ cmd_apply() {
           exit_code=1
         }
       fi
-    done
+    done <<< "$missing_npm"
   fi
 
   # Install missing cargo packages
   local missing_cargo
   missing_cargo=$(diff_missing "$(get_manifest_cargo)" "$(get_installed_cargo)")
   if [[ -n "$missing_cargo" ]] && command -v cargo &>/dev/null; then
-    echo "$missing_cargo" | while read -r pkg; do
+    while read -r pkg; do
       [[ -z "$pkg" ]] && continue
       if [[ $dry_run -eq 1 ]]; then
         info "[dry-run] Would install cargo: $pkg"
@@ -464,7 +432,7 @@ cmd_apply() {
           exit_code=1
         }
       fi
-    done
+    done <<< "$missing_cargo"
   fi
 
   if [[ $dry_run -eq 0 ]]; then

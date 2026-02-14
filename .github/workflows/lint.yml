@@ -98,6 +98,19 @@ jobs:
       - name: Run BATS tests
         run: bats tests/*.bats
 
+  python-lint:
+    name: Python Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install ruff
+        run: pip install ruff
+      - name: Run ruff on Python scripts
+        run: |
+          find dot_local/bin -name 'executable_*' -exec file {} + | \
+            grep -i python | cut -d: -f1 | \
+            xargs -r ruff check --select E,F,W
+
   gitleaks:
     name: Secret Scanning
     runs-on: ubuntu-latest

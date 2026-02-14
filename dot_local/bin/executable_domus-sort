@@ -28,31 +28,18 @@ LOG_FILE="${STATE_DIR}/sort.log"
 BIN_DIR="${HOME}/.local/bin"
 
 DEBOUNCE_SECONDS=5
-MAX_LOG_SIZE=1048576 # 1MB
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Colors
+# Shared library
 # ─────────────────────────────────────────────────────────────────────────────
 
-if [[ -t 1 ]]; then
-  RED=$'\033[0;31m'
-  GREEN=$'\033[0;32m'
-  YELLOW=$'\033[0;33m'
-  BLUE=$'\033[0;34m'
-  DIM=$'\033[0;90m'
-  RESET=$'\033[0m'
-else
-  RED='' GREEN='' YELLOW='' BLUE='' DIM='' RESET=''
-fi
+DOMUS_LIB="$(dirname "$0")/domus-lib.sh"
+# shellcheck source=domus-lib.sh
+source "$DOMUS_LIB" || { echo "error: domus-lib.sh not found" >&2; exit 2; }
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Helpers
+# Helpers (sort-specific)
 # ─────────────────────────────────────────────────────────────────────────────
-
-die() {
-  printf '%serror:%s %s\n' "$RED" "$RESET" "$1" >&2
-  exit 2
-}
 
 log() {
   local level="$1"
@@ -74,24 +61,12 @@ log() {
 
 log_rotate() {
   mkdir -p "${STATE_DIR}"
-  if [[ -f "${LOG_FILE}" ]]; then
-    local size
-    size=$(stat -f%z "${LOG_FILE}" 2>/dev/null || stat -c%s "${LOG_FILE}" 2>/dev/null || echo 0)
-    if [[ ${size} -gt ${MAX_LOG_SIZE} ]]; then
-      mv "${LOG_FILE}" "${LOG_FILE}.old"
-    fi
-  fi
+  domus_log_rotate "$LOG_FILE"
 }
 
 check_deps() {
   if ! command -v yq &>/dev/null; then
     die "yq required for manifest parsing (brew install yq)"
-  fi
-}
-
-check_manifest() {
-  if [[ ! -f "${MANIFEST}" ]]; then
-    die "Manifest not found: ${MANIFEST}"
   fi
 }
 

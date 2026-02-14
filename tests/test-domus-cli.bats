@@ -159,3 +159,47 @@ teardown() {
   [ "$status" -eq 2 ]
   [[ "$output" == *"domus-packages not found"* ]]
 }
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Logs
+# ─────────────────────────────────────────────────────────────────────────────
+
+@test "domus logs fails when log file missing" {
+  run bash "$DOMUS" logs
+  [ "$status" -eq 2 ]
+  [[ "$output" == *"Log file not found"* ]]
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Debug flag
+# ─────────────────────────────────────────────────────────────────────────────
+
+@test "domus --debug status runs without error" {
+  mock_chezmoi
+  mock_shell_telemetry
+  run bash "$DOMUS" --debug status
+  [[ "$status" -eq 0 || "$status" -eq 1 ]]
+  [[ "$output" == *"Domus Status"* ]]
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Help without jq/yq (check_deps bypass)
+# ─────────────────────────────────────────────────────────────────────────────
+
+@test "domus --help works without jq/yq on PATH" {
+  # Shadow jq and yq with scripts that exit 1 (simulate not found)
+  cat > "$BIN_DIR/jq" <<'SCRIPT'
+#!/usr/bin/env bash
+exit 127
+SCRIPT
+  chmod +x "$BIN_DIR/jq"
+  cat > "$BIN_DIR/yq" <<'SCRIPT'
+#!/usr/bin/env bash
+exit 127
+SCRIPT
+  chmod +x "$BIN_DIR/yq"
+  # BIN_DIR is already first on PATH from setup
+  run bash "$DOMUS" --help
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"COMMANDS"* ]]
+}
