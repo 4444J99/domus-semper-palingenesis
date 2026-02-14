@@ -111,6 +111,19 @@ jobs:
             grep -i python | cut -d: -f1 | \
             xargs -r ruff check --select E,F,W
 
+  doc-lint:
+    name: Doc References
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check for stale function references
+        run: |
+          if grep -rn 'maintain()\|maintain-quick\|cache-sizes()' docs/ README.md 2>/dev/null; then
+            echo "Found stale function references in docs"
+            exit 1
+          fi
+          echo "No stale references found"
+
   gitleaks:
     name: Secret Scanning
     runs-on: ubuntu-latest

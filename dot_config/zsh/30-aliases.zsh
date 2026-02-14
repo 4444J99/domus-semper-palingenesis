@@ -93,7 +93,9 @@ alias pip3='python3 -m pip'
 # System Maintenance
 # ─────────────────────────────────────────────────────────────────────────────
 
-alias brewup='brew update && brew upgrade && brew cleanup && brew doctor'
+alias brewup='brew update && brew upgrade && brew upgrade --greedy && brew cleanup && brew doctor'
+alias dmm='domus maintain'
+alias dmmq='domus maintain quick'
 alias docker-cleanup='docker system prune -a --volumes'
 
 # Browser & app caches

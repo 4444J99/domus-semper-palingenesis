@@ -1,19 +1,32 @@
 # ─────────────────────────────────────────────────────────────────────────────
-# PATH Configuration
+# PATH Configuration (templated for OS/arch portability)
 # ─────────────────────────────────────────────────────────────────────────────
 
+{{- if eq .chezmoi.os "darwin" }}
+{{- if eq .chezmoi.arch "arm64" }}
 # macOS ARM64 (Apple Silicon) - Homebrew
 export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH"
 export PATH="/opt/homebrew/opt/file-formula/bin:$PATH"
+{{- else }}
+# macOS Intel - Homebrew
+export PATH="/usr/local/bin:/usr/local/sbin:$PATH"
+{{- end }}
+{{- else if eq .chezmoi.os "linux" }}
+# Linux Homebrew
+if [[ -d "/home/linuxbrew/.linuxbrew/bin" ]]; then
+  export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
+fi
+{{- end }}
 
+{{- if eq .chezmoi.os "darwin" }}
 # Ruby (Homebrew - macOS)
 export PATH="/opt/homebrew/opt/ruby/bin:/opt/homebrew/lib/ruby/gems/3.4.0/bin:$PATH"
 export LDFLAGS="-L/opt/homebrew/opt/ruby/lib"
 export CPPFLAGS="-I/opt/homebrew/opt/ruby/include"
 export PKG_CONFIG_PATH="/opt/homebrew/opt/ruby/lib/pkgconfig"
+{{- end }}
 
-# Go
-export GOPATH="${XDG_DATA_HOME:-$HOME/.local/share}/go"
+# Go (GOPATH defined in 15-env.zsh)
 export PATH=$PATH:$GOPATH/bin
 
 # Rust (rustup toolchain)
@@ -22,6 +35,7 @@ export PATH="${CARGO_HOME:-$HOME/.local/share/cargo}/bin:$PATH"
 # pipx local bin
 export PATH="$HOME/.local/bin:$PATH"
 
+{{- if eq .chezmoi.os "darwin" }}
 # Python (Homebrew - follows latest via python@3 symlink)
 export PATH="/opt/homebrew/opt/python@3/libexec/bin:$PATH"
 
@@ -30,3 +44,4 @@ export PATH="/opt/homebrew/opt/python@3/libexec/bin:$PATH"
 if [[ -d "/Volumes/4444-iivii/ivi374forivi3ivi3/toolchains/bin" ]]; then
   export PATH=$PATH:/Volumes/4444-iivii/ivi374forivi3ivi3/toolchains/bin
 fi
+{{- end }}

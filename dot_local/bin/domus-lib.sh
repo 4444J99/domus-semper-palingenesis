@@ -72,7 +72,49 @@ domus_log_rotate() {
     local size
     size=$(stat -f%z "${log_file}" 2>/dev/null || stat -c%s "${log_file}" 2>/dev/null || echo 0)
     if [[ ${size} -gt ${max_size} ]]; then
-      mv "${log_file}" "${log_file}.old"
+      # Keep last 500 lines to preserve recent context; atomic-safe for concurrent writers
+      tail -500 "${log_file}" >"${log_file}.new" && mv "${log_file}.new" "${log_file}"
     fi
   fi
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Timing
+# ─────────────────────────────────────────────────────────────────────────────
+
+# Millisecond timestamp (portable via perl)
+now_ms() {
+  perl -MTime::HiRes=time -e 'printf "%d", time * 1000' 2>/dev/null || echo 0
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Interactive helpers
+# ─────────────────────────────────────────────────────────────────────────────
+
+# Prompt for confirmation; returns 0 for yes, 1 for no
+confirm() {
+  local prompt="$1"
+  printf '%s%s [y/N] %s' "${YELLOW}" "$prompt" "${RESET}"
+  local reply
+  read -r reply
+  case "$reply" in
+    [yY] | [yY][eE][sS]) return 0 ;;
+    *) return 1 ;;
+  esac
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Structured logging
+# ─────────────────────────────────────────────────────────────────────────────
+
+# Append a structured log entry to a file with automatic rotation.
+# Usage: domus_log <log_file> <tag> <message> [level]
+domus_log() {
+  local log_file="$1"
+  local tag="$2"
+  local message="$3"
+  local level="${4:-INFO}"
+  mkdir -p "$(dirname "$log_file")"
+  domus_log_rotate "$log_file"
+  printf '[%s] [%s] [%s] %s\n' "$(date -u +"%Y-%m-%dT%H:%M:%SZ")" "$level" "$tag" "$message" >>"$log_file"
 }

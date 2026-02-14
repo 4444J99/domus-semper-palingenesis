@@ -11,5 +11,10 @@
 .envrc
 .direnv/
 
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+
 # Tool-specific
 .serena/

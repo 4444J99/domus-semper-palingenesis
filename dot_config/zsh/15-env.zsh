@@ -31,7 +31,7 @@ export NODE_REPL_HISTORY="$XDG_STATE_HOME/node_repl_history"
 export NPM_CONFIG_USERCONFIG="$XDG_CONFIG_HOME/npm/npmrc"
 export LESSHISTFILE="$XDG_STATE_HOME/less/history"
 
-# Go (migrated from ~/go)
+# Go — canonical GOPATH definition (also used by 10-path.zsh for PATH)
 export GOPATH="$XDG_DATA_HOME/go"
 export GOMODCACHE="$XDG_CACHE_HOME/go/mod"
 

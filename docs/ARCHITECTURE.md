@@ -46,11 +46,11 @@ dot_zshrc (entry point)
   └─ sources ~/.config/zsh/*.zsh in order:
 
   00-init.zsh        ─── Startup timing, root guard
-  10-path.zsh        ─── PATH (Homebrew, Ruby, Go, Python, toolchains)
+  10-path.zsh.tmpl   ─── PATH (Homebrew, Ruby, Go, Python, toolchains; OS/arch templated)
   15-env.zsh         ─── XDG dirs, EDITOR, CARGO_HOME, RUSTUP_HOME
   20-tools.zsh       ─── Tool init (starship, zoxide, fzf, atuin, direnv, mise)
   30-aliases.zsh     ─── All aliases (git, chezmoi, eza, bat, domus, just)
-  40-functions.zsh   ─── Custom functions (maintain, cache-sizes, ktheme, cht)
+  40-functions.zsh   ─── Custom functions (ktheme, cht; see 'domus maintain' for maintenance)
   50-completions.zsh ─── compinit, Docker completions, styling
   85-plugins.zsh     ─── zsh-autosuggestions, zsh-syntax-highlighting
   90-telemetry.zsh   ─── Record startup time, deduplicate PATH

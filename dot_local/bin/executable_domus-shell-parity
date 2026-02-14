@@ -1,0 +1,166 @@
+#!/usr/bin/env bash
+# ─────────────────────────────────────────────────────────────────────────────
+# domus-shell-parity - Compare zsh and fish shell configurations
+# Reports drift between the two shells (missing aliases, functions, etc.)
+# ─────────────────────────────────────────────────────────────────────────────
+set -euo pipefail
+
+DOMUS_LIB="$(dirname "$0")/domus-lib.sh"
+# shellcheck source=domus-lib.sh
+source "$DOMUS_LIB" || {
+  echo "error: domus-lib.sh not found" >&2
+  exit 2
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Configuration
+# ─────────────────────────────────────────────────────────────────────────────
+
+# Default paths (chezmoi source directory)
+CHEZMOI_SRC="${CHEZMOI_SRC:-$(chezmoi source-path 2>/dev/null || echo "$HOME/domus-semper-palingenesis")}"
+ZSH_ALIASES="${CHEZMOI_SRC}/dot_config/zsh/30-aliases.zsh"
+ZSH_FUNCTIONS="${CHEZMOI_SRC}/dot_config/zsh/40-functions.zsh"
+FISH_ALIASES="${CHEZMOI_SRC}/dot_config/fish/conf.d/30-aliases.fish"
+FISH_FUNCTIONS="${CHEZMOI_SRC}/dot_config/fish/conf.d/40-functions.fish"
+
+# Fallback to monolithic fish config if conf.d doesn't exist yet
+if [[ ! -f "$FISH_ALIASES" ]]; then
+  FISH_ALIASES="${CHEZMOI_SRC}/dot_config/fish/config.fish.tmpl"
+  FISH_FUNCTIONS="${CHEZMOI_SRC}/dot_config/fish/config.fish.tmpl"
+fi
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Extraction
+# ─────────────────────────────────────────────────────────────────────────────
+
+extract_zsh_aliases() {
+  grep -E "^alias [a-zA-Z]" "$ZSH_ALIASES" 2>/dev/null |
+    sed "s/^alias \([^=]*\)=.*/\1/" |
+    sort -u
+}
+
+extract_zsh_abbreviations() {
+  grep -E "^abbr " "$ZSH_ALIASES" 2>/dev/null |
+    sed "s/^abbr -a \([^ ]*\).*/\1/" |
+    sort -u
+}
+
+extract_fish_aliases() {
+  grep -E "^\s*alias [a-zA-Z]" "$FISH_ALIASES" 2>/dev/null |
+    sed "s/.*alias \([^ ]*\).*/\1/" |
+    sort -u
+}
+
+extract_fish_abbreviations() {
+  grep -E "^\s*abbr -a " "$FISH_ALIASES" 2>/dev/null |
+    sed "s/.*abbr -a \([^ ]*\).*/\1/" |
+    sort -u
+}
+
+extract_zsh_functions() {
+  grep -E "^[a-zA-Z_][a-zA-Z0-9_-]*\(\)" "$ZSH_FUNCTIONS" 2>/dev/null |
+    sed "s/\(\).*//" |
+    sort -u
+}
+
+extract_fish_functions() {
+  grep -E "^\s*function [a-zA-Z_]" "$FISH_FUNCTIONS" 2>/dev/null |
+    sed "s/.*function \([^ ]*\).*/\1/" |
+    grep -v "^-" |
+    sort -u
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Comparison
+# ─────────────────────────────────────────────────────────────────────────────
+
+diff_sets() {
+  local label="$1"
+  local set_a="$2" # e.g., "zsh"
+  local set_b="$3" # e.g., "fish"
+  local file_a="$4"
+  local file_b="$5"
+
+  local only_a only_b both
+  only_a=$(comm -23 <(echo "$file_a") <(echo "$file_b"))
+  only_b=$(comm -13 <(echo "$file_a") <(echo "$file_b"))
+  both=$(comm -12 <(echo "$file_a") <(echo "$file_b"))
+
+  local count_a count_b count_both
+  count_a=$(echo "$only_a" | grep -c . || true)
+  count_b=$(echo "$only_b" | grep -c . || true)
+  count_both=$(echo "$both" | grep -c . || true)
+
+  printf '%s%s%s: %s%d shared%s' "$BOLD" "$label" "$RESET" "$GREEN" "$count_both" "$RESET"
+  if [[ $count_a -gt 0 ]]; then
+    printf ', %s%d %s-only%s' "$YELLOW" "$count_a" "$set_a" "$RESET"
+  fi
+  if [[ $count_b -gt 0 ]]; then
+    printf ', %s%d %s-only%s' "$YELLOW" "$count_b" "$set_b" "$RESET"
+  fi
+  echo ""
+
+  if [[ $count_a -gt 0 ]]; then
+    printf '  %s%s-only:%s %s\n' "$DIM" "$set_a" "$RESET" "$(echo "$only_a" | tr '\n' ' ')"
+  fi
+  if [[ $count_b -gt 0 ]]; then
+    printf '  %s%s-only:%s %s\n' "$DIM" "$set_b" "$RESET" "$(echo "$only_b" | tr '\n' ' ')"
+  fi
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Main
+# ─────────────────────────────────────────────────────────────────────────────
+
+case "${1:-}" in
+  -h | --help)
+    echo "Usage: domus shell-parity"
+    echo ""
+    echo "Compare zsh and fish shell configurations for missing aliases,"
+    echo "abbreviations, and functions. Reports what exists in one shell"
+    echo "but not the other."
+    exit 0
+    ;;
+esac
+
+echo ""
+printf '%sShell Parity Report%s\n' "$BOLD" "$RESET"
+echo ""
+
+# Check files exist
+for f in "$ZSH_ALIASES" "$ZSH_FUNCTIONS" "$FISH_ALIASES" "$FISH_FUNCTIONS"; do
+  if [[ ! -f "$f" ]]; then
+    warn "File not found: $f"
+  fi
+done
+
+# Compare aliases (zsh alias = fish alias)
+zsh_aliases=$(extract_zsh_aliases)
+fish_aliases=$(extract_fish_aliases)
+diff_sets "Aliases" "zsh" "fish" "$zsh_aliases" "$fish_aliases"
+
+echo ""
+
+# Compare abbreviations (zsh doesn't have abbr natively, but fish does)
+# Compare zsh aliases that are also fish abbreviations
+zsh_all=$(
+  echo "$zsh_aliases"
+  extract_zsh_abbreviations
+)
+zsh_all=$(echo "$zsh_all" | sort -u)
+fish_abbr=$(extract_fish_abbreviations)
+fish_all=$(
+  echo "$fish_aliases"
+  echo "$fish_abbr"
+)
+fish_all=$(echo "$fish_all" | sort -u)
+diff_sets "All shortcuts" "zsh" "fish" "$zsh_all" "$fish_all"
+
+echo ""
+
+# Compare functions
+zsh_funcs=$(extract_zsh_functions)
+fish_funcs=$(extract_fish_functions)
+diff_sets "Functions" "zsh" "fish" "$zsh_funcs" "$fish_funcs"
+
+echo ""

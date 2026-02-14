@@ -77,6 +77,8 @@ domus packages diff     # Package drift report
 domus perf shell        # Shell startup trends
 domus health            # Health check
 domus doctor            # Comprehensive diagnostics
+domus maintain          # System maintenance
+domus maintain quick    # Cache cleanup only
 ```
 
 ### Tokyo Night Terminal
@@ -105,6 +107,8 @@ cmr     # Recovery tool
 dm      # Status summary
 dma     # Apply all (dotfiles + packages)
 dmp     # Package status
+dmm     # System maintenance
+dmmq    # Quick cache cleanup
 
 # Tools
 lg      # Launch lazygit

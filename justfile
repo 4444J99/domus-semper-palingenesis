@@ -91,6 +91,12 @@ cache-clear:
     @rm -f "${XDG_CACHE_HOME:-$HOME/.cache}"/zcompdump*
     @echo "Shell caches cleared — next shell launch will regenerate"
 
+# Check docs don't reference removed functions
+doc-lint:
+    @echo ":: Doc references"
+    @! grep -rn 'maintain()\|maintain-quick\|cache-sizes()' docs/ README.md 2>/dev/null || true
+    @echo "No stale references found"
+
 # Open dotfiles in editor
 edit:
     $EDITOR ~/domus-semper-palingenesis

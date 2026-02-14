@@ -10,6 +10,7 @@
 #   domus apply [--dry-run]  # Sync all (dotfiles + packages)
 #   domus sort [--watch]     # Run file sorter
 #   domus packages [diff|apply]  # Package management
+#   domus maintain [quick|deep]  # System maintenance
 #   domus perf [shell]       # Performance report
 #   domus health             # Health check (wraps chezmoi-health)
 #   domus logs               # View system logs
@@ -40,7 +41,10 @@ DEBUG_MODE=0
 
 DOMUS_LIB="$(dirname "$0")/domus-lib.sh"
 # shellcheck source=domus-lib.sh
-source "$DOMUS_LIB" || { echo "error: domus-lib.sh not found" >&2; exit 2; }
+source "$DOMUS_LIB" || {
+  echo "error: domus-lib.sh not found" >&2
+  exit 2
+}
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Helpers (domus-specific)
@@ -53,10 +57,7 @@ debug() {
 }
 
 log() {
-  local level="${2:-INFO}"
-  mkdir -p "$(dirname "$LOG_FILE")"
-  domus_log_rotate "$LOG_FILE"
-  printf '[%s] [%s] %s\n' "$(date -u +"%Y-%m-%dT%H:%M:%SZ")" "$level" "$1" >> "$LOG_FILE"
+  domus_log "$LOG_FILE" "domus" "$1" "${2:-INFO}"
 }
 
 # shellcheck disable=SC2120
@@ -115,6 +116,8 @@ ${BOLD}COMMANDS${RESET}
         --dry-run       Preview changes only
         --dotfiles      Only sync dotfiles (chezmoi)
         --packages      Only sync packages
+        --json          Machine-readable summary
+        --quiet, -q     Minimal output
 
     ${CYAN}sort${RESET}                Run file sorter once
         --watch         Start FSEvents daemon
@@ -123,6 +126,12 @@ ${BOLD}COMMANDS${RESET}
         diff            Show drift from manifest
         apply           Install missing packages
         --json          Machine-readable output
+
+    ${CYAN}maintain${RESET}             System maintenance
+        quick           Cache cleanup only
+        deep            Full deep clean (with confirmations)
+        sizes           Show cache sizes
+        --dry-run       Preview what would run
 
     ${CYAN}perf${RESET}                Performance report
         shell           Shell startup trend
@@ -137,6 +146,8 @@ ${BOLD}COMMANDS${RESET}
         -n, --lines N   Number of lines (default: 50)
 
     ${CYAN}doctor${RESET}              Comprehensive system diagnostics
+
+    ${CYAN}shell-parity${RESET}        Compare zsh/fish config for drift
 
 ${BOLD}OPTIONS${RESET}
     --debug             Show detailed execution trace
@@ -298,6 +309,8 @@ cmd_apply() {
   local dry_run=0
   local dotfiles_only=0
   local packages_only=0
+  local json_mode=0
+  local quiet_mode=0
 
   while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -313,6 +326,14 @@ cmd_apply() {
         packages_only=1
         shift
         ;;
+      --json)
+        json_mode=1
+        shift
+        ;;
+      -q | --quiet)
+        quiet_mode=1
+        shift
+        ;;
       *) shift ;;
     esac
   done
@@ -321,27 +342,32 @@ cmd_apply() {
   if [[ $packages_only -eq 0 ]]; then
     debug "Checking 1Password authentication..."
     if ! op whoami &>/dev/null; then
-      warn "1Password is not authenticated. Templates may fail to render."
-      info "Continuing in non-interactive mode. Sync might fail for templated files."
+      [[ $quiet_mode -eq 0 && $json_mode -eq 0 ]] && warn "1Password is not authenticated. Templates may fail to render."
+      [[ $quiet_mode -eq 0 && $json_mode -eq 0 ]] && info "Continuing in non-interactive mode. Sync might fail for templated files."
       log "1Password not authenticated during apply" "WARN"
     fi
   fi
 
   local exit_code=0
+  local dotfiles_status="skipped"
+  local packages_status="skipped"
 
   # Apply dotfiles
   if [[ $packages_only -eq 0 ]]; then
-    info "Syncing dotfiles..."
+    [[ $quiet_mode -eq 0 && $json_mode -eq 0 ]] && info "Syncing dotfiles..."
     log "Starting dotfiles sync"
     if [[ $dry_run -eq 1 ]]; then
       chezmoi diff 2>/dev/null || true
+      dotfiles_status="dry-run"
     else
       if chezmoi apply 2>/dev/null; then
-        success "Dotfiles synced"
+        [[ $quiet_mode -eq 0 && $json_mode -eq 0 ]] && success "Dotfiles synced"
         log "Dotfiles sync successful"
+        dotfiles_status="synced"
       else
-        warn "Dotfiles sync had issues"
+        [[ $quiet_mode -eq 0 && $json_mode -eq 0 ]] && warn "Dotfiles sync had issues"
         log "Dotfiles sync failed" "ERROR"
+        dotfiles_status="failed"
         exit_code=1
       fi
     fi
@@ -349,25 +375,35 @@ cmd_apply() {
 
   # Apply packages
   if [[ $dotfiles_only -eq 0 ]]; then
-    info "Syncing packages..."
+    [[ $quiet_mode -eq 0 && $json_mode -eq 0 ]] && info "Syncing packages..."
     log "Starting packages sync"
     if [[ -x "${BIN_DIR}/domus-packages" ]]; then
       if [[ $dry_run -eq 1 ]]; then
         "${BIN_DIR}/domus-packages" diff
+        packages_status="dry-run"
       else
         if "${BIN_DIR}/domus-packages" apply; then
-          success "Packages synced"
+          [[ $quiet_mode -eq 0 && $json_mode -eq 0 ]] && success "Packages synced"
           log "Packages sync successful"
+          packages_status="synced"
         else
-          warn "Package sync had issues"
+          [[ $quiet_mode -eq 0 && $json_mode -eq 0 ]] && warn "Package sync had issues"
           log "Packages sync failed" "ERROR"
+          packages_status="failed"
           exit_code=1
         fi
       fi
     else
-      warn "domus-packages not found, skipping"
+      [[ $quiet_mode -eq 0 && $json_mode -eq 0 ]] && warn "domus-packages not found, skipping"
       log "domus-packages not found" "WARN"
+      packages_status="not-found"
     fi
+  fi
+
+  if [[ $json_mode -eq 1 ]]; then
+    printf '{"dotfiles":"%s","packages":"%s","dry_run":%s}\n' \
+      "$dotfiles_status" "$packages_status" \
+      "$([[ $dry_run -eq 1 ]] && echo "true" || echo "false")"
   fi
 
   return $exit_code
@@ -754,7 +790,7 @@ main() {
     esac
   done
 
-  if (( ${#args[@]} )); then
+  if ((${#args[@]})); then
     set -- "${args[@]}"
   else
     set --
@@ -789,6 +825,13 @@ main() {
       check_deps
       cmd_packages "$@"
       ;;
+    maintain | maint)
+      if [[ -x "${BIN_DIR}/domus-maintain" ]]; then
+        exec "${BIN_DIR}/domus-maintain" "$@"
+      else
+        die "domus-maintain not found"
+      fi
+      ;;
     perf | performance)
       check_deps
       cmd_perf "$@"
@@ -803,6 +846,13 @@ main() {
     doctor | doc)
       check_deps
       cmd_doctor "$@"
+      ;;
+    shell-parity | parity)
+      if [[ -x "${BIN_DIR}/domus-shell-parity" ]]; then
+        exec "${BIN_DIR}/domus-shell-parity" "$@"
+      else
+        die "domus-shell-parity not found"
+      fi
       ;;
     *)
       die "Unknown command: $cmd (try 'domus --help')"

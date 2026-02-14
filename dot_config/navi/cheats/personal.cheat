@@ -94,16 +94,25 @@ domus sort --watch
 
 % system, maintenance
 
-# Full system maintenance
-maintain
+# Full system maintenance (standard tier)
+domus maintain
 
-# Quick cache cleanup
-maintain-quick
+# Quick cache cleanup only
+domus maintain quick
+
+# Deep maintenance (destructive, with confirmations)
+domus maintain deep
 
 # Show cache sizes
-cache-sizes
+domus maintain sizes
 
-# Update Homebrew packages
+# Dry-run preview
+domus maintain --dry-run
+
+# Skip specific steps
+domus maintain --skip <steps>
+
+# Update Homebrew only
 brewup
 
 % tmux, terminal

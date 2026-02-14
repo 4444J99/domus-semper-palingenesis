@@ -1,0 +1,626 @@
+#!/usr/bin/env bash
+# shellcheck disable=SC2329
+# ─────────────────────────────────────────────────────────────────────────────
+# domus-maintain - Tiered system maintenance
+# Domus Semper Palingenesis: The ever-regenerating home
+# ─────────────────────────────────────────────────────────────────────────────
+#
+# Usage:
+#   domus maintain              # Standard tier (brew, npm, pip, etc.)
+#   domus maintain quick        # Cache cleanup only (safe, fast)
+#   domus maintain deep         # Everything + destructive ops (with confirms)
+#   domus maintain sizes        # Show cache sizes (read-only)
+#
+# Flags:
+#   --dry-run, -n       Print what would run without executing
+#   --skip <steps>      Comma-separated step names to skip
+#   --json              Machine-readable summary
+#   --quiet, -q         Minimal output
+#   -h, --help          Show this help
+#
+# Exit codes:
+#   0 - Success
+#   1 - Step failure(s) (non-fatal)
+#   2 - Error
+
+set -euo pipefail
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Configuration
+# ─────────────────────────────────────────────────────────────────────────────
+
+STATE_DIR="${HOME}/.local/state/domus"
+LOG_FILE="${STATE_DIR}/domus.log"
+LOCK_FILE="${STATE_DIR}/maintain.lock"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Shared library
+# ─────────────────────────────────────────────────────────────────────────────
+
+DOMUS_LIB="$(dirname "$0")/domus-lib.sh"
+# shellcheck source=domus-lib.sh
+source "$DOMUS_LIB" || {
+  echo "error: domus-lib.sh not found" >&2
+  exit 2
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Globals
+# ─────────────────────────────────────────────────────────────────────────────
+
+DRY_RUN=0
+QUIET=0
+JSON_MODE=0
+SKIP_STEPS=()
+STEP_RESULTS=() # "name:status:ms" entries
+TOTAL_STEPS=0
+CURRENT_STEP=0
+MAINTAIN_START_MS=0
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Helpers
+# ─────────────────────────────────────────────────────────────────────────────
+
+log() {
+  domus_log "$LOG_FILE" "maintain" "$1" "${2:-INFO}"
+}
+
+# now_ms and confirm are provided by domus-lib.sh
+
+acquire_lock() {
+  mkdir -p "$(dirname "$LOCK_FILE")"
+  if [[ -f "${LOCK_FILE}" ]]; then
+    local pid
+    pid=$(cat "${LOCK_FILE}")
+    if kill -0 "$pid" 2>/dev/null; then
+      die "Another maintain process is running (PID $pid)"
+    fi
+    rm -f "${LOCK_FILE}"
+  fi
+  echo $$ >"${LOCK_FILE}"
+  trap 'rm -f "${LOCK_FILE}"' EXIT
+}
+
+has_network() {
+  curl -sf --connect-timeout 3 --max-time 5 "https://connectivity-check.ubuntu.com/" &>/dev/null
+}
+
+# Print step header: [3/9] Homebrew...
+step_header() {
+  local name="$1"
+  local label="$2"
+  CURRENT_STEP=$((CURRENT_STEP + 1))
+  if [[ $QUIET -eq 0 && $JSON_MODE -eq 0 ]]; then
+    printf '\n%s[%d/%d]%s %s%s%s' "$CYAN" "$CURRENT_STEP" "$TOTAL_STEPS" "$RESET" "$BOLD" "$label" "$RESET"
+    if [[ $DRY_RUN -eq 1 ]]; then
+      printf ' %s(dry-run)%s' "$DIM" "$RESET"
+    fi
+    if should_skip "$name"; then
+      printf ' %s(skipped)%s' "$YELLOW" "$RESET"
+    fi
+    printf '\n'
+  fi
+}
+
+should_skip() {
+  local name="$1"
+  local s
+  for s in "${SKIP_STEPS[@]}"; do
+    if [[ "$s" == "$name" ]]; then
+      return 0
+    fi
+  done
+  return 1
+}
+
+# Run a step: run_step <name> <label> <function>
+# Handles skip, dry-run, timing, and result recording.
+run_step() {
+  local name="$1"
+  local label="$2"
+  local fn="$3"
+
+  step_header "$name" "$label"
+
+  if should_skip "$name"; then
+    STEP_RESULTS+=("${name}:skipped:0")
+    return 0
+  fi
+
+  if [[ $DRY_RUN -eq 1 ]]; then
+    STEP_RESULTS+=("${name}:dry-run:0")
+    return 0
+  fi
+
+  local start_ms end_ms elapsed_ms
+  start_ms=$(now_ms)
+
+  local step_status="ok"
+  if ! "$fn"; then
+    step_status="failed"
+  fi
+
+  end_ms=$(now_ms)
+  elapsed_ms=$((end_ms - start_ms))
+
+  STEP_RESULTS+=("${name}:${step_status}:${elapsed_ms}")
+
+  if [[ $QUIET -eq 0 && $JSON_MODE -eq 0 ]]; then
+    if [[ "$step_status" == "ok" ]]; then
+      printf '  %s✓%s done (%dms)\n' "$GREEN" "$RESET" "$elapsed_ms"
+    else
+      printf '  %s!%s failed (%dms)\n' "$YELLOW" "$RESET" "$elapsed_ms"
+    fi
+  fi
+}
+
+# confirm() is provided by domus-lib.sh; wrap to handle dry-run
+confirm_step() {
+  local prompt="$1"
+  if [[ $DRY_RUN -eq 1 ]]; then
+    return 0
+  fi
+  confirm "$prompt"
+}
+
+print_summary() {
+  local end_ms
+  end_ms=$(now_ms)
+  local total_ms=$((end_ms - MAINTAIN_START_MS))
+
+  if [[ $JSON_MODE -eq 1 ]]; then
+    print_summary_json "$total_ms"
+    return
+  fi
+
+  if [[ $QUIET -eq 1 ]]; then
+    return
+  fi
+
+  echo ""
+  printf '%s━━━ Summary ━━━%s\n' "$BOLD" "$RESET"
+
+  local ok=0 failed=0 skipped=0 dry_run=0
+  local entry name status ms
+  for entry in "${STEP_RESULTS[@]}"; do
+    name="${entry%%:*}"
+    local rest="${entry#*:}"
+    status="${rest%%:*}"
+    ms="${rest#*:}"
+
+    case "$status" in
+      ok)
+        ok=$((ok + 1))
+        printf '  %s✓%s %-20s %s%dms%s\n' "$GREEN" "$RESET" "$name" "$DIM" "$ms" "$RESET"
+        ;;
+      failed)
+        failed=$((failed + 1))
+        printf '  %s✗%s %-20s %s%dms%s\n' "$RED" "$RESET" "$name" "$DIM" "$ms" "$RESET"
+        ;;
+      skipped)
+        skipped=$((skipped + 1))
+        printf '  %s○%s %-20s %sskipped%s\n' "$DIM" "$RESET" "$name" "$DIM" "$RESET"
+        ;;
+      dry-run)
+        dry_run=$((dry_run + 1))
+        printf '  %s~%s %-20s %sdry-run%s\n' "$DIM" "$RESET" "$name" "$DIM" "$RESET"
+        ;;
+    esac
+  done
+
+  echo ""
+  printf '  Total: %dms | ok: %d | failed: %d | skipped: %d' "$total_ms" "$ok" "$failed" "$skipped"
+  if [[ $dry_run -gt 0 ]]; then
+    printf ' | dry-run: %d' "$dry_run"
+  fi
+  echo ""
+}
+
+print_summary_json() {
+  local total_ms="$1"
+  local steps_json=""
+  local entry name status ms
+  for entry in "${STEP_RESULTS[@]}"; do
+    name="${entry%%:*}"
+    local rest="${entry#*:}"
+    status="${rest%%:*}"
+    ms="${rest#*:}"
+    if [[ -n "$steps_json" ]]; then
+      steps_json+=","
+    fi
+    steps_json+=$(printf '{"name":"%s","status":"%s","ms":%s}' "$name" "$status" "$ms")
+  done
+
+  printf '{"timestamp":"%s","total_ms":%d,"steps":[%s]}\n' \
+    "$(date -u +"%Y-%m-%dT%H:%M:%SZ")" "$total_ms" "$steps_json"
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Step Functions (invoked indirectly via run_step)
+# ─────────────────────────────────────────────────────────────────────────────
+
+step_brew() {
+  if ! command -v brew &>/dev/null; then
+    [[ $QUIET -eq 0 && $JSON_MODE -eq 0 ]] && printf '  %s○%s brew not found, skipping\n' "$DIM" "$RESET"
+    return 0
+  fi
+  if has_network; then
+    brew update
+    brew upgrade
+    brew upgrade --greedy
+  else
+    [[ $QUIET -eq 0 && $JSON_MODE -eq 0 ]] && printf '  %s○%s no network, skipping update/upgrade\n' "$DIM" "$RESET"
+  fi
+  brew cleanup
+  brew doctor || true
+}
+
+step_npm() {
+  if ! command -v npm &>/dev/null; then
+    [[ $QUIET -eq 0 && $JSON_MODE -eq 0 ]] && printf '  %s○%s npm not found, skipping\n' "$DIM" "$RESET"
+    return 0
+  fi
+  npm cache clean --force
+}
+
+step_pnpm() {
+  if ! command -v pnpm &>/dev/null; then
+    [[ $QUIET -eq 0 && $JSON_MODE -eq 0 ]] && printf '  %s○%s pnpm not found, skipping\n' "$DIM" "$RESET"
+    return 0
+  fi
+  pnpm store prune
+}
+
+step_pip() {
+  if ! command -v pip3 &>/dev/null; then
+    [[ $QUIET -eq 0 && $JSON_MODE -eq 0 ]] && printf '  %s○%s pip3 not found, skipping\n' "$DIM" "$RESET"
+    return 0
+  fi
+  pip3 cache purge
+}
+
+step_uv() {
+  if ! command -v uv &>/dev/null; then
+    [[ $QUIET -eq 0 && $JSON_MODE -eq 0 ]] && printf '  %s○%s uv not found, skipping\n' "$DIM" "$RESET"
+    return 0
+  fi
+  uv cache prune --force
+}
+
+step_go() {
+  if ! command -v go &>/dev/null; then
+    [[ $QUIET -eq 0 && $JSON_MODE -eq 0 ]] && printf '  %s○%s go not found, skipping\n' "$DIM" "$RESET"
+    return 0
+  fi
+  go clean -cache -modcache -testcache
+}
+
+step_trunk() {
+  if ! command -v trunk &>/dev/null; then
+    [[ $QUIET -eq 0 && $JSON_MODE -eq 0 ]] && printf '  %s○%s trunk not found, skipping\n' "$DIM" "$RESET"
+    return 0
+  fi
+  trunk cache prune
+}
+
+step_gcloud() {
+  if [[ ! -d "${HOME}/.config/gcloud/virtenv" ]]; then
+    [[ $QUIET -eq 0 && $JSON_MODE -eq 0 ]] && printf '  %s○%s gcloud virtenv not found, skipping\n' "$DIM" "$RESET"
+    return 0
+  fi
+  find "${HOME}/.config/gcloud/virtenv" -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true
+  [[ $QUIET -eq 0 && $JSON_MODE -eq 0 ]] && printf '  cleaned gcloud __pycache__\n'
+}
+
+step_misc_caches() {
+  local cleaned=0
+  if [[ -d "${HOME}/.cache/puppeteer" ]]; then
+    rm -rf "${HOME}/.cache/puppeteer"
+    cleaned=$((cleaned + 1))
+  fi
+  if [[ -d "${HOME}/Library/Caches/ms-playwright" ]]; then
+    rm -rf "${HOME}/Library/Caches/ms-playwright"
+    cleaned=$((cleaned + 1))
+  fi
+  [[ $QUIET -eq 0 && $JSON_MODE -eq 0 ]] && printf '  removed %d misc cache(s)\n' "$cleaned"
+}
+
+step_cargo() {
+  local target="${CARGO_HOME:-$HOME/.cargo}/registry"
+  if [[ ! -d "$target" ]]; then
+    [[ $QUIET -eq 0 && $JSON_MODE -eq 0 ]] && printf '  %s○%s cargo registry not found, skipping\n' "$DIM" "$RESET"
+    return 0
+  fi
+  if ! confirm_step "Remove cargo registry cache ($target)?"; then
+    [[ $QUIET -eq 0 && $JSON_MODE -eq 0 ]] && printf '  %s○%s declined\n' "$DIM" "$RESET"
+    return 0
+  fi
+  rm -rf "$target"
+}
+
+step_docker() {
+  if ! command -v docker &>/dev/null; then
+    [[ $QUIET -eq 0 && $JSON_MODE -eq 0 ]] && printf '  %s○%s docker not found, skipping\n' "$DIM" "$RESET"
+    return 0
+  fi
+  if ! docker info &>/dev/null; then
+    [[ $QUIET -eq 0 && $JSON_MODE -eq 0 ]] && printf '  %s○%s docker not running, skipping\n' "$DIM" "$RESET"
+    return 0
+  fi
+  if ! confirm_step "Run docker system prune -a --volumes?"; then
+    [[ $QUIET -eq 0 && $JSON_MODE -eq 0 ]] && printf '  %s○%s declined\n' "$DIM" "$RESET"
+    return 0
+  fi
+  docker system prune -a --volumes -f
+}
+
+step_chrome() {
+  local chrome_cache="${HOME}/Library/Caches/Google/Chrome/Default/Cache"
+  local chrome_code_cache="${HOME}/Library/Caches/Google/Chrome/Default/Code Cache"
+  if [[ ! -d "$chrome_cache" && ! -d "$chrome_code_cache" ]]; then
+    [[ $QUIET -eq 0 && $JSON_MODE -eq 0 ]] && printf '  %s○%s Chrome cache not found, skipping\n' "$DIM" "$RESET"
+    return 0
+  fi
+  if ! confirm_step "Remove Chrome caches? (close Chrome first)"; then
+    [[ $QUIET -eq 0 && $JSON_MODE -eq 0 ]] && printf '  %s○%s declined\n' "$DIM" "$RESET"
+    return 0
+  fi
+  rm -rf "$chrome_cache" "$chrome_code_cache"
+}
+
+step_dns_flush() {
+  if ! confirm_step "Flush DNS cache?"; then
+    [[ $QUIET -eq 0 && $JSON_MODE -eq 0 ]] && printf '  %s○%s declined\n' "$DIM" "$RESET"
+    return 0
+  fi
+  sudo dscacheutil -flushcache 2>/dev/null || true
+  sudo killall -HUP mDNSResponder 2>/dev/null || true
+}
+
+step_mas() {
+  if ! command -v mas &>/dev/null; then
+    [[ $QUIET -eq 0 && $JSON_MODE -eq 0 ]] && printf '  %s○%s mas not found, skipping\n' "$DIM" "$RESET"
+    return 0
+  fi
+  if ! has_network; then
+    [[ $QUIET -eq 0 && $JSON_MODE -eq 0 ]] && printf '  %s○%s no network, skipping\n' "$DIM" "$RESET"
+    return 0
+  fi
+  mas upgrade
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Tiers
+# ─────────────────────────────────────────────────────────────────────────────
+
+cmd_quick() {
+  TOTAL_STEPS=5
+  run_step npm "npm cache" step_npm
+  run_step pnpm "pnpm store" step_pnpm
+  run_step pip "pip cache" step_pip
+  run_step uv "uv cache" step_uv
+  run_step misc "misc caches" step_misc_caches
+}
+
+cmd_standard() {
+  TOTAL_STEPS=9
+  run_step brew "Homebrew" step_brew
+  run_step npm "npm cache" step_npm
+  run_step pnpm "pnpm store" step_pnpm
+  run_step pip "pip cache" step_pip
+  run_step uv "uv cache" step_uv
+  run_step go "Go cache" step_go
+  run_step trunk "Trunk cache" step_trunk
+  run_step gcloud "gcloud cache" step_gcloud
+  run_step misc "misc caches" step_misc_caches
+}
+
+cmd_deep() {
+  TOTAL_STEPS=14
+  run_step brew "Homebrew" step_brew
+  run_step npm "npm cache" step_npm
+  run_step pnpm "pnpm store" step_pnpm
+  run_step pip "pip cache" step_pip
+  run_step uv "uv cache" step_uv
+  run_step go "Go cache" step_go
+  run_step trunk "Trunk cache" step_trunk
+  run_step gcloud "gcloud cache" step_gcloud
+  run_step misc "misc caches" step_misc_caches
+  run_step cargo "Cargo registry" step_cargo
+  run_step docker "Docker prune" step_docker
+  run_step chrome "Chrome caches" step_chrome
+  run_step dns "DNS flush" step_dns_flush
+  run_step mas "Mac App Store" step_mas
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Sizes subcommand
+# ─────────────────────────────────────────────────────────────────────────────
+
+cmd_sizes() {
+  if [[ $JSON_MODE -eq 1 ]]; then
+    cmd_sizes_json
+    return
+  fi
+
+  echo ""
+  printf '%sPackage Manager Caches%s\n' "$BOLD" "$RESET"
+  du -sh ~/Library/Caches/Homebrew 2>/dev/null || true
+  du -sh ~/.npm 2>/dev/null || true
+  command -v pnpm &>/dev/null && du -sh ~/Library/Caches/pnpm 2>/dev/null || true
+  du -sh ~/Library/Caches/pip 2>/dev/null || true
+  du -sh ~/.cache/uv 2>/dev/null || true
+  du -sh ~/.cache/trunk 2>/dev/null || true
+  du -sh ~/go/pkg 2>/dev/null || true
+  du -sh "${CARGO_HOME:-$HOME/.cargo}/registry" 2>/dev/null || true
+
+  echo ""
+  printf '%sBrowser & App Caches%s\n' "$BOLD" "$RESET"
+  du -sh ~/Library/Caches/Google/Chrome 2>/dev/null || true
+  du -sh ~/.cache/puppeteer 2>/dev/null || true
+  du -sh ~/Library/Caches/ms-playwright 2>/dev/null || true
+  du -sh ~/.config/gcloud/virtenv 2>/dev/null || true
+
+  echo ""
+  printf '%sDocker%s\n' "$BOLD" "$RESET"
+  docker system df 2>/dev/null || echo "Docker not running"
+  echo ""
+}
+
+cmd_sizes_json() {
+  local entries=()
+  local size_line
+  while IFS= read -r size_line; do
+    if [[ -n "$size_line" ]]; then
+      local size path
+      size=$(echo "$size_line" | awk '{print $1}')
+      path=$(echo "$size_line" | awk '{print $2}')
+      entries+=("$(printf '{"path":"%s","size":"%s"}' "$path" "$size")")
+    fi
+  done < <(
+    du -sh ~/Library/Caches/Homebrew 2>/dev/null || true
+    du -sh ~/.npm 2>/dev/null || true
+    du -sh ~/Library/Caches/pip 2>/dev/null || true
+    du -sh ~/.cache/uv 2>/dev/null || true
+    du -sh ~/Library/Caches/Google/Chrome 2>/dev/null || true
+    du -sh "${CARGO_HOME:-$HOME/.cargo}/registry" 2>/dev/null || true
+  )
+
+  local joined
+  joined=$(printf ',%s' "${entries[@]}")
+  joined="${joined:1}" # strip leading comma
+  printf '{"timestamp":"%s","caches":[%s]}\n' "$(date -u +"%Y-%m-%dT%H:%M:%SZ")" "$joined"
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Help
+# ─────────────────────────────────────────────────────────────────────────────
+
+cmd_help() {
+  cat <<EOF
+${BOLD}domus maintain${RESET} - Tiered system maintenance
+
+${BOLD}USAGE${RESET}
+    domus maintain [TIER] [OPTIONS]
+
+${BOLD}TIERS${RESET}
+    ${CYAN}(default)${RESET}           Standard: brew, npm, pnpm, pip, uv, go, trunk, gcloud, misc
+    ${CYAN}quick${RESET}               Cache cleanup only: npm, pnpm, pip, uv, misc
+    ${CYAN}deep${RESET}                Everything + cargo, docker, chrome, dns, mas (with confirms)
+    ${CYAN}sizes${RESET}               Show cache sizes (read-only)
+
+${BOLD}OPTIONS${RESET}
+    --dry-run, -n       Print what would run without executing
+    --skip <steps>      Comma-separated step names to skip
+                        Steps: brew, npm, pnpm, pip, uv, go, trunk, gcloud,
+                               misc, cargo, docker, chrome, dns, mas
+    --json              Machine-readable summary
+    --quiet, -q         Minimal output
+    -h, --help          Show this help
+
+${BOLD}EXAMPLES${RESET}
+    domus maintain                    # Standard maintenance
+    domus maintain quick              # Just caches
+    domus maintain --dry-run          # Preview standard tier
+    domus maintain --skip brew,go     # Standard minus brew and go
+    domus maintain deep --dry-run     # Preview deep tier
+    domus maintain --json quick       # JSON output
+
+EOF
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Main
+# ─────────────────────────────────────────────────────────────────────────────
+
+main() {
+  local tier="standard"
+  local positional=()
+
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      -h | --help | help)
+        cmd_help
+        exit 0
+        ;;
+      -n | --dry-run)
+        DRY_RUN=1
+        shift
+        ;;
+      -q | --quiet)
+        QUIET=1
+        shift
+        ;;
+      --json)
+        JSON_MODE=1
+        shift
+        ;;
+      --skip)
+        if [[ -z "${2:-}" ]]; then
+          die "--skip requires a comma-separated list of step names"
+        fi
+        IFS=',' read -ra SKIP_STEPS <<<"$2"
+        shift 2
+        ;;
+      -*)
+        die "Unknown option: $1 (try 'domus maintain --help')"
+        ;;
+      *)
+        positional+=("$1")
+        shift
+        ;;
+    esac
+  done
+
+  # Determine tier from positional args
+  if [[ ${#positional[@]} -gt 0 ]]; then
+    case "${positional[0]}" in
+      quick) tier="quick" ;;
+      deep) tier="deep" ;;
+      standard) tier="standard" ;;
+      sizes) tier="sizes" ;;
+      *)
+        die "Unknown tier: ${positional[0]} (try quick, deep, sizes, or omit for standard)"
+        ;;
+    esac
+  fi
+
+  # Sizes is a separate subcommand (read-only)
+  if [[ "$tier" == "sizes" ]]; then
+    cmd_sizes
+    exit 0
+  fi
+
+  acquire_lock
+  MAINTAIN_START_MS=$(now_ms)
+  log "Starting maintain ($tier) dry_run=$DRY_RUN skip=[${SKIP_STEPS[*]:-}]"
+
+  if [[ $QUIET -eq 0 && $JSON_MODE -eq 0 ]]; then
+    printf '%s━━━ System Maintenance (%s) ━━━%s %s%s%s\n' \
+      "$BOLD" "$tier" "$RESET" "$DIM" "$(date '+%Y-%m-%d %H:%M')" "$RESET"
+  fi
+
+  case "$tier" in
+    quick) cmd_quick ;;
+    standard) cmd_standard ;;
+    deep) cmd_deep ;;
+  esac
+
+  print_summary
+
+  # Determine exit code: 1 if any step failed
+  local exit_code=0
+  local entry
+  for entry in "${STEP_RESULTS[@]}"; do
+    local rest="${entry#*:}"
+    local status="${rest%%:*}"
+    if [[ "$status" == "failed" ]]; then
+      exit_code=1
+    fi
+  done
+
+  log "Finished maintain ($tier) exit_code=$exit_code"
+  exit "$exit_code"
+}
+
+main "$@"

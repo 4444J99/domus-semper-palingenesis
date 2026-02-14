@@ -151,6 +151,16 @@ teardown() {
 }
 
 # ─────────────────────────────────────────────────────────────────────────────
+# Maintain (delegates to domus-maintain)
+# ─────────────────────────────────────────────────────────────────────────────
+
+@test "domus maintain fails when domus-maintain not found" {
+  run bash "$DOMUS" maintain
+  [ "$status" -eq 2 ]
+  [[ "$output" == *"domus-maintain not found"* ]]
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
 # Packages (delegates to domus-packages)
 # ─────────────────────────────────────────────────────────────────────────────
 
@@ -180,6 +190,46 @@ teardown() {
   run bash "$DOMUS" --debug status
   [[ "$status" -eq 0 || "$status" -eq 1 ]]
   [[ "$output" == *"Domus Status"* ]]
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Help without jq/yq (check_deps bypass)
+# ─────────────────────────────────────────────────────────────────────────────
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Maintain delegation (alias)
+# ─────────────────────────────────────────────────────────────────────────────
+
+@test "domus maint delegates to domus-maintain" {
+  cat > "$BIN_DIR/domus-maintain" <<'SCRIPT'
+#!/usr/bin/env bash
+echo "maintain-mock $*"
+SCRIPT
+  chmod +x "$BIN_DIR/domus-maintain"
+  run bash "$DOMUS" maint --help
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"maintain-mock"* ]]
+}
+
+@test "domus maintain --help delegates correctly" {
+  cat > "$BIN_DIR/domus-maintain" <<'SCRIPT'
+#!/usr/bin/env bash
+echo "maintain-mock $*"
+SCRIPT
+  chmod +x "$BIN_DIR/domus-maintain"
+  run bash "$DOMUS" maintain --help
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"maintain-mock --help"* ]]
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Health delegation
+# ─────────────────────────────────────────────────────────────────────────────
+
+@test "domus health fails when chezmoi-health not found" {
+  run bash "$DOMUS" health
+  [ "$status" -eq 2 ]
+  [[ "$output" == *"chezmoi-health not found"* ]]
 }
 
 # ─────────────────────────────────────────────────────────────────────────────

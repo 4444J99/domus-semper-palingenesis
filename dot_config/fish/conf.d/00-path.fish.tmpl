@@ -1,0 +1,51 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# PATH Configuration (templated for OS/arch portability)
+# ─────────────────────────────────────────────────────────────────────────────
+
+if status is-interactive
+    # Record start time for performance tracking (timing end is in config.fish)
+    set -g _domus_shell_start_ms (perl -MTime::HiRes=time -e 'printf "%d", time * 1000' 2>/dev/null; or echo 0)
+
+{{- if eq .chezmoi.os "darwin" }}
+{{- if eq .chezmoi.arch "arm64" }}
+    # macOS ARM64 (Apple Silicon) - Homebrew
+    fish_add_path /opt/homebrew/bin
+    fish_add_path /opt/homebrew/sbin
+    fish_add_path /opt/homebrew/opt/file-formula/bin
+{{- else }}
+    # macOS Intel - Homebrew
+    fish_add_path /usr/local/bin
+    fish_add_path /usr/local/sbin
+{{- end }}
+{{- else if eq .chezmoi.os "linux" }}
+    # Linux Homebrew
+    fish_add_path /home/linuxbrew/.linuxbrew/bin
+{{- end }}
+
+{{- if eq .chezmoi.os "darwin" }}
+    # Ruby (Homebrew - macOS)
+    fish_add_path /opt/homebrew/opt/ruby/bin
+    fish_add_path /opt/homebrew/lib/ruby/gems/3.4.0/bin
+{{- end }}
+
+    # Go
+    set -gx GOPATH $HOME/.local/share/go
+    set -gx GOMODCACHE $HOME/.cache/go/mod
+    fish_add_path $GOPATH/bin
+
+    # Rust (rustup toolchain)
+    fish_add_path $HOME/.local/share/cargo/bin
+
+    # Python (Homebrew - follows latest via python@3 symlink)
+    fish_add_path /opt/homebrew/opt/python@3/libexec/bin
+
+    # pipx local bin
+    fish_add_path $HOME/.local/bin
+
+{{- if eq .chezmoi.os "darwin" }}
+    # Toolchains (External Volume - macOS only)
+    if test -d /Volumes/4444-iivii/ivi374forivi3ivi3/toolchains/bin
+        fish_add_path /Volumes/4444-iivii/ivi374forivi3ivi3/toolchains/bin
+    end
+{{- end }}
+end
