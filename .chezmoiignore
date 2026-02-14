@@ -45,8 +45,13 @@ justfile
 .serena/
 tests/
 
+# Python bytecode (generated at runtime)
+**/__pycache__/
+*.pyc
+
 # Repository documentation (don't apply to home directory)
 README.md
+CHANGELOG.md
 BOOTSTRAP.md
 BACKUP_STRATEGY.md
 docs/

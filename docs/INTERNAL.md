@@ -14,7 +14,7 @@ The ZSH configuration is modularized into `dot_config/zsh/*.zsh`. The numerical 
 ...and so on.
 
 ### Secret Management
-We use `onepasswordRead` instead of environment variables or `.env` files. 
+We use `onepasswordRead` instead of environment variables or `.env` files.
 **Why?**
 - Prevents "leaky" secrets in `.bash_history` or process lists.
 - Ensures secrets are only decrypted in memory during the `chezmoi apply` process.

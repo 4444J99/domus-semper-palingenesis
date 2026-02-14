@@ -110,8 +110,6 @@ teardown() {
 
 @test "log_rotate preserves small log files" {
   printf '%0.s.' {1..100} > "$STATE_DIR/daemon.log"
-  local before_size
-  before_size=$(wc -c < "$STATE_DIR/daemon.log")
   run bash "$TEST_SCRIPT" --force
   [ "$status" -eq 0 ]
   # Log should still exist and have grown (not been truncated)
