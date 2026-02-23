@@ -5,6 +5,33 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.3.1] - 2026-02-23
+
+### Fixed
+- `domus-sort` debounce bug: `last_event` was a subshell variable lost across pipe iterations; now persisted to `$STATE_DIR/sort-last-event`
+- BOOTSTRAP.md quick-start username (`4444JPP` → `4444J99/domus-semper-palingenesis`)
+- Bootstrap installs Kitty instead of iTerm2 (matching actual terminal config)
+
+### Added
+- LICENSE file (MIT)
+- CI badge in README
+- `.domus-keep` marker file support in `domus-home-guard` (exempt directories from being moved)
+- `split_name()` with multi-extension support (`.tar.gz`, etc.) in `domus_lib.py`
+- Threat model documentation for `secrets.zsh` plaintext cache
+- `chmod 600` enforcement on secrets cache load
+- `logging` module to `domus-agents-policy-sync` and `domus-home-guard` (replaces bare `print()` and swallowed exceptions)
+
+### Changed
+- `domus-downloads-tidy` now imports `split_name` and `unique_dest` from shared `domus_lib.py` instead of inline implementations
+- `chezmoi-health` and `chezmoi-recover` source `domus-lib.sh` for color definitions instead of independent declarations
+- Removed duplicate XDG exports from `15-env.zsh` (canonical source is `dot_zshenv`)
+- DAEMONS.md rewritten to document all 12 agents (was "three")
+- INTERNAL.md updated to match current ORGANVM env var naming (was stale `WORLD_ROOT`/`REALMS`)
+- `docs/system-guides/TODO.md` marked as archived with stale-path notice
+- README stats updated (236 managed files, 59 templates)
+- README structure section updated (12 agents, was 3)
+- Test files updated for `domus_lib` import compatibility
+
 ## [1.3.0] - 2026-02-23
 
 ### Added
