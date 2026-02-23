@@ -52,6 +52,13 @@ desired_servers = {
             "serena", "start-mcp-server",
             "--context", "claude-code"
         ]
+    },
+    "Neon": {
+        "type": "http",
+        "url": "https://mcp.neon.tech/mcp",
+        "headers": {
+            "Authorization": "Bearer {{ onepasswordRead "op://Personal/Neon API Key/credential" }}"
+        }
     }
 }
 

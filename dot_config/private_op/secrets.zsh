@@ -14,6 +14,7 @@ _op_cache_refresh() {
     echo "GEMINI_API_KEY=$(op read 'op://Personal/Gemini API Key/credential' 2>/dev/null)"
     echo "GITHUB_TOKEN=$(op read 'op://Personal/antigravity--github-api--112525/token' 2>/dev/null)"
     echo "NPM_TOKEN=$(op read 'op://Personal/NPM Token/credential' 2>/dev/null)"
+    echo "SONATYPE_GUIDE_TOKEN=$(op read 'op://Personal/Sonatype Guide/credential' 2>/dev/null)"
   } > "$_OP_CACHE.tmp" && mv "$_OP_CACHE.tmp" "$_OP_CACHE"
   chmod 600 "$_OP_CACHE"
 }
@@ -22,9 +23,10 @@ _op_cache_refresh() {
 if [[ -f "$_OP_CACHE" ]]; then
   source "$_OP_CACHE"
   # Export aliases
-  export GEMINI_API_KEY GITHUB_TOKEN NPM_TOKEN
+  export GEMINI_API_KEY GITHUB_TOKEN NPM_TOKEN SONATYPE_GUIDE_TOKEN
   export GOOGLE_API_KEY="$GEMINI_API_KEY"
   export GITHUB_MCP_PAT="$GITHUB_TOKEN"
+  export GITHUB_PERSONAL_ACCESS_TOKEN="$GITHUB_TOKEN"
   export GH_TOKEN="$GITHUB_TOKEN"
   export NODE_AUTH_TOKEN="$NPM_TOKEN"
 fi
