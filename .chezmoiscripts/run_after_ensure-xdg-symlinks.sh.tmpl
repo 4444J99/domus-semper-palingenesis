@@ -3,6 +3,10 @@
 # Idempotent: safe to run on every chezmoi apply
 set -euo pipefail
 
+{{- if not .domus_auto_enabled }}
+exit 0
+{{- end }}
+
 apps=(
   aitk
   anaconda

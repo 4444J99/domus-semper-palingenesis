@@ -71,6 +71,9 @@ def insert_notice(path: Path) -> bool:
 
 
 def main() -> int:
+    {{- if not .domus_auto_enabled }}
+    return 0
+    {{- end }}
     updated = 0
     for dirpath, dirnames, filenames in os.walk(ROOT):
         path = Path(dirpath)

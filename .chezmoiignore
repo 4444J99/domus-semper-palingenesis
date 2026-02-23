@@ -6,6 +6,11 @@ Library/
 .config/iterm2/
 {{ end }}
 
+# Ignore auto-functions if disabled
+{{ if not .domus_auto_enabled }}
+Library/LaunchAgents/
+{{ end }}
+
 # Ignore Linux-specific files on non-Linux systems
 {{ if ne .chezmoi.os "linux" }}
 .config/i3/

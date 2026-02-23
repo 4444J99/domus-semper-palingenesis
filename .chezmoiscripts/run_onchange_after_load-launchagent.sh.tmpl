@@ -6,6 +6,11 @@
 
 set -euo pipefail
 
+{{- if not .domus_auto_enabled }}
+echo "Domus auto functions disabled, skipping launchd management."
+exit 0
+{{- end }}
+
 echo "Managing launchd agents..."
 
 # Ensure state directories exist

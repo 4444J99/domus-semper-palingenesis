@@ -233,6 +233,11 @@ run_sorter() {
 # ─────────────────────────────────────────────────────────────────────────────
 
 main() {
+  {{- if not .domus_auto_enabled }}
+  echo "Domus auto functions disabled (domus_auto_enabled=false). Skipping daemon run."
+  exit 0
+  {{- end }}
+
   local start_time
   start_time=$(now_ms)
 
