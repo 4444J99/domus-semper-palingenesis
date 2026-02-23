@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.3.2] - 2026-02-23
+
+### Added
+- `tests/test_domus_lib.py` (20 tests): dedicated unit tests for shared Python library (`split_name` multi-extension handling, `unique_dest` collision logic)
+- `tests/test-domus-lib.bats` (17 tests): dedicated unit tests for shared Bash library (`die`, `info`, `warn`, `check_manifest`, `check_deps`, `domus_log_rotate`, `domus_log`, `now_ms`)
+- `.domus-keep` marker tests in `test_home_guard.py` (skip/move behavior)
+- `domus run` subcommand tests in `test-domus-cli.bats` (help, delegation, unknown task)
+
+### Fixed
+- `test_home_guard.py` SCRIPT path now falls back to `.tmpl` when rendered file is absent
+
 ## [1.3.1] - 2026-02-23
 
 ### Fixed
