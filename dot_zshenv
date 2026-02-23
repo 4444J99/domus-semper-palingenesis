@@ -16,25 +16,19 @@ export HISTFILE="$XDG_STATE_HOME/zsh/history"
 export HISTSIZE=50000
 export SAVEHIST=50000
 
-# ── World Root: canonical ontology topology ──
-export WORLD_ROOT="$HOME/world"
-export AUDIT_ROOT="$WORLD_ROOT/.audit"
-export REALMS="create research operate publish archive"
-export VCS_HOST="github.com"
-export ORG_POLICY="mirror-local-to-remote"
-export DEFAULT_ORG_UNIT="liminal"
+# ── ORGANVM workspace ──
+export ORGANVM_WORKSPACE_DIR="$HOME/Workspace"
+export ORGANVM_CORPUS_DIR="$ORGANVM_WORKSPACE_DIR/meta-organvm/organvm-corpvs-testamentvm"
 
-# ── Unmanaged (excluded from audit) ──
-export UNMANAGED_DIRS="$HOME/Library $HOME/.cache $HOME/.config $HOME/.Trash"
-
-# ── Organ → GitHub org mapping (stable references, mutable values) ──
-export ORG_I="ivviiviivvi"
-export ORG_II="omni-dromenon-machina"
-export ORG_III="labores-profani-crux"
-export ORG_IV=""
-export ORG_V=""
-export ORG_VI=""
-export ORG_VII=""
+# ── Organ → GitHub org mapping ──
+export ORG_I="organvm-i-theoria"
+export ORG_II="organvm-ii-poiesis"
+export ORG_III="organvm-iii-ergon"
+export ORG_IV="organvm-iv-taxis"
+export ORG_V="organvm-v-logos"
+export ORG_VI="organvm-vi-koinonia"
+export ORG_VII="organvm-vii-kerygma"
+export ORG_META="meta-organvm"
 
 # ── Personal namespaces ──
 export ORG_LIMINAL="4444j99"
@@ -43,3 +37,5 @@ export ORG_LIMINAL_ALT="4444jpp"
 # ── Account identity ──
 export GITHUB_PRIMARY="4444J99"
 export GITHUB_SECONDARY="4444JPP"
+export PAGER=cat
+export CLAUDE_INTERACTIVE=0
