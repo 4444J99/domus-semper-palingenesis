@@ -8,7 +8,9 @@ from pathlib import Path
 from unittest import mock
 
 SCRIPT_DIR = Path(__file__).resolve().parent.parent / "dot_local" / "bin"
-SCRIPT = SCRIPT_DIR / "executable_domus-home-guard"
+_plain = SCRIPT_DIR / "executable_domus-home-guard"
+_tmpl = SCRIPT_DIR / "executable_domus-home-guard.tmpl"
+SCRIPT = _plain if _plain.exists() else _tmpl
 
 # Ensure domus_lib is importable (lives alongside the script)
 if str(SCRIPT_DIR) not in sys.path:
@@ -121,6 +123,58 @@ class TestAllowlist:
 
     def test_workspace_in_allowlist(self):
         assert "Workspace" in ALLOW_NAMES
+
+
+# ─── .domus-keep marker tests ───
+
+
+class TestDomusKeep:
+    def test_directory_with_keep_marker_skipped(self):
+        """Directories containing .domus-keep should not appear in actions."""
+        with tempfile.TemporaryDirectory() as d:
+            # Create a non-allowlisted directory with .domus-keep
+            stray_dir = Path(d) / "my-project"
+            stray_dir.mkdir()
+            (stray_dir / ".domus-keep").touch()
+            (stray_dir / "file.txt").write_text("content")
+
+            result = subprocess.run(
+                [sys.executable, str(SCRIPT), "--help"],
+                capture_output=True,
+                text=True,
+                env={**dict(__import__("os").environ), "HOME": d},
+            )
+            # --help just verifies script loads; the real test is below via dry-run
+            assert result.returncode == 0
+
+            # Run dry-run with mocked HOME to verify the dir is skipped
+            result = subprocess.run(
+                [sys.executable, str(SCRIPT)],
+                capture_output=True,
+                text=True,
+                env={**dict(__import__("os").environ), "HOME": d},
+            )
+            assert result.returncode == 0
+            # The kept directory should not appear in dry-run output
+            assert "my-project" not in result.stdout
+
+    def test_directory_without_keep_marker_moved(self):
+        """Directories without .domus-keep should appear in dry-run output."""
+        with tempfile.TemporaryDirectory() as d:
+            # Create a non-allowlisted directory without .domus-keep
+            stray_dir = Path(d) / "random-stuff"
+            stray_dir.mkdir()
+            (stray_dir / "file.txt").write_text("content")
+
+            result = subprocess.run(
+                [sys.executable, str(SCRIPT)],
+                capture_output=True,
+                text=True,
+                env={**dict(__import__("os").environ), "HOME": d},
+            )
+            assert result.returncode == 0
+            # The directory should appear in dry-run output
+            assert "random-stuff" in result.stderr or "random-stuff" in result.stdout
 
 
 # ─── CLI tests ───

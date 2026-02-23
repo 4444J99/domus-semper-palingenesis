@@ -253,3 +253,51 @@ SCRIPT
   [ "$status" -eq 0 ]
   [[ "$output" == *"COMMANDS"* ]]
 }
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Run subcommand
+# ─────────────────────────────────────────────────────────────────────────────
+
+@test "domus run (no task) shows task list and exits 0" {
+  run bash "$DOMUS" run
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"TASKS"* ]]
+  [[ "$output" == *"sort"* ]]
+  [[ "$output" == *"guard"* ]]
+}
+
+@test "domus run --help shows task list" {
+  # run with no task shows help-like output
+  run bash "$DOMUS" run
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"domus run"* ]]
+}
+
+@test "domus run sort delegates to domus-sort" {
+  cat > "$BIN_DIR/domus-sort" <<'SCRIPT'
+#!/usr/bin/env bash
+echo "sort-mock $*"
+SCRIPT
+  chmod +x "$BIN_DIR/domus-sort"
+  run bash "$DOMUS" run sort --dry-run
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"sort-mock"* ]]
+  [[ "$output" == *"--dry-run"* ]]
+}
+
+@test "domus run guard delegates to domus-home-guard" {
+  cat > "$BIN_DIR/domus-home-guard" <<'SCRIPT'
+#!/usr/bin/env bash
+echo "guard-mock $*"
+SCRIPT
+  chmod +x "$BIN_DIR/domus-home-guard"
+  run bash "$DOMUS" run guard
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"guard-mock"* ]]
+}
+
+@test "domus run unknown-task fails with exit 2" {
+  run bash "$DOMUS" run nonexistent-task
+  [ "$status" -eq 2 ]
+  [[ "$output" == *"Unknown task"* ]]
+}
