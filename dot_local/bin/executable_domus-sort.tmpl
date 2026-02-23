@@ -453,11 +453,6 @@ cmd_watch() {
 # ─────────────────────────────────────────────────────────────────────────────
 
 main() {
-  {{- if not .domus_auto_enabled }}
-  echo "Domus auto functions disabled (domus_auto_enabled=false). Skipping sort run."
-  exit 0
-  {{- end }}
-
   mkdir -p "${STATE_DIR}"
 
   local cmd=""

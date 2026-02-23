@@ -27,7 +27,7 @@ set -euo pipefail
 # Configuration
 # ─────────────────────────────────────────────────────────────────────────────
 
-DOMUS_VERSION="1.2.0"
+DOMUS_VERSION="1.3.0"
 CONFIG_DIR="${HOME}/.config/domus"
 STATE_DIR="${HOME}/.local/state/domus"
 MANIFEST="${CONFIG_DIR}/manifest.yaml"
@@ -130,6 +130,9 @@ ${BOLD}COMMANDS${RESET}
         -f, --follow    Tail logs
         -n, --lines N   Number of lines (default: 50)
 
+    ${CYAN}run${RESET} <task>           Run a file-management task on demand
+        ${DIM}sort, tidy, guard, naming, desktop, policy-sync, daemon, heal${RESET}
+
     ${CYAN}doctor${RESET}              Comprehensive system diagnostics
 
     ${CYAN}shell-parity${RESET}        Compare zsh/fish config for drift
@@ -144,6 +147,8 @@ ${BOLD}EXAMPLES${RESET}
     domus                   # Quick status
     domus apply --dry-run   # Preview sync
     domus packages diff     # Show package drift
+    domus run sort          # Dry-run file sorter
+    domus run tidy --apply  # Move old downloads
     domus perf shell        # Shell startup times
 
 EOF
@@ -624,6 +629,63 @@ cmd_logs() {
   fi
 }
 
+cmd_run() {
+  local task="${1:-}"
+  [[ $# -gt 0 ]] && shift
+
+  if [[ -z "$task" ]]; then
+    cat <<EOF
+${BOLD}domus run${RESET} - Run file-management tasks on demand
+
+${BOLD}USAGE${RESET}
+    domus run <task> [OPTIONS]
+
+${BOLD}TASKS${RESET}
+    ${CYAN}sort${RESET}          File sorter (dry-run default)
+    ${CYAN}tidy${RESET}          Downloads cleanup (dry-run default)
+    ${CYAN}guard${RESET}         Home directory guard (dry-run default)
+    ${CYAN}naming${RESET}        Cloud naming maintenance (dry-run default)
+    ${CYAN}desktop${RESET}       Desktop file router (immediate)
+    ${CYAN}policy-sync${RESET}   AGENTS.md policy sync (immediate)
+    ${CYAN}daemon${RESET}        Orchestrator health check
+    ${CYAN}heal${RESET}          Chezmoi self-heal (dry-run default)
+
+Pass --apply to tasks that support it. All flags forward to the underlying script.
+EOF
+    return 0
+  fi
+
+  case "$task" in
+    sort)
+      exec "${BIN_DIR}/domus-sort" "$@"
+      ;;
+    tidy)
+      exec "${BIN_DIR}/domus-downloads-tidy" "$@"
+      ;;
+    guard)
+      exec "${BIN_DIR}/domus-home-guard" "$@"
+      ;;
+    naming)
+      exec "${BIN_DIR}/domus-naming-maintenance" "$@"
+      ;;
+    desktop)
+      exec "${BIN_DIR}/domus-desktop-router" "$@"
+      ;;
+    policy-sync)
+      exec "${BIN_DIR}/domus-agents-policy-sync" "$@"
+      ;;
+    daemon)
+      exec "${BIN_DIR}/domus-daemon" "$@"
+      ;;
+    heal)
+      exec "${BIN_DIR}/chezmoi-daemon" "$@"
+      ;;
+    *)
+      die "Unknown task: $task (try 'domus run' to list tasks)"
+      ;;
+  esac
+}
+
 cmd_doctor() {
   local exit_code=0
 
@@ -828,6 +890,9 @@ main() {
       ;;
     logs)
       cmd_logs "$@"
+      ;;
+    run)
+      cmd_run "$@"
       ;;
     doctor | doc)
       check_deps

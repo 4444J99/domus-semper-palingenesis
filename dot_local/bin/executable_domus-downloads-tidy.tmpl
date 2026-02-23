@@ -80,9 +80,6 @@ def unique_dest(dest: Path) -> Path:
 
 
 def main() -> None:
-    {{- if not .domus_auto_enabled }}
-    return
-    {{- end }}
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", default=str(Path.home() / "Downloads"))
     parser.add_argument("--apply", action="store_true", help="Perform moves (default is dry run).")

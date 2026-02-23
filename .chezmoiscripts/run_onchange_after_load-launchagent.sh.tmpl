@@ -6,18 +6,7 @@
 
 set -euo pipefail
 
-{{- if not .domus_auto_enabled }}
-echo "Domus auto functions disabled, skipping launchd management."
-exit 0
-{{- end }}
-
 echo "Managing launchd agents..."
-
-# Ensure state directories exist
-mkdir -p "${HOME}/.local/share/chezmoi-health"
-mkdir -p "${HOME}/.local/state/domus/telemetry"
-mkdir -p "${HOME}/.local/state/domus/normalize"
-mkdir -p "${HOME}/.local/state/domus/photo_sort"
 
 # Function to load/reload an agent
 load_agent() {
@@ -51,6 +40,42 @@ load_agent() {
     echo "   ERROR: Failed to load agent"
   fi
 }
+
+# ── Infrastructure agents (always load) ──────────────────────────────────────
+
+# Load MCP env setter
+load_agent \
+  "${HOME}/Library/LaunchAgents/com.4jp.env.mcp.plist" \
+  "com.4jp.env.mcp" \
+  "env-mcp (set MCP_TOOLS_FILE)"
+
+# Load MCP servers
+load_agent \
+  "${HOME}/Library/LaunchAgents/com.4jp.mcp.servers.plist" \
+  "com.4jp.mcp.servers" \
+  "mcp-servers (stdio server hub)"
+
+# Load gmail labeler
+load_agent \
+  "${HOME}/Library/LaunchAgents/com.user.gmail_labeler.plist" \
+  "com.user.gmail_labeler" \
+  "gmail-labeler (daily 9am)"
+
+# Load mail automation (disabled by default)
+load_agent \
+  "${HOME}/Library/LaunchAgents/com.user.mail_automation.plist" \
+  "com.user.mail_automation" \
+  "mail-automation (daily 9am, disabled)"
+
+# ── File-automation agents (only when enabled) ──────────────────────────────
+
+{{- if .domus_auto_enabled }}
+
+# Ensure state directories exist
+mkdir -p "${HOME}/.local/share/chezmoi-health"
+mkdir -p "${HOME}/.local/state/domus/telemetry"
+mkdir -p "${HOME}/.local/state/domus/normalize"
+mkdir -p "${HOME}/.local/state/domus/photo_sort"
 
 # Load chezmoi self-heal agent
 load_agent \
@@ -100,29 +125,11 @@ load_agent \
   "com.4jp.agents-policy-sync" \
   "agents-policy-sync (5min AGENTS.md sync)"
 
-# Load MCP env setter
-load_agent \
-  "${HOME}/Library/LaunchAgents/com.4jp.env.mcp.plist" \
-  "com.4jp.env.mcp" \
-  "env-mcp (set MCP_TOOLS_FILE)"
-
-# Load MCP servers
-load_agent \
-  "${HOME}/Library/LaunchAgents/com.4jp.mcp.servers.plist" \
-  "com.4jp.mcp.servers" \
-  "mcp-servers (stdio server hub)"
-
-# Load gmail labeler
-load_agent \
-  "${HOME}/Library/LaunchAgents/com.user.gmail_labeler.plist" \
-  "com.user.gmail_labeler" \
-  "gmail-labeler (daily 9am)"
-
-# Load mail automation (disabled by default)
-load_agent \
-  "${HOME}/Library/LaunchAgents/com.user.mail_automation.plist" \
-  "com.user.mail_automation" \
-  "mail-automation (daily 9am, disabled)"
+{{- else }}
+echo ""
+echo "File-automation agents disabled (domus_auto_enabled=false)."
+echo "Use 'domus run <task>' to run scripts manually."
+{{- end }}
 
 echo ""
 echo "Management commands:"

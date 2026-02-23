@@ -4,10 +4,6 @@
 
 set -euo pipefail
 
-{{- if not .domus_auto_enabled }}
-exit 0
-{{- end }}
-
 timestamp="$(date +%Y%m%d-%H%M%S)"
 log_root="${HOME}/.local/state/domus"
 normalize_log_dir="${log_root}/normalize"

@@ -3,10 +3,6 @@
 
 set -euo pipefail
 
-{{- if not .domus_auto_enabled }}
-exit 0
-{{- end }}
-
 EXPECTED_EXTENSIONS=(
   "ant.dir.ant.anthropic.filesystem"
   "ant.dir.ant.anthropic.imessage"

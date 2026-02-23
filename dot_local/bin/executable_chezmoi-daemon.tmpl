@@ -362,11 +362,6 @@ apply_changes() {
 # ─────────────────────────────────────────────────────────────────────────────
 
 main() {
-  {{- if not .domus_auto_enabled }}
-  echo "Domus auto functions disabled (domus_auto_enabled=false). Skipping daemon run."
-  exit 0
-  {{- end }}
-
   log_rotate
 
   log "INFO" "Daemon started (apply=${DO_APPLY}, force=${FORCE_RUN})"

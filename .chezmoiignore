@@ -6,9 +6,16 @@ Library/
 .config/iterm2/
 {{ end }}
 
-# Ignore auto-functions if disabled
+# Ignore file-automation LaunchAgents if disabled (infrastructure agents always deploy)
 {{ if not .domus_auto_enabled }}
-Library/LaunchAgents/
+Library/LaunchAgents/com.chezmoi.self-heal.plist
+Library/LaunchAgents/com.domus.daemon.plist
+Library/LaunchAgents/com.domus.sort.plist
+Library/LaunchAgents/com.4jp.desktop-router.plist
+Library/LaunchAgents/com.4jp.home-root-guard.plist
+Library/LaunchAgents/com.4jp.downloads-tidy.plist
+Library/LaunchAgents/com.4jp.naming-maintenance.plist
+Library/LaunchAgents/com.4jp.agents-policy-sync.plist
 {{ end }}
 
 # Ignore Linux-specific files on non-Linux systems

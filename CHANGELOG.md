@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.3.0] - 2026-02-23
+
+### Added
+- `domus run <task>` subcommand for one-shot execution of file-management scripts
+  - Tasks: sort, tidy, guard, naming, desktop, policy-sync, daemon, heal
+  - All flags forward to underlying scripts (e.g. `--apply`, `--dry-run`)
+
+### Changed
+- File-automation LaunchAgents disabled by default (`domus_auto_enabled=false`)
+- Infrastructure LaunchAgents (MCP, mail) now always deploy regardless of auto setting
+- Removed `domus_auto_enabled` gates from executable scripts (manual invocation always works)
+- Removed `domus_auto_enabled` gates from chezmoi run scripts (sync-skills, link-skills, XDG symlinks, extension checks)
+- `.chezmoiignore` now selectively ignores only file-automation plists instead of all LaunchAgents
+
 ## [1.2.0] - 2026-02-14
 
 ### Added
