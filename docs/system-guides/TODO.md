@@ -1,5 +1,10 @@
-Home TODO
-=========
+Home TODO (Archived)
+====================
+
+> **Note (2026-02-23):** This file predates the XDG migration. Paths like
+> `~/System/Scripts/`, `~/System/Logs/`, and `~/System/Config/` have been
+> reorganized into `~/.local/bin/`, `~/.local/state/domus/`, and
+> `~/.config/domus/` respectively. Items below may reference stale locations.
 
 System Reorg (2025-12-19)
 -------------------------

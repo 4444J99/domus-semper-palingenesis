@@ -7,9 +7,15 @@ from __future__ import annotations
 
 import argparse
 from datetime import datetime
+import logging
 from pathlib import Path
 import plistlib
 import subprocess
+
+logging.basicConfig(
+    format="[%(levelname)s] %(message)s",
+    level=logging.INFO,
+)
 
 HOME = Path.home()
 
@@ -92,6 +98,7 @@ def is_screen_locked() -> bool:
                 return True
         return False
     except Exception:
+        logging.debug("Could not determine screen lock state", exc_info=True)
         return False
 
 
@@ -120,6 +127,9 @@ def main() -> None:
         if path.is_symlink():
             # Leave symlinks alone unless explicitly handled elsewhere.
             continue
+        # Respect .domus-keep marker files (placed in directories to exempt them)
+        if path.is_dir() and (path / ".domus-keep").exists():
+            continue
 
         if path.is_dir():
             if is_repo_dir(path):
@@ -139,7 +149,8 @@ def main() -> None:
         dest.parent.mkdir(parents=True, exist_ok=True)
         if args.apply:
             src.rename(dest)
-        print(f"{src} -> {dest} ({'moved' if args.apply else 'dry-run'})")
+        label = "moved" if args.apply else "dry-run"
+        logging.info("%s -> %s (%s)", src, dest, label)
 
 
 if __name__ == "__main__":

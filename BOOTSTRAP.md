@@ -5,7 +5,7 @@ Complete guide for setting up a new machine with these dotfiles.
 ## 🚀 Quick Start (One Command)
 
 ```bash
-sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply 4444JPP
+sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply 4444J99/domus-semper-palingenesis
 ```
 
 This single command will:

@@ -10,6 +10,10 @@ from pathlib import Path
 SCRIPT_DIR = Path(__file__).resolve().parent.parent / "dot_local" / "bin"
 SCRIPT = SCRIPT_DIR / "executable_domus-downloads-tidy"
 
+# Ensure domus_lib is importable (lives alongside the script)
+if str(SCRIPT_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPT_DIR))
+
 
 def _import_module():
     import importlib.machinery
@@ -23,9 +27,10 @@ def _import_module():
 
 
 _mod = _import_module()
-split_name = _mod.split_name
 category_for = _mod.category_for
-unique_dest = _mod.unique_dest
+
+# split_name and unique_dest now live in the shared library
+from domus_lib import split_name, unique_dest
 
 
 # ─── split_name tests ───

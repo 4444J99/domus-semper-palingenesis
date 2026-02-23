@@ -31,15 +31,14 @@ Background tasks are managed via macOS `launchd`.
 - `com.domus.sort`: A reactive FSEvents watcher. It uses `executable_domus-sort` to organize the `Downloads` folder in real-time.
 
 ### Organizational Topology (`dot_zshenv`)
-The `dot_zshenv` file defines a structured namespace for all projects and repositories:
+The `dot_zshenv` file defines a structured namespace for all projects and repositories using the ORGANVM convention:
 
-- **`WORLD_ROOT`** (`~/world`): Canonical root for the project namespace tree.
-- **`REALMS`**: Space-separated list of top-level categories (`create research operate publish archive`).
-- **`ORG_I` through `ORG_VII`**: Stable env var references that map to GitHub organization slugs. Values are mutable (orgs can be renamed/replaced), but the variable names are stable references usable in scripts.
-- **`ORG_LIMINAL` / `ORG_LIMINAL_ALT`**: Personal GitHub namespace handles.
-- **`GITHUB_PRIMARY` / `GITHUB_SECONDARY`**: Account identity for multi-account Git workflows.
-- **`AUDIT_ROOT`**: Directory for audit/reconciliation data.
-- **`UNMANAGED_DIRS`**: Directories excluded from audit (system caches, Trash, etc.).
+- **`ORGANVM_WORKSPACE_DIR`** (`~/Workspace`): Canonical root for the project namespace tree.
+- **`ORGANVM_CORPUS_DIR`**: Path to the ORGANVM corpus testamentum within the meta-organvm workspace.
+- **`ORG_I` through `ORG_VII`**: Stable env var references that map to GitHub organization slugs (e.g., `organvm-i-theoria`, `organvm-ii-poiesis`). Values are mutable (orgs can be renamed/replaced), but the variable names are stable references usable in scripts.
+- **`ORG_META`**: The `meta-organvm` GitHub org.
+- **`ORG_LIMINAL` / `ORG_LIMINAL_ALT`**: Personal GitHub namespace handles (`4444j99` / `4444jpp`).
+- **`GITHUB_PRIMARY` / `GITHUB_SECONDARY`**: Account identity for multi-account Git workflows (`4444J99` / `4444JPP`).
 
 These are defined in `dot_zshenv` because it's the earliest-loading zsh file, making the vars available to all processes. Fish does not currently have these (gap, not intentional).
 

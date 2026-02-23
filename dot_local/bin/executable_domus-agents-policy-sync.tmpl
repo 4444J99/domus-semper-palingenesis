@@ -4,8 +4,14 @@ Ensure every AGENTS.md in ~/ references the global policy file.
 Walks the home directory, skipping cloud storage, containers, and
 common build artifacts. Inserts a notice line after the first heading.
 """
+import logging
 import os
 from pathlib import Path
+
+logging.basicConfig(
+    format="[%(levelname)s] %(message)s",
+    level=logging.INFO,
+)
 
 ROOT = Path.home()
 GLOBAL_REF = str(ROOT / "AGENTS.md")
@@ -86,9 +92,10 @@ def main() -> int:
                 continue
             try:
                 if insert_notice(fpath):
+                    logging.info("Updated: %s", fpath)
                     updated += 1
             except Exception:
-                # Keep the sync resilient; skip files we can't read or write.
+                logging.warning("Skipped (unreadable/unwritable): %s", fpath, exc_info=True)
                 continue
 
     return updated

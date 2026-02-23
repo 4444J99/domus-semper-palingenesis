@@ -10,6 +10,10 @@ from unittest import mock
 SCRIPT_DIR = Path(__file__).resolve().parent.parent / "dot_local" / "bin"
 SCRIPT = SCRIPT_DIR / "executable_domus-home-guard"
 
+# Ensure domus_lib is importable (lives alongside the script)
+if str(SCRIPT_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPT_DIR))
+
 
 def _import_module():
     import importlib.machinery

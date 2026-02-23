@@ -45,18 +45,19 @@ while [[ $# -gt 0 ]]; do
 done
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Colors (disabled for non-interactive or JSON mode)
+# Colors (via shared lib; disabled for non-interactive or JSON mode)
 # ─────────────────────────────────────────────────────────────────────────────
 
-if [[ -t 1 && $JSON_ONLY -eq 0 ]]; then
-  RED='\033[0;31m'
-  GREEN='\033[0;32m'
-  YELLOW='\033[0;33m'
-  BLUE='\033[0;34m'
-  CYAN='\033[0;36m'
-  BOLD='\033[1m'
-  RESET='\033[0m'
+DOMUS_LIB="${HOME}/.local/bin/domus-lib.sh"
+# shellcheck source=domus-lib.sh
+if [[ -f "$DOMUS_LIB" ]]; then
+  source "$DOMUS_LIB"
 else
+  RED='' GREEN='' YELLOW='' BLUE='' CYAN='' BOLD='' RESET=''
+fi
+
+# Override: disable colors in JSON mode
+if [[ $JSON_ONLY -eq 1 ]]; then
   RED='' GREEN='' YELLOW='' BLUE='' CYAN='' BOLD='' RESET=''
 fi
 

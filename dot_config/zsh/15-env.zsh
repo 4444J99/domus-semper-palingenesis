@@ -9,14 +9,8 @@ export VISUAL=nvim
 # Gemini CLI Configuration
 export GEMINI_CLI=1
 
-# ─────────────────────────────────────────────────────────────────────────────
-# XDG Base Directories (canonical source: ~/.zshenv; duplicated here for safety)
-# ─────────────────────────────────────────────────────────────────────────────
-
-export XDG_CONFIG_HOME="$HOME/.config"
-export XDG_DATA_HOME="$HOME/.local/share"
-export XDG_STATE_HOME="$HOME/.local/state"
-export XDG_CACHE_HOME="$HOME/.cache"
+# XDG Base Directories are set in ~/.zshenv (the earliest-loading zsh file).
+# They are guaranteed available here; do not re-export.
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Application-specific XDG compliance

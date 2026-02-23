@@ -427,19 +427,21 @@ cmd_watch() {
     die "No valid directories to watch"
   fi
 
-  # Track last event time for debouncing
-  local last_event=0
+  # Debounce state file (persisted across pipe subshell iterations)
+  local debounce_file="${STATE_DIR}/sort-last-event"
+  echo "0" > "$debounce_file"
 
   # Start fswatch
   fswatch -0 --event Created --event MovedTo "${watch_dirs[@]}" | while IFS= read -r -d '' file; do
-    local now
+    local now last_event
     now=$(date +%s)
+    last_event=$(cat "$debounce_file" 2>/dev/null || echo 0)
 
     # Debounce: skip if too soon after last event
     if [[ $((now - last_event)) -lt $DEBOUNCE_SECONDS ]]; then
       continue
     fi
-    last_event=$now
+    echo "$now" > "$debounce_file"
 
     # Small delay to let file finish writing
     sleep 1

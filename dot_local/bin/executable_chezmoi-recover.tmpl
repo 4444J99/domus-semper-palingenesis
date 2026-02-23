@@ -16,17 +16,19 @@ set -euo pipefail
 BACKUP_DIR="${HOME}/.local/share/chezmoi-health/backups"
 CHEZMOI_SOURCE="{{ .chezmoi.sourceDir }}"
 
-# Colors
-if [[ -t 1 ]]; then
-  RED='\033[0;31m'
-  GREEN='\033[0;32m'
-  YELLOW='\033[0;33m'
-  BLUE='\033[0;34m'
-  CYAN='\033[0;36m'
-  BOLD='\033[1m'
-  RESET='\033[0m'
+# Shared library (colors, helpers)
+DOMUS_LIB="${HOME}/.local/bin/domus-lib.sh"
+# shellcheck source=domus-lib.sh
+if [[ -f "$DOMUS_LIB" ]]; then
+  source "$DOMUS_LIB"
 else
-  RED='' GREEN='' YELLOW='' BLUE='' CYAN='' BOLD='' RESET=''
+  # Fallback if lib not yet deployed
+  if [[ -t 1 ]]; then
+    RED='\033[0;31m' GREEN='\033[0;32m' YELLOW='\033[0;33m'
+    BLUE='\033[0;34m' CYAN='\033[0;36m' BOLD='\033[1m' RESET='\033[0m'
+  else
+    RED='' GREEN='' YELLOW='' BLUE='' CYAN='' BOLD='' RESET=''
+  fi
 fi
 
 # ─────────────────────────────────────────────────────────────────────────────

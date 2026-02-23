@@ -4,6 +4,8 @@
 
 **The Ever-Regenerating Home**
 
+[![Lint & Validate](https://github.com/4444J99/domus-semper-palingenesis/actions/workflows/lint.yml/badge.svg)](https://github.com/4444J99/domus-semper-palingenesis/actions/workflows/lint.yml)
+
 [Install](#install) · [How It Works](#how-it-works) · [Usage](#usage) · [Docs](#documentation)
 
 </div>
@@ -145,7 +147,7 @@ j       # just (task runner)
 ├── dot_zshrc               # Shell entry point (loads zsh/ modules)
 ├── private_dot_ssh/        # SSH via 1Password agent
 ├── private_dot_claude/     # Claude Code config
-└── private_Library/        # macOS LaunchAgents (3 daemons)
+└── private_Library/        # macOS LaunchAgents (12 agents)
 ```
 
 ## Documentation
@@ -166,7 +168,7 @@ j       # just (task runner)
 
 <div align="center">
 
-**220+ managed files · 53 templates · 10 CI jobs · 0 secrets in Git**
+**236 managed files · 59 templates · 10 CI jobs · 0 secrets in Git**
 
 MIT · [chezmoi](https://chezmoi.io) · [Tokyo Night](https://github.com/folke/tokyonight.nvim)
 

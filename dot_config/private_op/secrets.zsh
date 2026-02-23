@@ -1,6 +1,19 @@
 # 1Password-backed secrets with caching for fast shell startup.
 # Loads secrets instantly from cache, refreshes in background when stale.
-# Cache file: ~/.cache/op-secrets (mode 600, encrypted at rest via FileVault)
+# Cache file: ~/.cache/op-secrets (mode 600)
+#
+# Threat model:
+#   - The cache stores secrets in plaintext, readable by any process running
+#     as the current user. This is an intentional trade-off: shell startup
+#     must be fast (< 50ms), and `op read` takes 1-3 seconds per item.
+#   - Mitigations:
+#     1. File permissions are enforced to 600 (owner-only read/write).
+#     2. FileVault (full-disk encryption) protects against offline/disk-theft.
+#     3. Cache is excluded from Time Machine via extended attributes.
+#     4. Background refresh limits the window of stale credentials.
+#   - Residual risk: a compromised local process (e.g., malicious npm
+#     postinstall) running as the user can read the cache. Acceptable
+#     because such a process could also keylog or read process memory.
 
 _OP_CACHE="${HOME}/.cache/op-secrets"
 _OP_CACHE_MAX_AGE=60  # minutes
@@ -19,8 +32,9 @@ _op_cache_refresh() {
   chmod 600 "$_OP_CACHE"
 }
 
-# Load from cache (instant)
+# Load from cache (instant); enforce permissions
 if [[ -f "$_OP_CACHE" ]]; then
+  [[ "$(stat -f '%Lp' "$_OP_CACHE" 2>/dev/null)" != "600" ]] && chmod 600 "$_OP_CACHE"
   source "$_OP_CACHE"
   # Export aliases
   export GEMINI_API_KEY GITHUB_TOKEN NPM_TOKEN SONATYPE_GUIDE_TOKEN
