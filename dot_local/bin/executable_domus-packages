@@ -33,7 +33,10 @@ SNAPSHOT_DIR="${STATE_DIR}/snapshots"
 
 DOMUS_LIB="$(dirname "$0")/domus-lib.sh"
 # shellcheck source=domus-lib.sh
-source "$DOMUS_LIB" || { echo "error: domus-lib.sh not found" >&2; exit 2; }
+source "$DOMUS_LIB" || {
+  echo "error: domus-lib.sh not found" >&2
+  exit 2
+}
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Helpers (packages-specific)
@@ -360,7 +363,7 @@ cmd_apply() {
           exit_code=1
         }
       fi
-    done <<< "$missing_formulae"
+    done <<<"$missing_formulae"
   fi
 
   # Install missing homebrew casks
@@ -378,7 +381,7 @@ cmd_apply() {
           exit_code=1
         }
       fi
-    done <<< "$missing_casks"
+    done <<<"$missing_casks"
   fi
 
   # Install missing pipx packages
@@ -396,7 +399,7 @@ cmd_apply() {
           exit_code=1
         }
       fi
-    done <<< "$missing_pipx"
+    done <<<"$missing_pipx"
   fi
 
   # Install missing npm global packages
@@ -414,7 +417,7 @@ cmd_apply() {
           exit_code=1
         }
       fi
-    done <<< "$missing_npm"
+    done <<<"$missing_npm"
   fi
 
   # Install missing cargo packages
@@ -432,7 +435,7 @@ cmd_apply() {
           exit_code=1
         }
       fi
-    done <<< "$missing_cargo"
+    done <<<"$missing_cargo"
   fi
 
   if [[ $dry_run -eq 0 ]]; then
