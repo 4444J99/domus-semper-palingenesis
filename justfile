@@ -107,24 +107,22 @@ cache-clear:
 
 # Bump version in both DOMUS_VERSION and CHANGELOG atomically
 bump version:
-    @if grep -q '## \[{{version}}\]' CHANGELOG.md; then \
-        echo "CHANGELOG already has [{{version}}]"; \
-    else \
-        sed -i '' '7a\
-\
-## [{{version}}] - '"$(date +%Y-%m-%d)"'\
-\
-### Added\
-\
-### Fixed\
-\
-### Changed\
-' CHANGELOG.md; \
-        echo "Added [{{version}}] section to CHANGELOG.md"; \
+    #!/usr/bin/env bash
+    set -euo pipefail
+    v="{{version}}"
+    if grep -q "## \[$v\]" CHANGELOG.md; then
+        echo "CHANGELOG already has [$v]"
+    else
+        section=$(printf '\n## [%s] - %s\n\n### Added\n\n### Fixed\n\n### Changed\n' "$v" "$(date +%Y-%m-%d)")
+        head -7 CHANGELOG.md > CHANGELOG.tmp
+        echo "$section" >> CHANGELOG.tmp
+        tail -n +8 CHANGELOG.md >> CHANGELOG.tmp
+        mv CHANGELOG.tmp CHANGELOG.md
+        echo "Added [$v] section to CHANGELOG.md"
     fi
-    @sed -i '' 's/^DOMUS_VERSION=".*"/DOMUS_VERSION="{{version}}"/' dot_local/bin/executable_domus
-    @echo "DOMUS_VERSION set to {{version}}"
-    @bash dot_local/bin/executable_domus-version-check
+    sed -i '' "s/DOMUS_VERSION=\".*\"/DOMUS_VERSION=\"$v\"/" dot_local/bin/executable_domus
+    echo "DOMUS_VERSION set to $v"
+    bash dot_local/bin/executable_domus-version-check
 
 # Check docs don't reference removed functions
 doc-lint:
