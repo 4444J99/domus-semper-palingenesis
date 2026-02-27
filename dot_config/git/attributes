@@ -48,54 +48,54 @@ Makefile text eol=lf
 Dockerfile text eol=lf
 
 # =============================================================================
-# Git LFS - Large Binary Files
+# Binary files — mark as binary to prevent line-ending normalization and diffs.
+# LFS tracking is intentionally NOT set globally. Repos needing LFS should
+# declare it in their own .gitattributes.
 # =============================================================================
 # Images
-*.gif filter=lfs diff=lfs merge=lfs -text
-*.ico filter=lfs diff=lfs merge=lfs -text
-*.jpg filter=lfs diff=lfs merge=lfs -text
-*.jpeg filter=lfs diff=lfs merge=lfs -text
-*.png filter=lfs diff=lfs merge=lfs -text
-*.psd filter=lfs diff=lfs merge=lfs -text
-*.svg filter=lfs diff=lfs merge=lfs -text
-*.webp filter=lfs diff=lfs merge=lfs -text
+*.gif binary
+*.ico binary
+*.jpg binary
+*.jpeg binary
+*.png binary
+*.psd binary
+*.svg text
+*.webp binary
 
 # Audio
-*.mp3 filter=lfs diff=lfs merge=lfs -text
-*.ogg filter=lfs diff=lfs merge=lfs -text
-*.wav filter=lfs diff=lfs merge=lfs -text
+*.mp3 binary
+*.ogg binary
+*.wav binary
 
 # Video
-*.mp4 filter=lfs diff=lfs merge=lfs -text
-*.mov filter=lfs diff=lfs merge=lfs -text
-*.webm filter=lfs diff=lfs merge=lfs -text
-*.avi filter=lfs diff=lfs merge=lfs -text
+*.mp4 binary
+*.mov binary
+*.webm binary
+*.avi binary
 
 # Fonts
-*.eot filter=lfs diff=lfs merge=lfs -text
-*.otf filter=lfs diff=lfs merge=lfs -text
-*.ttf filter=lfs diff=lfs merge=lfs -text
-*.woff filter=lfs diff=lfs merge=lfs -text
-*.woff2 filter=lfs diff=lfs merge=lfs -text
+*.eot binary
+*.otf binary
+*.ttf binary
+*.woff binary
+*.woff2 binary
 
 # Archives
-*.7z filter=lfs diff=lfs merge=lfs -text
-*.bz2 filter=lfs diff=lfs merge=lfs -text
-*.gz filter=lfs diff=lfs merge=lfs -text
-*.rar filter=lfs diff=lfs merge=lfs -text
-*.tar filter=lfs diff=lfs merge=lfs -text
-*.zip filter=lfs diff=lfs merge=lfs -text
+*.7z binary
+*.bz2 binary
+*.gz binary
+*.rar binary
+*.tar binary
+*.zip binary
 
 # Compiled binaries
-*.exe filter=lfs diff=lfs merge=lfs -text
-*.dll filter=lfs diff=lfs merge=lfs -text
-*.so filter=lfs diff=lfs merge=lfs -text
-*.dylib filter=lfs diff=lfs merge=lfs -text
+*.exe binary
+*.dll binary
+*.so binary
+*.dylib binary
 
-# Documents (optional - uncomment if using LFS for docs)
-# *.pdf filter=lfs diff=lfs merge=lfs -text
-# *.doc filter=lfs diff=lfs merge=lfs -text
-# *.docx filter=lfs diff=lfs merge=lfs -text
+# Documents
+*.pdf binary
 
 # =============================================================================
 # Diff drivers

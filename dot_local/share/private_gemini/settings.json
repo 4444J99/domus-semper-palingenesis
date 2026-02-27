@@ -28,7 +28,7 @@
     "showCitations": true,
     "showModelInfoInChat": true,
     "showHomeDirectoryWarning": false,
-    "useAlternateBuffer": true
+    "useAlternateBuffer": false
   },
   "context": {
     "loadMemoryFromIncludeDirectories": true,
@@ -38,7 +38,8 @@
   },
   "tools": {
     "shell": {
-      "showColor": true
+      "showColor": true,
+      "enableInteractiveShell": false
     },
     "autoAccept": true,
     "approvalMode": "default"

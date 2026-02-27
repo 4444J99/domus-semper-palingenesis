@@ -104,6 +104,28 @@ if command -v mise &>/dev/null; then
   unset _cache
 fi
 
+# Kubernetes - kubectl completion
+if command -v kubectl &>/dev/null; then
+  _cache="${XDG_CACHE_HOME:-$HOME/.cache}/kubectl-zsh.zsh"
+  if [[ ! -f "$_cache" ]] || [[ "$(command -v kubectl)" -nt "$_cache" ]]; then
+    mkdir -p "${XDG_CACHE_HOME:-$HOME/.cache}"
+    kubectl completion zsh > "$_cache" 2>/dev/null
+  fi
+  source "$_cache"
+  unset _cache
+fi
+
+# Kind - completion
+if command -v kind &>/dev/null; then
+  _cache="${XDG_CACHE_HOME:-$HOME/.cache}/kind-zsh.zsh"
+  if [[ ! -f "$_cache" ]] || [[ "$(command -v kind)" -nt "$_cache" ]]; then
+    mkdir -p "${XDG_CACHE_HOME:-$HOME/.cache}"
+    kind completion zsh > "$_cache" 2>/dev/null
+  fi
+  source "$_cache"
+  unset _cache
+fi
+
 # ─────────────────────────────────────────────────────────────────────────────
 # Lazy-loaded tools (deferred until first use to reduce startup time)
 # ─────────────────────────────────────────────────────────────────────────────
