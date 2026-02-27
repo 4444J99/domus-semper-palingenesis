@@ -6,6 +6,7 @@ This directory contains the single source of truth for AI tool instructions.
 
 - `system-info.md.tmpl` - System context (OS, shell, environment)
 - `code-style.md.tmpl` - Code style preferences and conventions
+- `plan-discipline.md.tmpl` - Plan file hygiene rules (date-prefixed, never-overwrite, archive)
 
 ## Usage
 
@@ -14,13 +15,16 @@ Include these files in tool-specific configs:
 ```
 {{- $systemInfo := include "dot_config/ai-context/system-info.md.tmpl" }}
 {{- $codeStyle := include "dot_config/ai-context/code-style.md.tmpl" }}
+{{- $planDiscipline := include "dot_config/ai-context/plan-discipline.md.tmpl" }}
 {{ $systemInfo }}
 {{ $codeStyle }}
+{{ $planDiscipline }}
 ```
 
 ## Tools Using These Configs
 
-- Claude Code: `~/.claude/CLAUDE.md`
-- Gemini CLI: `~/.gemini/GEMINI.md`
+- Claude Code: `~/.claude/CLAUDE.md` (via `private_dot_claude/CLAUDE.md.tmpl`)
+- Gemini CLI: `~/.gemini/GEMINI.md` (via `dot_local/share/private_gemini/GEMINI.md.tmpl`)
+- Global AGENTS.md: `~/AGENTS.md` (via `AGENTS.md.tmpl` at chezmoi root)
 - GitHub Copilot: `~/.config/ai-instructions/copilot-instructions.md`
 - Cursor: `~/.config/ai-instructions/cursor-rules/core.mdc`

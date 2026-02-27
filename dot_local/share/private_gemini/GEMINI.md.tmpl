@@ -2,8 +2,17 @@
 
 {{- $systemInfo := include "dot_config/ai-context/system-info.md.tmpl" }}
 {{- $codeStyle := include "dot_config/ai-context/code-style.md.tmpl" }}
+{{- $planDiscipline := include "dot_config/ai-context/plan-discipline.md.tmpl" }}
 {{ $systemInfo }}
 {{ $codeStyle }}
+## Gemini-Specific
+
+### Plan Paths
+
+- **Project plans**: `.gemini/plans/` within each project
+- **Global fallback**: `~/.gemini/plans/` (only for non-project contexts)
+
+{{ $planDiscipline }}
 ## Skills
 
 Specialized skills available at `~/.local/share/ai-skills/`.

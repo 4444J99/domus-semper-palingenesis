@@ -1,0 +1,15 @@
+# Global AI Agent Instructions
+
+Applies to all AI coding agents (Codex, etc.) operating in this home directory.
+
+{{- $systemInfo := include "dot_config/ai-context/system-info.md.tmpl" }}
+{{- $codeStyle := include "dot_config/ai-context/code-style.md.tmpl" }}
+{{- $planDiscipline := include "dot_config/ai-context/plan-discipline.md.tmpl" }}
+{{ $systemInfo }}
+### Plan Paths
+
+- **Project plans**: tool-specific plans directory within each project (e.g., `.codex/plans/`)
+- **Global fallback**: `~/.codex/plans/` (only for non-project contexts)
+
+{{ $planDiscipline }}
+{{ $codeStyle }}

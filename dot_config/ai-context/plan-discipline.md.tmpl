@@ -1,0 +1,7 @@
+## Plan File Discipline
+
+- Plans MUST be saved in the **project's** tool-specific plans directory (e.g., `~/Workspace/my-project/<tool-config>/plans/`), NOT the home directory or a global dump
+- When no project context exists (home dir, ad-hoc tasks), use the tool's global plans fallback with **date-prefixed names**: `YYYY-MM-DD-{descriptive-slug}.md`
+- Plans are **never overwritten**. To revise, create a new file with incremented suffix: `YYYY-MM-DD-{slug}-v2.md`
+- Agent sub-plans follow: `YYYY-MM-DD-{slug}-agent-{short-id}.md`
+- Archive old plans instead of deleting: move to `archive/YYYY-MM/` subdirectory
