@@ -5,8 +5,10 @@ Place at `.github/copilot-instructions.md` in your project.
 
 {{- $systemInfo := include "dot_config/ai-context/system-info.md.tmpl" }}
 {{- $codeStyle := include "dot_config/ai-context/code-style.md.tmpl" }}
+{{- $planDiscipline := include "dot_config/ai-context/plan-discipline.md.tmpl" }}
 {{ $systemInfo }}
 {{ $codeStyle }}
+{{ $planDiscipline }}
 ## Security
 
 - Never commit secrets or credentials

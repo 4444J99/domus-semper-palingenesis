@@ -1,0 +1,103 @@
+#!/usr/bin/env bash
+# ─────────────────────────────────────────────────────────────────────────────
+# domus-ai-config-check - Validate AI config fragment parity across consumers
+# ─────────────────────────────────────────────────────────────────────────────
+#
+# Checks that each AI tool consumer template includes the expected shared
+# fragments from dot_config/ai-context/. Outputs a matrix table and exits
+# nonzero if any required fragment is missing.
+#
+# Usage:
+#   domus-ai-config-check                # run from repo root
+#   domus-ai-config-check /path/to/repo  # explicit source dir
+
+set -euo pipefail
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Configuration
+# ─────────────────────────────────────────────────────────────────────────────
+
+REPO_DIR="${1:-$(git rev-parse --show-toplevel 2>/dev/null || echo "$HOME/domus-semper-palingenesis")}"
+
+# Consumer templates (short name → relative path from repo root)
+declare -A CONSUMERS=(
+  [Claude]="private_dot_claude/CLAUDE.md.tmpl"
+  [Gemini]="dot_local/share/private_gemini/GEMINI.md.tmpl"
+  [AGENTS]="AGENTS.md.tmpl"
+  [Copilot]="dot_config/ai-instructions/copilot-instructions.md.tmpl"
+  [Cursor]="dot_config/ai-instructions/cursor-rules/core.mdc.tmpl"
+)
+
+# Fragments and which consumers should include them
+# Format: fragment-name → space-separated list of consumer short names
+declare -A FRAGMENT_MATRIX=()
+FRAGMENT_MATRIX["system-info"]="Claude Gemini AGENTS Copilot Cursor"
+FRAGMENT_MATRIX["code-style"]="Claude Gemini AGENTS Copilot Cursor"
+FRAGMENT_MATRIX["plan-discipline"]="Claude Gemini AGENTS Copilot Cursor"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Colors (skip if no tty)
+# ─────────────────────────────────────────────────────────────────────────────
+
+if [[ -t 1 ]]; then
+  GREEN='\033[0;32m'
+  RED='\033[0;31m'
+  BOLD='\033[1m'
+  DIM='\033[2m'
+  RESET='\033[0m'
+else
+  GREEN='' RED='' BOLD='' DIM='' RESET=''
+fi
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Check logic
+# ─────────────────────────────────────────────────────────────────────────────
+
+failures=0
+
+# Ordered lists for consistent output
+CONSUMER_ORDER=(Claude Gemini AGENTS Copilot Cursor)
+FRAGMENT_ORDER=(system-info code-style plan-discipline)
+
+# Print header
+printf '\n%b%sAI Config Fragment Parity%b\n\n' "$BOLD" "" "$RESET"
+printf '  %-16s' ""
+for consumer in "${CONSUMER_ORDER[@]}"; do
+  printf '%-10s' "$consumer"
+done
+printf '\n'
+printf '  %s\n' "$(printf '─%.0s' {1..66})"
+
+for fragment in "${FRAGMENT_ORDER[@]}"; do
+  printf '  %-16s' "$fragment"
+  required_consumers="${FRAGMENT_MATRIX[$fragment]}"
+
+  for consumer in "${CONSUMER_ORDER[@]}"; do
+    template_path="${REPO_DIR}/${CONSUMERS[$consumer]}"
+
+    # Check if this consumer should have this fragment
+    if [[ " $required_consumers " == *" $consumer "* ]]; then
+      # Required — check if included
+      if [[ -f "$template_path" ]] && grep -q "include \"dot_config/ai-context/${fragment}.md.tmpl\"" "$template_path" 2>/dev/null; then
+        printf '%b✓%b         ' "$GREEN" "$RESET"
+      else
+        printf '%b✗%b         ' "$RED" "$RESET"
+        failures=$((failures + 1))
+      fi
+    else
+      # Not required
+      printf '%b·%b         ' "$DIM" "$RESET"
+    fi
+  done
+  printf '\n'
+done
+
+printf '\n'
+
+if [[ $failures -eq 0 ]]; then
+  printf '%b✓ All consumers at full parity%b\n\n' "$GREEN" "$RESET"
+  exit 0
+else
+  printf '%b✗ %d missing fragment(s)%b\n\n' "$RED" "$failures" "$RESET"
+  exit 1
+fi

@@ -7,6 +7,10 @@ on:
     branches: [master]
 
 jobs:
+  # ─────────────────────────────────────────────────────────────────────────
+  # Lint stage (parallel)
+  # ─────────────────────────────────────────────────────────────────────────
+
   shellcheck:
     name: ShellCheck
     runs-on: ubuntu-latest
@@ -66,38 +70,6 @@ jobs:
           export PATH="$HOME/.local/bin:$PATH"
           find dot_local/bin -name 'executable_*' ! -name '*.tmpl' -exec shfmt -d -i 2 -ci {} +
 
-  template-check:
-    name: Template Validation
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install chezmoi
-        run: sh -c "$(curl -fsLS get.chezmoi.io)"
-      - name: Validate templates parse
-        run: |
-          # Check that templates have valid Go template syntax
-          find . -name '*.tmpl' ! -path './.git/*' | while read -r file; do
-            echo "Checking template syntax: $file"
-            # Basic syntax check: ensure {{ }} pairs are balanced
-            opens=$(grep -o '{{' "$file" | wc -l)
-            closes=$(grep -o '}}' "$file" | wc -l)
-            if [ "$opens" -ne "$closes" ]; then
-              echo "ERROR: Unbalanced template delimiters in $file ({{ = $opens, }} = $closes)"
-              exit 1
-            fi
-          done
-          echo "All templates have balanced delimiters"
-
-  bats:
-    name: BATS Tests
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install BATS
-        run: sudo apt-get install -y bats
-      - name: Run BATS tests
-        run: bats tests/*.bats
-
   python-lint:
     name: Python Lint
     runs-on: ubuntu-latest
@@ -111,8 +83,24 @@ jobs:
             grep -i python | cut -d: -f1 | \
             xargs -r ruff check --select E,F,W
 
+  # ─────────────────────────────────────────────────────────────────────────
+  # Test stage (needs: lint stage)
+  # ─────────────────────────────────────────────────────────────────────────
+
+  bats:
+    name: BATS Tests
+    needs: [shellcheck, shfmt]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install BATS
+        run: sudo apt-get install -y bats
+      - name: Run BATS tests
+        run: bats tests/*.bats
+
   pytest:
     name: Python Tests
+    needs: [python-lint]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -122,8 +110,30 @@ jobs:
       - run: pip install pytest
       - run: python -m pytest tests/ -q
 
+  template-check:
+    name: Template Validation
+    needs: [shellcheck, yamllint, validate-json]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install chezmoi
+        run: sh -c "$(curl -fsLS get.chezmoi.io)"
+      - name: Validate templates parse
+        run: |
+          find . -name '*.tmpl' ! -path './.git/*' | while read -r file; do
+            echo "Checking template syntax: $file"
+            opens=$(grep -o '{{' "$file" | wc -l)
+            closes=$(grep -o '}}' "$file" | wc -l)
+            if [ "$opens" -ne "$closes" ]; then
+              echo "ERROR: Unbalanced template delimiters in $file ({{ = $opens, }} = $closes)"
+              exit 1
+            fi
+          done
+          echo "All templates have balanced delimiters"
+
   doc-lint:
     name: Doc References
+    needs: [shellcheck]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -135,8 +145,46 @@ jobs:
           fi
           echo "No stale references found"
 
+  # ─────────────────────────────────────────────────────────────────────────
+  # Integration stage (needs: test stage)
+  # ─────────────────────────────────────────────────────────────────────────
+
+  integration-macos:
+    name: macOS Integration
+    needs: [bats, pytest]
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install chezmoi
+        run: sh -c "$(curl -fsLS get.chezmoi.io)" -- -b "$HOME/.local/bin"
+      - name: Setup CI chezmoi config
+        run: |
+          mkdir -p "$HOME/.config/chezmoi"
+          # Merge CI fixture data into chezmoi config
+          cat > "$HOME/.config/chezmoi/chezmoi.toml" << 'EOF'
+          [data]
+          has_aws_credentials = false
+          domus_auto_enabled = false
+          is_work = false
+          EOF
+      - name: Run chezmoi init + apply
+        run: |
+          export PATH="$HOME/.local/bin:$PATH"
+          chezmoi init --apply --source="$GITHUB_WORKSPACE"
+      - name: Validate key files exist
+        run: |
+          echo "Checking rendered files..."
+          test -f "$HOME/.claude/CLAUDE.md" && echo "✓ CLAUDE.md"
+          test -f "$HOME/.config/ai-instructions/copilot-instructions.md" && echo "✓ copilot-instructions.md"
+          test -f "$HOME/.local/bin/domus" && echo "✓ domus"
+          test -f "$HOME/.local/bin/domus-lib.sh" && echo "✓ domus-lib.sh"
+          test -f "$HOME/.local/bin/domus-ai-config-check" && echo "✓ domus-ai-config-check"
+          test -f "$HOME/.local/bin/domus-version-check" && echo "✓ domus-version-check"
+          echo "All key files present"
+
   gitleaks:
     name: Secret Scanning
+    needs: [bats, pytest]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -145,3 +193,21 @@ jobs:
       - uses: gitleaks/gitleaks-action@v2
         env:
           GITLEAKS_CONFIG: .gitleaks.toml
+
+  version-sync:
+    name: Version Sync
+    needs: [bats, pytest]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check DOMUS_VERSION matches CHANGELOG
+        run: bash dot_local/bin/executable_domus-version-check
+
+  ai-config-parity:
+    name: AI Config Parity
+    needs: [template-check]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check AI config fragment parity
+        run: bash dot_local/bin/executable_domus-ai-config-check .

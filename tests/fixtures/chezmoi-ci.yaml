@@ -1,0 +1,5 @@
+# CI-specific chezmoi data overrides
+# Used by integration-macos job to render templates without 1Password
+has_aws_credentials: false
+domus_auto_enabled: false
+is_work: false

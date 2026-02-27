@@ -27,7 +27,7 @@ set -euo pipefail
 # Configuration
 # ─────────────────────────────────────────────────────────────────────────────
 
-DOMUS_VERSION="1.3.0"
+DOMUS_VERSION="1.5.0"
 CONFIG_DIR="${HOME}/.config/domus"
 STATE_DIR="${HOME}/.local/state/domus"
 MANIFEST="${CONFIG_DIR}/manifest.yaml"
@@ -806,6 +806,104 @@ cmd_doctor() {
     printf ' %s✓%s %s data file(s)\n' "$GREEN" "$RESET" "$telem_files"
   else
     printf ' %s○%s no telemetry directory\n' "$DIM" "$RESET"
+  fi
+
+  # 8. AI config fragment parity
+  printf '%s[ai-config]%s' "$CYAN" "$RESET"
+  if command -v domus-ai-config-check &>/dev/null; then
+    if domus-ai-config-check &>/dev/null; then
+      printf ' %s✓%s all consumers at parity\n' "$GREEN" "$RESET"
+    else
+      printf ' %s!%s fragment mismatch detected\n' "$YELLOW" "$RESET"
+      exit_code=1
+    fi
+  else
+    printf ' %s○%s domus-ai-config-check not found\n' "$DIM" "$RESET"
+  fi
+
+  # 9. All LaunchAgents (comprehensive)
+  printf '%s[daemons-all]%s' "$CYAN" "$RESET"
+  if [[ "$(uname)" == "Darwin" ]]; then
+    local all_ok=0
+    local all_missing=0
+    local all_total=0
+    for prefix in com.chezmoi com.domus com.4jp; do
+      while IFS= read -r plist; do
+        local label
+        label=$(basename "$plist" .plist)
+        all_total=$((all_total + 1))
+        if launchctl list "$label" &>/dev/null; then
+          all_ok=$((all_ok + 1))
+        else
+          all_missing=$((all_missing + 1))
+        fi
+      done < <(find "$HOME/Library/LaunchAgents" -name "${prefix}.*" -maxdepth 1 2>/dev/null)
+    done
+    if [[ $all_total -eq 0 ]]; then
+      printf ' %s○%s no agents found\n' "$DIM" "$RESET"
+    elif [[ $all_missing -eq 0 ]]; then
+      printf ' %s✓%s %s/%s agents loaded\n' "$GREEN" "$RESET" "$all_ok" "$all_total"
+    else
+      printf ' %s!%s %s/%s loaded (%s not loaded)\n' "$YELLOW" "$RESET" "$all_ok" "$all_total" "$all_missing"
+    fi
+  else
+    printf ' %s○%s not macOS\n' "$DIM" "$RESET"
+  fi
+
+  # 10. Shell cache freshness
+  printf '%s[shell-cache]%s' "$CYAN" "$RESET"
+  local cache_dir="${XDG_CACHE_HOME:-$HOME/.cache}"
+  local stale_caches=0
+  local checked_caches=0
+  local max_age_days=7
+  for cache_name in starship zoxide atuin direnv mise fzf kubectl kind; do
+    local cache_file="${cache_dir}/${cache_name}-zsh.zsh"
+    if [[ -f "$cache_file" ]]; then
+      checked_caches=$((checked_caches + 1))
+      local age_days
+      if [[ "$(uname)" == "Darwin" ]]; then
+        age_days=$((($(date +%s) - $(stat -f %m "$cache_file")) / 86400))
+      else
+        age_days=$((($(date +%s) - $(stat -c %Y "$cache_file")) / 86400))
+      fi
+      if [[ $age_days -gt $max_age_days ]]; then
+        stale_caches=$((stale_caches + 1))
+      fi
+    fi
+  done
+  if [[ $checked_caches -eq 0 ]]; then
+    printf ' %s○%s no cached init files\n' "$DIM" "$RESET"
+  elif [[ $stale_caches -eq 0 ]]; then
+    printf ' %s✓%s %s caches fresh (<%sd)\n' "$GREEN" "$RESET" "$checked_caches" "$max_age_days"
+  else
+    printf ' %s!%s %s/%s stale (>%sd) — run just cache-clear\n' "$YELLOW" "$RESET" "$stale_caches" "$checked_caches" "$max_age_days"
+  fi
+
+  # 11. Version consistency
+  printf '%s[version]%s   ' "$CYAN" "$RESET"
+  local changelog="${HOME}/domus-semper-palingenesis/CHANGELOG.md"
+  if [[ -f "$changelog" ]]; then
+    local changelog_ver
+    changelog_ver=$(grep -m1 '^## \[' "$changelog" | sed 's/^## \[\(.*\)\].*/\1/')
+    if [[ "$changelog_ver" == "$DOMUS_VERSION" ]]; then
+      printf '%s✓%s v%s (script == changelog)\n' "$GREEN" "$RESET" "$DOMUS_VERSION"
+    else
+      printf '%s!%s script=%s changelog=%s\n' "$YELLOW" "$RESET" "$DOMUS_VERSION" "$changelog_ver"
+      exit_code=1
+    fi
+  else
+    printf '%s○%s CHANGELOG.md not found\n' "$DIM" "$RESET"
+  fi
+
+  # 12. Pre-commit hook
+  printf '%s[pre-commit]%s' "$CYAN" "$RESET"
+  local hook_path="${HOME}/domus-semper-palingenesis/.git/hooks/pre-commit"
+  if [[ -x "$hook_path" ]]; then
+    printf ' %s✓%s hook installed\n' "$GREEN" "$RESET"
+  elif [[ -f "$hook_path" ]]; then
+    printf ' %s!%s hook exists but not executable\n' "$YELLOW" "$RESET"
+  else
+    printf ' %s!%s not installed — run pre-commit install\n' "$YELLOW" "$RESET"
   fi
 
   echo ""

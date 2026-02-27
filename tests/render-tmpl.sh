@@ -14,4 +14,14 @@ render_tmpl() {
     -e 's/{{[^}]*}}//g' \
     "$src" >"$dest"
   chmod +x "$dest"
+
+  # Copy shared libraries next to rendered script so $(dirname "$0")/domus-lib.sh resolves
+  local src_dir dest_dir
+  src_dir="$(cd "$(dirname "$src")" && pwd)"
+  dest_dir="$(dirname "$dest")"
+  for lib in domus-lib.sh domus_lib.py; do
+    if [[ -f "$src_dir/$lib" ]]; then
+      cp "$src_dir/$lib" "$dest_dir/$lib"
+    fi
+  done
 }

@@ -6,7 +6,9 @@ from pathlib import Path
 from unittest.mock import patch
 
 SCRIPT_DIR = Path(__file__).resolve().parent.parent / "dot_local" / "bin"
-SCRIPT = SCRIPT_DIR / "executable_domus-agents-policy-sync"
+_plain = SCRIPT_DIR / "executable_domus-agents-policy-sync"
+_tmpl = SCRIPT_DIR / "executable_domus-agents-policy-sync.tmpl"
+SCRIPT = _plain if _plain.exists() else _tmpl
 
 
 def _import_module(home_dir: Path):

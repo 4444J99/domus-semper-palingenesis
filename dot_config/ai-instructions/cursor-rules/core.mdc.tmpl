@@ -5,8 +5,12 @@ alwaysApply: true
 ---
 
 # Core Conventions
+{{- $systemInfo := include "dot_config/ai-context/system-info.md.tmpl" }}
 {{- $codeStyle := include "dot_config/ai-context/code-style.md.tmpl" }}
+{{- $planDiscipline := include "dot_config/ai-context/plan-discipline.md.tmpl" }}
+{{ $systemInfo }}
 {{ $codeStyle }}
+{{ $planDiscipline }}
 ## Performance
 
 - Optimize only when necessary

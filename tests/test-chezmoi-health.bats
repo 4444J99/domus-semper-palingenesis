@@ -17,6 +17,13 @@ setup() {
   BIN_DIR="$TEST_HOME/.local/bin"
   mkdir -p "$BIN_DIR"
 
+  # Copy shared libraries so scripts can source $HOME/.local/bin/domus-lib.sh
+  local repo_bin
+  repo_bin="$(cd "$BATS_TEST_DIRNAME/../dot_local/bin" && pwd)"
+  for lib in domus-lib.sh domus_lib.py; do
+    [[ -f "$repo_bin/$lib" ]] && cp "$repo_bin/$lib" "$BIN_DIR/$lib"
+  done
+
   # Mock chezmoi (no drift by default)
   cat > "$BIN_DIR/chezmoi" <<'MOCK'
 #!/usr/bin/env bash

@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+# ─────────────────────────────────────────────────────────────────────────────
+# domus-version-check - Verify DOMUS_VERSION matches CHANGELOG.md
+# ─────────────────────────────────────────────────────────────────────────────
+#
+# Reads DOMUS_VERSION from executable_domus and compares it to the latest
+# version heading in CHANGELOG.md. Exits 0 if they match, 1 if not.
+#
+# Usage:
+#   domus-version-check              # run from repo root
+#   domus-version-check /path/to/repo
+
+set -euo pipefail
+
+REPO_DIR="${1:-$(git rev-parse --show-toplevel 2>/dev/null || echo ".")}"
+
+DOMUS_SCRIPT="${REPO_DIR}/dot_local/bin/executable_domus"
+CHANGELOG="${REPO_DIR}/CHANGELOG.md"
+
+# Extract version from script
+if [[ ! -f "$DOMUS_SCRIPT" ]]; then
+  echo "error: executable_domus not found at $DOMUS_SCRIPT" >&2
+  exit 2
+fi
+script_ver=$(grep '^DOMUS_VERSION=' "$DOMUS_SCRIPT" | head -1 | sed 's/^DOMUS_VERSION="\(.*\)"/\1/')
+
+# Extract version from CHANGELOG
+if [[ ! -f "$CHANGELOG" ]]; then
+  echo "error: CHANGELOG.md not found at $CHANGELOG" >&2
+  exit 2
+fi
+changelog_ver=$(grep -m1 '^## \[' "$CHANGELOG" | sed 's/^## \[\(.*\)\].*/\1/')
+
+if [[ "$script_ver" == "$changelog_ver" ]]; then
+  echo "ok: version $script_ver (script == changelog)"
+  exit 0
+else
+  echo "MISMATCH: DOMUS_VERSION=$script_ver but CHANGELOG says $changelog_ver" >&2
+  echo "Fix: update DOMUS_VERSION in executable_domus or add a CHANGELOG entry" >&2
+  exit 1
+fi

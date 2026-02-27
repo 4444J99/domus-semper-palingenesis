@@ -2,16 +2,21 @@
 # Tests for domus-naming-maintenance
 
 setup() {
-  SCRIPT="$BATS_TEST_DIRNAME/../dot_local/bin/executable_domus-naming-maintenance"
+  source "$BATS_TEST_DIRNAME/render-tmpl.sh"
   TEST_HOME="$(mktemp -d)"
   export HOME="$TEST_HOME"
 
   STATE_DIR="$TEST_HOME/.local/state/domus"
   mkdir -p "$STATE_DIR/normalize" "$STATE_DIR/photo_sort"
 
-  # Create mock normalize-names that succeeds
   BIN_DIR="$TEST_HOME/.local/bin"
   mkdir -p "$BIN_DIR"
+
+  # Render .tmpl to testable script
+  SCRIPT="$BIN_DIR/domus-naming-maintenance"
+  render_tmpl "$BATS_TEST_DIRNAME/../dot_local/bin/executable_domus-naming-maintenance.tmpl" "$SCRIPT"
+
+  # Create mock normalize-names that succeeds
   cat > "$BIN_DIR/normalize-names" <<'MOCK'
 #!/usr/bin/env bash
 echo "Done. renamed=0, removed=0, conflicts=0, skipped=0 (dry run)."

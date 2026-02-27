@@ -16,6 +16,20 @@ setup_test_env() {
   export TELEMETRY_DIR="$STATE_DIR/telemetry"
 
   mkdir -p "$CONFIG_DIR" "$STATE_DIR" "$BIN_DIR" "$TELEMETRY_DIR"
+
+  # Copy shared libraries so scripts can source them via $HOME/.local/bin/
+  copy_libs_to_bin
+}
+
+# Copy domus-lib.sh and domus_lib.py into BIN_DIR
+copy_libs_to_bin() {
+  local repo_bin
+  repo_bin="$(cd "$BATS_TEST_DIRNAME/../dot_local/bin" && pwd)"
+  for lib in domus-lib.sh domus_lib.py; do
+    if [[ -f "$repo_bin/$lib" ]]; then
+      cp "$repo_bin/$lib" "$BIN_DIR/$lib"
+    fi
+  done
 }
 
 # Clean up test environment

@@ -141,7 +141,7 @@ j       # just (task runner)
 ├── dot_local/bin/           # domus CLI, daemons, health, packages, theme
 │   ├── domus-lib.sh        # Shared bash utilities
 │   └── domus_lib.py        # Shared Python utilities (unique_dest, etc.)
-├── tests/                   # 14 BATS + 5 pytest test files
+├── tests/                   # 16 BATS + 6 pytest test files
 │   ├── render-tmpl.sh      # Render-then-test pipeline for .tmpl scripts
 │   └── test-helpers.bash   # Shared BATS fixtures and mocks
 ├── dot_zshrc               # Shell entry point (loads zsh/ modules)
@@ -168,7 +168,7 @@ j       # just (task runner)
 
 <div align="center">
 
-**236 managed files · 59 templates · 10 CI jobs · 0 secrets in Git**
+**236 managed files · 59 templates · 13 CI jobs · 0 secrets in Git**
 
 MIT · [chezmoi](https://chezmoi.io) · [Tokyo Night](https://github.com/folke/tokyonight.nvim)
 

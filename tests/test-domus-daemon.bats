@@ -2,10 +2,13 @@
 # Tests for domus-daemon
 
 setup() {
-  DAEMON="$BATS_TEST_DIRNAME/../dot_local/bin/executable_domus-daemon"
+  source "$BATS_TEST_DIRNAME/render-tmpl.sh"
   load 'test-helpers'
   setup_test_env
   export PATH="$BIN_DIR:$PATH"
+
+  DAEMON="$BIN_DIR/domus-daemon"
+  render_tmpl "$BATS_TEST_DIRNAME/../dot_local/bin/executable_domus-daemon.tmpl" "$DAEMON"
 }
 
 teardown() {

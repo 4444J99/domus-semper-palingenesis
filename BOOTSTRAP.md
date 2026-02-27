@@ -254,6 +254,27 @@ Some things still need manual setup:
 - Installing GUI applications (beyond basic Homebrew casks)
 - Configuring IDE extensions
 
+## 🔑 Chezmoi Data Variables
+
+Chezmoi templates reference variables from `chezmoi.toml` (or the init prompts). Required:
+
+| Variable | Type | Description |
+|----------|------|-------------|
+| `email` | string | User email for git config and 1Password lookups |
+| `is_work` | bool | `true` on work machines (enables work-specific configs) |
+| `domus_auto_enabled` | bool | `true` to deploy file-automation LaunchAgents (sort, tidy, guard, naming) |
+| `has_aws_credentials` | bool | `true` to render AWS credential templates from 1Password |
+
+These are set during `chezmoi init` prompts or by editing `~/.config/chezmoi/chezmoi.toml`:
+
+```toml
+[data]
+  email = "you@example.com"
+  is_work = false
+  domus_auto_enabled = false
+  has_aws_credentials = false
+```
+
 ## 📚 Additional Resources
 
 - [Main README](README.md) - Full documentation
@@ -263,4 +284,4 @@ Some things still need manual setup:
 
 ---
 
-**Last Updated**: 2025-12-29
+**Last Updated**: 2026-02-27

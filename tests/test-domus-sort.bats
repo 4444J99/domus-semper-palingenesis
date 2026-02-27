@@ -2,10 +2,13 @@
 # Tests for domus-sort
 
 setup() {
-  SORT="$BATS_TEST_DIRNAME/../dot_local/bin/executable_domus-sort"
+  source "$BATS_TEST_DIRNAME/render-tmpl.sh"
   load 'test-helpers'
   setup_test_env
   export PATH="$BIN_DIR:$PATH"
+
+  SORT="$BIN_DIR/domus-sort"
+  render_tmpl "$BATS_TEST_DIRNAME/../dot_local/bin/executable_domus-sort.tmpl" "$SORT"
 }
 
 teardown() {

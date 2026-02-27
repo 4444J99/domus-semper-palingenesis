@@ -5,6 +5,57 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.5.0] - 2026-02-27
+
+### Fixed
+- ~30 BATS tests now pass: `render_tmpl()` copies `domus-lib.sh` and `domus_lib.py` next to rendered scripts
+- 3 test files (domus-sort, domus-daemon, naming-maintenance) updated to render `.tmpl` files before testing
+- `test-chezmoi-health.bats` setup now copies shared libs to mock BIN_DIR
+- `test_downloads_tidy.py` and `test_agents_policy_sync.py` now fall back to `.tmpl` path (matching `test_home_guard.py` pattern)
+- README stats corrected: 13 CI jobs (was "10"), 16 BATS + 6 pytest (was "14 + 5")
+- BOOTSTRAP.md date updated from 2025-12-29
+
+### Added
+- `copy_libs_to_bin()` helper in `test-helpers.bash` (called from `setup_test_env()`)
+- Chezmoi data variables section in BOOTSTRAP.md (`domus_auto_enabled`, `is_work`, `has_aws_credentials`)
+- `just ci-local` now runs `domus-version-check` and `domus-ai-config-check` validators
+- `just test` now includes pytest alongside BATS
+
+### Removed
+- `docs/system-guides/TODO.md` (archived since v1.3.1, now deleted)
+
+### Changed
+- `render_tmpl()` in `render-tmpl.sh` copies shared libraries next to rendered output
+- `just ci-local` expanded: lint + test (BATS + pytest) + fmt + gitleaks + version-sync + ai-config-parity
+
+## [1.4.0] - 2026-02-27
+
+### Added
+- `domus-ai-config-check` validator: checks fragment parity across all 5 AI config consumers (Claude, Gemini, AGENTS, Copilot, Cursor)
+- `domus-version-check` script: verifies `DOMUS_VERSION` matches CHANGELOG.md latest heading
+- `domus doctor` expanded from 7 to 12 checks: `[ai-config]`, `[daemons-all]`, `[shell-cache]`, `[version]`, `[pre-commit]`
+- `[daemons-all]` check: iterates all `com.chezmoi.*`, `com.domus.*`, `com.4jp.*` LaunchAgents (was hardcoded to 3)
+- `[shell-cache]` check: warns on init caches older than 7 days (starship, zoxide, atuin, direnv, mise, fzf, kubectl, kind)
+- macOS CI integration test (`integration-macos` job): runs `chezmoi init --apply` on `macos-14`
+- CI jobs: `version-sync`, `ai-config-parity`
+- CI dependency graph: lint → test → integration stages with `needs:` edges
+- Pre-commit hook: `version-sync` (local, runs on executable_domus and CHANGELOG.md changes)
+- `just bump <version>` recipe for atomic DOMUS_VERSION + CHANGELOG updates
+- `tests/test-domus-ai-config-check.bats` (4 tests)
+- `tests/fixtures/chezmoi-ci.yaml` for CI template rendering
+- Plan-discipline fragment added to Copilot and Cursor configs
+- System-info fragment added to Cursor config
+
+### Fixed
+- `DOMUS_VERSION` synced to `1.4.0` (was stuck at `1.3.0` since v1.3.1)
+- All 5 AI config consumers now include all 3 shared fragments (system-info, code-style, plan-discipline)
+
+### Changed
+- 1Password `onepasswordRead` calls guarded with `lookPath "op"` fallback in 6 templates (enables CI rendering without 1Password)
+- `just cache-clear` now includes kubectl and kind caches
+- CI pipeline restructured into 3 stages: lint (5 jobs) → test (4 jobs) → integration (4 jobs)
+- Total CI jobs: 13 (was 10)
+
 ## [1.3.2] - 2026-02-23
 
 ### Added

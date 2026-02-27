@@ -19,7 +19,7 @@
         "ghcr.io/github/github-mcp-server"
       ],
       "env": {
-        "GITHUB_PERSONAL_ACCESS_TOKEN": "{{ onepasswordRead "op://Personal/master-org-token-110525/token" }}"
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "{{ if lookPath "op" }}{{ onepasswordRead "op://Personal/master-org-token-110525/token" }}{{ else }}CI_REDACTED{{ end }}"
       }
     },
     "serena": {

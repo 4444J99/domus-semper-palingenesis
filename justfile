@@ -35,6 +35,13 @@ test:
     else \
         echo ":: BATS not installed (brew install bats-core)"; \
     fi
+    @echo ""
+    @if command -v python3 >/dev/null 2>&1 && python3 -m pytest --version >/dev/null 2>&1; then \
+        echo ":: pytest"; \
+        python3 -m pytest tests/ -q; \
+    else \
+        echo ":: pytest not available (pip install pytest)"; \
+    fi
 
 # Health check
 health:
@@ -83,13 +90,41 @@ check-all: lint test fmt security
 ci-local: lint test fmt
     @echo ":: Gitleaks"
     @gitleaks detect --config .gitleaks.toml --source . -v 2>/dev/null || echo "gitleaks not found (brew install gitleaks)"
+    @echo ""
+    @echo ":: Version sync"
+    @bash dot_local/bin/executable_domus-version-check
+    @echo ""
+    @echo ":: AI config parity"
+    @bash dot_local/bin/executable_domus-ai-config-check
+    @echo ""
     @echo "All CI checks passed"
 
 # Clear shell init caches (forces regeneration on next shell)
 cache-clear:
-    @rm -f "${XDG_CACHE_HOME:-$HOME/.cache}"/{starship,zoxide,atuin,direnv,mise,fzf}-zsh.zsh
+    @rm -f "${XDG_CACHE_HOME:-$HOME/.cache}"/{starship,zoxide,atuin,direnv,mise,fzf,kubectl,kind}-zsh.zsh
     @rm -f "${XDG_CACHE_HOME:-$HOME/.cache}"/zcompdump*
     @echo "Shell caches cleared — next shell launch will regenerate"
+
+# Bump version in both DOMUS_VERSION and CHANGELOG atomically
+bump version:
+    @if grep -q '## \[{{version}}\]' CHANGELOG.md; then \
+        echo "CHANGELOG already has [{{version}}]"; \
+    else \
+        sed -i '' '7a\
+\
+## [{{version}}] - '"$(date +%Y-%m-%d)"'\
+\
+### Added\
+\
+### Fixed\
+\
+### Changed\
+' CHANGELOG.md; \
+        echo "Added [{{version}}] section to CHANGELOG.md"; \
+    fi
+    @sed -i '' 's/^DOMUS_VERSION=".*"/DOMUS_VERSION="{{version}}"/' dot_local/bin/executable_domus
+    @echo "DOMUS_VERSION set to {{version}}"
+    @bash dot_local/bin/executable_domus-version-check
 
 # Check docs don't reference removed functions
 doc-lint:

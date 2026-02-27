@@ -37,3 +37,11 @@ repos:
     rev: v8.30.0
     hooks:
       - id: gitleaks
+
+  - repo: local
+    hooks:
+      - id: version-sync
+        name: Check DOMUS_VERSION matches CHANGELOG
+        entry: bash -c 'dot_local/bin/executable_domus-version-check'
+        language: system
+        files: '(executable_domus|CHANGELOG\.md)$'

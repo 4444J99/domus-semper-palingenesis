@@ -8,7 +8,9 @@ import time
 from pathlib import Path
 
 SCRIPT_DIR = Path(__file__).resolve().parent.parent / "dot_local" / "bin"
-SCRIPT = SCRIPT_DIR / "executable_domus-downloads-tidy"
+_plain = SCRIPT_DIR / "executable_domus-downloads-tidy"
+_tmpl = SCRIPT_DIR / "executable_domus-downloads-tidy.tmpl"
+SCRIPT = _plain if _plain.exists() else _tmpl
 
 # Ensure domus_lib is importable (lives alongside the script)
 if str(SCRIPT_DIR) not in sys.path:
