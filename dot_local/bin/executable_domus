@@ -725,8 +725,7 @@ cmd_doctor() {
     case "$pkg_status" in
       synced) printf '%s✓%s in sync with manifest\n' "$GREEN" "$RESET" ;;
       drift)
-        printf '%s!%s drift detected\n' "$YELLOW" "$RESET"
-        exit_code=1
+        printf '%s·%s drift detected (normal between syncs)\n' "$BLUE" "$RESET"
         ;;
       *) printf '%s○%s unable to check\n' "$DIM" "$RESET" ;;
     esac
@@ -749,8 +748,17 @@ cmd_doctor() {
     if [[ $agents_missing -eq 0 ]]; then
       printf '%s✓%s %s/3 agents loaded\n' "$GREEN" "$RESET" "$agents_ok"
     else
-      printf '%s!%s %s/3 agents loaded (%s missing)\n' "$YELLOW" "$RESET" "$agents_ok" "$agents_missing"
-      exit_code=1
+      # Check if automation is intentionally disabled
+      local auto_enabled="false"
+      if command -v chezmoi &>/dev/null; then
+        auto_enabled=$(chezmoi data --format json 2>/dev/null | grep -o '"domus_auto_enabled":[^,}]*' | grep -o 'true\|false' | head -1) || auto_enabled="false"
+      fi
+      if [[ "$auto_enabled" == "false" ]]; then
+        printf '%s·%s %s/3 agents loaded — automation disabled by config\n' "$BLUE" "$RESET" "$agents_ok"
+      else
+        printf '%s!%s %s/3 agents loaded (%s missing)\n' "$YELLOW" "$RESET" "$agents_ok" "$agents_missing"
+        exit_code=1
+      fi
     fi
   else
     printf '%s○%s not macOS\n' "$DIM" "$RESET"
@@ -774,6 +782,8 @@ cmd_doctor() {
   if command -v op &>/dev/null; then
     if op whoami &>/dev/null 2>&1; then
       printf ' %s✓%s authenticated\n' "$GREEN" "$RESET"
+    elif [[ ! -t 0 ]]; then
+      printf ' %s·%s not signed in (no TTY session)\n' "$BLUE" "$RESET"
     else
       printf ' %s!%s installed but not signed in\n' "$YELLOW" "$RESET"
     fi
@@ -784,10 +794,13 @@ cmd_doctor() {
   # 6. Chezmoi health (quick check)
   printf '%s[chezmoi]%s  ' "$CYAN" "$RESET"
   if command -v chezmoi &>/dev/null; then
-    local drift
-    drift=$(timeout 10 chezmoi diff 2>/dev/null | head -1) || drift=""
-    if [[ -z "$drift" ]]; then
+    local all_drift real_drift
+    all_drift=$(timeout 10 chezmoi diff 2>/dev/null | grep '^diff' || true)
+    real_drift=$(echo "$all_drift" | grep -v '\.chezmoiscripts/' | head -1) || real_drift=""
+    if [[ -z "$all_drift" ]]; then
       printf '%s✓%s no drift\n' "$GREEN" "$RESET"
+    elif [[ -z "$real_drift" ]]; then
+      printf '%s·%s run scripts only (transient)\n' "$BLUE" "$RESET"
     else
       printf '%s!%s drift detected\n' "$YELLOW" "$RESET"
       exit_code=1
@@ -902,6 +915,8 @@ cmd_doctor() {
     printf ' %s✓%s hook installed\n' "$GREEN" "$RESET"
   elif [[ -f "$hook_path" ]]; then
     printf ' %s!%s hook exists but not executable\n' "$YELLOW" "$RESET"
+  elif git -C "$HOME/domus-semper-palingenesis" config --get core.hooksPath &>/dev/null || git config --global --get core.hooksPath &>/dev/null; then
+    printf ' %s·%s using global hooksPath\n' "$BLUE" "$RESET"
   else
     printf ' %s!%s not installed — run pre-commit install\n' "$YELLOW" "$RESET"
   fi

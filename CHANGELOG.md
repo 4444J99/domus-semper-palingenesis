@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [1.5.0] - 2026-02-27
 
+### Added
+- `domus doctor` now distinguishes expected state (`·` blue) from actionable problems (`!` yellow)
+- `[daemons]` reads `domus_auto_enabled` from chezmoi data — reports `·` when automation is disabled by config
+- `[chezmoi]` filters transient `run_after_`/`run_once_`/`run_onchange_` scripts from drift — reports `·` when only run scripts differ
+- `[1password]` reports `·` in non-interactive shells (no TTY) instead of warning
+- `[packages]` drift is now `·` informational (normal between syncs), no longer sets exit 1
+- `[pre-commit]` detects `core.hooksPath` override — reports `·` instead of missing hook warning
+
 ### Fixed
 - ~30 BATS tests now pass: `render_tmpl()` copies `domus-lib.sh` and `domus_lib.py` next to rendered scripts
 - 3 test files (domus-sort, domus-daemon, naming-maintenance) updated to render `.tmpl` files before testing
