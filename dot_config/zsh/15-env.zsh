@@ -71,3 +71,7 @@ export PROJECTS_DIR="$HOME/Projects"
 
 # Context system
 export FILE_CONTEXT_DIR="$HOME/.local/share/file-context"
+
+# Android SDK
+export ANDROID_HOME="/Users/4jp/Android/Sdk"
+export PATH="$PATH:$ANDROID_HOME/platform-tools"
