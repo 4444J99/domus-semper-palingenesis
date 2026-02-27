@@ -21,6 +21,28 @@ else
 fi
 unset _comp_cache
 
+# Kubernetes - kubectl completion (must load after compinit)
+if command -v kubectl &>/dev/null; then
+  _cache="${XDG_CACHE_HOME:-$HOME/.cache}/kubectl-zsh.zsh"
+  if [[ ! -f "$_cache" ]] || [[ "$(command -v kubectl)" -nt "$_cache" ]]; then
+    mkdir -p "${XDG_CACHE_HOME:-$HOME/.cache}"
+    kubectl completion zsh > "$_cache" 2>/dev/null
+  fi
+  source "$_cache"
+  unset _cache
+fi
+
+# Kind - completion (must load after compinit)
+if command -v kind &>/dev/null; then
+  _cache="${XDG_CACHE_HOME:-$HOME/.cache}/kind-zsh.zsh"
+  if [[ ! -f "$_cache" ]] || [[ "$(command -v kind)" -nt "$_cache" ]]; then
+    mkdir -p "${XDG_CACHE_HOME:-$HOME/.cache}"
+    kind completion zsh > "$_cache" 2>/dev/null
+  fi
+  source "$_cache"
+  unset _cache
+fi
+
 # Completion styling
 zstyle ':completion:*' menu select
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'  # Case insensitive
