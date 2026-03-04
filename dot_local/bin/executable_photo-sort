@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# ruff: noqa: E501
 """
 Sort photos from an inbox directory into a YYYY/MM/ date-based hierarchy.
 
