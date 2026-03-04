@@ -26,7 +26,7 @@ jobs:
           for file in $(find . -name '*.sh.tmpl' ! -path './.git/*'); do
             echo "Checking: $file"
             tmp=$(mktemp)
-            sed 's/{{[^}]*}}//g' "$file" > "$tmp"
+            sed 's/{{[^}]*}}//g' "$file" | awk 'NR==1 && /^$/ {next} {print}' > "$tmp"
             shellcheck -x -s bash "$tmp" || exit 1
             rm "$tmp"
           done
