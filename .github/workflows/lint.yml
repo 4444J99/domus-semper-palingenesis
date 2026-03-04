@@ -94,9 +94,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Install BATS
-        run: sudo apt-get install -y bats yq && sh -c "$(curl -fsLS https://get.chezmoi.io)" && sudo mv ./bin/chezmoi /usr/local/bin/
+        run: sudo apt-get install -y bats yq jq curl git && (sh -c "$(curl -fsLS https://get.chezmoi.io)" || true) && sudo mv ./bin/chezmoi /usr/local/bin/ || echo "chezmoi skip"
       - name: Run BATS tests
-        run: bats tests/*.bats
+        run: |\n          echo "PATH: $PATH"\n          which chezmoi || echo "no chezmoi"\n          which yq || echo "no yq"\n          ls -R dot_local/bin/\n          bats tests/*.bats
 
   pytest:
     name: Python Tests
