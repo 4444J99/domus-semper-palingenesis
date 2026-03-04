@@ -168,6 +168,7 @@ jobs:
           echo "is_ci = true" >> "$HOME/.config/chezmoi/chezmoi.toml"
           echo "name = \"CI Runner\"" >> "$HOME/.config/chezmoi/chezmoi.toml"
           echo "email = \"ci@example.com\"" >> "$HOME/.config/chezmoi/chezmoi.toml"
+          echo "ssh_signing_key = \"ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAI...\"" >> "$HOME/.config/chezmoi/chezmoi.toml"
       - name: Run chezmoi init + apply
         run: |
           # Path already includes /opt/homebrew/bin
