@@ -449,7 +449,7 @@ cmd_sizes() {
   printf '%sPackage Manager Caches%s\n' "$BOLD" "$RESET"
   du -sh ~/Library/Caches/Homebrew 2>/dev/null || true
   du -sh ~/.npm 2>/dev/null || true
-  command -v pnpm &>/dev/null && du -sh ~/Library/Caches/pnpm 2>/dev/null || true
+  if command -v pnpm &>/dev/null; then du -sh ~/Library/Caches/pnpm 2>/dev/null || true; fi
   du -sh ~/Library/Caches/pip 2>/dev/null || true
   du -sh ~/.cache/uv 2>/dev/null || true
   du -sh ~/.cache/trunk 2>/dev/null || true
