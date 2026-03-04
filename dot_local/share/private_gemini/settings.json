@@ -3,9 +3,12 @@
     "previewFeatures": true,
     "debugKeystrokeLogging": true,
     "sessionRetention": {
-      "enabled": true
+      "enabled": true,
+      "warningAcknowledged": true,
+      "maxAge": "120d"
     },
-    "enablePromptCompletion": true
+    "enablePromptCompletion": true,
+    "defaultApprovalMode": "default"
   },
   "security": {
     "auth": {
@@ -49,5 +52,15 @@
   },
   "experimental": {
     "plan": true
+  },
+  "mcpServers": {
+    "MCP_DOCKER": {
+      "command": "docker",
+      "args": [
+        "mcp",
+        "gateway",
+        "run"
+      ]
+    }
   }
 }
