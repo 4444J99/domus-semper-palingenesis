@@ -172,7 +172,7 @@ jobs:
       - name: Run chezmoi init + apply
         run: |
           # Path already includes /opt/homebrew/bin
-          cat "$HOME/.config/chezmoi/chezmoi.toml"\n          chezmoi init --apply --source="$GITHUB_WORKSPACE"
+          chezmoi init --apply --source="$GITHUB_WORKSPACE"
       - name: Validate key files exist
         run: |
           echo "Checking rendered files..."
