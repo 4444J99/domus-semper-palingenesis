@@ -166,7 +166,7 @@ jobs:
           [data]
           has_aws_credentials = false
           domus_auto_enabled = false
-          is_work = false
+          is_work = false\n          is_ci = true
           EOF
       - name: Run chezmoi init + apply
         run: |

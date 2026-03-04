@@ -38,7 +38,7 @@ desired_servers = {
             "ghcr.io/github/github-mcp-server"
         ],
         "env": {
-            "GITHUB_PERSONAL_ACCESS_TOKEN": "{{ if lookPath "op" }}{{ onepasswordRead "op://Personal/master-org-token-110525/token" }}{{ else }}CI_REDACTED{{ end }}"
+            "GITHUB_PERSONAL_ACCESS_TOKEN": "{{ if and (not .is_ci) (lookPath "op") }}{{ onepasswordRead "op://Personal/master-org-token-110525/token" }}{{ else }}CI_REDACTED{{ end }}"
         }
     },
     "jupyter": {
@@ -57,7 +57,7 @@ desired_servers = {
         "type": "http",
         "url": "https://mcp.neon.tech/mcp",
         "headers": {
-            "Authorization": "Bearer {{ if lookPath "op" }}{{ onepasswordRead "op://Personal/Neon API Key/credential" }}{{ else }}CI_REDACTED{{ end }}"
+            "Authorization": "Bearer {{ if and (not .is_ci) (lookPath "op") }}{{ onepasswordRead "op://Personal/Neon API Key/credential" }}{{ else }}CI_REDACTED{{ end }}"
         }
     }
 }
