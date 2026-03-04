@@ -167,7 +167,7 @@ jobs:
           has_aws_credentials = false
           domus_auto_enabled = false
           is_work = false
-          is_ci = true
+          is_ci = true\n          name = "CI Runner"\n          email = "ci@example.com"
           EOF
       - name: Run chezmoi init + apply
         run: |
