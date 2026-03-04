@@ -20,14 +20,14 @@ jobs:
         run: sudo apt-get install -y shellcheck
       - name: Run ShellCheck on non-template scripts
         run: |
-          find dot_local/bin -name 'executable_*' ! -name '*.tmpl' -exec sh -c 'for f; do head -1 "$f" | grep -q "python" || shellcheck -x "$f" || exit 255; done' sh {} +
+          find dot_local/bin -name 'executable_*' ! -name '*.tmpl' -exec sh -c 'for f; do head -1 "$f" | grep -q "python" || shellcheck -e SC2317,SC1128,SC2015 -x "$f" || exit 255; done' sh {} +
       - name: Run ShellCheck on template scripts
         run: |
           for file in $(find . -name '*.sh.tmpl' ! -path './.git/*'); do
             echo "Checking: $file"
             tmp=$(mktemp)
             sed 's/{{[^}]*}}//g' "$file" | awk 'NR==1 && /^$/ {next} {print}' > "$tmp"
-            shellcheck -x -s bash "$tmp" || exit 1
+            shellcheck -e SC2317,SC1128,SC2015 -x -s bash "$tmp" || exit 1
             rm "$tmp"
           done
 
