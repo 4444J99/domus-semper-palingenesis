@@ -31,7 +31,7 @@ case "${1:-}" in
       exit 1
     fi
     wal --theme "$2"
-    [[ -n "$KITTY_PID" ]] && kitty @ set-colors -a ~/.cache/wal/colors-kitty.conf 2>/dev/null || true
+    if [[ -n "$KITTY_PID" ]]; then kitty @ set-colors -a ~/.cache/wal/colors-kitty.conf 2>/dev/null || true; fi
     echo "Theme '$2' applied"
     ;;
   "")
@@ -41,7 +41,7 @@ case "${1:-}" in
   *)
     if [[ -f "$1" ]]; then
       wal -i "$1"
-      [[ -n "$KITTY_PID" ]] && kitty @ set-colors -a ~/.cache/wal/colors-kitty.conf 2>/dev/null || true
+      if [[ -n "$KITTY_PID" ]]; then kitty @ set-colors -a ~/.cache/wal/colors-kitty.conf 2>/dev/null || true; fi
       echo "Theme applied from $1"
     else
       echo "Error: File not found: $1"

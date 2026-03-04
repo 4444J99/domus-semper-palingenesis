@@ -81,6 +81,7 @@ acquire_lock() {
   trap 'rm -f "${LOCK_FILE}"' EXIT
 }
 
+# shellcheck disable=SC2317
 has_network() {
   curl -sf --connect-timeout 3 --max-time 5 "https://connectivity-check.ubuntu.com/" &>/dev/null
 }

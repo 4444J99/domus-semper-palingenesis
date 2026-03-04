@@ -20,7 +20,7 @@ jobs:
         run: sudo apt-get install -y shellcheck
       - name: Run ShellCheck on non-template scripts
         run: |
-          find dot_local/bin -name 'executable_*' ! -name '*.tmpl' -exec shellcheck -x {} +
+          find dot_local/bin -name 'executable_*' ! -name '*.tmpl' -exec sh -c 'for f; do head -1 "$f" | grep -q "python" || shellcheck -x "$f" || exit 255; done' sh {} +
       - name: Run ShellCheck on template scripts
         run: |
           for file in $(find . -name '*.sh.tmpl' ! -path './.git/*'); do
