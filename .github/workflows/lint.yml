@@ -64,10 +64,10 @@ jobs:
       - name: Install shfmt
         run: |
           curl -sS https://webinstall.dev/shfmt | bash
-          export PATH="$HOME/.local/bin:$PATH"
+          # Path already includes /opt/homebrew/bin
       - name: Check shell formatting
         run: |
-          export PATH="$HOME/.local/bin:$PATH"
+          # Path already includes /opt/homebrew/bin
           find dot_local/bin -name 'executable_*' ! -name '*.tmpl' -exec sh -c 'for f; do head -1 "$f" | grep -q "python" || shfmt -d -i 2 -ci "$f" || exit 255; done' sh {} +
 
   python-lint:
@@ -157,7 +157,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Install chezmoi
-        run: sh -c "$(curl -fsLS get.chezmoi.io)" -- -b "$HOME/.local/bin"
+        run: brew install chezmoi
       - name: Setup CI chezmoi config
         run: |
           mkdir -p "$HOME/.config/chezmoi"
@@ -170,7 +170,7 @@ jobs:
           EOF
       - name: Run chezmoi init + apply
         run: |
-          export PATH="$HOME/.local/bin:$PATH"
+          # Path already includes /opt/homebrew/bin
           chezmoi init --apply --source="$GITHUB_WORKSPACE"
       - name: Validate key files exist
         run: |
