@@ -174,7 +174,14 @@ jobs:
       - name: Run chezmoi init + apply
         run: |
           # Path already includes /opt/homebrew/bin
-          chezmoi init --apply --source="$GITHUB_WORKSPACE" --data "name=CI Runner" --data "email=ci@example.com" --data "is_ci=true" --data "has_aws_credentials=false" --data "domus_auto_enabled=false" --data "is_work=false"
+          chezmoi init \
+            --data "name=CI Runner" \
+            --data "email=ci@example.com" \
+            --data "is_ci=true" \
+            --data "has_aws_credentials=false" \
+            --data "domus_auto_enabled=false" \
+            --data "is_work=false" \
+            --apply --source="$GITHUB_WORKSPACE"
       - name: Validate key files exist
         run: |
           echo "Checking rendered files..."
