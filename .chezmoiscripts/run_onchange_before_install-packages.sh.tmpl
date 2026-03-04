@@ -69,7 +69,7 @@ if ! command -v rustup &>/dev/null; then
 fi
 
 # Initialize tlrc cache
-command -v tldr &>/dev/null && tldr --update || true
+if command -v tldr &>/dev/null; then tldr --update || true; fi
 
 # Install optional but recommended (skip if already installed)
 echo "📦 Installing recommended packages..."
