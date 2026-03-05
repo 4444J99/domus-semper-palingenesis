@@ -75,3 +75,29 @@ export FILE_CONTEXT_DIR="$HOME/.local/share/file-context"
 # Android SDK
 export ANDROID_HOME="/Users/4jp/Android/Sdk"
 export PATH="$PATH:$ANDROID_HOME/platform-tools"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Agent Workspace Hierarchy
+# Anchored to dotfiles repo; agents write only inside WORKSPACE_ROOT + AGENTS_ROOT
+# ─────────────────────────────────────────────────────────────────────────────
+
+export DOMUS_ROOT="$HOME/domus-semper-palingenesis"
+export AGENTS_ROOT="$DOMUS_ROOT/_agents"
+export AGENTS_BIN="$AGENTS_ROOT/bin"
+export AGENTS_CACHE="$AGENTS_ROOT/cache"
+export AGENTS_STATE="$AGENTS_ROOT/state"
+export AGENTS_LOG="$AGENTS_ROOT/log"
+export WORKSPACE_ROOT="$DOMUS_ROOT/projects"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Python Toolchain (uv / pipx)
+# Pin agent frameworks to 3.11 for broadest compatibility
+# ─────────────────────────────────────────────────────────────────────────────
+
+export UV_PYTHON_PREFERENCE="only-managed"
+export UV_CACHE_DIR="$AGENTS_CACHE/uv"
+export UV_PYTHON="python3.11"
+export PIPX_DEFAULT_PYTHON="python3.11"
+
+# Aider model selection (set per-session or in .env)
+export AIDER_MODEL="${AIDER_MODEL:-}"

@@ -1,0 +1,108 @@
+#!/usr/bin/env bash
+# ─────────────────────────────────────────────────────────────────────────────
+# agent-tmux - 4-pane agent swarm layout
+# ─────────────────────────────────────────────────────────────────────────────
+#
+# Creates a tmux session with:
+#   Pane 1 (top-left):     Agent CLI placeholder (your shell)
+#   Pane 2 (top-right):    Test/lint loop
+#   Pane 3 (bottom-left):  Git status watcher
+#   Pane 4 (bottom-right): Structured log viewer
+#
+# Usage:
+#   agent-tmux [session-name]
+#   agent-tmux --dry-run
+#   agent-tmux --help
+
+set -euo pipefail
+
+SESSION="${1:-agents}"
+DRY_RUN=0
+
+AGENTS_LOG="${AGENTS_LOG:-$HOME/domus-semper-palingenesis/_agents/log}"
+
+show_help() {
+  cat <<'EOF'
+agent-tmux - 4-pane agent swarm layout
+
+Usage:
+  agent-tmux [session-name]    Create tmux session (default: "agents")
+  agent-tmux --dry-run         Show commands without executing
+  agent-tmux --help            Show this help
+
+Panes:
+  1 (top-left):     Your shell (run agent CLI here)
+  2 (top-right):    Test/lint watcher loop
+  3 (bottom-left):  Git status/diff watcher
+  4 (bottom-right): Agent log viewer (JSON → jq)
+
+Environment:
+  AGENTS_LOG   Parent directory for run logs
+EOF
+}
+
+case "${1:-}" in
+  --dry-run)
+    DRY_RUN=1
+    ;;
+  -h | --help)
+    show_help
+    exit 0
+    ;;
+esac
+
+if ! command -v tmux &>/dev/null; then
+  echo "error: tmux not installed (brew install tmux)" >&2
+  exit 2
+fi
+
+# Check for existing session
+if tmux has-session -t "$SESSION" 2>/dev/null; then
+  echo "Session '$SESSION' already exists. Attaching..."
+  if [[ $DRY_RUN -eq 1 ]]; then
+    echo "[dry-run] Would attach to: $SESSION"
+    exit 0
+  fi
+  exec tmux attach-session -t "$SESSION"
+fi
+
+if [[ $DRY_RUN -eq 1 ]]; then
+  echo "[dry-run] Would create tmux session: $SESSION"
+  echo "[dry-run] Pane 1: shell (agent CLI)"
+  echo "[dry-run] Pane 2: pytest watcher"
+  echo "[dry-run] Pane 3: git status watcher"
+  echo "[dry-run] Pane 4: log viewer"
+  exit 0
+fi
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Create session with 4 panes
+# ─────────────────────────────────────────────────────────────────────────────
+
+# Create session with first pane (agent shell)
+tmux new-session -d -s "$SESSION" -n "swarm"
+
+# Split right: test/lint loop (Pane 2)
+tmux split-window -h -t "$SESSION:swarm"
+tmux send-keys -t "$SESSION:swarm.1" \
+  'echo "── Test Watcher ──"; while true; do clear; date; echo ""; if command -v pytest >/dev/null 2>&1; then pytest -q --tb=short 2>&1 | tail -20; else echo "pytest not installed"; fi; sleep 5; done' C-m
+
+# Split bottom-left: git watcher (Pane 3)
+tmux select-pane -t "$SESSION:swarm.0"
+tmux split-window -v -t "$SESSION:swarm.0"
+tmux send-keys -t "$SESSION:swarm.2" \
+  'echo "── Git Watcher ──"; while true; do clear; date; echo ""; git status --porcelain=v1 2>/dev/null; echo "───"; git diff --stat 2>/dev/null; sleep 3; done' C-m
+
+# Split bottom-right: log viewer (Pane 4)
+tmux select-pane -t "$SESSION:swarm.1"
+tmux split-window -v -t "$SESSION:swarm.1"
+tmux send-keys -t "$SESSION:swarm.3" \
+  "echo '── Log Viewer ──'; echo 'Watching: $AGENTS_LOG'; tail -f \"$AGENTS_LOG\"/*/tool_*.json 2>/dev/null | jq . 2>/dev/null || echo 'No logs yet — start an agent-run first'" C-m
+
+# Focus on pane 0 (agent shell)
+tmux select-pane -t "$SESSION:swarm.0"
+tmux send-keys -t "$SESSION:swarm.0" \
+  'echo "── Agent Shell ──"; echo "Run your agent CLI here (aider, claude, codex, gemini, goose, opencode)"; echo "Or use: agent-run --agent <name>"' C-m
+
+# Attach
+exec tmux attach-session -t "$SESSION"

@@ -1,0 +1,279 @@
+#!/usr/bin/env bash
+# ─────────────────────────────────────────────────────────────────────────────
+# agent-run - Reproducible agent session harness
+# ─────────────────────────────────────────────────────────────────────────────
+#
+# Creates a timestamped run directory, captures environment + git state,
+# runs the chosen agent CLI, then runs quality gates and writes a report.
+#
+# Usage:
+#   agent-run [--agent <name>] [--prompt <file>] [--dry-run] [-- <agent-args>...]
+#   agent-run --help
+#
+# Environment:
+#   AGENTS_LOG   - Parent directory for run dirs (default: ~/domus-semper-palingenesis/_agents/log)
+#   AIDER_MODEL  - Model for aider (optional)
+#
+# Exit codes:
+#   0 - Agent run completed, all gates passed
+#   1 - Agent run completed, gate failures
+#   2 - Error
+
+set -euo pipefail
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Defaults
+# ─────────────────────────────────────────────────────────────────────────────
+
+AGENTS_LOG="${AGENTS_LOG:-$HOME/domus-semper-palingenesis/_agents/log}"
+AGENT_NAME="${1:-}"
+PROMPT_FILE=""
+DRY_RUN=0
+AGENT_ARGS=()
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Parse arguments
+# ─────────────────────────────────────────────────────────────────────────────
+
+show_help() {
+  cat <<'EOF'
+agent-run - Reproducible agent session harness
+
+Usage:
+  agent-run [OPTIONS] [-- <agent-args>...]
+
+Options:
+  --agent <name>    Agent CLI to run (aider, claude, codex, gemini, goose, opencode)
+  --prompt <file>   Save prompt file to run directory
+  --dry-run         Show what would be done without running
+  --help            Show this help
+
+Environment:
+  AGENTS_LOG        Parent directory for run dirs
+  AIDER_MODEL       Model for aider
+
+Examples:
+  agent-run --agent aider -- --model claude-3.5-sonnet
+  agent-run --agent claude
+  agent-run --agent gemini --prompt task.md
+EOF
+}
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --agent)
+      AGENT_NAME="$2"
+      shift 2
+      ;;
+    --prompt)
+      PROMPT_FILE="$2"
+      shift 2
+      ;;
+    --dry-run)
+      DRY_RUN=1
+      shift
+      ;;
+    -h | --help)
+      show_help
+      exit 0
+      ;;
+    --)
+      shift
+      AGENT_ARGS=("$@")
+      break
+      ;;
+    *)
+      # If no flag, treat as agent name for convenience
+      if [[ -z "$AGENT_NAME" ]]; then
+        AGENT_NAME="$1"
+      fi
+      shift
+      ;;
+  esac
+done
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Create run directory
+# ─────────────────────────────────────────────────────────────────────────────
+
+AGENT_RUN_ID="$(date +%Y%m%d_%H%M%S)"
+AGENT_RUN_DIR="$AGENTS_LOG/$AGENT_RUN_ID"
+export AGENT_RUN_ID AGENT_RUN_DIR
+
+mkdir -p "$AGENT_RUN_DIR"
+
+echo "─── agent-run: $AGENT_RUN_ID ───"
+echo "  Run dir: $AGENT_RUN_DIR"
+echo "  Agent:   ${AGENT_NAME:-<interactive>}"
+echo "  CWD:     $(pwd)"
+echo ""
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Snapshot pre-run state
+# ─────────────────────────────────────────────────────────────────────────────
+
+{
+  echo "# Agent Run: $AGENT_RUN_ID"
+  echo "agent: ${AGENT_NAME:-unknown}"
+  echo "cwd: $(pwd)"
+  echo "timestamp: $(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+  echo "user: $(whoami)"
+  echo ""
+  echo "## Environment"
+  env | command grep -E '^(AGENT_|AIDER_|UV_|PIPX_|OPENAI_|ANTHROPIC_|GOOGLE_|HUGGINGFACE_)' | sort || true
+} >"$AGENT_RUN_DIR/metadata.md"
+
+# Git state
+if git rev-parse --is-inside-work-tree &>/dev/null; then
+  {
+    echo "## Git State"
+    echo "branch: $(git branch --show-current 2>/dev/null || echo 'detached')"
+    echo "commit: $(git rev-parse --short HEAD 2>/dev/null || echo 'none')"
+    echo ""
+    echo "### Status"
+    git status --porcelain=v1 2>/dev/null || true
+    echo ""
+    echo "### Diff Stat"
+    git diff --stat 2>/dev/null || true
+  } >>"$AGENT_RUN_DIR/metadata.md"
+
+  git diff >"$AGENT_RUN_DIR/pre-run.diff" 2>/dev/null || true
+fi
+
+# Copy prompt if provided
+if [[ -n "$PROMPT_FILE" && -f "$PROMPT_FILE" ]]; then
+  cp "$PROMPT_FILE" "$AGENT_RUN_DIR/prompt.md"
+  echo "  Prompt saved to run dir"
+fi
+
+if [[ $DRY_RUN -eq 1 ]]; then
+  echo "[dry-run] Would run: ${AGENT_NAME:-<none>} ${AGENT_ARGS[*]:-}"
+  echo "[dry-run] Run dir created at: $AGENT_RUN_DIR"
+  exit 0
+fi
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Run agent
+# ─────────────────────────────────────────────────────────────────────────────
+
+agent_exit=0
+if [[ -n "$AGENT_NAME" ]]; then
+  echo "─── Starting $AGENT_NAME ───"
+  case "$AGENT_NAME" in
+    aider)
+      aider ${AIDER_MODEL:+--model "$AIDER_MODEL"} --git "${AGENT_ARGS[@]}" || agent_exit=$?
+      ;;
+    claude)
+      claude "${AGENT_ARGS[@]}" || agent_exit=$?
+      ;;
+    codex)
+      codex "${AGENT_ARGS[@]}" || agent_exit=$?
+      ;;
+    gemini)
+      gemini "${AGENT_ARGS[@]}" || agent_exit=$?
+      ;;
+    goose)
+      goose session "${AGENT_ARGS[@]}" || agent_exit=$?
+      ;;
+    opencode)
+      opencode "${AGENT_ARGS[@]}" || agent_exit=$?
+      ;;
+    *)
+      echo "Unknown agent: $AGENT_NAME" >&2
+      echo "Supported: aider, claude, codex, gemini, goose, opencode" >&2
+      exit 2
+      ;;
+  esac
+  echo ""
+  echo "─── $AGENT_NAME exited ($agent_exit) ───"
+else
+  echo "No agent specified, skipping agent run."
+fi
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Post-run: capture diff
+# ─────────────────────────────────────────────────────────────────────────────
+
+if git rev-parse --is-inside-work-tree &>/dev/null; then
+  git diff >"$AGENT_RUN_DIR/post-run.diff" 2>/dev/null || true
+fi
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Quality gates
+# ─────────────────────────────────────────────────────────────────────────────
+
+gate_exit=0
+echo "─── Quality Gates ───"
+
+# Ruff
+if command -v ruff &>/dev/null; then
+  echo "  [ruff] checking..."
+  ruff check . --output-format=json >"$AGENT_RUN_DIR/gate-ruff.json" 2>/dev/null || gate_exit=1
+else
+  echo "  [ruff] not installed, skipping"
+fi
+
+# Pytest
+if command -v pytest &>/dev/null; then
+  echo "  [pytest] running..."
+  pytest -q --tb=short >"$AGENT_RUN_DIR/gate-pytest.txt" 2>&1 || gate_exit=1
+else
+  echo "  [pytest] not installed, skipping"
+fi
+
+# Pre-commit (if available and in a git repo)
+if command -v pre-commit &>/dev/null && git rev-parse --is-inside-work-tree &>/dev/null; then
+  echo "  [pre-commit] running..."
+  pre-commit run --all-files >"$AGENT_RUN_DIR/gate-precommit.txt" 2>&1 || gate_exit=1
+else
+  echo "  [pre-commit] not available, skipping"
+fi
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Write report
+# ─────────────────────────────────────────────────────────────────────────────
+
+{
+  echo "# Agent Run Report"
+  echo ""
+  echo "- **Run ID**: $AGENT_RUN_ID"
+  echo "- **Agent**: ${AGENT_NAME:-none}"
+  echo "- **Agent exit**: $agent_exit"
+  echo "- **Gates exit**: $gate_exit"
+  echo "- **Timestamp**: $(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+  echo "- **CWD**: $(pwd)"
+  echo ""
+  if [[ -f "$AGENT_RUN_DIR/post-run.diff" ]]; then
+    local_diff_lines=$(wc -l <"$AGENT_RUN_DIR/post-run.diff" | tr -d ' ')
+    echo "- **Post-run diff lines**: $local_diff_lines"
+  fi
+  echo ""
+  echo "## Gate Results"
+  for f in "$AGENT_RUN_DIR"/gate-*; do
+    [[ -f "$f" ]] || continue
+    echo ""
+    echo "### $(basename "$f")"
+    echo '```'
+    head -50 "$f"
+    echo '```'
+  done
+} >"$AGENT_RUN_DIR/report.md"
+
+# JSON summary
+cat <<EOF >"$AGENT_RUN_DIR/report.json"
+{
+  "run_id": "$AGENT_RUN_ID",
+  "agent": "${AGENT_NAME:-null}",
+  "agent_exit": $agent_exit,
+  "gates_exit": $gate_exit,
+  "timestamp": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")",
+  "cwd": "$(pwd)"
+}
+EOF
+
+echo ""
+echo "─── Report: $AGENT_RUN_DIR/report.md ───"
+
+# Exit with worst code
+[[ $agent_exit -ne 0 ]] && exit $agent_exit
+exit $gate_exit

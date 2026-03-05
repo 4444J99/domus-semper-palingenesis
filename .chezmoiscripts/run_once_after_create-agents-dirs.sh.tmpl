@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# ─────────────────────────────────────────────────────────────────────────────
+# Create _agents directory skeleton
+# Ensures the agent workspace hierarchy exists
+# ─────────────────────────────────────────────────────────────────────────────
+
+{{ if eq .chezmoi.os "darwin" -}}
+set -euo pipefail
+
+DOMUS_ROOT="{{ .chezmoi.homeDir }}/domus-semper-palingenesis"
+
+mkdir -p \
+  "$DOMUS_ROOT/_agents/bin" \
+  "$DOMUS_ROOT/_agents/cache" \
+  "$DOMUS_ROOT/_agents/state" \
+  "$DOMUS_ROOT/_agents/log" \
+  "$DOMUS_ROOT/_agents/config" \
+  "$DOMUS_ROOT/_agents/lab" \
+  "$DOMUS_ROOT/projects" \
+  "$DOMUS_ROOT/_registry"
+{{ end -}}

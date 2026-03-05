@@ -62,6 +62,8 @@ packages:
       - gemini-cli
       - huggingface-cli
       - kimi-cli
+      # Local inference backend (Goose + Ollama integration)
+      - ollama
       # Security & code quality
       - actionlint
       - gitleaks
@@ -134,6 +136,20 @@ packages:
     - pywal
     - pplx-cli
     - jupyter-mcp-server
+    # Lane A: Agent CLIs (isolated executables)
+    - aider-chat          # Git-integrated coding agent
+    - open-interpreter    # Agent + tool runner for local scripting
+    # Quality gates (agents iterate against these)
+    - ruff
+    - mypy
+    - pytest
+
+  uv_tools:
+    # MCP ecosystem tooling
+    - "mcp[cli]"
+    # Multi-agent framework CLIs
+    - crewai
+    - smolagents
 
   npm_global:
     - pnpm

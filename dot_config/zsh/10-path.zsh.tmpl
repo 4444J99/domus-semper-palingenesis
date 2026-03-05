@@ -32,8 +32,11 @@ export PATH=$PATH:$GOPATH/bin
 # Rust (rustup toolchain)
 export PATH="${CARGO_HOME:-$HOME/.local/share/cargo}/bin:$PATH"
 
-# pipx local bin
+# pipx local bin (also covers uv tool installs via UV_TOOL_BIN_DIR default)
 export PATH="$HOME/.local/bin:$PATH"
+
+# Agent harness scripts (_agents/bin/agent-run, agent-tmux, etc.)
+export PATH="$HOME/domus-semper-palingenesis/_agents/bin:$PATH"
 
 {{- if eq .chezmoi.os "darwin" }}
 # Python (Homebrew - follows latest via python@3 symlink)

@@ -1,4 +1,5 @@
-{{ if not .is_ci }}\n#!/usr/bin/env bash
+#!/usr/bin/env bash
+{{ if not .is_ci -}}
 # sync-skills.sh hash: {{ include "dot_config/ai-skills/.keep" | sha256sum }}
 set -euo pipefail
 
@@ -17,4 +18,4 @@ else
     git clone "$SKILLS_REPO" "$SKILLS_DIR"
     echo "Skills cloned from GitHub"
 fi
-\n{{ end }}
+{{ end -}}

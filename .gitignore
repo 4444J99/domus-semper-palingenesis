@@ -18,3 +18,14 @@ __pycache__/
 
 # Tool-specific
 .serena/
+
+# Agent runtime state (ephemeral, not source)
+_agents/cache/
+_agents/state/
+_agents/log/
+_agents/lab/.venv/
+_registry/
+projects/
+
+# Ruff cache
+.ruff_cache/

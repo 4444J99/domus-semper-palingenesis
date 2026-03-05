@@ -85,6 +85,13 @@ get_installed_cargo() {
   fi
 }
 
+# Get installed uv tool packages
+get_installed_uv_tools() {
+  if command -v uv &>/dev/null; then
+    uv tool list 2>/dev/null | command grep -v '^  ' | awk '{print $1}' | sort || true
+  fi
+}
+
 # ─────────────────────────────────────────────────────────────────────────────
 # Manifest Extraction
 # ─────────────────────────────────────────────────────────────────────────────
@@ -107,6 +114,11 @@ get_manifest_npm() {
 
 get_manifest_cargo() {
   yq -r '.packages.cargo[]? ' "${MANIFEST}" 2>/dev/null | sort
+}
+
+get_manifest_uv_tools() {
+  yq -r '.packages.uv_tools[]? ' "${MANIFEST}" 2>/dev/null |
+    sed 's/\[.*\]//g' | sort || true  # Strip extras brackets for comparison
 }
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -156,7 +168,7 @@ cmd_status() {
   local total_extra=0
 
   # Check each package manager
-  local managers=("formulae" "casks" "pipx" "npm" "cargo")
+  local managers=("formulae" "casks" "pipx" "npm" "cargo" "uv_tools")
 
   for mgr in "${managers[@]}"; do
     local manifest_list installed_list missing extra
@@ -181,6 +193,10 @@ cmd_status() {
       cargo)
         manifest_list=$(get_manifest_cargo)
         installed_list=$(get_installed_cargo)
+        ;;
+      uv_tools)
+        manifest_list=$(get_manifest_uv_tools)
+        installed_list=$(get_installed_uv_tools)
         ;;
     esac
 
@@ -288,6 +304,7 @@ cmd_diff() {
   print_diff_section "pipx" "$(get_manifest_pipx)" "$(get_installed_pipx)"
   print_diff_section "npm:global" "$(get_manifest_npm)" "$(get_installed_npm)"
   print_diff_section "cargo" "$(get_manifest_cargo)" "$(get_installed_cargo)"
+  print_diff_section "uv_tools" "$(get_manifest_uv_tools)" "$(get_installed_uv_tools)"
 
   if [[ $json_mode -eq 1 ]]; then
     # Build JSON output
@@ -318,7 +335,12 @@ cmd_diff() {
     # cargo
     m=$(diff_missing "$(get_manifest_cargo)" "$(get_installed_cargo)" | jq -R . | jq -s .)
     e=$(diff_extra "$(get_manifest_cargo)" "$(get_installed_cargo)" | jq -R . | jq -s .)
-    json_output+='"cargo": {"missing": '"$m"', "extra": '"$e"'}'
+    json_output+='"cargo": {"missing": '"$m"', "extra": '"$e"'},'
+
+    # uv_tools
+    m=$(diff_missing "$(get_manifest_uv_tools)" "$(get_installed_uv_tools)" | jq -R . | jq -s .)
+    e=$(diff_extra "$(get_manifest_uv_tools)" "$(get_installed_uv_tools)" | jq -R . | jq -s .)
+    json_output+='"uv_tools": {"missing": '"$m"', "extra": '"$e"'}'
 
     json_output+='}}'
     echo "$json_output" | jq .
@@ -438,6 +460,31 @@ cmd_apply() {
     done <<<"$missing_cargo"
   fi
 
+  # Install missing uv tool packages
+  local missing_uv_tools
+  missing_uv_tools=$(diff_missing "$(get_manifest_uv_tools)" "$(get_installed_uv_tools)")
+  if [[ -n "$missing_uv_tools" ]] && command -v uv &>/dev/null; then
+    # Need original manifest names (with extras) for install
+    local manifest_raw
+    manifest_raw=$(yq -r '.packages.uv_tools[]? ' "${MANIFEST}" 2>/dev/null)
+    while read -r pkg; do
+      [[ -z "$pkg" ]] && continue
+      # Find the original manifest entry that matches this base name
+      local install_name
+      install_name=$(echo "$manifest_raw" | command grep -F "$pkg" | head -1)
+      [[ -z "$install_name" ]] && install_name="$pkg"
+      if [[ $dry_run -eq 1 ]]; then
+        info "[dry-run] Would install uv_tool: $install_name"
+      else
+        info "Installing uv_tool: $install_name"
+        uv tool install "$install_name" || {
+          warn "Failed to install $install_name"
+          exit_code=1
+        }
+      fi
+    done <<<"$missing_uv_tools"
+  fi
+
   if [[ $dry_run -eq 0 ]]; then
     if [[ $exit_code -eq 0 ]]; then
       success "All packages synced"
@@ -468,6 +515,8 @@ cmd_snapshot() {
   npm=$(get_installed_npm | jq -R . | jq -s .)
   local cargo
   cargo=$(get_installed_cargo | jq -R . | jq -s .)
+  local uv_tools
+  uv_tools=$(get_installed_uv_tools | jq -R . | jq -s .)
 
   cat <<EOF >"$snapshot"
 {
@@ -479,7 +528,8 @@ cmd_snapshot() {
     },
     "pipx": ${pipx},
     "npm_global": ${npm},
-    "cargo": ${cargo}
+    "cargo": ${cargo},
+    "uv_tools": ${uv_tools}
   }
 }
 EOF

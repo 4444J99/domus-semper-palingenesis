@@ -71,3 +71,11 @@ docs/
 1PASSWORD_SETUP.md
 PLUGINS.md
 DOTFILES_CLEANUP.md
+
+# Agent runtime state (managed by agent tools, not chezmoi)
+_agents/cache/
+_agents/state/
+_agents/log/
+_agents/lab/.venv/
+projects/
+_registry/

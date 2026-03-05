@@ -58,6 +58,7 @@ packages:
   pipx: []
   npm_global: []
   cargo: []
+  uv_tools: []
 
 sorting:
   directories:
