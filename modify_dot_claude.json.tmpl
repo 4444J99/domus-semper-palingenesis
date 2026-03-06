@@ -16,15 +16,15 @@ import os
 
 desired_servers = {
     "filesystem": {
-        "command": "npx",
+        "command": "/opt/homebrew/bin/npx",
         "args": ["-y", "@modelcontextprotocol/server-filesystem", "{{ .chezmoi.homeDir }}/Workspace"],
     },
     "sequential-thinking": {
-        "command": "npx",
+        "command": "/opt/homebrew/bin/npx",
         "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"],
     },
     "memory": {
-        "command": "npx",
+        "command": "/opt/homebrew/bin/npx",
         "args": ["-y", "@modelcontextprotocol/server-memory"],
     }
 }
@@ -32,7 +32,7 @@ desired_servers = {
 # Add extra servers for work/personal context
 {{- if $isWork }}
 desired_servers["github"] = {
-    "command": "npx",
+    "command": "/opt/homebrew/bin/npx",
     "args": ["-y", "@modelcontextprotocol/server-github"],
     "env": {
         "GITHUB_PERSONAL_ACCESS_TOKEN": "op://Personal/GitHub Personal Access Token/token"
