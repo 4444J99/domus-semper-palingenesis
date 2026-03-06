@@ -7,63 +7,50 @@ overwriting dynamic runtime data (numStartups, tipsHistory, projects, etc.)
 """
 import json
 import sys
+import os
 
-# Read existing config from stdin (provided by chezmoi)
-existing_content = sys.stdin.read().strip()
+# Define our desired MCP server configuration
+# This is templated by chezmoi to include correct home directory paths
+{{- $isWork := false }}{{ if hasKey . "is_work" }}{{ $isWork = .is_work }}{{ end }}
+{{- $isCI := false }}{{ if hasKey . "is_ci" }}{{ $isCI = .is_ci }}{{ end }}
 
-if existing_content:
-    try:
-        config = json.loads(existing_content)
-    except json.JSONDecodeError:
-        config = {}
-else:
-    config = {}
-
-# Ensure mcpServers key exists
-if "mcpServers" not in config:
-    config["mcpServers"] = {}
-
-# Define the MCP servers we want to ensure are configured
-# These will be merged into the existing config
 desired_servers = {
-    "MCP_DOCKER": {
-        "command": "docker",
-        "args": ["mcp", "gateway", "run"]
+    "filesystem": {
+        "command": "npx",
+        "args": ["-y", "@modelcontextprotocol/server-filesystem", "{{ .chezmoi.homeDir }}/Workspace"],
     },
-    "github": {
-        "command": "docker",
-        "args": [
-            "run", "-i", "--rm",
-            "-e", "GITHUB_PERSONAL_ACCESS_TOKEN",
-            "ghcr.io/github/github-mcp-server"
-        ],
-        "env": {
-            "GITHUB_PERSONAL_ACCESS_TOKEN": "{{ if and (not .is_ci) (lookPath "op") }}{{ onepasswordRead "op://Personal/master-org-token-110525/token" }}{{ else }}CI_REDACTED{{ end }}"
-        }
+    "sequential-thinking": {
+        "command": "npx",
+        "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"],
     },
-    "jupyter": {
-        "command": "jupyter-mcp-server",
-        "args": []
-    },
-    "serena": {
-        "command": "uvx",
-        "args": [
-            "--from", "git+https://github.com/4444J99/serena",
-            "serena", "start-mcp-server",
-            "--context", "claude-code"
-        ]
-    },
-    "Neon": {
-        "type": "http",
-        "url": "https://mcp.neon.tech/mcp",
-        "headers": {
-            "Authorization": "Bearer {{ if and (not .is_ci) (lookPath "op") }}{{ onepasswordRead "op://Personal/Neon API Key/credential" }}{{ else }}CI_REDACTED{{ end }}"
-        }
+    "memory": {
+        "command": "npx",
+        "args": ["-y", "@modelcontextprotocol/server-memory"],
     }
 }
 
-# Merge desired servers into existing config
-# This preserves any user-added servers while ensuring our required servers exist
+# Add extra servers for work/personal context
+{{- if $isWork }}
+desired_servers["github"] = {
+    "command": "npx",
+    "args": ["-y", "@modelcontextprotocol/server-github"],
+    "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "op://Personal/GitHub Personal Access Token/token"
+    }
+}
+{{- end }}
+
+# Read existing config from stdin
+try:
+    config = json.load(sys.stdin)
+except json.JSONDecodeError:
+    # If file is empty or invalid, start with basic structure
+    config = {"mcpServers": {}}
+
+if "mcpServers" not in config:
+    config["mcpServers"] = {}
+
+# Merge while ensuring our required servers exist
 for server_name, server_config in desired_servers.items():
     config["mcpServers"][server_name] = server_config
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-{{ if not .is_ci -}}
+{{ if and (hasKey . "is_ci") (not .is_ci) -}}
 # sync-skills.sh hash: {{ include "dot_config/ai-skills/.keep" | sha256sum }}
 set -euo pipefail
 

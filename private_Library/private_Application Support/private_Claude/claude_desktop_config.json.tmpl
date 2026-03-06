@@ -19,7 +19,7 @@
         "ghcr.io/github/github-mcp-server"
       ],
       "env": {
-        "GITHUB_PERSONAL_ACCESS_TOKEN": "{{ if and (not .is_ci) (lookPath "op") }}{{ onepasswordRead "op://Personal/master-org-token-110525/token" }}{{ else }}CI_REDACTED{{ end }}"
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "{{ if and (and (hasKey . "is_ci") (not .is_ci)) (lookPath "op") }}{{ onepasswordRead "op://Personal/master-org-token-110525/token" }}{{ else }}CI_REDACTED{{ end }}"
       }
     },
     "serena": {
@@ -32,6 +32,18 @@
         "--context",
         "desktop-app"
       ]
+    },
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "{{ .chezmoi.homeDir }}/Workspace"]
+    },
+    "sequential-thinking": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"]
+    },
+    "memory": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-memory"]
     }
   },
   "isHardwareAccelerationDisabled": false,
