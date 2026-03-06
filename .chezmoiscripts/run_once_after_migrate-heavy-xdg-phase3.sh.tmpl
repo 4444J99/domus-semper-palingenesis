@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+# Phase 3 XDG migration: heavy directories (.android ~512MB, .gradle ~1.9GB)
+# and orphan files (.outlook_token_cache.json)
+# run_once: only runs once per machine via chezmoi state
+set -euo pipefail
+
+migrate_dir() {
+  local app="$1"
+  local src="$HOME/.$app"
+  local dst="$HOME/.local/share/$app"
+
+  # Skip if already a symlink or source doesn't exist
+  [[ -L "$src" ]] && return 0
+  [[ ! -d "$src" ]] && return 0
+
+  echo "Migrating ~/.$app → ~/.local/share/$app ..."
+  mkdir -p "$dst"
+  rsync -a --ignore-errors "$src/" "$dst/" || true
+  rm -rf "$src"
+  echo "  Done ($(du -sh "$dst" | cut -f1))"
+}
+
+# Heavy directories
+migrate_dir android
+migrate_dir gradle
+migrate_dir cocoapods
+migrate_dir matplotlib
+
+# Relocate orphan outlook token cache
+if [[ -f "$HOME/.outlook_token_cache.json" && ! -L "$HOME/.outlook_token_cache.json" ]]; then
+  mkdir -p "$HOME/.cache/outlook"
+  mv "$HOME/.outlook_token_cache.json" "$HOME/.cache/outlook/token_cache.json"
+  echo "Moved .outlook_token_cache.json → .cache/outlook/token_cache.json"
+fi
+
+echo "Phase 3 XDG migration complete"
