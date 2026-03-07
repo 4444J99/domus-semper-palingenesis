@@ -32,8 +32,25 @@ export GOMODCACHE="$XDG_CACHE_HOME/go/mod"
 # Kubernetes
 export KUBECONFIG="$XDG_CONFIG_HOME/kube/config"
 
-# npm cache
+# npm
 export NPM_CONFIG_CACHE="$XDG_CACHE_HOME/npm"
+
+# Android SDK
+export ANDROID_USER_HOME="$XDG_DATA_HOME/android"
+export ANDROID_HOME="$XDG_DATA_HOME/android"
+
+# Gradle
+export GRADLE_USER_HOME="$XDG_DATA_HOME/gradle"
+
+# matplotlib
+export MPLCONFIGDIR="$XDG_CONFIG_HOME/matplotlib"
+
+# AWS CLI
+export AWS_CONFIG_FILE="$XDG_CONFIG_HOME/aws/config"
+export AWS_SHARED_CREDENTIALS_FILE="$XDG_CONFIG_HOME/aws/credentials"
+
+# Tmux Plugin Manager
+export TMUX_PLUGIN_MANAGER_PATH="$XDG_DATA_HOME/tmux/plugins"
 
 # Google Cloud SDK
 export CLOUDSDK_CONFIG="$XDG_CONFIG_HOME/gcloud"
@@ -72,8 +89,7 @@ export PROJECTS_DIR="$HOME/Projects"
 # Context system
 export FILE_CONTEXT_DIR="$HOME/.local/share/file-context"
 
-# Android SDK
-export ANDROID_HOME="/Users/4jp/Android/Sdk"
+# Android platform-tools on PATH
 export PATH="$PATH:$ANDROID_HOME/platform-tools"
 
 # ─────────────────────────────────────────────────────────────────────────────

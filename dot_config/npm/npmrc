@@ -10,6 +10,9 @@ progress=false
 save-exact=true
 engine-strict=true
 
+# Global install prefix (XDG-compliant)
+prefix=${XDG_DATA_HOME}/npm
+
 # Init defaults
 init-author-name=4jp
 init-license=MIT
