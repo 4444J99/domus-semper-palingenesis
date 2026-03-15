@@ -34,4 +34,4 @@ if "mcpServers" not in config:
 for server_name, server_config in desired_servers.items():
     config["mcpServers"][server_name] = server_config
 
-print(json.dumps(config, indent=2, ensure_ascii=False))
+print(json.dumps(config, indent=2, ensure_ascii=False) + "\n", end="")
