@@ -1,37 +1,15 @@
 #!/usr/bin/env python3
 """
 Chezmoi modify script for ~/.claude.json
+Preserves existing config, ensures valid JSON with trailing newline.
+MCP servers are managed by Claude Code plugins and MCP_DOCKER gateway.
 """
 import json
 import sys
-import os
-
-{{- $isWork := false }}{{ if hasKey . "is_work" }}{{ $isWork = .is_work }}{{ end }}
-
-desired_servers = {
-    "filesystem": {
-        "command": "/opt/homebrew/bin/npx",
-        "args": ["-y", "@modelcontextprotocol/server-filesystem", "{{ .chezmoi.homeDir }}/Workspace"],
-    },
-    "sequential-thinking": {
-        "command": "/opt/homebrew/bin/npx",
-        "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"],
-    },
-    "memory": {
-        "command": "/opt/homebrew/bin/npx",
-        "args": ["-y", "@modelcontextprotocol/server-memory"],
-    }
-}
 
 try:
     config = json.load(sys.stdin)
 except json.JSONDecodeError:
-    config = {"mcpServers": {}}
-
-if "mcpServers" not in config:
-    config["mcpServers"] = {}
-
-for server_name, server_config in desired_servers.items():
-    config["mcpServers"][server_name] = server_config
+    config = {}
 
 print(json.dumps(config, indent=2, ensure_ascii=False) + "\n", end="")
