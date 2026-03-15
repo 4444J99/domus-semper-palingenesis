@@ -3,7 +3,7 @@ set -euo pipefail
 
 # Gemini CLI extension installer
 # chezmoi:template:hash
-# {{ "gemini-extensions-v2" }}
+# {{ "gemini-extensions-v3" }}
 
 if ! command -v gemini &>/dev/null; then
   echo "⚠️  Gemini CLI not found, skipping extensions"
@@ -12,54 +12,30 @@ fi
 
 # Extensions from GitHub repos (gemini extensions install <url>)
 github_extensions=(
-  # Git & GitHub
-  "https://github.com/paufortiana/geminicli-git-tools-extension"        # git-tools: /git-commit:write, /git-pr:draft
-  "https://github.com/gemini-cli-extensions/code-review"                # code-review
+  # Core MCP servers
+  "https://github.com/ChromeDevTools/chrome-devtools-mcp"               # chrome-devtools: live Chrome debugging, Lighthouse
+  "https://github.com/cloud-aspect/doc-indexer"                         # doc-indexer: documentation indexing
+  "https://github.com/swissspidy/extension-browser"                     # extension-browser: browse/install extensions
+  "https://github.com/qodo-ai/open-aware"                              # open-aware: OSS research
+  "https://github.com/Flux159/mcp-game-asset-gen"                       # asset-gen: image/3D generation
 
   # Google Cloud
-  "https://github.com/gemini-cli-extensions/gcloud"                     # gcloud MCP
-  "https://github.com/GoogleCloudPlatform/gke-mcp"                      # gke-mcp-server
-  "https://github.com/googleworkspace/developer-tools"                  # workspace-developer MCP
+  "https://github.com/gemini-cli-extensions/gcloud"                     # gcloud CLI
+  "https://github.com/GoogleCloudPlatform/gke-mcp"                      # GKE cluster management
+  "https://github.com/googleworkspace/developer-tools"                  # Workspace API docs
 
-  # Browser & DevTools
-  "https://github.com/ChromeDevTools/chrome-devtools-mcp"               # chrome-devtools MCP
+  # AI integration
+  "https://github.com/gemini-cli-extensions/jules"                      # Jules task delegation
 
-  # AI & Agents
-  "https://github.com/gemini-cli-extensions/jules"                      # julesServer MCP
-  "https://github.com/jduncan-rva/gemini-agent-creator"                 # agent-creator
-  "https://github.com/jduncan-rva/gemini-system-agents"                 # system-agents
-  "https://github.com/JayadityaGit/gemini-mentor"                       # gemini-mentor
-
-  # Productivity
-  "https://github.com/abagames/slash-criticalthink"                     # criticalthink
-  "https://github.com/harish-garg/gemini-cli-prompt-library"            # prompt-library
-  "https://github.com/jduncan-rva/gemini-history-learning"              # history-learning
-  "https://github.com/marcusgoll/Spec-Flow"                             # spec-flow
-  "https://github.com/swissspidy/extension-browser"                     # extension-browser MCP
-
-  # Content & Docs
-  "https://github.com/cloud-aspect/doc-indexer"                         # doc-indexer MCP
-  "https://github.com/jduncan-rva/blog-assistant"                       # blog-publisher
-  "https://github.com/sapientcoffee/scribe"                             # scribe
-  "https://github.com/jduncan-rva/skill-porter"                        # skill-porter
-
-  # Research & Search
-  "https://github.com/qodo-ai/open-aware"                              # open-aware MCP
-  "https://github.com/Flux159/mcp-game-asset-gen"                       # asset-gen MCP
-
-  # Database
-  "https://github.com/googleapis/genai-toolbox"                         # mcp-toolbox-for-databases
-  "https://github.com/gemini-cli-extensions/mcp-toolbox"                # mcp-toolbox
-
-  # Google integrations
-  "https://github.com/gemini-cli-extensions/genkit"                     # genkit (disabled)
-  "https://github.com/jduncan-rva/google-workspace-inbox"               # workspace-inbox
+  # Workflow commands
+  "https://github.com/paufortiana/geminicli-git-tools-extension"        # /git-commit:write, /git-pr:draft
+  "https://github.com/gemini-cli-extensions/code-review"                # /code-review, /pr-code-review
+  "https://github.com/abagames/slash-criticalthink"                     # /criticalthink
 )
 
 installed=$(gemini extensions list 2>/dev/null || echo "")
 
 for url in "${github_extensions[@]}"; do
-  # Extract extension name from URL (last path segment)
   name="${url##*/}"
   if ! echo "$installed" | grep -qi "$name"; then
     echo "Installing Gemini extension: $name"
@@ -81,4 +57,4 @@ for path in "${local_extensions[@]}"; do
   fi
 done
 
-echo "✅ Gemini extensions ready"
+echo "✅ Gemini extensions ready (14 extensions)"
