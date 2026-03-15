@@ -3,5 +3,11 @@
     "type": "command",
     "command": "/bin/bash /Users/4jp/.claude/statusline-command.sh"
   },
+  "enabledPlugins": {
+    "context7@claude-plugins-official": true,
+    "superpowers@claude-plugins-official": true,
+    "serena@claude-plugins-official": true,
+    "explanatory-output-style@claude-plugins-official": true
+  },
   "skipDangerousModePermissionPrompt": true
 }
