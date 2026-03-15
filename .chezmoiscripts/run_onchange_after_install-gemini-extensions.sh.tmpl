@@ -1,0 +1,84 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Gemini CLI extension installer
+# chezmoi:template:hash
+# {{ "gemini-extensions-v2" }}
+
+if ! command -v gemini &>/dev/null; then
+  echo "⚠️  Gemini CLI not found, skipping extensions"
+  exit 0
+fi
+
+# Extensions from GitHub repos (gemini extensions install <url>)
+github_extensions=(
+  # Git & GitHub
+  "https://github.com/paufortiana/geminicli-git-tools-extension"        # git-tools: /git-commit:write, /git-pr:draft
+  "https://github.com/gemini-cli-extensions/code-review"                # code-review
+
+  # Google Cloud
+  "https://github.com/gemini-cli-extensions/gcloud"                     # gcloud MCP
+  "https://github.com/GoogleCloudPlatform/gke-mcp"                      # gke-mcp-server
+  "https://github.com/googleworkspace/developer-tools"                  # workspace-developer MCP
+
+  # Browser & DevTools
+  "https://github.com/ChromeDevTools/chrome-devtools-mcp"               # chrome-devtools MCP
+
+  # AI & Agents
+  "https://github.com/gemini-cli-extensions/jules"                      # julesServer MCP
+  "https://github.com/jduncan-rva/gemini-agent-creator"                 # agent-creator
+  "https://github.com/jduncan-rva/gemini-system-agents"                 # system-agents
+  "https://github.com/JayadityaGit/gemini-mentor"                       # gemini-mentor
+
+  # Productivity
+  "https://github.com/abagames/slash-criticalthink"                     # criticalthink
+  "https://github.com/harish-garg/gemini-cli-prompt-library"            # prompt-library
+  "https://github.com/jduncan-rva/gemini-history-learning"              # history-learning
+  "https://github.com/marcusgoll/Spec-Flow"                             # spec-flow
+  "https://github.com/swissspidy/extension-browser"                     # extension-browser MCP
+
+  # Content & Docs
+  "https://github.com/cloud-aspect/doc-indexer"                         # doc-indexer MCP
+  "https://github.com/jduncan-rva/blog-assistant"                       # blog-publisher
+  "https://github.com/sapientcoffee/scribe"                             # scribe
+  "https://github.com/jduncan-rva/skill-porter"                        # skill-porter
+
+  # Research & Search
+  "https://github.com/qodo-ai/open-aware"                              # open-aware MCP
+  "https://github.com/Flux159/mcp-game-asset-gen"                       # asset-gen MCP
+
+  # Database
+  "https://github.com/googleapis/genai-toolbox"                         # mcp-toolbox-for-databases
+  "https://github.com/gemini-cli-extensions/mcp-toolbox"                # mcp-toolbox
+
+  # Google integrations
+  "https://github.com/gemini-cli-extensions/genkit"                     # genkit (disabled)
+  "https://github.com/jduncan-rva/google-workspace-inbox"               # workspace-inbox
+)
+
+installed=$(gemini extensions list 2>/dev/null || echo "")
+
+for url in "${github_extensions[@]}"; do
+  # Extract extension name from URL (last path segment)
+  name="${url##*/}"
+  if ! echo "$installed" | grep -qi "$name"; then
+    echo "Installing Gemini extension: $name"
+    gemini extensions install "$url" 2>/dev/null || echo "⚠️  Failed to install $name"
+  fi
+done
+
+# Local extensions (from ORGANVM skills build)
+local_extensions=(
+  "/Users/4jp/Workspace/organvm-iv-taxis/a-i--skills/.build/extensions/gemini/document-skills"
+  "/Users/4jp/Workspace/organvm-iv-taxis/a-i--skills/.build/extensions/gemini/example-skills"
+)
+
+for path in "${local_extensions[@]}"; do
+  name="$(basename "$path")"
+  if [ -d "$path" ] && ! echo "$installed" | grep -qi "$name"; then
+    echo "Installing local Gemini extension: $name"
+    gemini extensions install "$path" 2>/dev/null || echo "⚠️  Failed to install $name (path may not exist yet)"
+  fi
+done
+
+echo "✅ Gemini extensions ready"

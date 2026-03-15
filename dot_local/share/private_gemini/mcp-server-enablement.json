@@ -1,0 +1,8 @@
+{
+  "genkit": {
+    "enabled": false
+  },
+  "mcp_toolbox": {
+    "enabled": false
+  }
+}
