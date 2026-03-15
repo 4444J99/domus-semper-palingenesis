@@ -3,58 +3,61 @@ set -euo pipefail
 
 # Gemini CLI extension installer
 # chezmoi:template:hash
-# {{ "gemini-extensions-v3" }}
+# {{ "gemini-extensions-v4" }}
 
 if ! command -v gemini &>/dev/null; then
   echo "⚠️  Gemini CLI not found, skipping extensions"
   exit 0
 fi
 
-# Extensions from GitHub repos (gemini extensions install <url>)
+EXTENSIONS_DIR="${HOME}/.gemini/extensions"
+
+# Map: directory-name|install-url
+# Check by directory existence rather than parsing `gemini extensions list`
 github_extensions=(
   # Core MCP servers
-  "https://github.com/ChromeDevTools/chrome-devtools-mcp"               # chrome-devtools: live Chrome debugging, Lighthouse
-  "https://github.com/cloud-aspect/doc-indexer"                         # doc-indexer: documentation indexing
-  "https://github.com/swissspidy/extension-browser"                     # extension-browser: browse/install extensions
-  "https://github.com/qodo-ai/open-aware"                              # open-aware: OSS research
-  "https://github.com/Flux159/mcp-game-asset-gen"                       # asset-gen: image/3D generation
+  "chrome-devtools-mcp|https://github.com/ChromeDevTools/chrome-devtools-mcp"
+  "doc-indexer|https://github.com/cloud-aspect/doc-indexer"
+  "extension-browser|https://github.com/swissspidy/extension-browser"
+  "open-aware|https://github.com/qodo-ai/open-aware"
+  "mcp-game-asset-gen|https://github.com/Flux159/mcp-game-asset-gen"
 
   # Google Cloud
-  "https://github.com/gemini-cli-extensions/gcloud"                     # gcloud CLI
-  "https://github.com/GoogleCloudPlatform/gke-mcp"                      # GKE cluster management
-  "https://github.com/googleworkspace/developer-tools"                  # Workspace API docs
+  "gcloud|https://github.com/gemini-cli-extensions/gcloud"
+  "gke-mcp|https://github.com/GoogleCloudPlatform/gke-mcp"
+  "google-workspace-developer-tools|https://github.com/googleworkspace/developer-tools"
 
   # AI integration
-  "https://github.com/gemini-cli-extensions/jules"                      # Jules task delegation
+  "gemini-cli-jules|https://github.com/gemini-cli-extensions/jules"
 
   # Workflow commands
-  "https://github.com/paufortiana/geminicli-git-tools-extension"        # /git-commit:write, /git-pr:draft
-  "https://github.com/gemini-cli-extensions/code-review"                # /code-review, /pr-code-review
-  "https://github.com/abagames/slash-criticalthink"                     # /criticalthink
+  "git-tools|https://github.com/paufortiana/geminicli-git-tools-extension"
+  "code-review|https://github.com/gemini-cli-extensions/code-review"
+  "criticalthink|https://github.com/abagames/slash-criticalthink"
 )
 
-installed=$(gemini extensions list 2>/dev/null || echo "")
-
-for url in "${github_extensions[@]}"; do
-  name="${url##*/}"
-  if ! echo "$installed" | grep -qi "$name"; then
-    echo "Installing Gemini extension: $name"
-    gemini extensions install "$url" 2>/dev/null || echo "⚠️  Failed to install $name"
+for entry in "${github_extensions[@]}"; do
+  dir_name="${entry%%|*}"
+  url="${entry##*|}"
+  if [ ! -d "${EXTENSIONS_DIR}/${dir_name}" ]; then
+    echo "Installing Gemini extension: ${dir_name}"
+    gemini extensions install "$url" 2>/dev/null || echo "⚠️  Failed to install ${dir_name}"
   fi
 done
 
 # Local extensions (from ORGANVM skills build)
 local_extensions=(
-  "/Users/4jp/Workspace/organvm-iv-taxis/a-i--skills/.build/extensions/gemini/document-skills"
-  "/Users/4jp/Workspace/organvm-iv-taxis/a-i--skills/.build/extensions/gemini/example-skills"
+  "document-skills|{{ .chezmoi.homeDir }}/Workspace/organvm-iv-taxis/a-i--skills/.build/extensions/gemini/document-skills"
+  "example-skills|{{ .chezmoi.homeDir }}/Workspace/organvm-iv-taxis/a-i--skills/.build/extensions/gemini/example-skills"
 )
 
-for path in "${local_extensions[@]}"; do
-  name="$(basename "$path")"
-  if [ -d "$path" ] && ! echo "$installed" | grep -qi "$name"; then
-    echo "Installing local Gemini extension: $name"
-    gemini extensions install "$path" 2>/dev/null || echo "⚠️  Failed to install $name (path may not exist yet)"
+for entry in "${local_extensions[@]}"; do
+  dir_name="${entry%%|*}"
+  path="${entry##*|}"
+  if [ ! -d "${EXTENSIONS_DIR}/${dir_name}" ] && [ -d "$path" ]; then
+    echo "Installing local Gemini extension: ${dir_name}"
+    gemini extensions install "$path" 2>/dev/null || echo "⚠️  Failed to install ${dir_name}"
   fi
 done
 
-echo "✅ Gemini extensions ready (14 extensions)"
+echo "✅ Gemini extensions ready"
