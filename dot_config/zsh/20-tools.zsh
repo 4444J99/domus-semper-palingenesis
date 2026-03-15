@@ -7,6 +7,11 @@ if [[ -f "$HOME/.config/op/secrets.zsh" ]]; then
   source "$HOME/.config/op/secrets.zsh"
 fi
 
+# 1Password Shell Plugins (after secrets for fallback env vars)
+if [[ -f "$HOME/.config/op/plugins.zsh" ]]; then
+  source "$HOME/.config/op/plugins.zsh"
+fi
+
 # Starship prompt
 if command -v starship &>/dev/null; then
   _cache="${XDG_CACHE_HOME:-$HOME/.cache}/starship-zsh.zsh"
