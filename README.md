@@ -173,3 +173,11 @@ j       # just (task runner)
 MIT · [chezmoi](https://chezmoi.io) · [Tokyo Night](https://github.com/folke/tokyonight.nvim)
 
 </div>
+
+<!-- SYSTEM-NAV-START -->
+
+---
+
+<sub>[Portfolio](https://4444j99.github.io/portfolio/) · [System Directory](https://4444j99.github.io/portfolio/directory/) · [ORGAN 4444J99](https://4444J99.github.io/) · Part of the <a href="https://4444j99.github.io/portfolio/directory/">ORGANVM eight-organ system</a></sub>
+
+<!-- SYSTEM-NAV-END -->
