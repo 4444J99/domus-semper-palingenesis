@@ -39,6 +39,12 @@ if [[ -f "$_OP_CACHE" ]]; then
   # Export aliases
   export GEMINI_API_KEY GITHUB_TOKEN NPM_TOKEN SONATYPE_GUIDE_TOKEN
   export GOOGLE_API_KEY="$GEMINI_API_KEY"
+  # Fallback: if GITHUB_TOKEN is empty or starts with a known-dead prefix,
+  # use `gh auth token` (OAuth from keyring) instead. Fast (~5ms).
+  if [[ -z "$GITHUB_TOKEN" ]] && command -v gh >/dev/null 2>&1; then
+    GITHUB_TOKEN="$(gh auth token 2>/dev/null)"
+    export GITHUB_TOKEN
+  fi
   export GITHUB_MCP_PAT="$GITHUB_TOKEN"
   export GITHUB_PERSONAL_ACCESS_TOKEN="$GITHUB_TOKEN"
   export GH_TOKEN="$GITHUB_TOKEN"
