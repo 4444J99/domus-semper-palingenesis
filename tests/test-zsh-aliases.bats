@@ -102,8 +102,12 @@ assert_aliases_defined() {
 # ─────────────────────────────────────────────────────────────────────────────
 
 @test "kubectl aliases are NOT set when kubectl is unavailable" {
-  # Use a minimal PATH that excludes kubectl
-  run zsh --no-rcs -c 'PATH=/usr/bin:/bin; source "$1" 2>/dev/null; alias k 2>&1' -- "$ALIASES_FILE"
+  # Build a clean PATH with no kubectl (CI runners may have it in /usr/bin)
+  local safe_dir
+  safe_dir="$(mktemp -d)"
+  ln -sf "$(command -v zsh)" "$safe_dir/zsh"
+  run zsh --no-rcs -c 'export PATH="$1"; source "$2" 2>/dev/null; alias k 2>&1' -- "$safe_dir" "$ALIASES_FILE"
+  rm -rf "$safe_dir"
   [ "$status" -ne 0 ]
 }
 

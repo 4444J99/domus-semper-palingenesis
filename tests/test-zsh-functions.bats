@@ -36,7 +36,12 @@ teardown() {
 }
 
 @test "pip-clean reports not found when pip missing" {
-  run zsh --no-rcs -c 'export PATH=/usr/bin:/bin; source "$1" 2>/dev/null; pip-clean' -- "$FUNCTIONS_FILE"
+  # Build a clean PATH with no pip (CI runners may have it in /usr/bin)
+  local safe_dir
+  safe_dir="$(mktemp -d)"
+  ln -sf "$(command -v zsh)" "$safe_dir/zsh"
+  run zsh --no-rcs -c 'export PATH="$1"; source "$2" 2>/dev/null; pip-clean' -- "$safe_dir" "$FUNCTIONS_FILE"
+  rm -rf "$safe_dir"
   [ "$status" -eq 0 ]
   [[ "$output" == *"pip not found"* ]]
 }

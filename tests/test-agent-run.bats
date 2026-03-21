@@ -94,7 +94,7 @@ teardown() {
   # Create a temporary git repo
   local git_dir="$TEST_HOME/test-repo"
   mkdir -p "$git_dir"
-  (cd "$git_dir" && git init -q && git commit --allow-empty -m "init" -q)
+  (cd "$git_dir" && git init -q && git config user.email "test@test.com" && git config user.name "Test" && git commit --allow-empty -m "init" -q)
 
   run bash -c "cd '$git_dir' && bash '$SCRIPT' --agent claude --dry-run"
   [ "$status" -eq 0 ]
