@@ -18,7 +18,7 @@ setup() {
 assert_aliases_defined() {
   local alias_name
   for alias_name in "$@"; do
-    run zsh -c 'source "$1" 2>/dev/null; alias '"$alias_name" -- "$ALIASES_FILE"
+    run zsh --no-rcs -c 'source "$1" 2>/dev/null; alias '"$alias_name" -- "$ALIASES_FILE"
     [ "$status" -eq 0 ]
   done
 }
@@ -32,25 +32,25 @@ assert_aliases_defined() {
 }
 
 @test "git alias g expands to git" {
-  run zsh -c 'source "$1" 2>/dev/null; alias g' -- "$ALIASES_FILE"
+  run zsh --no-rcs -c 'source "$1" 2>/dev/null; alias g' -- "$ALIASES_FILE"
   [ "$status" -eq 0 ]
   [[ "$output" == *"git"* ]]
 }
 
 @test "git alias gs expands to git status" {
-  run zsh -c 'source "$1" 2>/dev/null; alias gs' -- "$ALIASES_FILE"
+  run zsh --no-rcs -c 'source "$1" 2>/dev/null; alias gs' -- "$ALIASES_FILE"
   [ "$status" -eq 0 ]
   [[ "$output" == *"git status"* ]]
 }
 
 @test "git alias gd expands to git diff" {
-  run zsh -c 'source "$1" 2>/dev/null; alias gd' -- "$ALIASES_FILE"
+  run zsh --no-rcs -c 'source "$1" 2>/dev/null; alias gd' -- "$ALIASES_FILE"
   [ "$status" -eq 0 ]
   [[ "$output" == *"git diff"* ]]
 }
 
 @test "git alias gc expands to git commit" {
-  run zsh -c 'source "$1" 2>/dev/null; alias gc' -- "$ALIASES_FILE"
+  run zsh --no-rcs -c 'source "$1" 2>/dev/null; alias gc' -- "$ALIASES_FILE"
   [ "$status" -eq 0 ]
   [[ "$output" == *"git commit"* ]]
 }
@@ -64,7 +64,7 @@ assert_aliases_defined() {
 }
 
 @test "chezmoi alias cma expands to chezmoi apply" {
-  run zsh -c 'source "$1" 2>/dev/null; alias cma' -- "$ALIASES_FILE"
+  run zsh --no-rcs -c 'source "$1" 2>/dev/null; alias cma' -- "$ALIASES_FILE"
   [ "$status" -eq 0 ]
   [[ "$output" == *"chezmoi apply"* ]]
 }
@@ -78,7 +78,7 @@ assert_aliases_defined() {
 }
 
 @test "domus alias dm expands to domus" {
-  run zsh -c 'source "$1" 2>/dev/null; alias dm' -- "$ALIASES_FILE"
+  run zsh --no-rcs -c 'source "$1" 2>/dev/null; alias dm' -- "$ALIASES_FILE"
   [ "$status" -eq 0 ]
   [[ "$output" == *"domus"* ]]
 }
@@ -92,7 +92,7 @@ assert_aliases_defined() {
 }
 
 @test "tmux alias tm expands to tmux" {
-  run zsh -c 'source "$1" 2>/dev/null; alias tm' -- "$ALIASES_FILE"
+  run zsh --no-rcs -c 'source "$1" 2>/dev/null; alias tm' -- "$ALIASES_FILE"
   [ "$status" -eq 0 ]
   [[ "$output" == *"tmux"* ]]
 }
@@ -103,7 +103,7 @@ assert_aliases_defined() {
 
 @test "kubectl aliases are NOT set when kubectl is unavailable" {
   # Use a minimal PATH that excludes kubectl
-  run zsh -c 'PATH=/usr/bin:/bin; source "$1" 2>/dev/null; alias k 2>&1' -- "$ALIASES_FILE"
+  run zsh --no-rcs -c 'PATH=/usr/bin:/bin; source "$1" 2>/dev/null; alias k 2>&1' -- "$ALIASES_FILE"
   [ "$status" -ne 0 ]
 }
 
@@ -114,7 +114,7 @@ assert_aliases_defined() {
   printf '#!/bin/sh\nexit 0\n' > "$mock_dir/kubectl"
   chmod +x "$mock_dir/kubectl"
 
-  run zsh -c 'PATH="'"$mock_dir"':/usr/bin:/bin"; source "$1" 2>/dev/null; alias k && alias kgp && alias kgs' -- "$ALIASES_FILE"
+  run zsh --no-rcs -c 'PATH="'"$mock_dir"':/usr/bin:/bin"; source "$1" 2>/dev/null; alias k && alias kgp && alias kgs' -- "$ALIASES_FILE"
   [ "$status" -eq 0 ]
   [[ "$output" == *"kubectl"* ]]
 
@@ -127,7 +127,7 @@ assert_aliases_defined() {
 
 @test "ls is NOT overridden to eza when eza is unavailable" {
   # Use a minimal PATH that excludes eza
-  run zsh -c 'PATH=/usr/bin:/bin; source "$1" 2>/dev/null; alias ls 2>&1' -- "$ALIASES_FILE"
+  run zsh --no-rcs -c 'PATH=/usr/bin:/bin; source "$1" 2>/dev/null; alias ls 2>&1' -- "$ALIASES_FILE"
   # Either the alias is not set (status != 0) or it does not mention eza
   if [ "$status" -eq 0 ]; then
     [[ "$output" != *"eza"* ]]
@@ -141,7 +141,7 @@ assert_aliases_defined() {
   printf '#!/bin/sh\nexit 0\n' > "$mock_dir/eza"
   chmod +x "$mock_dir/eza"
 
-  run zsh -c 'PATH="'"$mock_dir"':/usr/bin:/bin"; source "$1" 2>/dev/null; alias ls' -- "$ALIASES_FILE"
+  run zsh --no-rcs -c 'PATH="'"$mock_dir"':/usr/bin:/bin"; source "$1" 2>/dev/null; alias ls' -- "$ALIASES_FILE"
   [ "$status" -eq 0 ]
   [[ "$output" == *"eza"* ]]
 
