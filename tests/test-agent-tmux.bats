@@ -61,18 +61,20 @@ SCRIPT
   # us verify "myname" is used as the session identifier.
   _mock_tmux
 
-  run env PATH="$BIN_DIR:$PATH" bash "$SCRIPT" myname
+  # Use BIN_DIR first to ensure mock tmux shadows any real tmux
+  run env PATH="$BIN_DIR:/usr/bin:/bin" bash "$SCRIPT" myname
   [ "$status" -eq 0 ]
   [[ "$output" == *"myname"* ]]
 }
 
 @test "agent-tmux fails without tmux" {
-  # Create a minimal PATH directory with bash but not tmux
+  # Create a minimal PATH with only bash — tmux must NOT be findable
   local safe_bin="$TEST_HOME/safe-bin"
   mkdir -p "$safe_bin"
   ln -s "$(command -v bash)" "$safe_bin/bash"
 
-  run env PATH="$safe_bin:/usr/bin" bash "$SCRIPT"
+  # Use only safe_bin in PATH (no /usr/bin which may have real tmux on CI)
+  run env PATH="$safe_bin" bash "$SCRIPT"
   [ "$status" -eq 2 ]
   [[ "$output" == *"tmux not installed"* ]]
 }
@@ -82,7 +84,8 @@ SCRIPT
   # that echoes its args so we can verify the default name.
   _mock_tmux
 
-  run env PATH="$BIN_DIR:$PATH" bash "$SCRIPT"
+  # Use BIN_DIR first to ensure mock tmux shadows any real tmux
+  run env PATH="$BIN_DIR:/usr/bin:/bin" bash "$SCRIPT"
   [ "$status" -eq 0 ]
   [[ "$output" == *"agents"* ]]
 }
