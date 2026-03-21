@@ -327,7 +327,6 @@ storybook-static/
 # =============================================================================
 *.gem
 *.rbc
-/.config
 /coverage/
 /InstalledFiles
 /pkg/
