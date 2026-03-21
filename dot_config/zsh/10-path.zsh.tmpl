@@ -32,6 +32,9 @@ export PATH=$PATH:$GOPATH/bin
 # Rust (rustup toolchain)
 export PATH="${CARGO_HOME:-$HOME/.local/share/cargo}/bin:$PATH"
 
+# npm global bin (prefix set in npmrc → XDG_DATA_HOME/npm)
+export PATH="${XDG_DATA_HOME:-$HOME/.local/share}/npm/bin:$PATH"
+
 # pipx local bin (also covers uv tool installs via UV_TOOL_BIN_DIR default)
 export PATH="$HOME/.local/bin:$PATH"
 

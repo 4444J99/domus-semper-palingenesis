@@ -187,8 +187,9 @@ in chezmoi config.
 | `run_once_after_setup-directories.sh.tmpl` | Once | Create XDG dirs, Projects/, etc. |
 | `run_once_after_migrate-zsh-xdg.sh.tmpl` | Once | Migrate zsh config to XDG locations |
 | `run_once_macos-defaults.sh.tmpl` | Once | Apply macOS system defaults |
-| `run_after_link-skills.sh.tmpl` | Every apply | Symlink skills into `~/.claude/skills/` |
-| `run_after_ensure-xdg-symlinks.sh.tmpl` | Every apply | Ensure XDG symlinks are correct |
+| `run_onchange_after_link-skills.sh.tmpl` | On change | Symlink skills into `~/.claude/skills/` |
+| `run_onchange_after_ensure-xdg-symlinks.sh.tmpl` | On change | Ensure XDG symlinks are correct |
+| `run_onchange_after_check-claude-extensions.sh.tmpl` | On change | Report missing Claude Desktop extensions |
 | `run_onchange_after_sync-skills.sh.tmpl` | On change | Sync AI skills |
 | `run_onchange_after_setup-vscode-mcp.sh.tmpl` | On change | Configure VSCode MCP |
 | `run_onchange_after_load-launchagent.sh.tmpl` | On change | Reload LaunchAgents |

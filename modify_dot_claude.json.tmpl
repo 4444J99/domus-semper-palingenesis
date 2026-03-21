@@ -12,4 +12,4 @@ try:
 except json.JSONDecodeError:
     config = {}
 
-print(json.dumps(config, indent=2, ensure_ascii=False) + "\n", end="")
+print(json.dumps(config, indent=2, ensure_ascii=False), end="")
