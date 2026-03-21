@@ -2,6 +2,7 @@
 # Unit tests for zsh functions defined in dot_config/zsh/40-functions.zsh
 
 setup() {
+  command -v zsh &>/dev/null || skip "zsh not installed"
   FUNCTIONS_FILE="$BATS_TEST_DIRNAME/../dot_config/zsh/40-functions.zsh"
   load 'test-helpers'
   setup_test_env

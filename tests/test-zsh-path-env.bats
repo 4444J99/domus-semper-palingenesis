@@ -2,6 +2,7 @@
 # Tests for PATH template (10-path.zsh.tmpl) and env vars (15-env.zsh)
 
 setup() {
+  command -v zsh &>/dev/null || skip "zsh not installed"
   source "$BATS_TEST_DIRNAME/render-tmpl.sh"
   TEST_HOME="$(mktemp -d)"
   export HOME="$TEST_HOME"

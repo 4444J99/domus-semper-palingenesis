@@ -95,7 +95,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Install BATS
-        run: sudo apt-get install -y bats yq jq curl git && (sh -c "$(curl -fsLS https://get.chezmoi.io)" || true) && sudo mv ./bin/chezmoi /usr/local/bin/ || echo "chezmoi skip"
+        run: sudo apt-get install -y bats yq jq curl git zsh && (sh -c "$(curl -fsLS https://get.chezmoi.io)" || true) && sudo mv ./bin/chezmoi /usr/local/bin/ || echo "chezmoi skip"
       - name: Run BATS tests
         run: |
           echo "PATH: $PATH"

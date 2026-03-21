@@ -6,6 +6,7 @@
 # are tested both with and without the guarding tool on PATH.
 
 setup() {
+  command -v zsh &>/dev/null || skip "zsh not installed"
   ALIASES_FILE="$BATS_TEST_DIRNAME/../dot_config/zsh/30-aliases.zsh"
 }
 
