@@ -118,7 +118,7 @@ get_manifest_cargo() {
 
 get_manifest_uv_tools() {
   yq -r '.packages.uv_tools[]? ' "${MANIFEST}" 2>/dev/null |
-    sed 's/\[.*\]//g' | sort || true  # Strip extras brackets for comparison
+    sed 's/\[.*\]//g' | sort || true # Strip extras brackets for comparison
 }
 
 # ─────────────────────────────────────────────────────────────────────────────

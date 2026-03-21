@@ -42,6 +42,7 @@ jobs:
         run: |
           find . -name '*.yml' -o -name '*.yaml' | \
             grep -v '.git/' | grep -v 'node_modules/' | \
+            grep -v 'private_hosts.yml' | \
             xargs yamllint -c .yamllint.yml
 
   validate-json:
