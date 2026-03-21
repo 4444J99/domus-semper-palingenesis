@@ -26,8 +26,8 @@ export CPPFLAGS="-I/opt/homebrew/opt/ruby/include"
 export PKG_CONFIG_PATH="/opt/homebrew/opt/ruby/lib/pkgconfig"
 {{- end }}
 
-# Go (GOPATH defined in 15-env.zsh)
-export PATH=$PATH:$GOPATH/bin
+# Go (GOPATH defined in 15-env.zsh; fallback mirrors that definition)
+export PATH="${GOPATH:-${XDG_DATA_HOME:-$HOME/.local/share}/go}/bin:$PATH"
 
 # Rust (rustup toolchain)
 export PATH="${CARGO_HOME:-$HOME/.local/share/cargo}/bin:$PATH"

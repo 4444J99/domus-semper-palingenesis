@@ -97,7 +97,11 @@ jobs:
         run: sudo apt-get install -y bats yq jq curl git && (sh -c "$(curl -fsLS https://get.chezmoi.io)" || true) && sudo mv ./bin/chezmoi /usr/local/bin/ || echo "chezmoi skip"
       - name: Run BATS tests
         run: |
-          echo "PATH: $PATH"\n          which chezmoi || echo "no chezmoi"\n          which yq || echo "no yq"\n          ls -R dot_local/bin/\n          bats tests/*.bats
+          echo "PATH: $PATH"
+          which chezmoi || echo "no chezmoi"
+          which yq || echo "no yq"
+          ls -R dot_local/bin/
+          bats tests/*.bats
 
   pytest:
     name: Python Tests

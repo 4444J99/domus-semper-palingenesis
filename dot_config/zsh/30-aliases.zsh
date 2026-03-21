@@ -157,12 +157,14 @@ alias dmpd='domus packages diff'
 # Kubernetes
 # ─────────────────────────────────────────────────────────────────────────────
 
-alias k='kubectl'
-alias kgp='kubectl get pods'
-alias kgs='kubectl get svc'
-alias kgn='kubectl get nodes'
-alias kctx='kubectl config get-contexts'
-alias kns='kubectl config set-context --current --namespace'
+if command -v kubectl &>/dev/null; then
+  alias k='kubectl'
+  alias kgp='kubectl get pods'
+  alias kgs='kubectl get svc'
+  alias kgn='kubectl get nodes'
+  alias kctx='kubectl config get-contexts'
+  alias kns='kubectl config set-context --current --namespace'
+fi
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Color Theme Tools

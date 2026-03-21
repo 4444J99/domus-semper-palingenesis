@@ -78,13 +78,13 @@ mkdir -p "$normalize_log_dir" "$photo_log_dir"
 
 if [[ ! -f "$normalize_py" ]]; then
   echo "normalize-names not found at $normalize_py" >&2
-  echo "  (placeholder scripts need to be created or sourced from Dropbox)" >&2
+  echo "  (run 'chezmoi apply' to deploy it)" >&2
   exit 1
 fi
 
 if (( with_photo )) && [[ ! -f "$photo_py" ]]; then
   echo "photo-sort not found at $photo_py" >&2
-  echo "  (placeholder scripts need to be created or sourced from Dropbox)" >&2
+  echo "  (run 'chezmoi apply' to deploy it)" >&2
   exit 1
 fi
 if (( only_when_locked )) && ! is_screen_locked; then

@@ -18,6 +18,10 @@ Library/LaunchAgents/com.4jp.naming-maintenance.plist
 Library/LaunchAgents/com.4jp.agents-policy-sync.plist
 {{ end }}
 
+# Broken LaunchAgents — repos not yet created
+Library/LaunchAgents/com.user.gmail_labeler.plist
+Library/LaunchAgents/com.user.mail_automation.plist
+
 # Ignore Linux-specific files on non-Linux systems
 {{ if ne .chezmoi.os "linux" }}
 .config/i3/

@@ -54,7 +54,7 @@ domus perf shell
 Common causes:
 - **conda init in .zshrc** — should be lazy-loaded (see `20-tools.zsh` lazy-loading section)
 - **nvm/navi/gcloud loading eagerly** — ensure they use deferred loading
-- **Too many Oh My Zsh plugins** — audit `~/.zshrc` plugins list
+- **Too many zsh plugins** — audit `85-plugins.zsh` and Homebrew plugin sources
 
 Profile startup time:
 

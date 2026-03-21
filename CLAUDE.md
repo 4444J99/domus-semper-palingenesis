@@ -44,7 +44,7 @@ domus-semper-palingenesis/
 │   │   ├── 30-aliases.zsh      # Aliases (chezmoi, git, domus, modern CLI tools)
 │   │   ├── 40-functions.zsh    # Shell functions
 │   │   ├── 50-completions.zsh  # Completion setup
-│   │   ├── 85-plugins.zsh      # Oh My Zsh / plugin loader
+│   │   ├── 85-plugins.zsh      # ZSH plugin loader (autosuggestions, syntax-highlighting)
 │   │   ├── 90-telemetry.zsh    # Shell startup timing report
 │   │   ├── 99-local.zsh.tmpl   # Machine-local overrides (template)
 │   │   ├── dot_zprofile        # ~/.zprofile (login shell)
@@ -175,9 +175,14 @@ Deployed to `~/Library/LaunchAgents/` from `private_Library/LaunchAgents/`:
 | `com.4jp.downloads-tidy.plist` | Downloads directory tidying |
 | `com.4jp.naming-maintenance.plist` | File naming conventions enforcement |
 | `com.4jp.agents-policy-sync.plist` | Agent policy sync |
+| `com.4jp.env.mcp.plist` | Set MCP environment variables via launchctl |
+| `com.4jp.home-root-guard.plist` | Home directory clutter prevention |
+| `com.user.gmail_labeler.plist` | Gmail label automation (disabled — repo not yet created) |
+| `com.user.mail_automation.plist` | Mail automation (disabled — repo not yet created) |
 
 Conditional deployment: file-automation agents are suppressed when `domus_auto_enabled = false`
-in chezmoi config.
+in chezmoi config. Mail automation agents are suppressed via `.chezmoiignore` until their
+repos exist.
 
 ## Apply-Time Scripts (`.chezmoiscripts/`)
 

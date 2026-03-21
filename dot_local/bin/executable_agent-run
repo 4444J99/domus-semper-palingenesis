@@ -26,7 +26,7 @@ set -euo pipefail
 # ─────────────────────────────────────────────────────────────────────────────
 
 AGENTS_LOG="${AGENTS_LOG:-$HOME/domus-semper-palingenesis/_agents/log}"
-AGENT_NAME="${1:-}"
+AGENT_NAME=""
 PROMPT_FILE=""
 DRY_RUN=0
 AGENT_ARGS=()

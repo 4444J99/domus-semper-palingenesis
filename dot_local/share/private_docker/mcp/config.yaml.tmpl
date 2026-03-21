@@ -1,0 +1,21 @@
+markitdown:
+  paths: []
+filesystem:
+  paths:
+    - {{ .chezmoi.homeDir }}/Workspace
+    - {{ .chezmoi.homeDir }}/Documents
+    - {{ .chezmoi.homeDir }}/Downloads
+    - {{ .chezmoi.homeDir }}/Desktop
+desktop-commander:
+  paths:
+    - {{ .chezmoi.homeDir }}
+dockerhub:
+  username: ajpadavano
+git:
+  paths:
+    - {{ .chezmoi.homeDir }}/Workspace
+cloud-run-mcp:
+  credentials_path: {{ .chezmoi.homeDir }}/.config/gcloud/application_default_credentials.json
+markdownify:
+  paths:
+    - ~/
