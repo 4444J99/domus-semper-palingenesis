@@ -46,9 +46,11 @@ teardown() {
 }
 
 @test "domus-sort fails without yq" {
-  # Override PATH to hide yq
-  export PATH="/usr/bin:/bin"
-  run bash "$SORT" --dry-run
+  # Build isolated PATH without yq (CI may have yq in /usr/bin)
+  local safe_dir
+  safe_dir="$(path_without yq)"
+  run env PATH="$safe_dir" bash "$SORT" --dry-run
+  rm -rf "$safe_dir"
   [ "$status" -eq 2 ]
   [[ "$output" == *"yq required"* ]]
 }

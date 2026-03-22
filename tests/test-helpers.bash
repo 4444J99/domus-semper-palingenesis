@@ -166,3 +166,28 @@ skip_if_no_command() {
     skip "$cmd not available"
   fi
 }
+
+# Skip if yq is not Mike Farah's Go version (Ubuntu apt installs kislyuk's python-yq)
+skip_if_wrong_yq() {
+  skip_if_no_command yq
+  if ! yq --version 2>&1 | grep -qi 'mikefarah\|github.com/mikefarah'; then
+    skip "yq is not Mike Farah's Go version (needed for .key[] syntax)"
+  fi
+}
+
+# Build an isolated PATH directory without a specific command
+# Usage: path_without <command_name>
+# Returns: path to temp dir (caller must clean up)
+path_without() {
+  local exclude="$1"
+  local safe_dir
+  safe_dir="$(mktemp -d)"
+  # Link common utils but NOT the excluded command
+  for cmd in bash env cat grep sed awk head tail sort uniq wc tr date mkdir rm cp mv ln echo printf test dirname basename id readlink stat; do
+    local cmd_path
+    cmd_path="$(command -v "$cmd" 2>/dev/null)" || continue
+    [[ "$(basename "$cmd_path")" == "$exclude" ]] && continue
+    ln -sf "$cmd_path" "$safe_dir/$cmd" 2>/dev/null || true
+  done
+  echo "$safe_dir"
+}

@@ -29,7 +29,7 @@ teardown() {
 # ─────────────────────────────────────────────────────────────────────────────
 
 @test "domus-packages status --quiet outputs synced or drift" {
-  skip_if_no_command yq
+  skip_if_wrong_yq
   mock_manifest
   run bash "$PACKAGES" status --quiet
   # exits 0 (synced) or 1 (drift)
@@ -38,7 +38,7 @@ teardown() {
 }
 
 @test "domus-packages status --json produces valid JSON" {
-  skip_if_no_command yq
+  skip_if_wrong_yq
   mock_manifest
   run bash "$PACKAGES" status --json
   [[ "$status" -eq 0 || "$status" -eq 1 ]]
@@ -55,8 +55,10 @@ teardown() {
 
 @test "domus-packages status fails without yq" {
   mock_manifest
-  export PATH="/usr/bin:/bin"
-  run bash "$PACKAGES" status
+  local safe_dir
+  safe_dir="$(path_without yq)"
+  run env PATH="$safe_dir" bash "$PACKAGES" status
+  rm -rf "$safe_dir"
   [ "$status" -eq 2 ]
   [[ "$output" == *"yq required"* ]]
 }

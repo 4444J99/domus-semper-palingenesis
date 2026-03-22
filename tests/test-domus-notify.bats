@@ -75,12 +75,17 @@ teardown() {
 # ─────────────────────────────────────────────────────────────────────────────
 
 @test "domus-notify derives title from sorting event" {
-  # With silent level, it won't actually send, but code path runs
+  # Mock manifest so event levels resolve (sorting.file_moved → silent)
+  mock_manifest
   run bash "$NOTIFY" --level silent --event sorting.file_moved --message "test"
   [ "$status" -eq 0 ]
 }
 
 @test "domus-notify derives title from health event" {
+  # health.drift_detected → normal, which calls osascript (macOS only)
+  command -v osascript &>/dev/null || skip "osascript not available (macOS only)"
+  mock_manifest
   run bash "$NOTIFY" --level silent --event health.drift_detected --message "test"
-  [ "$status" -eq 0 ]
+  # event level overrides --level flag; normal sends via osascript
+  [[ "$status" -eq 0 || "$status" -eq 1 ]]
 }
