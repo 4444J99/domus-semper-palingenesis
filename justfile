@@ -16,7 +16,7 @@ diff:
 # Run all linters
 lint:
     @echo ":: ShellCheck"
-    @find dot_local/bin -name 'executable_*' ! -name '*.tmpl' -exec sh -c 'head -1 "$1" | grep -q python || echo "$1"' _ {} \; | xargs shellcheck -x 2>/dev/null || true
+    @find dot_local/bin -name 'executable_*' ! -name '*.tmpl' ! -path '*__pycache__*' -exec sh -c 'head -1 "$1" | grep -q python || echo "$1"' _ {} \; | xargs shellcheck -x 2>/dev/null || true
     @echo ""
     @echo ":: YAML lint"
     @find . -name '*.yml' -o -name '*.yaml' | grep -v '.git/' | xargs yamllint -c .yamllint.yml 2>/dev/null || true
