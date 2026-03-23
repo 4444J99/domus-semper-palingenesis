@@ -1,0 +1,40 @@
+# seed.yaml — Automation Contract for 4444J99/domus-semper-palingenesis
+# Schema: seed/v1.0
+# IRF-DOM-001
+
+schema_version: "1.0"
+organ: Liminal
+organ_name: Liminal
+repo: domus-semper-palingenesis
+org: 4444J99
+
+metadata:
+  implementation_status: ACTIVE
+  tier: infrastructure
+  promotion_status: GRADUATED
+  last_validated: "2026-03-23"
+  language: shell
+  note: >-
+    The operator's machine configuration — shell environment, tool setup,
+    secrets management, agent infrastructure. Managed by chezmoi with
+    autoCommit + autoPush. If domus breaks, every organ loses its shell,
+    secrets, and context files.
+
+produces:
+  - type: environment-config
+    description: "Shell environment, PATH, XDG dirs, tool initialization"
+    consumers: [ALL]
+  - type: agent-infrastructure
+    description: "Claude/Gemini/Codex agent configuration, MCP servers, LaunchAgents"
+    consumers: [ORGAN-IV, META-ORGANVM]
+  - type: secrets-management
+    description: "1Password CLI integration, API key provisioning"
+    consumers: [ALL]
+
+consumes:
+  - type: skills
+    description: "AI skills from a-i--skills"
+    producers: [ORGAN-IV]
+  - type: governance-policy
+    description: "System governance rules and standards"
+    producers: [META-ORGANVM]
