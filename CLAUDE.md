@@ -34,22 +34,22 @@ This directory **is** the chezmoi source. Files deploy to `$HOME/` via `chezmoi 
 
 ```
 domus-semper-palingenesis/
-├── dot_zshenv                  # ~/.zshenv — XDG dirs, ORGANVM vars, loaded by all zsh instances
+├── dot_zshenv.tmpl             # ~/.zshenv — XDG dirs, ORGANVM vars, identity from chezmoi.toml
 ├── dot_config/
 │   ├── zsh/                    # ~/.config/zsh/ — zsh config (ZDOTDIR)
-│   │   ├── 00-init.zsh         # Shell startup timing, root guard
-│   │   ├── 10-path.zsh.tmpl    # PATH (OS/arch-aware via template)
+│   │   ├── _cache.zsh          # Cache helper — DRY primitive for tool init caching
+│   │   ├── 00-init.zsh         # Shell startup timing (native zsh/datetime), root guard
+│   │   ├── 10-path.zsh.tmpl    # PATH (OS/arch-aware via template, dedup at top)
 │   │   ├── 15-env.zsh          # XDG compliance env vars, agent workspace env
 │   │   ├── 20-tools.zsh        # Tool initializations (1Password, starship, zoxide, fzf, …)
 │   │   ├── 30-aliases.zsh      # Aliases (chezmoi, git, domus, modern CLI tools)
-│   │   ├── 40-functions.zsh    # Shell functions
+│   │   ├── 40-functions.zsh    # Shell functions (op-refresh, kitty themes, cleaners)
 │   │   ├── 50-completions.zsh  # Completion setup
-│   │   ├── 85-plugins.zsh      # ZSH plugin loader (autosuggestions, syntax-highlighting)
-│   │   ├── 90-telemetry.zsh    # Shell startup timing report
+│   │   ├── 85-plugins.zsh      # ZSH plugins + shell integrations (autosuggestions, syntax-highlighting, iTerm2)
+│   │   ├── 90-telemetry.zsh    # Shell startup timing report (Domus telemetry)
 │   │   ├── 99-local.zsh.tmpl   # Machine-local overrides (template)
-│   │   ├── dot_zprofile        # ~/.zprofile (login shell)
-│   │   ├── dot_zshenv          # ~/.config/zsh/.zshenv
-│   │   └── dot_zshrc           # ~/.zshrc entry point
+│   │   ├── dot_zshenv          # ~/.config/zsh/.zshenv (re-source bridge)
+│   │   └── dot_zshrc           # ~/.zshrc entry point (glob loader)
 │   ├── git/config.tmpl         # Git config (email/name from chezmoi data, SSH signing via 1Password)
 │   ├── private_op/secrets.zsh  # 1Password secrets — sourced early in 20-tools.zsh
 │   ├── nvim/                   # Neovim config (init.lua + lua/)
@@ -93,7 +93,7 @@ domus-semper-palingenesis/
 
 | Source file | Deployed to | Purpose |
 |-------------|-------------|---------|
-| `dot_zshenv` | `~/.zshenv` | XDG dirs, ORGANVM env vars, HISTFILE, `CLAUDE_INTERACTIVE=0` |
+| `dot_zshenv.tmpl` | `~/.zshenv` | XDG dirs, ORGANVM vars, identity from chezmoi.toml, `PAGER=cat`, `CLAUDE_INTERACTIVE=0` |
 | `dot_config/zsh/10-path.zsh.tmpl` | `~/.config/zsh/10-path.zsh` | PATH for Homebrew (ARM64/Intel), Ruby, Go, Rust, pipx, Python |
 | `dot_config/zsh/15-env.zsh` | `~/.config/zsh/15-env.zsh` | XDG compliance for all tools, agent workspace vars (`DOMUS_ROOT`, `AGENTS_ROOT`) |
 | `dot_config/zsh/20-tools.zsh` | `~/.config/zsh/20-tools.zsh` | Sources 1Password secrets, inits starship/zoxide/fzf/atuin |
@@ -117,7 +117,7 @@ See `1PASSWORD_SETUP.md` for first-time setup.
 
 ## Environment Variables Set by This Repo
 
-Key vars set in `dot_zshenv` (loaded universally):
+Key vars set in `dot_zshenv.tmpl` (loaded universally, identity from chezmoi.toml):
 
 ```zsh
 XDG_CONFIG_HOME, XDG_DATA_HOME, XDG_STATE_HOME, XDG_CACHE_HOME  # XDG base dirs
@@ -126,8 +126,8 @@ HISTFILE, HISTSIZE, SAVEHIST       # Zsh history config
 SHELL_SESSIONS_DISABLE=1           # Suppress macOS per-session history files
 ORGANVM_WORKSPACE_DIR, ORGANVM_CORPUS_DIR
 ORG_I … ORG_META                   # ORGANVM organ → GitHub org mapping
-ORG_LIMINAL, ORG_LIMINAL_ALT
-GITHUB_PRIMARY, GITHUB_SECONDARY
+ORG_LIMINAL                        # From chezmoi.toml (.org_liminal)
+GITHUB_PRIMARY                     # From chezmoi.toml (.github_primary)
 CLAUDE_INTERACTIVE=0
 CLAUDE_CODE_MAX_OUTPUT_TOKENS=128000
 PAGER=cat
