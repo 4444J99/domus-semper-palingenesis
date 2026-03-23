@@ -24,13 +24,8 @@ if command -v bat &>/dev/null; then
   alias catp='bat'  # with paging
 fi
 
-# ripgrep (modern grep)
-if command -v rg &>/dev/null; then
-  alias grep='rg'
-fi
-
 # ─────────────────────────────────────────────────────────────────────────────
-# Git Shortcuts
+# Git Shortcuts (single source of truth — git config keeps its own for `git <alias>`)
 # ─────────────────────────────────────────────────────────────────────────────
 
 alias g='git'
@@ -85,7 +80,6 @@ alias cmr='chezmoi-recover'
 # Python Aliases
 # ─────────────────────────────────────────────────────────────────────────────
 
-# Use python3 -m pip for version-agnostic pip access
 alias pip='python3 -m pip'
 alias pip3='python3 -m pip'
 
@@ -116,7 +110,7 @@ alias ....='cd ../../..'
 # Common directories
 alias dl='cd ~/Downloads'
 alias dt='cd ~/Desktop'
-alias proj='cd ~/Projects'
+alias ws='cd ~/Workspace'
 
 # Reload shell config
 alias reload='source ${ZDOTDIR:-$HOME/.config/zsh}/.zshrc'
@@ -170,7 +164,6 @@ fi
 # Color Theme Tools
 # ─────────────────────────────────────────────────────────────────────────────
 
-# lolcat aliases
 if command -v lolcat &>/dev/null; then
   alias lc='lolcat'
   alias lca='lolcat -a'

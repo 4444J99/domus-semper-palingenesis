@@ -9,17 +9,18 @@
 #   - Mitigations:
 #     1. File permissions are enforced to 600 (owner-only read/write).
 #     2. FileVault (full-disk encryption) protects against offline/disk-theft.
-#     3. Cache is excluded from Time Machine via extended attributes.
+#     3. Cache is excluded from Time Machine (enforced in _op_cache_refresh).
 #     4. Background refresh limits the window of stale credentials.
 #   - Residual risk: a compromised local process (e.g., malicious npm
 #     postinstall) running as the user can read the cache. Acceptable
 #     because such a process could also keylog or read process memory.
+#
+# Secret list must match op-refresh() in 40-functions.zsh.
 
 _OP_CACHE="${HOME}/.cache/op-secrets"
 _OP_CACHE_MAX_AGE=60  # minutes
 
 _op_cache_refresh() {
-  # Only refresh if op is available
   command -v op >/dev/null 2>&1 || return 1
 
   mkdir -p "$(dirname "$_OP_CACHE")"
@@ -30,17 +31,18 @@ _op_cache_refresh() {
     echo "SONATYPE_GUIDE_TOKEN=$(op read 'op://Personal/Sonatype Guide/credential' 2>/dev/null)"
   } > "$_OP_CACHE.tmp" && mv "$_OP_CACHE.tmp" "$_OP_CACHE"
   chmod 600 "$_OP_CACHE"
+
+  # Exclude from Time Machine
+  command -v tmutil &>/dev/null && tmutil addexclusion "$_OP_CACHE" 2>/dev/null
 }
 
 # Load from cache (instant); enforce permissions
 if [[ -f "$_OP_CACHE" ]]; then
   [[ "$(stat -f '%Lp' "$_OP_CACHE" 2>/dev/null)" != "600" ]] && chmod 600 "$_OP_CACHE"
   source "$_OP_CACHE"
-  # Export aliases
   export GEMINI_API_KEY GITHUB_TOKEN NPM_TOKEN SONATYPE_GUIDE_TOKEN
   export GOOGLE_API_KEY="$GEMINI_API_KEY"
-  # Fallback: if GITHUB_TOKEN is empty or starts with a known-dead prefix,
-  # use `gh auth token` (OAuth from keyring) instead. Fast (~5ms).
+  # Fallback: if GITHUB_TOKEN is empty, use `gh auth token` (OAuth from keyring, ~5ms)
   if [[ -z "$GITHUB_TOKEN" ]] && command -v gh >/dev/null 2>&1; then
     GITHUB_TOKEN="$(gh auth token 2>/dev/null)"
     export GITHUB_TOKEN
@@ -52,6 +54,11 @@ if [[ -f "$_OP_CACHE" ]]; then
 fi
 
 # Refresh cache in background if stale (>1 hour old) or missing
-if [[ ! -f "$_OP_CACHE" ]] || [[ -n "$(find "$_OP_CACHE" -mmin +${_OP_CACHE_MAX_AGE} 2>/dev/null)" ]]; then
-  ( _op_cache_refresh & ) 2>/dev/null
+# Only attempt from interactive shells (non-interactive can't authenticate op v2)
+if [[ -o interactive ]]; then
+  if [[ ! -f "$_OP_CACHE" ]] || [[ -n "$(find "$_OP_CACHE" -mmin +${_OP_CACHE_MAX_AGE} 2>/dev/null)" ]]; then
+    ( _op_cache_refresh & ) 2>/dev/null
+  fi
 fi
+
+unset _OP_CACHE _OP_CACHE_MAX_AGE

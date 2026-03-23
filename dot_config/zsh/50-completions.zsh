@@ -2,14 +2,15 @@
 # Shell Completions
 # ─────────────────────────────────────────────────────────────────────────────
 
-# Docker CLI completions (macOS)
-fpath=("$HOME/.docker/completions" $fpath)
+# Docker CLI completions (XDG with legacy fallback)
+if [[ -d "${XDG_DATA_HOME:-$HOME/.local/share}/docker/completions" ]]; then
+  fpath=("${XDG_DATA_HOME:-$HOME/.local/share}/docker/completions" $fpath)
+elif [[ -d "$HOME/.docker/completions" ]]; then
+  fpath=("$HOME/.docker/completions" $fpath)
+fi
 
 # Custom completions directory
 fpath=("${ZDOTDIR:-$HOME/.config/zsh}/completions" $fpath)
-
-# macOS: iTerm2 shell integration
-[[ -f "$HOME/.iterm2_shell_integration.zsh" ]] && source "$HOME/.iterm2_shell_integration.zsh"
 
 # Initialize completions (cached via compdump, regenerated once per day)
 autoload -Uz compinit
@@ -21,27 +22,9 @@ else
 fi
 unset _comp_cache
 
-# Kubernetes - kubectl completion (must load after compinit)
-if command -v kubectl &>/dev/null; then
-  _cache="${XDG_CACHE_HOME:-$HOME/.cache}/kubectl-zsh.zsh"
-  if [[ ! -f "$_cache" ]] || [[ "$(command -v kubectl)" -nt "$_cache" ]]; then
-    mkdir -p "${XDG_CACHE_HOME:-$HOME/.cache}"
-    kubectl completion zsh > "$_cache" 2>/dev/null
-  fi
-  source "$_cache"
-  unset _cache
-fi
-
-# Kind - completion (must load after compinit)
-if command -v kind &>/dev/null; then
-  _cache="${XDG_CACHE_HOME:-$HOME/.cache}/kind-zsh.zsh"
-  if [[ ! -f "$_cache" ]] || [[ "$(command -v kind)" -nt "$_cache" ]]; then
-    mkdir -p "${XDG_CACHE_HOME:-$HOME/.cache}"
-    kind completion zsh > "$_cache" 2>/dev/null
-  fi
-  source "$_cache"
-  unset _cache
-fi
+# Kubernetes completions (must load after compinit; uses _domus_cache_init from 20-tools)
+_domus_cache_init kubectl kubectl completion zsh
+_domus_cache_init kind    kind completion zsh
 
 # Completion styling
 zstyle ':completion:*' menu select

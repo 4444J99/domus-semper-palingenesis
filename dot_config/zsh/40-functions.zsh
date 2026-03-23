@@ -6,7 +6,6 @@
 # System Maintenance (individual cleaners — use 'domus maintain' for full)
 # ─────────────────────────────────────────────────────────────────────────────
 
-# Package manager cleanups
 npm-clean() { command -v npm &>/dev/null && npm cache clean --force || echo "npm not found"; }
 pnpm-clean() { command -v pnpm &>/dev/null && pnpm store prune || echo "pnpm not found"; }
 yarn-clean() { command -v yarn &>/dev/null && yarn cache clean || echo "yarn not found"; }
@@ -31,29 +30,44 @@ cargo-clean() {
 # Kitty Theme Helpers
 # ─────────────────────────────────────────────────────────────────────────────
 
-# List available kitty themes
-kthemes() {
-    ls ~/.config/kitty/themes/*.conf 2>/dev/null | xargs -n1 basename | sed 's/\.conf$//'
+kthemes() { print -l ~/.config/kitty/themes/*.conf(N:t:r) 2>/dev/null; }
+
+ktheme() {
+  local f="$HOME/.config/kitty/themes/${1:?Usage: ktheme <name>}.conf"
+  if [[ -f "$f" ]]; then
+    kitty @ set-colors "$f" && echo "Applied: $1"
+  else
+    echo "Not found: $1"
+    kthemes
+    return 1
+  fi
 }
 
-# Switch kitty theme by name
-ktheme() {
-    local theme="$1"
-    if [[ -z "$theme" ]]; then
-        echo "Usage: ktheme <theme-name>"
-        echo "Available themes:"
-        kthemes
-        return 1
-    fi
-    if [[ -f ~/.config/kitty/themes/${theme}.conf ]]; then
-        kitty @ set-colors ~/.config/kitty/themes/${theme}.conf
-        echo "Applied theme: $theme"
-    else
-        echo "Theme not found: $theme"
-        echo "Available themes:"
-        kthemes
-        return 1
-    fi
+# ─────────────────────────────────────────────────────────────────────────────
+# 1Password — v2-native secrets cache refresh
+# ─────────────────────────────────────────────────────────────────────────────
+# Run from an interactive terminal when the secrets cache is stale.
+# Secret list must match _op_cache_refresh() in secrets.zsh.
+
+op-refresh() {
+  local cache="${HOME}/.cache/op-secrets"
+  local tmp="${cache}.tmp"
+  echo "Refreshing secrets from 1Password..."
+  {
+    echo "GEMINI_API_KEY=$(op read 'op://Personal/Gemini API Key/credential')"
+    echo "GITHUB_TOKEN=$(op read 'op://Personal/antigravity--github-api--112525/token')"
+    echo "NPM_TOKEN=$(op read 'op://Personal/NPM Token/credential')"
+    echo "SONATYPE_GUIDE_TOKEN=$(op read 'op://Personal/Sonatype Guide/credential')"
+  } > "$tmp" && mv "$tmp" "$cache" && chmod 600 "$cache" && {
+    source "$cache"
+    export GEMINI_API_KEY GITHUB_TOKEN NPM_TOKEN SONATYPE_GUIDE_TOKEN
+    export GOOGLE_API_KEY="$GEMINI_API_KEY"
+    export GITHUB_MCP_PAT="$GITHUB_TOKEN"
+    export GITHUB_PERSONAL_ACCESS_TOKEN="$GITHUB_TOKEN"
+    export GH_TOKEN="$GITHUB_TOKEN"
+    export NODE_AUTH_TOKEN="$NPM_TOKEN"
+    echo "Secrets refreshed and exported."
+  } || echo "Refresh failed. Is 1Password unlocked?"
 }
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -73,12 +87,3 @@ cht() {
     curl -s "cheat.sh/${query// /+}" | less -R
   fi
 }
-
-# ─────────────────────────────────────────────────────────────────────────────
-# Color Theme Tools
-# ─────────────────────────────────────────────────────────────────────────────
-
-# pywal - load color variables (sequences not used on macOS)
-if command -v wal &>/dev/null && [[ -f "$HOME/.cache/wal/colors.sh" ]]; then
-  source "$HOME/.cache/wal/colors.sh"
-fi

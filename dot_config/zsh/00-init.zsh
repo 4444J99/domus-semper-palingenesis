@@ -2,17 +2,9 @@
 # ZSH Initialization
 # ─────────────────────────────────────────────────────────────────────────────
 
-# Startup Timing (Domus Telemetry)
-typeset -g _DOMUS_SHELL_START_MS
-if [[ "$OSTYPE" == "darwin"* ]]; then
-  # macOS: use perl for milliseconds (faster than python)
-  _DOMUS_SHELL_START_MS=$(perl -MTime::HiRes=time -e 'printf "%d", time * 1000' 2>/dev/null || echo 0)
-else
-  _DOMUS_SHELL_START_MS=$(($(date +%s) * 1000))
-fi
+# Native zsh microsecond timer — zero subprocess cost
+zmodload zsh/datetime 2>/dev/null
+typeset -gF _DOMUS_SHELL_START=${EPOCHREALTIME:-0}
 
-# Root Directory Guard
-if [[ "$PWD" == "/" ]]; then
-  echo "Warning: Shell started in root. Switching to home directory."
-  cd ~
-fi
+# Root directory guard (silent)
+[[ "$PWD" == "/" ]] && cd ~

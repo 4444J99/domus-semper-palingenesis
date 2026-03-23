@@ -2,51 +2,42 @@
 # Tool Initializations
 # ─────────────────────────────────────────────────────────────────────────────
 
-# 1Password Secrets (load early for API keys)
-if [[ -f "$HOME/.config/op/secrets.zsh" ]]; then
-  source "$HOME/.config/op/secrets.zsh"
-fi
+# Cache helper (DRY primitive for tool init caching)
+[[ -f "${ZDOTDIR:-$HOME/.config/zsh}/_cache.zsh" ]] && \
+  source "${ZDOTDIR:-$HOME/.config/zsh}/_cache.zsh"
 
-# 1Password Shell Plugins (after secrets for fallback env vars)
-if [[ -f "$HOME/.config/op/plugins.zsh" ]]; then
-  source "$HOME/.config/op/plugins.zsh"
-fi
+# 1Password secrets (cache-first — no CLI auth needed at shell startup)
+[[ -f "$HOME/.config/op/secrets.zsh" ]] && source "$HOME/.config/op/secrets.zsh"
 
-# Starship prompt
-if command -v starship &>/dev/null; then
-  _cache="${XDG_CACHE_HOME:-$HOME/.cache}/starship-zsh.zsh"
-  if [[ ! -f "$_cache" ]] || [[ "$(command -v starship)" -nt "$_cache" ]]; then
-    mkdir -p "${XDG_CACHE_HOME:-$HOME/.cache}"
-    starship init zsh > "$_cache" 2>/dev/null
-  fi
-  source "$_cache"
-  unset _cache
-fi
+# 1Password shell plugins
+[[ -f "$HOME/.config/op/plugins.zsh" ]] && source "$HOME/.config/op/plugins.zsh"
 
-# Zoxide (smart cd)
-if command -v zoxide &>/dev/null; then
-  _cache="${XDG_CACHE_HOME:-$HOME/.cache}/zoxide-zsh.zsh"
-  if [[ ! -f "$_cache" ]] || [[ "$(command -v zoxide)" -nt "$_cache" ]]; then
-    mkdir -p "${XDG_CACHE_HOME:-$HOME/.cache}"
-    zoxide init zsh > "$_cache" 2>/dev/null
-  fi
-  source "$_cache"
-  unset _cache
-fi
+# ─────────────────────────────────────────────────────────────────────────────
+# Cached tool inits (~0ms from cache, regenerates when binary updates)
+# ─────────────────────────────────────────────────────────────────────────────
 
-# fzf (fuzzy finder)
+_domus_cache_init starship  starship init zsh
+_domus_cache_init zoxide    zoxide init zsh
+_domus_cache_init direnv    direnv hook zsh
+_domus_cache_init atuin     atuin init zsh
+_domus_cache_init mise      mise activate zsh
+
+# ─────────────────────────────────────────────────────────────────────────────
+# fzf (fuzzy finder) — needs post-processing on cached output
+# ─────────────────────────────────────────────────────────────────────────────
+
 if command -v fzf &>/dev/null; then
-  # Set up fzf key bindings and fuzzy completion (cached for faster startup)
-  _fzf_cache="${XDG_CACHE_HOME:-$HOME/.cache}/fzf-zsh.zsh"
-  if [[ ! -f "$_fzf_cache" ]] || [[ "$(command -v fzf)" -nt "$_fzf_cache" ]]; then
-    mkdir -p "${XDG_CACHE_HOME:-$HOME/.cache}"
-    fzf --zsh > "$_fzf_cache" 2>/dev/null
-    # Suppress "can't change option: zle" on fzf's option-restore eval lines
-    sed -i '' 's/eval $__fzf_key_bindings_options/eval $__fzf_key_bindings_options 2>\/dev\/null/' "$_fzf_cache"
-    sed -i '' 's/eval $__fzf_completion_options/eval $__fzf_completion_options 2>\/dev\/null/' "$_fzf_cache"
+  _fzf_cache="${XDG_CACHE_HOME:-$HOME/.cache}/domus/fzf.zsh"
+  _fzf_bin="$(command -v fzf)"
+  if [[ ! -f "$_fzf_cache" ]] || [[ "$_fzf_bin" -nt "$_fzf_cache" ]]; then
+    mkdir -p "${_fzf_cache%/*}"
+    # sed -E for macOS BSD sed compat (BSD sed lacks \| in BRE)
+    fzf --zsh 2>/dev/null | \
+      sed -E 's/eval \$__fzf_(key_bindings|completion)_options/& 2>\/dev\/null/g' \
+      > "$_fzf_cache"
   fi
   source "$_fzf_cache"
-  unset _fzf_cache
+  unset _fzf_cache _fzf_bin
 
   # Use fd for fzf if available (respects .gitignore)
   if command -v fd &>/dev/null; then
@@ -55,7 +46,7 @@ if command -v fzf &>/dev/null; then
     export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git'
   fi
 
-  # fzf appearance - Tokyo Night theme
+  # Tokyo Night theme
   export FZF_DEFAULT_OPTS='
     --height 40%
     --layout=reverse
@@ -71,64 +62,25 @@ if command -v fzf &>/dev/null; then
   '
 
   # Preview files with bat if available
-  if command -v bat &>/dev/null; then
+  command -v bat &>/dev/null && \
     export FZF_CTRL_T_OPTS="--preview 'bat --style=numbers --color=always --line-range :500 {}'"
-  fi
-fi
-
-# Atuin (shell history)
-if command -v atuin &>/dev/null; then
-  _cache="${XDG_CACHE_HOME:-$HOME/.cache}/atuin-zsh.zsh"
-  if [[ ! -f "$_cache" ]] || [[ "$(command -v atuin)" -nt "$_cache" ]]; then
-    mkdir -p "${XDG_CACHE_HOME:-$HOME/.cache}"
-    atuin init zsh > "$_cache" 2>/dev/null
-  fi
-  source "$_cache"
-  unset _cache
-fi
-
-# direnv (directory-specific environments)
-if command -v direnv &>/dev/null; then
-  _cache="${XDG_CACHE_HOME:-$HOME/.cache}/direnv-zsh.zsh"
-  if [[ ! -f "$_cache" ]] || [[ "$(command -v direnv)" -nt "$_cache" ]]; then
-    mkdir -p "${XDG_CACHE_HOME:-$HOME/.cache}"
-    direnv hook zsh > "$_cache" 2>/dev/null
-  fi
-  source "$_cache"
-  unset _cache
-fi
-
-# mise (tool version manager)
-if command -v mise &>/dev/null; then
-  _cache="${XDG_CACHE_HOME:-$HOME/.cache}/mise-zsh.zsh"
-  if [[ ! -f "$_cache" ]] || [[ "$(command -v mise)" -nt "$_cache" ]]; then
-    mkdir -p "${XDG_CACHE_HOME:-$HOME/.cache}"
-    mise activate zsh > "$_cache" 2>/dev/null
-  fi
-  source "$_cache"
-  unset _cache
 fi
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Lazy-loaded tools (deferred until first use to reduce startup time)
 # ─────────────────────────────────────────────────────────────────────────────
 
-# Anaconda / Conda - lazy load on first `conda` call
+# Anaconda / Conda
 if [[ -d "/opt/anaconda3" ]]; then
   conda() {
     unfunction conda
-    __conda_setup="$('/opt/anaconda3/bin/conda' 'shell.zsh' 'hook' 2>/dev/null)"
-    if [[ $? -eq 0 ]]; then
-      eval "$__conda_setup"
-    else
+    eval "$('/opt/anaconda3/bin/conda' 'shell.zsh' 'hook' 2>/dev/null)" || \
       export PATH="/opt/anaconda3/bin:$PATH"
-    fi
-    unset __conda_setup
     conda "$@"
   }
 fi
 
-# navi (interactive cheatsheet) - lazy load on Ctrl+G
+# navi (interactive cheatsheet — Ctrl+G)
 if command -v navi &>/dev/null; then
   _navi_init() {
     eval "$(navi widget zsh)"
@@ -138,7 +90,7 @@ if command -v navi &>/dev/null; then
   bindkey '^G' _navi_init
 fi
 
-# Google Cloud SDK - lazy load on first `gcloud` call
+# Google Cloud SDK
 if [[ -d "$HOME/google-cloud-sdk" ]]; then
   gcloud() {
     unfunction gcloud

@@ -6,9 +6,6 @@
 export EDITOR=nvim
 export VISUAL=nvim
 
-# Gemini CLI Configuration
-export GEMINI_CLI=1
-
 # XDG Base Directories are set in ~/.zshenv (the earliest-loading zsh file).
 # They are guaranteed available here; do not re-export.
 
@@ -16,6 +13,9 @@ export GEMINI_CLI=1
 # Application-specific XDG compliance
 # Force various tools to respect XDG Base Directories
 # ─────────────────────────────────────────────────────────────────────────────
+
+# 1Password CLI — use desktop app biometric unlock (v2 native)
+export OP_BIOMETRIC_UNLOCK_ENABLED=true
 
 export DOCKER_CONFIG="$XDG_CONFIG_HOME/docker"
 export MACHINE_STORAGE_PATH="$XDG_DATA_HOME/docker-machine"
@@ -83,15 +83,6 @@ export JUPYTER_DATA_DIR="$XDG_DATA_HOME/jupyter"
 # Terraform
 export TF_DATA_DIR="$XDG_DATA_HOME/terraform"
 
-# Project directories
-export PROJECTS_DIR="$HOME/Projects"
-
-# Context system
-export FILE_CONTEXT_DIR="$HOME/.local/share/file-context"
-
-# Android platform-tools on PATH
-export PATH="$PATH:$ANDROID_HOME/platform-tools"
-
 # ─────────────────────────────────────────────────────────────────────────────
 # Agent Workspace Hierarchy
 # Anchored to dotfiles repo; agents write only inside WORKSPACE_ROOT + AGENTS_ROOT
@@ -114,6 +105,3 @@ export UV_PYTHON_PREFERENCE="only-managed"
 export UV_CACHE_DIR="$AGENTS_CACHE/uv"
 export UV_PYTHON="python3.11"
 export PIPX_DEFAULT_PYTHON="python3.11"
-
-# Aider model selection (set per-session or in .env)
-export AIDER_MODEL="${AIDER_MODEL:-}"

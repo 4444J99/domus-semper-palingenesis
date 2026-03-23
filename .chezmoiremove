@@ -1,5 +1,6 @@
 .zshrc
 .zprofile
+.config/zsh/.zprofile
 .curlrc
 .inputrc
 .lesskey
