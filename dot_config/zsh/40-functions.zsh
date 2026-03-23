@@ -37,7 +37,7 @@ ktheme() {
   if [[ -f "$f" ]]; then
     kitty @ set-colors "$f" && echo "Applied: $1"
   else
-    echo "Not found: $1"
+    echo "Theme not found: $1"
     kthemes
     return 1
   fi
