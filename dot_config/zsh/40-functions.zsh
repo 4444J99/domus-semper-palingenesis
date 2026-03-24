@@ -55,17 +55,20 @@ op-refresh() {
   echo "Refreshing secrets from 1Password..."
   {
     echo "GEMINI_API_KEY=$(op read 'op://Personal/Gemini API Key/credential')"
-    echo "GITHUB_TOKEN=$(op read 'op://Personal/antigravity--github-api--112525/token')"
     echo "NPM_TOKEN=$(op read 'op://Personal/NPM Token/credential')"
     echo "SONATYPE_GUIDE_TOKEN=$(op read 'op://Personal/Sonatype Guide/credential')"
   } > "$tmp" && mv "$tmp" "$cache" && chmod 600 "$cache" && {
     source "$cache"
-    export GEMINI_API_KEY GITHUB_TOKEN NPM_TOKEN SONATYPE_GUIDE_TOKEN
+    export GEMINI_API_KEY NPM_TOKEN SONATYPE_GUIDE_TOKEN
     export GOOGLE_API_KEY="$GEMINI_API_KEY"
-    export GITHUB_MCP_PAT="$GITHUB_TOKEN"
-    export GITHUB_PERSONAL_ACCESS_TOKEN="$GITHUB_TOKEN"
-    export GH_TOKEN="$GITHUB_TOKEN"
     export NODE_AUTH_TOKEN="$NPM_TOKEN"
+    # GitHub token from gh auth (not 1Password)
+    if command -v gh >/dev/null 2>&1; then
+      GITHUB_TOKEN="$(gh auth token 2>/dev/null)"
+      if [[ -n "$GITHUB_TOKEN" ]]; then
+        export GITHUB_TOKEN GITHUB_MCP_PAT="$GITHUB_TOKEN" GITHUB_PERSONAL_ACCESS_TOKEN="$GITHUB_TOKEN"
+      fi
+    fi
     echo "Secrets refreshed and exported."
   } || echo "Refresh failed. Is 1Password unlocked?"
 }

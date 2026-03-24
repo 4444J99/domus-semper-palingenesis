@@ -26,7 +26,6 @@ _op_cache_refresh() {
   mkdir -p "$(dirname "$_OP_CACHE")"
   {
     echo "GEMINI_API_KEY=$(op read 'op://Personal/Gemini API Key/credential' 2>/dev/null)"
-    echo "GITHUB_TOKEN=$(op read 'op://Personal/antigravity--github-api--112525/token' 2>/dev/null)"
     echo "NPM_TOKEN=$(op read 'op://Personal/NPM Token/credential' 2>/dev/null)"
     echo "SONATYPE_GUIDE_TOKEN=$(op read 'op://Personal/Sonatype Guide/credential' 2>/dev/null)"
   } > "$_OP_CACHE.tmp" && mv "$_OP_CACHE.tmp" "$_OP_CACHE"
@@ -40,17 +39,20 @@ _op_cache_refresh() {
 if [[ -f "$_OP_CACHE" ]]; then
   [[ "$(stat -f '%Lp' "$_OP_CACHE" 2>/dev/null)" != "600" ]] && chmod 600 "$_OP_CACHE"
   source "$_OP_CACHE"
-  export GEMINI_API_KEY GITHUB_TOKEN NPM_TOKEN SONATYPE_GUIDE_TOKEN
+  export GEMINI_API_KEY NPM_TOKEN SONATYPE_GUIDE_TOKEN
   export GOOGLE_API_KEY="$GEMINI_API_KEY"
-  # Fallback: if GITHUB_TOKEN is empty, use `gh auth token` (OAuth from keyring, ~5ms)
-  if [[ -z "$GITHUB_TOKEN" ]] && command -v gh >/dev/null 2>&1; then
-    GITHUB_TOKEN="$(gh auth token 2>/dev/null)"
-    export GITHUB_TOKEN
-  fi
-  export GITHUB_MCP_PAT="$GITHUB_TOKEN"
-  export GITHUB_PERSONAL_ACCESS_TOKEN="$GITHUB_TOKEN"
-  export GH_TOKEN="$GITHUB_TOKEN"
   export NODE_AUTH_TOKEN="$NPM_TOKEN"
+fi
+
+# GitHub: gh auth is the single source of truth (OAuth in macOS Keychain).
+# Never export GH_TOKEN — it overrides gh's keyring and breaks `gh auth refresh`.
+if command -v gh >/dev/null 2>&1; then
+  GITHUB_TOKEN="$(gh auth token 2>/dev/null)"
+  if [[ -n "$GITHUB_TOKEN" ]]; then
+    export GITHUB_TOKEN
+    export GITHUB_MCP_PAT="$GITHUB_TOKEN"
+    export GITHUB_PERSONAL_ACCESS_TOKEN="$GITHUB_TOKEN"
+  fi
 fi
 
 # Refresh cache in background if stale (>1 hour old) or missing
