@@ -1,0 +1,53 @@
+registry:
+  cloud-run-mcp:
+    ref: ""
+  context7:
+    ref: ""
+  desktop-commander:
+    ref: ""
+  dockerhub:
+    ref: ""
+  duckduckgo:
+    ref: ""
+  fetch:
+    ref: ""
+  filesystem:
+    ref: ""
+  gemini-api-docs:
+    ref: ""
+  git:
+    ref: ""
+  gitmcp:
+    ref: ""
+  markdownify:
+    ref: ""
+  markitdown:
+    ref: ""
+  mcp-python-refactoring:
+    ref: ""
+  memory:
+    ref: ""
+  node-code-sandbox:
+    ref: ""
+  perplexity-ask:
+    ref: ""
+  playwright:
+    ref: ""
+  puppeteer:
+    ref: ""
+  semgrep:
+    ref: ""
+  sequentialthinking:
+    ref: ""
+  task-orchestrator:
+    ref: ""
+  tavily:
+    ref: ""
+  time:
+    ref: ""
+  wikipedia-mcp:
+    ref: ""
+  youtube_transcript:
+    ref: ""
+  github-official:
+    ref: ""
