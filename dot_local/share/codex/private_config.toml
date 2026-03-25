@@ -1,0 +1,117 @@
+model = "gpt-5.4"
+model_reasoning_effort = "xhigh"
+personality = "pragmatic"
+sandbox_mode = "danger-full-access"
+service_tier = "fast"
+
+[mcp_servers]
+[mcp_servers.MCP_DOCKER]
+command = 'docker'
+args = ['mcp', 'gateway', 'run']
+startup_timeout_sec = 30
+
+[mcp_servers.conductor]
+command = '/Users/4jp/Workspace/organvm-iv-taxis/tool-interaction-design/.venv/bin/python3'
+args = ['/Users/4jp/Workspace/organvm-iv-taxis/tool-interaction-design/mcp_server.py']
+startup_timeout_sec = 30
+
+[notice]
+hide_full_access_warning = true
+'hide_gpt-5.1-codex-max_migration_prompt' = true
+
+[notice.model_migrations]
+"gpt-5.1-codex-max" = "gpt-5.2-codex"
+"gpt-5.1-codex-mini" = "gpt-5.2-codex"
+"gpt-5.3-codex" = "gpt-5.4"
+
+[projects]
+[projects.'/']
+trust_level = 'trusted'
+
+[projects.'/Users/4jp']
+trust_level = 'trusted'
+
+[projects.'/Users/4jp/mail_automation']
+trust_level = 'trusted'
+
+[projects.'/Users/4jp/padavano-v-mdc--employment-lawsuit']
+trust_level = 'trusted'
+
+[projects.'/Volumes/4444-iivii']
+trust_level = 'trusted'
+
+[projects."/Users/4jp/Documents/Legal/padavano-v-mdc--employment-lawsuit"]
+trust_level = "untrusted"
+
+[projects."/Users/4jp/Workspace/omni-dromenon-machina"]
+trust_level = "trusted"
+
+[projects."/Users/4jp/Workspace/life-my--midst--in"]
+trust_level = "trusted"
+
+[projects."/Users/4jp/Workspace/mail_automation"]
+trust_level = "trusted"
+
+[projects."/Users/4jp/Workspace"]
+trust_level = "trusted"
+
+[projects."/Users/4jp/Legal/padavano-v-mdc--employment-lawsuit"]
+trust_level = "trusted"
+
+[projects."/Users/4jp/knowledge-base"]
+trust_level = "trusted"
+
+[projects."/Users/4jp/Workspace/knowledge-base"]
+trust_level = "trusted"
+
+[projects."/Users/4jp/Workspace/narratological-algorithmic-lenses"]
+trust_level = "trusted"
+
+[projects."/Users/4jp/.local/share/ai-skills"]
+trust_level = "trusted"
+
+[projects."/Users/4jp/Workspace/ivviiviivvi/.github"]
+trust_level = "trusted"
+
+[projects."/Users/4jp/Workspace/public-record-data-scrapper"]
+trust_level = "trusted"
+
+[projects."/Users/4jp/Workspace/meta-source--ledger-output"]
+trust_level = "trusted"
+
+[projects."/Users/4jp/Workspace/the-actual-news"]
+trust_level = "trusted"
+
+[projects."/Users/4jp/Workspace/etceter4"]
+trust_level = "trusted"
+
+[projects."/Users/4jp/Workspace/organvm-iii-ergon/peer-audited--behavioral-blockchain"]
+trust_level = "trusted"
+
+[projects."/Users/4jp/Workspace/meta-organvm"]
+trust_level = "trusted"
+
+[projects."/Users/4jp/Workspace/dwv/growth-auditor"]
+trust_level = "trusted"
+
+[projects."/Users/4jp/Workspace/intake/ai-exports"]
+trust_level = "trusted"
+
+[projects."/Users/4jp/Workspace/organvm-i-theoria/conversation-corpus-engine"]
+trust_level = "trusted"
+
+[projects."/Users/4jp/Workspace/organvm-iii-ergon/public-record-data-scrapper"]
+trust_level = "trusted"
+
+[features]
+unified_exec = true
+shell_snapshot = true
+steer = true
+apps = true
+personality = true
+multi_agent = true
+js_repl = true
+prevent_idle_sleep = true
+
+[tui]
+status_line = ["model-with-reasoning", "context-remaining", "current-dir", "model-name", "project-root", "git-branch", "context-used", "codex-version", "context-window-size"]
