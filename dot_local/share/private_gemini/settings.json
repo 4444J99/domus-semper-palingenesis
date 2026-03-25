@@ -61,6 +61,21 @@
         "gateway",
         "run"
       ]
+    },
+    "serena": {
+      "command": "uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/4444J99/serena",
+        "serena",
+        "start-mcp-server",
+        "--context",
+        "gemini"
+      ]
+    },
+    "jupyter": {
+      "command": "jupyter-mcp-server",
+      "args": []
     }
   }
 }
