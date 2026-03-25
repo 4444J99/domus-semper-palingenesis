@@ -26,6 +26,7 @@ _agents/log/
 _agents/lab/.venv/
 _registry/
 projects/
+!private_dot_claude/projects/
 
 # Ruff cache
 .ruff_cache/
