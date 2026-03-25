@@ -14,7 +14,7 @@ ORGANVM's legal/financial institutionalization strategy was researched and desig
 
 **Phased roadmap:**
 - Phase 1 (weeks): Fiscal sponsor + LLC formation
-- Phase 2 (months 1-6): Grant pipeline — NLnet, Creative Capital, Shuttleworth, Sloan, NSF POSE
+- Phase 2 (months 1-6): Grant pipeline — NLnet, Creative Capital, Sloan, NSF POSE
 - Phase 3 (year 1-3): Convert LLC → Delaware PBC, build 3-year history, file 501(c)(3)
 - Phase 4 (year 3+): Full Mozilla model (Foundation owns PBC)
 
@@ -23,7 +23,7 @@ ORGANVM's legal/financial institutionalization strategy was researched and desig
 - April 2: Creative Capital ($50K)
 - April 6: Sovereign Tech Fellowship
 - April 12: ZKM Rauschenberg Residency
-- May 1: Shuttleworth Fellowship ($275K+/year) — TOP PRIORITY
+- ~~May 1: Shuttleworth Fellowship~~ — CLOSED permanently July 2022. Misinformation from aggregator sites.
 
 **Candid pathway:** Once fiscally sponsored → enroll FSP pilot (fsp@candid.org) → Bronze Seal → Gold Seal (free Premium if <$1M revenue) → 230+ platform syndication.
 

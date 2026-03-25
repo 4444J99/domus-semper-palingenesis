@@ -64,7 +64,7 @@
 - [User researcher profile](user_researcher_profile.md) — rhetorician background, Wikipedia:Apadavano
 
 ## Institutional Strategy (2026-03-24)
-- [Master strategy](project_institutional_strategy.md) — Fiscal sponsorship (Aspiration Tech) + LLC hybrid, grant pipeline, Candid profile, phased roadmap to Mozilla model. Immediate deadlines: NLnet Apr 1, Creative Capital Apr 2, Shuttleworth May 1.
+- [Master strategy](project_institutional_strategy.md) — Fiscal sponsorship (Aspiration Tech) + LLC hybrid, grant pipeline, Candid profile, phased roadmap to Mozilla model. Immediate deadlines: NLnet Apr 1, Creative Capital Apr 2. Shuttleworth CLOSED (July 2022, misinformation from aggregators).
 
 ## Memory infrastructure
 - [Memory must be remote](feedback_memory_must_be_remote.md) — `chezmoi add` memory files after every write. Local-only = death on disk failure. Fixed 2026-03-24.
