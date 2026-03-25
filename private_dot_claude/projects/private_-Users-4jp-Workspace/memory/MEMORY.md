@@ -66,6 +66,9 @@
 ## Institutional Strategy (2026-03-24)
 - [Master strategy](project_institutional_strategy.md) — Fiscal sponsorship (Aspiration Tech) + LLC hybrid, grant pipeline, Candid profile, phased roadmap to Mozilla model. Immediate deadlines: NLnet Apr 1, Creative Capital Apr 2, Shuttleworth May 1.
 
+## Memory infrastructure
+- [Memory must be remote](feedback_memory_must_be_remote.md) — `chezmoi add` memory files after every write. Local-only = death on disk failure. Fixed 2026-03-24.
+
 ## Email triage & Dependabot (2026-03-24)
 - [S36 email triage](project_email_triage_s36.md) — 300+ emails triaged, P0 emergencies (GoDaddy parked, Vercel cascade), OSS PRs, 6 job rejections, 11 new IRF items
 - [Dependabot firehose](feedback_dependabot_firehose.md) — 83-90% of inbox is bot noise; fix at org-level .github repos, not per-repo. DONE-215 records the fix.
