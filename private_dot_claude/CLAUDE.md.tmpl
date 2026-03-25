@@ -3,6 +3,7 @@
 {{- $systemInfo := include "dot_config/ai-context/system-info.md.tmpl" }}
 {{- $codeStyle := include "dot_config/ai-context/code-style.md.tmpl" }}
 {{- $planDiscipline := include "dot_config/ai-context/plan-discipline.md.tmpl" }}
+{{- $voicePolicy := include "dot_config/ai-context/voice-governance.md.tmpl" }}
 {{ $systemInfo }}
 {{ $codeStyle }}
 ## Claude-Specific
@@ -16,3 +17,4 @@
 
 {{- $skillIndex := include "dot_config/ai-skills/skill-index.md.tmpl" }}
 {{ $skillIndex }}
+{{ $voicePolicy }}
