@@ -29,4 +29,6 @@ ORGANVM's legal/financial institutionalization strategy was researched and desig
 
 **Eliminated options:** Fractured Atlas (non-commercial req), NumFOCUS (closed/narrow), SFC (slow/ideology conflict), L3C, cooperative, direct 501(c)(3) filing (too slow, IRS scrutiny of OSS).
 
-**Full research:** `~/Workspace/.claude/plans/2026-03-24-organvm-institutional-strategy-master.md` + 3 supporting research docs.
+**Canonical repo:** `meta-organvm/aerarium--res-publica` (https://github.com/meta-organvm/aerarium--res-publica) — Treasury of the Public Thing. All institutional applications, entity formation, strategy, and research live here. NOT in personal application-pipeline.
+
+**Full research:** `aerarium--res-publica/strategy/` + `aerarium--res-publica/research/` (9 docs, 3,014 lines).
