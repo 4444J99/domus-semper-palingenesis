@@ -125,6 +125,12 @@ load_agent \
   "com.4jp.agents-policy-sync" \
   "agents-policy-sync (5min AGENTS.md sync)"
 
+# Load context sync (registry-v2.json watcher + 30min fallback)
+load_agent \
+  "${HOME}/Library/LaunchAgents/com.4jp.context-sync.plist" \
+  "com.4jp.context-sync" \
+  "context-sync (registry watcher + 30min timer)"
+
 {{- else }}
 echo ""
 echo "File-automation agents disabled (domus_auto_enabled=false)."

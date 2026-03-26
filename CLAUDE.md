@@ -175,6 +175,7 @@ Deployed to `~/Library/LaunchAgents/` from `private_Library/LaunchAgents/`:
 | `com.4jp.downloads-tidy.plist` | Downloads directory tidying |
 | `com.4jp.naming-maintenance.plist` | File naming conventions enforcement |
 | `com.4jp.agents-policy-sync.plist` | Agent policy sync |
+| `com.4jp.context-sync.plist` | ORGANVM context sync (registry watcher + 30min timer) |
 | `com.4jp.env.mcp.plist` | Set MCP environment variables via launchctl |
 | `com.4jp.home-root-guard.plist` | Home directory clutter prevention |
 | `com.user.gmail_labeler.plist` | Gmail label automation (disabled — repo not yet created) |
