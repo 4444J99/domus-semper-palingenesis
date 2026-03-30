@@ -1,0 +1,329 @@
+#!/usr/bin/env bash
+# -----------------------------------------------------------------------------
+# domus-ingestion-refresh - Automated portfolio data ingestion pipeline
+# -----------------------------------------------------------------------------
+#
+# Regenerates portfolio data (projects.json, essays.json, graph.json, etc.)
+# from the canonical registry-v2.json and system-metrics.json sources in
+# meta-organvm/organvm-corpvs-testamentvm.
+#
+# Pipeline:
+#   1. Run praxis-portfolio-generate.py (registry -> portfolio JSON)
+#   2. Copy system-metrics.json into portfolio data dir
+#   3. Run npm sync scripts (vitals, omega, identity, workspace-health)
+#   4. Log results with timestamp
+#
+# Usage:
+#   domus-ingestion-refresh              # Normal run
+#   domus-ingestion-refresh --dry-run    # Show what would run, don't execute
+#   domus-ingestion-refresh --verbose    # Detailed output
+#
+# Exit codes:
+#   0 - Success
+#   1 - Pipeline failure
+#   2 - Missing dependencies (python3, npm, registry, etc.)
+#   3 - Skipped (lock held)
+
+set -euo pipefail
+
+# -----------------------------------------------------------------------------
+# Configuration
+# -----------------------------------------------------------------------------
+
+WORKSPACE="${HOME}/Workspace"
+PORTFOLIO_DIR="${WORKSPACE}/4444J99/portfolio"
+CORPUS_DIR="${WORKSPACE}/meta-organvm/organvm-corpvs-testamentvm"
+GENERATOR_SCRIPT="${CORPUS_DIR}/scripts/praxis-portfolio-generate.py"
+REGISTRY_FILE="${CORPUS_DIR}/registry-v2.json"
+METRICS_FILE="${CORPUS_DIR}/system-metrics.json"
+OUTPUT_DIR="${PORTFOLIO_DIR}/src/data"
+
+STATE_DIR="${HOME}/.local/state/domus"
+LOG_FILE="${STATE_DIR}/ingestion-refresh.log"
+LOCK_FILE="${STATE_DIR}/ingestion-refresh.lock"
+TELEMETRY_FILE="${STATE_DIR}/telemetry/ingestion-runs.jsonl"
+
+# Runtime flags
+DRY_RUN=0
+VERBOSE=0
+
+# -----------------------------------------------------------------------------
+# Parse arguments
+# -----------------------------------------------------------------------------
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --dry-run | -n)
+      DRY_RUN=1
+      shift
+      ;;
+    --verbose | -v)
+      VERBOSE=1
+      shift
+      ;;
+    --help | -h)
+      echo "Usage: domus-ingestion-refresh [--dry-run] [--verbose]"
+      echo ""
+      echo "Regenerate portfolio data from canonical registry sources."
+      echo ""
+      echo "Options:"
+      echo "  --dry-run, -n   Show what would run without executing"
+      echo "  --verbose, -v   Detailed output"
+      exit 0
+      ;;
+    *) shift ;;
+  esac
+done
+
+# -----------------------------------------------------------------------------
+# Logging
+# -----------------------------------------------------------------------------
+
+mkdir -p "${STATE_DIR}"
+mkdir -p "$(dirname "${TELEMETRY_FILE}")"
+
+log() {
+  local level="$1"
+  shift
+  local timestamp
+  timestamp=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+  local msg="[${timestamp}] [${level}] ingestion-refresh: $*"
+
+  echo "${msg}" >>"${LOG_FILE}"
+
+  if [[ $VERBOSE -eq 1 ]] || [[ -t 1 ]]; then
+    echo "[${level}] $*"
+  fi
+}
+
+# Keep log file under 500 lines
+if [[ -f "${LOG_FILE}" ]]; then
+  local_lines=$(wc -l <"${LOG_FILE}" 2>/dev/null || echo 0)
+  if [[ ${local_lines} -gt 500 ]]; then
+    tail -250 "${LOG_FILE}" >"${LOG_FILE}.tmp"
+    mv "${LOG_FILE}.tmp" "${LOG_FILE}"
+  fi
+fi
+
+# -----------------------------------------------------------------------------
+# Lock management
+# -----------------------------------------------------------------------------
+
+acquire_lock() {
+  if [[ -f "${LOCK_FILE}" ]]; then
+    local pid
+    pid=$(cat "${LOCK_FILE}")
+    if kill -0 "${pid}" 2>/dev/null; then
+      log "WARN" "Another instance running (PID ${pid})"
+      return 1
+    fi
+    rm -f "${LOCK_FILE}"
+  fi
+
+  echo $$ >"${LOCK_FILE}"
+  trap 'rm -f "${LOCK_FILE}"' EXIT
+  return 0
+}
+
+# -----------------------------------------------------------------------------
+# Telemetry
+# -----------------------------------------------------------------------------
+
+record_run() {
+  local duration_ms="$1"
+  local run_status="$2"
+  local projects_count="$3"
+
+  local timestamp
+  timestamp=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+
+  echo "{\"timestamp\":\"${timestamp}\",\"ms\":${duration_ms},\"status\":\"${run_status}\",\"projects\":${projects_count}}" \
+    >>"${TELEMETRY_FILE}"
+
+  # Keep file under 100 entries
+  if [[ -f "${TELEMETRY_FILE}" ]]; then
+    local lines
+    lines=$(wc -l <"${TELEMETRY_FILE}")
+    if [[ $lines -gt 100 ]]; then
+      tail -50 "${TELEMETRY_FILE}" >"${TELEMETRY_FILE}.tmp"
+      mv "${TELEMETRY_FILE}.tmp" "${TELEMETRY_FILE}"
+    fi
+  fi
+}
+
+# -----------------------------------------------------------------------------
+# Dependency checks
+# -----------------------------------------------------------------------------
+
+check_dependencies() {
+  local missing=0
+
+  if ! command -v python3 &>/dev/null; then
+    log "ERROR" "python3 not found"
+    missing=1
+  fi
+
+  if ! command -v npm &>/dev/null; then
+    log "ERROR" "npm not found"
+    missing=1
+  fi
+
+  if [[ ! -f "${GENERATOR_SCRIPT}" ]]; then
+    log "ERROR" "Generator script not found: ${GENERATOR_SCRIPT}"
+    missing=1
+  fi
+
+  if [[ ! -f "${REGISTRY_FILE}" ]]; then
+    log "ERROR" "Registry file not found: ${REGISTRY_FILE}"
+    missing=1
+  fi
+
+  if [[ ! -d "${PORTFOLIO_DIR}" ]]; then
+    log "ERROR" "Portfolio directory not found: ${PORTFOLIO_DIR}"
+    missing=1
+  fi
+
+  if [[ ! -d "${OUTPUT_DIR}" ]]; then
+    log "ERROR" "Output directory not found: ${OUTPUT_DIR}"
+    missing=1
+  fi
+
+  return $missing
+}
+
+# -----------------------------------------------------------------------------
+# Pipeline steps
+# -----------------------------------------------------------------------------
+
+step_generate_data() {
+  log "INFO" "Step 1: Running praxis-portfolio-generate.py"
+
+  if [[ $DRY_RUN -eq 1 ]]; then
+    log "INFO" "[dry-run] python3 ${GENERATOR_SCRIPT} --output-dir ${OUTPUT_DIR}"
+    return 0
+  fi
+
+  python3 "${GENERATOR_SCRIPT}" --output-dir "${OUTPUT_DIR}" 2>&1 | while IFS= read -r line; do
+    log "INFO" "  generate: ${line}"
+  done
+
+  local exit_code=${PIPESTATUS[0]}
+  if [[ $exit_code -ne 0 ]]; then
+    log "ERROR" "praxis-portfolio-generate.py failed (exit ${exit_code})"
+    return 1
+  fi
+
+  log "INFO" "Step 1 complete: data generated"
+}
+
+step_copy_metrics() {
+  log "INFO" "Step 2: Copying system-metrics.json"
+
+  if [[ ! -f "${METRICS_FILE}" ]]; then
+    log "WARN" "system-metrics.json not found at ${METRICS_FILE} -- skipping"
+    return 0
+  fi
+
+  if [[ $DRY_RUN -eq 1 ]]; then
+    log "INFO" "[dry-run] cp ${METRICS_FILE} ${OUTPUT_DIR}/"
+    return 0
+  fi
+
+  cp "${METRICS_FILE}" "${OUTPUT_DIR}/"
+  log "INFO" "Step 2 complete: system-metrics.json copied"
+}
+
+step_sync_vitals() {
+  log "INFO" "Step 3: Running npm sync scripts"
+
+  if [[ $DRY_RUN -eq 1 ]]; then
+    log "INFO" "[dry-run] npm run sync:vitals (in ${PORTFOLIO_DIR})"
+    log "INFO" "[dry-run] npm run sync:omega"
+    log "INFO" "[dry-run] npm run sync:identity"
+    return 0
+  fi
+
+  cd "${PORTFOLIO_DIR}"
+
+  # sync:vitals -> vitals.json, trust-vitals.json, landing.json
+  if npm run sync:vitals 2>&1 | tail -5 | while IFS= read -r line; do
+    log "INFO" "  vitals: ${line}"
+  done; then
+    log "INFO" "  sync:vitals complete"
+  else
+    log "WARN" "  sync:vitals failed (non-fatal)"
+  fi
+
+  # sync:omega -> omega.json
+  if npm run sync:omega 2>&1 | tail -5 | while IFS= read -r line; do
+    log "INFO" "  omega: ${line}"
+  done; then
+    log "INFO" "  sync:omega complete"
+  else
+    log "WARN" "  sync:omega failed (non-fatal)"
+  fi
+
+  # sync:identity -> about.json
+  if npm run sync:identity 2>&1 | tail -5 | while IFS= read -r line; do
+    log "INFO" "  identity: ${line}"
+  done; then
+    log "INFO" "  sync:identity complete"
+  else
+    log "WARN" "  sync:identity failed (non-fatal)"
+  fi
+
+  log "INFO" "Step 3 complete: sync scripts finished"
+}
+
+# -----------------------------------------------------------------------------
+# Main
+# -----------------------------------------------------------------------------
+
+main() {
+  local start_ms
+  start_ms=$(python3 -c "import time; print(int(time.time()*1000))")
+
+  log "INFO" "Ingestion refresh started (dry-run=${DRY_RUN})"
+
+  # Acquire lock
+  if ! acquire_lock; then
+    exit 3
+  fi
+
+  # Check dependencies
+  if ! check_dependencies; then
+    log "ERROR" "Missing dependencies -- aborting"
+    exit 2
+  fi
+
+  local failures=0
+
+  # Run pipeline
+  step_generate_data || ((failures++)) || true
+  step_copy_metrics || ((failures++)) || true
+  step_sync_vitals || ((failures++)) || true
+
+  # Count projects in output for telemetry
+  local projects_count=0
+  if [[ -f "${OUTPUT_DIR}/projects.json" ]]; then
+    projects_count=$(python3 -c "import json; d=json.load(open('${OUTPUT_DIR}/projects.json')); print(len(d.get('projects', d)) if isinstance(d, dict) else len(d))" 2>/dev/null || echo 0)
+  fi
+
+  # Record telemetry
+  local end_ms
+  end_ms=$(python3 -c "import time; print(int(time.time()*1000))")
+  local duration=$((end_ms - start_ms))
+
+  local run_status="ok"
+  [[ $failures -gt 0 ]] && run_status="partial_failure"
+
+  if [[ $DRY_RUN -eq 0 ]]; then
+    record_run "$duration" "$run_status" "$projects_count"
+  fi
+
+  log "INFO" "Ingestion refresh complete in ${duration}ms (failures: ${failures}, projects: ${projects_count})"
+
+  [[ $failures -eq 0 ]] && exit 0 || exit 1
+}
+
+main
