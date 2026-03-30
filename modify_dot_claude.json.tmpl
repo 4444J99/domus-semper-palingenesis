@@ -2,7 +2,7 @@
 """
 Chezmoi modify script for ~/.claude.json
 Preserves existing config, ensures valid JSON with trailing newline.
-MCP servers are managed by Claude Code plugins and MCP_DOCKER gateway.
+Injects Conductor MCP server for system-wide dispatch capabilities.
 """
 import json
 import sys
@@ -11,5 +11,17 @@ try:
     config = json.load(sys.stdin)
 except json.JSONDecodeError:
     config = {}
+
+# Ensure mcpServers exists
+if "mcpServers" not in config:
+    config["mcpServers"] = {}
+
+# Inject Conductor MCP server (cognitive service dispatch, fleet routing, cross-verification)
+CONDUCTOR_BASE = "{{ .chezmoi.homeDir }}/Workspace/organvm-iv-taxis/tool-interaction-design"
+config["mcpServers"]["conductor"] = {
+    "command": f"{CONDUCTOR_BASE}/.venv/bin/python3",
+    "args": [f"{CONDUCTOR_BASE}/mcp_server.py"],
+    "cwd": CONDUCTOR_BASE,
+}
 
 print(json.dumps(config, indent=2, ensure_ascii=False), end="")

@@ -15,6 +15,9 @@
 
 {{ $planDiscipline }}
 
+{{- $dispatchProtocol := include "dot_config/ai-context/dispatch-protocol.md.tmpl" }}
+{{ $dispatchProtocol }}
+
 {{- $skillIndex := include "dot_config/ai-skills/skill-index.md.tmpl" }}
 {{ $skillIndex }}
 {{ $voicePolicy }}
