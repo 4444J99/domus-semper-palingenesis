@@ -24,4 +24,12 @@ config["mcpServers"]["conductor"] = {
     "cwd": CONDUCTOR_BASE,
 }
 
+# Inject Voice Scorer MCP server (voice governance, scoring, drift detection)
+VOX_BASE = "{{ .chezmoi.homeDir }}/Workspace/organvm-iv-taxis/vox--architectura-gubernatio"
+config["mcpServers"]["voice-scorer"] = {
+    "command": f"{VOX_BASE}/.venv/bin/python3",
+    "args": ["-m", "vox.mcp_server"],
+    "cwd": VOX_BASE,
+}
+
 print(json.dumps(config, indent=2, ensure_ascii=False), end="")
