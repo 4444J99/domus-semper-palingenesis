@@ -63,10 +63,13 @@ op-refresh() {
     export GOOGLE_API_KEY="$GEMINI_API_KEY"
     export NODE_AUTH_TOKEN="$NPM_TOKEN"
     # GitHub token from gh auth (not 1Password)
+    # Only export GITHUB_PERSONAL_ACCESS_TOKEN — never GITHUB_TOKEN/GH_TOKEN
+    # which override gh's keyring and block `gh auth refresh`.
     if command -v gh >/dev/null 2>&1; then
-      GITHUB_TOKEN="$(gh auth token 2>/dev/null)"
-      if [[ -n "$GITHUB_TOKEN" ]]; then
-        export GITHUB_TOKEN GITHUB_MCP_PAT="$GITHUB_TOKEN" GITHUB_PERSONAL_ACCESS_TOKEN="$GITHUB_TOKEN"
+      local _gh_token
+      _gh_token="$(gh auth token 2>/dev/null)"
+      if [[ -n "$_gh_token" ]]; then
+        export GITHUB_PERSONAL_ACCESS_TOKEN="$_gh_token"
       fi
     fi
     echo "Secrets refreshed and exported."

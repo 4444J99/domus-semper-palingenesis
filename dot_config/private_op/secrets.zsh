@@ -45,14 +45,15 @@ if [[ -f "$_OP_CACHE" ]]; then
 fi
 
 # GitHub: gh auth is the single source of truth (OAuth in macOS Keychain).
-# Never export GH_TOKEN — it overrides gh's keyring and breaks `gh auth refresh`.
+# Never export GITHUB_TOKEN or GH_TOKEN — either one overrides gh's keyring
+# and blocks `gh auth refresh -s <scope>` from triggering an OAuth flow.
+# MCP servers get their token from 1Password via chezmoi-rendered env blocks.
 if command -v gh >/dev/null 2>&1; then
-  GITHUB_TOKEN="$(gh auth token 2>/dev/null)"
-  if [[ -n "$GITHUB_TOKEN" ]]; then
-    export GITHUB_TOKEN
-    export GITHUB_MCP_PAT="$GITHUB_TOKEN"
-    export GITHUB_PERSONAL_ACCESS_TOKEN="$GITHUB_TOKEN"
+  _gh_token="$(gh auth token 2>/dev/null)"
+  if [[ -n "$_gh_token" ]]; then
+    export GITHUB_PERSONAL_ACCESS_TOKEN="$_gh_token"
   fi
+  unset _gh_token
 fi
 
 # Refresh cache in background if stale (>1 hour old) or missing
