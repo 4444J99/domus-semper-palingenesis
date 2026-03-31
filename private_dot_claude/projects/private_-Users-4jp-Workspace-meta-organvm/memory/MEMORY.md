@@ -10,6 +10,9 @@
 - [Usage promotion](feedback_usage_promotion.md) — March 2026 unlimited Claude usage. Go maximum.
 - [Forced revision](feedback_forced_revision.md) — how anything is done = how everything is done; never skip research; telos = compass not GPS
 - [Laziness as force](feedback_laziness_as_force.md) — flaws are forces not moral failures; system channels human inconsistency
+- [Everything is a loop](feedback_everything_is_a_loop.md) — never single-shot; SOPs as living receivers at every pipe output
+- [Local-remote 1:1 parity](feedback_local_remote_parity.md) — if physical dies, soul persists; local:remote always 1:1
+- [If lost, recover immediately](feedback_if_lost_recover.md) — universal rule, no exceptions, audit before close
 
 ## User Identity
 - [Identity](user_identity.md) — artist-technologist, MFA, building life's work in isolation
@@ -37,6 +40,7 @@
 - [April Grants](project_grants_april2026.md) — 10 apps ($230K+), Creative Capital ($50K, Apr 2) HIGHEST
 - [Pipeline Integration](project_pipeline_integration.md) — 11 data surfaces connecting app pipeline
 - [SPEC Implementation](project_spec_implementation.md) — Layer 1 methodology v3, hard gates
+- [Patch Signal Architecture](project_patch_signal_architecture.md) — SOPs as synth modules, patches as presets, revenue from patch packs
 
 ## System State
 - [Snapshot 2026-03-30](project_system_snapshot_20260330.md) — 128 repos (V1), ~5,817 tests, 37 engine modules
