@@ -101,6 +101,7 @@
 - [Quadrant-Mask-Content Loop 2026-03-30](project_quadrant_mask_content_loop_2026-03-30.md) — Every application = research = content feedstock. Q1→Narrator, Q2→Strategist, Q3→Architect, Q4→Integrator. Pipeline markets itself through its own operation.
 - [Funder-Fit Lessons 2026-03-30](project_funder_fit_lessons_2026-03-30.md) — CC + NLnet both deferred. Gate works. 89 NLnet projects analyzed: 0 governance tools. Reframe Cvrsvs as seed.yaml spec or DAG validator or GH Action. Past Winners Analysis is a HARD GATE in Phase 1.
 - [Session 2026-03-31](project_session_2026-03-31.md) — CLAUDE.md compression 43.7k→27.6k chars (37%), merged Commands/Quick Commands/CLI, restructured Script Dependency Graph, all behavioral rules preserved
+- [Session S44 Audit 2026-03-31](project_session_2026-03-31-s44.md) — Hall-monitor audit: 4 violations found (5 memory files unsynced, IRF-DOM collision 019-022, orphaned script, formatting). All fixed. Deadlines: NLnet Apr 1, Sovereign Tech Apr 6, ZKM Apr 12.
 
 ## References
 - [OpenClaw Gateway Setup](reference_openclaw_setup_2026-03-31.md) — OpenClaw v2026.3.28 at ~/.openclaw/, Ollama gateway port 18789, llama3.2:3b primary, no cloud auth
