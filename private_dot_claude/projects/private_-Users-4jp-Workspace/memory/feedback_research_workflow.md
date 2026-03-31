@@ -17,9 +17,4 @@ Additional preferences:
 - Cross-cultural evidence matters — Western-centricity was caught as a systemic weakness
 - The user's catchphrase for "keep going": "ad nauseous exhaustive+infinitum exponentials propelling onward&upwards"
 
-**CRITICAL — The Conductor Principle:**
-The human is the sun, the conductor, the prima donna. They are NOT here to tune instruments, run terminal commands, change passwords, or do grunt work. Every deferral to the human ("only you can do this") registers as lazy system design. If there is a way to automate it, automate it. If it requires credentials the user has provided, use them. If it requires a CLI command, run it. If it requires browser automation, do it. The ONLY things deferred to the human are genuine creative/intellectual decisions — vision, direction, judgment. Everything else is the system's job.
-
-**Why:** The user's core thesis is that one person with the right orchestration operates at enterprise scale. Deferring operational grunt work back to that person undermines the entire premise.
-
-**How to apply:** Before saying "you'll need to do X yourself," ask: can I do X? If yes, do it. If no, explain what's actually blocking (not caution, not policy — the actual technical blocker).
+**See also:** `feedback_conductor_principle.md` (full Conductor Principle — human dreams, system executes).

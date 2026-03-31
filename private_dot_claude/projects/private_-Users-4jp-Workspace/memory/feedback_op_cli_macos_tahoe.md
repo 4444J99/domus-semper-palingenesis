@@ -1,6 +1,6 @@
 ---
-name: 1Password CLI v2 in non-interactive shells
-description: op v2 biometric auth can't present dialogs in non-interactive shells (Claude Code, scripts) — secrets cache is the solution, not session tokens
+name: 1Password CLI — ONE call maximum, no exceptions
+description: COVENANT — op CLI triggers fingerprint every call. User is the ONLY operator. Max ONE op call per session, cache everything, prefer env vars and cached secrets.
 type: feedback
 ---
 
@@ -15,4 +15,6 @@ The issue is that **non-interactive shells** (Claude Code's Bash tool, cron, scr
 - Secrets are loaded from `~/.cache/op-secrets` cache (instant, no op call)
 - `op-refresh` function in `40-functions.zsh` refreshes the cache (run from interactive terminal)
 - Background refresh in `secrets.zsh` is guarded by `[[ -o interactive ]]` — won't attempt from Claude Code
-- Direct `op` commands (op whoami, op item list) will NOT work from Claude Code — this is expected, not a bug
+- Direct `op` commands (op whoami, op item list) WILL technically work from Claude Code on macOS Tahoe BUT they trigger a fingerprint prompt EVERY TIME — this is unacceptable UX. NEVER call `op` repeatedly.
+- **ABSOLUTE RULE: Maximum ONE `op` call per session if truly unavoidable.** Cache the entire result in a temp file/variable and reuse it. Prefer `~/.cache/op-secrets` or environment variables over live `op` calls.
+- When writing scripts that need 1Password data: read everything in a SINGLE `op item get --format json` call, extract all needed fields at once, then NEVER call `op` again.

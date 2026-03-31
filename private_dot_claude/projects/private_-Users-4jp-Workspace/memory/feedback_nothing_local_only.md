@@ -6,7 +6,7 @@ type: feedback
 
 **RULE: Nothing is ever local only.** Every artifact produced in a session must be committed to a git repo and pushed to a remote before the session closes. "ON DISK" is not a valid final state — it means the work is one disk failure from gone.
 
-**Why:** The user builds at enterprise scale across 124 repos. Local-only files are invisible to the system, to future sessions, and to disaster recovery. If it's not pushed, it doesn't exist.
+**Why:** The user builds at enterprise scale across 127+ repos. Local-only files are invisible to the system, to future sessions, and to disaster recovery. If it's not pushed, it doesn't exist.
 
 **How to apply:**
 1. Before claiming a session is "safe to close," verify EVERY produced artifact is in a git repo that has been pushed to remote.

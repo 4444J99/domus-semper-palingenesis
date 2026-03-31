@@ -10,6 +10,6 @@ Background: Rhetoric → systems architecture. Not formally CS-trained — came 
 
 **How to apply:** Use the philosophical bridge. When explaining CS concepts, connect to the philosophical tradition the user already knows. Don't oversimplify — the user reads 30-80 Wikipedia articles in a single deep-dive session.
 
-Wikipedia account: Apadavano (registered 2020, user page live with research program). Safari is the primary Wikipedia browser. Password was exposed in conversation on 2026-03-21 — user needs to change it.
+Wikipedia account: Apadavano (registered 2020, user page live with research program). Safari is the primary Wikipedia browser. Password changed + TOTP enabled 2026-03-23 (see project_wikipedia_security_incident.md).
 
 Research style: deep-dive sessions following link trails from broad concepts to specific sub-domains. Day Zero of the current research project: March 2, 2026.
