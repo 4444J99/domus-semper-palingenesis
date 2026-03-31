@@ -1,0 +1,7 @@
+- [Partnership context](user_partnership.md) — Padavano x Lefler Design joint venture, pitch target works in 3D animation
+- [Reveal.js sizing](feedback_pitch_deck_sizing.md) — Base 20px, opaque backgrounds, center:true, content must fit 1280x720
+- [Shibui design doctrine](feedback_design_doctrine.md) — Glassmorphic 3D, ultra-light typography, Shibumi aesthetic, Ma negative space
+- [Pitch decks deployed](project_pitch_decks_deployed.md) — Three variants (investor/agency/product), Scott confirmed 2026-03-25
+- [Deployment URL](reference_netlify_deployment.md) — cronus-metabolus.pages.dev (Cloudflare Pages, migrated from Netlify)
+- [Closed loop proven](project_closed_loop.md) — Full metabolism on Ollama: video → 9 content units, zero API keys, 2026-03-27
+- [Free-first doctrine](feedback_free_first.md) — Always free/open-source first; 7 providers wired; paid = optional upgrade
