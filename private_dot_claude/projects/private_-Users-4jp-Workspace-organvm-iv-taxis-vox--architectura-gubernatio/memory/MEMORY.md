@@ -1,0 +1,6 @@
+- [Voice Corpus Three-Layer Architecture](project_corpus_roadmap.md) — L0 seeded (30 docs), L2 ingested (141 docs). L1 (external canon + formalization) pending human rewrites.
+- [Public Voice Testing Interface](project_public_interface.md) — vox--publica deployed to Cloudflare Workers (IRF-VOX-012 DONE)
+- [Artist voice profile evidence](project_artist_profile_evidence.md) — Creative Capital 3-lens review proves need for audience-aware profiles (IRF-VOX-003 gate met)
+- [User autonomy preference](feedback_autonomy.md) — User gives full autonomy: "you take the reigns, i'm taking the back seat"
+- [Session S-vox-build summary](project_session_summary.md) — Full session output: stylesheet, corpus, worksheets, ingestion, Publica, roadmap
+- [GH Issues + IRF must be in unison](feedback_gh_irf_unison.md) — Every work item must exist in GH Issues, Project Board, AND the IRF simultaneously
