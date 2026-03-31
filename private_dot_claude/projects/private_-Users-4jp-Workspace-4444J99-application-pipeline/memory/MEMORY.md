@@ -70,6 +70,8 @@
 - [Rules are ADDITIVE](feedback_rules_are_additive.md) — New rules amend, never overwrite. All existing rules remain in force unless explicitly revoked.
 - [Gemini collaboration](feedback_gemini_collaboration.md) — Net negative for this repo. No persistent memory = violates unseen rules. Stateless tasks only.
 - [Validate before shipping](feedback_validate_before_shipping.md) — Every generated artifact needs post-generation validation. Never ship and hope.
+- [Loops are physics](feedback_loops_are_physics.md) — 10 loops are the universal execution model, not pipeline-specific. Energy in → transform → output → feedback. PUBLISH (2%) is the critical underinvestment. Every system, repo, venture maps to this.
+- [Multi-agent post-mortem](feedback_multi_agent_postmortem_2026-03-30.md) — First parallel run: Codex 9, Gemini 7, OpenCode 6. Prompt precision prevents drift. Compile check in every edit prompt. Constrain test scope. Pre-scan file manifests. Model selection matters for Scouts.
 
 ## Project Memories
 - [System Purpose](project_system_purpose.md) — Core mission: Scan → Match → Build → Apply → Follow up. Everything else is armor plating.
@@ -97,3 +99,8 @@
 - [Session Arc 2026-03-28](project_session_2026-03-28.md) — CL template unified, resume CSS tuned, 5 quality gates added, 4 apps submitted, 12 verified contacts, Cursor deferred.
 - [Triptych Architecture 2026-03-30](project_triptych_architecture_2026-03-30.md) — Aerarium (grants) + Pipeline (jobs) + Consulting = three faces, shared infra, distinct process. SOP-INST-001 applies to all three.
 - [Quadrant-Mask-Content Loop 2026-03-30](project_quadrant_mask_content_loop_2026-03-30.md) — Every application = research = content feedstock. Q1→Narrator, Q2→Strategist, Q3→Architect, Q4→Integrator. Pipeline markets itself through its own operation.
+- [Funder-Fit Lessons 2026-03-30](project_funder_fit_lessons_2026-03-30.md) — CC + NLnet both deferred. Gate works. 89 NLnet projects analyzed: 0 governance tools. Reframe Cvrsvs as seed.yaml spec or DAG validator or GH Action. Past Winners Analysis is a HARD GATE in Phase 1.
+- [Session 2026-03-31](project_session_2026-03-31.md) — CLAUDE.md compression 43.7k→27.6k chars (37%), merged Commands/Quick Commands/CLI, restructured Script Dependency Graph, all behavioral rules preserved
+
+## References
+- [OpenClaw Gateway Setup](reference_openclaw_setup_2026-03-31.md) — OpenClaw v2026.3.28 at ~/.openclaw/, Ollama gateway port 18789, llama3.2:3b primary, no cloud auth
