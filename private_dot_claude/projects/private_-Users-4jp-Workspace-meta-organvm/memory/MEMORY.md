@@ -44,7 +44,8 @@
 
 ## System State
 - [Snapshot 2026-03-30](project_system_snapshot_20260330.md) — 128 repos (V1), ~5,817 tests, 37 engine modules
-- [IRF supersession](project_irf_supersession.md) — V1 IRF → a-organvm project board (25 issues), S43 items done but unlogged
+- [Handoff 2026-03-30](project_session_handoff_20260330.md) — death cantation: a-organvm entry, GEN-002→SIG-001→SKL-001, 54 board issues
+- [IRF supersession](project_irf_supersession.md) — V1 IRF → a-organvm project board (25→54 issues), multi-agent state
 - [Session 2026-03-19 synthesis](project_session_20260319_synthesis.md) — the inflection point: 126 commits
 
 ## References
