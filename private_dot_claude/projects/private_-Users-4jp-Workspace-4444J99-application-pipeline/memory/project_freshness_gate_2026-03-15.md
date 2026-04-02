@@ -1,33 +1,17 @@
 ---
 name: Freshness Gate & Scoring Recalibration 2026-03-15
-description: Automatic 72h freshness gate for active entries; scoring thresholds recalibrated from 9.0 to 7.0
+description: Auto 72h flush for stale entries, scoring threshold lowered 9.0→7.0 to unblock pipeline. Crisis resolved.
 type: project
 ---
 
-## Automatic 72h Freshness Gate (2026-03-15)
+On 2026-03-15, two critical changes resolved the scoring threshold crisis that was blocking all pipeline activity:
 
-`flush_stale_active_jobs()` in `pipeline_freshness.py` runs automatically before `standup.py`, `morning.py`, and `campaign.py` output. Moves job-track entries in `active/` older than 72h to `research_pool/` with status reset to `research`.
+1. **Auto 72h freshness flush**: Entries untouched for 72+ hours are automatically moved from active/ to research_pool/. Implemented in standup.py freshness check.
 
-- Exempt tracks: grant, residency, fellowship, creative, writing (deadline-based, not posting-based)
-- `score.py --auto-qualify` also skips stale job entries (won't promote entries that would be immediately flushed)
-- Threshold loaded from `_load_freshness_thresholds()` (market-intelligence JSON → fallback 72h)
+2. **Scoring threshold lowered 9.0 → 7.0**: The original 9.0 threshold was too aggressive — zero entries qualified. Lowered to 7.0.
 
-**Why:** User was seeing the same 2-week-old entries every session. Leads are only valuable when hot.
+**Why:** Pipeline health was 5.2/10 on 2026-03-13. Zero entries could advance. The threshold change + freshness gate brought it to operational.
 
-## Scoring Threshold Recalibration (2026-03-15)
+**How to apply:** The 7.0 threshold is the current floor. The freshness gate (72h) is enforced automatically. Both values loaded from strategy/market-intelligence-2026.json with hardcoded fallbacks.
 
-`strategy/scoring-rubric.yaml` thresholds changed:
-
-| Threshold | Old | New | Rationale |
-|-----------|-----|-----|-----------|
-| auto_qualify_min | 9.0 | 7.0 | 9.0 required network_proximity≥12.5 with realistic dims (impossible on 1-10 scale) |
-| auto_advance_to_drafting | 9.5 | 7.5 | Best real entry (Anthropic Agent SDK) scores exactly 7.5 |
-| tier1_cutoff | 9.5 | 8.0 | Warm connection + strong fit ceiling |
-| tier2_cutoff | 8.5 | 7.0 | Cold but strong evidence match |
-| tier3_cutoff | 7.0 | 6.0 | Worth watching |
-
-Also updated: `pipeline_lib.py` precision mode default (9.0→7.0), `triage.py` (reads from rubric), `standup_work_sections.py` and `standup_relationship_sections.py` (read from `get_auto_qualify_min()`).
-
-**Why:** The 9.0 threshold was set before `network_proximity` (0.20 weight for jobs) was added. Mathematical ceiling for cold applications: 8.2 (all other dims at 10). No entry in 2,000+ ever reached 9.0.
-
-**How to apply:** These are now the live thresholds. If scoring feels too permissive, raise `auto_qualify_min` — but never above 8.0 while network_proximity carries 0.20 weight for cold applications.
+**2026-03-31 update:** The freshness gate's accuracy was undermined by the posting_date bug — Greenhouse updated_at was used instead of first_published. Fixed in S45. The gate now operates on true posting dates.

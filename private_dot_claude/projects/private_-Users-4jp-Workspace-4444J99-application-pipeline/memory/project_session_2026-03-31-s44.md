@@ -16,10 +16,10 @@ Session S44 was a pure audit session verifying S43's close was clean.
 
 **How to apply:** Every session close must verify: (a) chezmoi source file count matches live file count, (b) IRF IDs are unique (grep -o 'IRF-XXX-NNN' | sort | uniq -d), (c) no orphaned scripts in repo root. The lefthook ghost (GH#51) requires LEFTHOOK=0 on chezmoi push until fixed.
 
-**Deadlines flagged:**
-- NLnet P0: April 1, 2026 (TOMORROW)
-- Sovereign Tech P1: April 6
-- ZKM Rauschenberg P1: April 12
+**Deadlines flagged (S44 claims — reconciled in S45):**
+- NLnet P0: April 1, 2026 — STALE. NLnet is archived only (`pipeline/archive/drafts/`), not in active pipeline. Deferred per funder-fit analysis (0/89 governance tools in past winners).
+- Sovereign Tech P1: April 6 — PHANTOM. No pipeline entry ever existed. Memory-only reference with no backing file. Purged in S45.
+- ZKM Rauschenberg P1: April 12 — VALID. Reactivated to `drafting` in S45.
 - ORCID P0: no deadline but flagged
 
 **Pipeline state:** 20 open GitHub issues. 0 N/A vacuums in active/submitted YAML (1 false positive in description field). All 47 memory files now at parity.
