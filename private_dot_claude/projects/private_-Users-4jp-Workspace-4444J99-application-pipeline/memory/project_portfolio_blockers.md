@@ -1,10 +1,12 @@
 ---
-name: Portfolio deploy blocked — security audit + Plausible
-description: Portfolio deploy gate fails on undici/lhci vulnerabilities, blocking Plausible analytics deployment
+name: Portfolio deploy blocked — security audit + Plausible (RESOLVED)
+description: RESOLVED. Portfolio security audit fixed and Plausible analytics now operational. Historical record only.
 type: project
 ---
 
-## Portfolio Deploy Blocked (2026-03-15)
+**⚠ RESOLVED** — Plausible now working. Security audit fixed in a portfolio session. This file is historical.
+
+## Portfolio Deploy Blocked (2026-03-15, resolved ~2026-03-28)
 
 The Plausible script update (old `script.js` → new `pa-RjIinI-oQ3QXE-LnbY2eA.js`) is committed to portfolio main but NOT deployed. Quality gate fails on security audit.
 

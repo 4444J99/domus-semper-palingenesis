@@ -13,8 +13,15 @@
 - [Everything is a loop](feedback_everything_is_a_loop.md) — never single-shot; SOPs as living receivers at every pipe output
 - [Local-remote 1:1 parity](feedback_local_remote_parity.md) — if physical dies, soul persists; local:remote always 1:1
 - [If lost, recover immediately](feedback_if_lost_recover.md) — universal rule, no exceptions, audit before close
+- [Close Protocol](feedback_close_protocol.md) — unified 12-step close-out sequence, supersedes individual close rules, liturgical
 - [River principle](feedback_river_principle.md) — code from necessity, art as byproduct, strip ceremony
 - [Hot hands](feedback_hot_hands.md) — don't build function N+1 in the same session as function N; cold eyes pick better
+- [Structural order](feedback_structural_order.md) — don't offer ordering choices when dependency graph determines the sequence
+- [System time](feedback_system_time.md) — time = mathematical micro-to-macro cycles, not human timezones
+- [Memory reconciliation](feedback_memory_reconciliation.md) — memory is hypothesis, not fact. Load → verify → present delta.
+- [Plans are artifacts](feedback_plans_are_artifacts.md) — every plan/audit committed to repo. ~/.claude/plans/ is draft; repo copy is record.
+- [Alchemy not absorption](feedback_alchemy_not_absorption.md) — Body→Seed = transmutation, not absorption. Gates are crucibles.
+- [Dispersive planning](feedback_dispersive_planning.md) — plans surface the full seven-state spectrum (SPEC-022); plans are wounds or scars
 
 ## User Identity
 - [Identity](user_identity.md) — artist-technologist, MFA, building life's work in isolation
@@ -26,6 +33,7 @@
 ## V2 Palingenesis (S42)
 - [V2 principles](project_v2_principles.md) — prime directive, minimalism, modular synthesis, multiverse, biological systems, proofs
 - [Post-flood V2](project_post_flood_v2.md) — first embodiment landed (ddc6174), 22 tests, 2 instruments, GEN-002 ratified
+- [Exit Interview Protocol](project_exit_interview_protocol.md) — 5-phase V1→V2 handoff, three-voice rectification, `organvm exit-interview`
 - Spec location: `.claude/plans/2026-03-30-palingenesis.md` (modular synthesis v3, 6 proofs)
 
 ## Active Projects
@@ -39,21 +47,41 @@
 - [Dependabot Rationalization](project_dependabot_rationalization.md) — 305+ PRs closed, 5 production repos
 - [SGO Convergence](project_sgo_convergence.md) — Studium Generale converged into praxis-perpetua
 - [AMP Lab](project_amp_lab.md) — collaborative channel with Chris, SigLIP validated
-- [April Grants](project_grants_april2026.md) — 10 apps ($230K+), Creative Capital ($50K, Apr 2) HIGHEST
+- [April Grants](project_grants_april2026.md) — 10 apps ($230K+). All deadlines PASSED (Creative Capital Apr 2). Check pipeline for outcomes.
 - [Pipeline Integration](project_pipeline_integration.md) — 11 data surfaces connecting app pipeline
 - [SPEC Implementation](project_spec_implementation.md) — Layer 1 methodology v3, hard gates
 - [Patch Signal Architecture](project_patch_signal_architecture.md) — SOPs as synth modules, patches as presets, revenue from patch packs
+- [Gravitas Culturalis](project_gravitas_culturalis.md) — SPEC-021: orbital emergence theory. Layer 0 shipped. 4 layers pending.
+- [Dispersio Formalis](project_dispersio_formalis.md) — SPEC-022: seven-state material taxonomy. Layer 0 shipped 2026-04-01.
+- [Triptych state 2026-03-31](project_triptych_state_20260331.md) — Body/Mind/Seed. Verify live counts.
 
 ## System State
-- [Snapshot 2026-03-30](project_system_snapshot_20260330.md) — 128 repos (V1), ~5,817 tests, 37 engine modules
-- [Handoff 2026-03-30](project_session_handoff_20260330.md) — death cantation: GEN-002→SIG-001→SKL-001, throttle: embody don't expand, 72 issues, 5 repairs
-- [Handoff 2026-03-31](project_session_handoff_20260331.md) — S45: first embodiment landed, throttle lifts, next = second function + board update
-- [IRF supersession](project_irf_supersession.md) — V1 IRF → a-organvm project board (25→54 issues), multi-agent state
+- [Cross-session synthesis 2026-03-31](project_cross_session_synthesis_20260331.md) — 6+ sessions across 4 repos, multi-agent dispatch proven
+- [Snapshot 2026-03-30](project_system_snapshot_20260330.md) — 128 repos, ~5,858 tests, 38+ engine modules (point-in-time)
+- [Handoff 2026-03-30](project_session_handoff_20260330.md) — death cantation, throttle: embody don't expand
+- [Handoff 2026-03-31](project_session_handoff_20260331.md) — S45: first embodiment landed
+- [Handoff S47](project_session_handoff_s47.md) — twin recovery, circulatory_route.py landed
+- [Handoff S-dispersio](project_session_handoff_s_dispersio.md) — SPEC-022 Layer 0, S49 IRF destruction recovered
+- [Handoff S-Brahma](project_session_handoff_s_brahma.md) — Logos Layer: Amendment K, LEX-XI+RR-8, 108 symmetry violations, 258-file sync
+- [Handoff S-Audit](project_session_handoff_s_handoff_audit.md) — 2026-04-03: doc handoff architecture audit, 5 layers mapped, committed to praxis-perpetua
+- [IRF dual index](project_irf_supersession.md) — IRF (845 items) + a-organvm board coexist, neither supersedes
 - [Session 2026-03-19 synthesis](project_session_20260319_synthesis.md) — the inflection point: 126 commits
-- [S45 close-out concerns](project_closeout_concerns_s45.md) — 8 inherited debt items: bash parser, lock contention, schema mismatch, context sync, auto-commit, test gap, conductor orphan, SOP divergence
+- [S45 close-out concerns](project_closeout_concerns_s45.md) — 8 inherited debt items (some still open)
+
+## Prompt Grammar
+- [Prompt Sequence Protocol](project_prompt_sequence_protocol.md) — 8 phases (SEED→HANDOFF), session-level
+- [Design Grammar](project_design_grammar.md) — 9 phases (DEFINE→TRANSFORM), creation-level
+- [Close Protocol](feedback_close_protocol.md) — 12-step close-out, liturgical, non-negotiable
+- [Operational Vocabulary](project_operational_vocabulary.md) — 12 categories, 7 paired patterns
+- [Frameworks and Principles](project_frameworks_and_principles.md) — 22 abstractions + 11 kin, three-stratum topology
+- [Prompt Archaeology](project_prompt_archaeology.md) — 48-hour prompt history pass needed, ~50-200 uncatalogued
+
+## Commercial Architecture
+- [CCE Commercial Architecture](project_cce_commercial_architecture.md) — knowledge utility, 5 compounding loops, reproductive--instantiate as v2 function
 
 ## References
 - [Portal deployment](reference_portal_deployment.md) — stakeholder-portal-ten.vercel.app
 - [AMP Lab Google Drive](reference_amp_lab_gdrive.md) — shared folder with Chris
-- [Atomic Clock SOP](reference_atomic_clock_sop.md) — SOP-SYS-004: 4 layers, 9 beats, 26 ticks. Universal sequencing primitive.
-- [OSH inventory](reference_osh_inventory.md) — orchestration-start-here: 96 items, 6 vacuums, Plague Campaign inflection
+- [Atomic Clock SOP](reference_atomic_clock_sop.md) — SOP-SYS-004: 4 layers, 9 beats, 26 ticks
+- [OSH inventory](reference_osh_inventory.md) — orchestration-start-here: 96 items, 6 vacuums
+- [Doc handoff architecture](reference_doc_handoff_architecture.md) — 5-layer audit committed to praxis-perpetua/studies/audits/

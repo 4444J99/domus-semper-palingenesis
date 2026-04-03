@@ -16,8 +16,8 @@ ORGANVM's legal/financial institutionalization strategy was researched and desig
 
 | Deadline | Funder | Amount | Application status |
 |----------|--------|--------|-------------------|
-| 2026-04-01 | NLnet NGI0 Commons | EUR 37,080 | **DRAFT COMPLETE** — 153-line application, "Cvrsvs Honorvm" governance engine extraction, 11 milestones, 448 hours at EUR 80/hr. Ready for human review + web form submission at nlnet.nl/propose/ |
-| 2026-04-02 | Creative Capital | $50K | **EMPTY** — form structure documented but all fields are [DRAFT] placeholder. Research exists. Bio + work-sample-notes exist. Needs full drafting. |
+| 2026-04-01 | NLnet NGI0 Commons | EUR 37,080 | **SUBMITTED** — 153-line application, "Cvrsvs Honorvm" governance engine extraction, 11 milestones. Awaiting review. |
+| ~~2026-04-02~~ | ~~Creative Capital~~ | ~~$50K~~ | **DEFERRED** — funder-fit gate failed (CC funds sensory art, not infrastructure). See project_creative_capital_rewrite.md |
 | 2026-04-06 | Sovereign Tech Fellowship | TBD | Not yet drafted |
 | 2026-04-12 | ZKM Rauschenberg Residency | TBD | Not yet drafted |
 | ~~2026-05-01~~ | ~~Shuttleworth Fellowship~~ | — | CLOSED permanently July 2022. Misinformation from aggregator sites. |
@@ -28,10 +28,4 @@ ORGANVM's legal/financial institutionalization strategy was researched and desig
 - Phase 3 (year 1-3): Convert LLC → Delaware PBC, build 3-year history, file 501(c)(3)
 - Phase 4 (year 3+): Full Mozilla model (Foundation owns PBC)
 
-**Canonical repo:** `meta-organvm/aerarium--res-publica` — Treasury of the Public Thing. All applications, entity formation, strategy, and research live here.
-
-**Application files:**
-- `aerarium--res-publica/applications/nlnet-ngi0-commons-2026/draft.md` — the complete NLnet application
-- `aerarium--res-publica/applications/creative-capital-2027/draft.md` — empty scaffold
-- `aerarium--res-publica/research/` — 9 docs of funder-specific research
-- `aerarium--res-publica/strategy/` — master institutional strategy + roadmap
+**Canonical repo:** `meta-organvm/aerarium--res-publica` — Treasury of the Public Thing.

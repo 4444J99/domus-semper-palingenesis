@@ -1,20 +1,25 @@
 ---
 name: user-ai-service-stack
-description: User's paid AI services and their roles — Claude Max (primary), Codex, Gemini CLI, OpenCode, Perplexity Pro, Goose
+description: User's AI service portfolio — 12 agents registered in fleet.yaml, 6 active, systematic routing via FleetRouter
 type: user
 ---
 
-User's AI coding/research service portfolio (as of 2026-03-30):
+User's AI agent fleet (as of 2026-04-02):
 
-| Service | Tier | Role |
-|---------|------|------|
-| Claude Code (Max) | Primary, paid | "Main squeeze" — deep architecture, ORGANVM governance, multi-file work |
-| Codex (OpenAI) | Paid (ChatGPT plan) | CLI agent, code generation |
-| Gemini CLI | Free tier / paid | Fallback when Claude hits token limits — user notes this causes "net negative" damage |
-| OpenCode | Free/API-keyed | Terminal coding agent, provider-agnostic |
-| Perplexity | Pro (paid) | Research, web search, knowledge synthesis |
-| Goose (Block) | Free/local | CLI agent, supports local Ollama models |
+**Active agents:**
 
-**Key pain point:** No systematic process for routing tasks to the right service. When Claude runs out of tokens, switching to Gemini is ad-hoc and damaging because Gemini doesn't respect CLAUDE.md conventions or prior architectural decisions.
+| Service | Provider | Mode | Cognitive Max | Field Rating |
+|---------|----------|------|--------------|-------------|
+| Claude Code (Max) | Anthropic | coding | strategic | conductor |
+| Codex CLI | OpenAI | coding | tactical | 9/10 |
+| Gemini CLI | Google | coding | mechanical | 4/10 |
+| OpenCode | Community | coding | mechanical | 7/10 |
+| Jules | Google | coding (bot) | tactical | untested |
+| Perplexity | Perplexity | research | strategic | untested |
 
-User also has a full Homebrew inventory audit at `research/Audit of Your Homebrew Inventory for AI-Agentic Capability.md` and `research/AI-Agentic-Package-Categorization.md`.
+**Inactive (installed):** Goose (Block), Kimi (Moonshot)
+**Wishlist (not installed):** Aider, Cursor, Windsurf, Devin
+
+**Routing is now systematic.** `fleet.yaml` at `organvm-iv-taxis/` superproject root is the canonical registry. `FleetRouter` scores agents by phase affinity, strength match, utilization pressure, context fit, cost efficiency, and historical survival. `TaskDispatcher` classifies work into 9 types across 3 cognitive classes and hard-filters agents.
+
+Homebrew inventory audit: `research/Audit of Your Homebrew Inventory for AI-Agentic Capability.md`

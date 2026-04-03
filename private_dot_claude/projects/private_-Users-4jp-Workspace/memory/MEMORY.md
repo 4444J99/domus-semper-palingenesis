@@ -31,21 +31,26 @@
 - [1Password CLI — ONE call max](feedback_op_cli_macos_tahoe.md) — COVENANT: fingerprint per call, cache everything
 - [Research workflow preferences](feedback_research_workflow.md) — momentum over caution, parallel execution
 - [Dependabot firehose](feedback_dependabot_firehose.md) — fix at org-level .github, not per-repo (DONE-215)
-- [Signal Closure Law](feedback_signal_closure_law.md) — AX-6 + LIQ-008 + Amendment F: system logically closed, first enforcement 2026-03-28
-- [Formalization gate](feedback_formalization_gate.md) — written-first = qualification test, not communication preference; not a transcription service
-- [Forced revision](feedback_forced_revision.md) — how anything is done = how everything is done; never write into final form first
-- [Laziness as force](feedback_laziness_as_force.md) — flaws are forces not moral failures; system channels human inconsistency; downstream collapse from shortcuts is most expensive debt
+- [Signal Closure Law](feedback_signal_closure_law.md) — AX-6 + LIQ-008 + Amendment F: system logically closed
+- [Formalization gate](feedback_formalization_gate.md) — written-first = qualification test, not transcription service
+- [Forced revision](feedback_forced_revision.md) — never write into final form first
+- [Laziness as force](feedback_laziness_as_force.md) — flaws are forces, not moral failures; system channels inconsistency
+- [Plans are artifacts](feedback_plans_are_artifacts.md) — every plan committed to repo, never local-only
 
 ## Active Projects
-- [Signal Closure Cascade](project_signal_closure_cascade.md) — 4-phase plan: Phase 1 DONE, NLnet ready, Creative Capital empty, April deadlines
-- [Client Pillar design](project_client_pillar_design.md) — commerce--meta IMPLEMENTED 2026-03-30, 95+ files, operational
-- [Creative Capital rewrite](project_creative_capital_rewrite.md) — URGENT: deadline Apr 2 3PM ET, draft needs artist-voice rewrite
-- [Institutional strategy](project_institutional_strategy.md) — NLnet COMPLETE, Creative Capital EMPTY, April 1-12 deadlines
+- [Signal Closure Cascade](project_signal_closure_cascade.md) — Phase 1 DONE, NLnet submitted, CC deferred, portal hardening DONE
+- [Portal avalanche architecture](project_portal_avalanche_architecture.md) — 5-file genome, RECEIPT.md relay, scaffold-portal.py (S51→S52)
+- [Grafana interview](project_grafana_interview.md) — Staff AI Engineer, recruiter screen Mon 2026-04-06 10:30 AM EDT
+- [Institutional strategy](project_institutional_strategy.md) — NLnet SUBMITTED, CC DEFERRED, Sovereign Tech Apr 6, ZKM Apr 12
 - [SGO Research Program](project_sgo_research_program.md) — 13 works, 500K+ words, arXiv submissions pending
 
 ## Resolved/Historical
+- [Creative Capital — DEFERRED](project_creative_capital_rewrite.md) — funder-fit gate failed 2026-03-30, P0→P3
+- [Client Pillar design](project_client_pillar_design.md) — commerce--meta IMPLEMENTED 2026-03-30, 95+ files
 - [S36 email triage](project_email_triage_s36.md) — 300+ emails, P0 emergencies, 11 new IRF items
 - [Wikipedia credential stuffing](project_wikipedia_security_incident.md) — PW changed, TOTP enabled, 4 services + credit freeze still needed
 
 ## References
 - [Gmail access paths](reference_gmail_access_paths.md) — OAuth (1Password), claude.ai MCP (read-only), Docker (broken), gcloud (no scopes)
+- [Prompt history data sources](reference_prompt_history_sources.md) — Claude history.jsonl (richest), Warp SQLite, Gemini metadata, Codex binary
+- [Prompt accountability law](feedback_prompt_accountability.md) — every prompt is an ORDER; artifact is RECEIPT; gap = system debt

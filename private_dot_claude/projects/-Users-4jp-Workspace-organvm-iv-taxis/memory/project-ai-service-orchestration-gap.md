@@ -1,16 +1,15 @@
 ---
 name: ai-service-orchestration-gap
-description: Missing cognitive task routing layer — ontology routes tools-to-tools but not tasks-to-AI-services. User wants to assign work to its best owner (Claude, Gemini, Codex, Perplexity, etc.)
+description: CLOSED — cognitive task routing layer built (dispatch layer 2026-03-30, fleet elevation 2026-04-02). Fleet.yaml is canonical source.
 type: project
 ---
 
-User identified (2026-03-30) that the system has a tool routing layer (`tool-interaction-design/ontology.yaml` — 578 tools, 64 clusters, 12 domains) but no **task-to-service** routing. The ontology knows WHAT tools each service has. It doesn't know WHICH service is best for a given cognitive task class, or HOW to hand off without losing coherence.
+**Status: CLOSED (2026-04-02)**
 
-**Why:** When Claude Max hits token limits, user switches to Gemini CLI. Assessments mark this as a "net negative" because of vision/roadmap damage. The gap: no protocol for degradation, no task classification by service affinity, no handoff envelope that preserves context and conventions.
+User identified (2026-03-30) that the system had tool-to-tool routing but no task-to-service routing. Gap is now fully addressed:
 
-**How to apply:**
-- This is a design project in progress (brainstorming started 2026-03-30, interrupted before design phase)
-- The existing `tool-interaction-design/routing-matrix.yaml` (32 directed routes) and `router.py` (BFS pathfinding) are the foundation to extend
-- The ontology already classifies AI agents into clusters: `claude_code_core`, `ai_cli_agents` (codex, gemini-cli, opencode, kimi-cli, goose), `ai_gui_agents` (Perplexity.app, Claude.app, etc.), `local_llm`
-- Research corpus exists: `research/AI-Agentic-Package-Categorization.md`, `research/Audit of Your Homebrew Inventory for AI-Agentic Capability.md`, `research/Free CLI AI Agents Search.md`
-- User wants this to be a process, not just documentation — "task offloading to its best owner type of feature"
+1. **Cognitive Service Dispatch Layer** (2026-03-30) — 22 files, 2859 lines, 638 tests in `tool-interaction-design/`. Includes `FleetRouter` (6-factor scoring), `TaskDispatcher` (work type classification), `work_types.yaml` (9 work types, 3 cognitive classes), guardrailed handoff envelopes, cross-verification protocol.
+
+2. **Fleet Elevation** (2026-04-02) — `fleet.yaml` moved to `organvm-iv-taxis/` superproject root. Expanded from 6 to 12 agents (6 active, 2 inactive, 4 wishlist). `FLEET.md` human reference created at superproject root. New fields: `mode`, `field_rating`, `damage_modes`, `prompt_fixes`, `best_for`, `installed`.
+
+**Canonical source:** `organvm-iv-taxis/fleet.yaml` — all agent capability definitions live here, not in memory.

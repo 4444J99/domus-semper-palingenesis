@@ -51,6 +51,6 @@ The machinery frontier is closed. The blocker is manual adjudication of generate
 - Session artifacts under `reports/`, `state/`, `federation/` are repo-ignored. The runtime snapshot was archived to `meta-organvm/organvm-corpvs-testamentvm/docs/validation-runs/conversation-corpus-engine/2026-03-25-s37-runtime-snapshot/`.
 - The Codex session ran at gpt-5.4 xhigh reasoning level with danger-full-access permissions.
 
-## Superseded by S38
+## Counts (drifted — do not rely)
 
-Test count updated from 233 → 246. Module count updated from 31 → 33 (added `chatgpt_local_session.py`, `import_chatgpt_local_session_corpus.py`). The orphan `intake/ai-exports/` referenced in provenance was deleted. See `session_s38_chatgpt_adapter.md` for the continuation.
+Test count has grown through S38-S40: 233 → 246 → 267 → 277 (verified 2026-03-31). Module count: 33. Queue size: 406 at S37 close, not re-measured since. See later session files for continuation.

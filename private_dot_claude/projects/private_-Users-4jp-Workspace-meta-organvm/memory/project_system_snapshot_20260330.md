@@ -25,10 +25,11 @@ type: project
 - Materia-collider: 81
 - **Total: ~5,817**
 
-**Engine domain modules:** 37 (excluding __pycache__, cli/)
+**Engine domain modules:** 37 as of 2026-03-30; now 38+ (exit_interview subpackage added 2026-03-31 with 7 modules + 41 tests)
 New since last snapshot (2026-03-20): fossil (10 files), pulse (24 files), irf (2), events (1), debt (1), verification (4), audit (9), indexer (5), ontology (3)
+New since this snapshot: governance/exit_interview/ (7 files, ~2,088 lines total)
 
-**CLI command modules:** 38 files in cli/ package
+**CLI command modules:** 38 files as of 2026-03-30; now 39 (exit_interview.py added 2026-03-31)
 
 **MCP server:** 132 tool registrations, 34 source files
 

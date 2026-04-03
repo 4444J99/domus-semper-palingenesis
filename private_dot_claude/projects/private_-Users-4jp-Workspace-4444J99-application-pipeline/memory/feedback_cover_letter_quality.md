@@ -1,10 +1,12 @@
 ---
 name: Cover letter quality — location, format, length, factual errors
-description: Cover letter standards: NYC location, markdown source + resume-styled PDF, full 1-page length (550-700 words), no MCP misattribution, no apologizing, current metrics.
+description: SUPERSEDED by feedback_resume_cover_letter_quality_2026-03-26.md. Kept for historical reference only.
 type: feedback
 ---
 
-Cover letter quality rules (updated 2026-03-20):
+**⚠ SUPERSEDED** — All rules consolidated into `feedback_resume_cover_letter_quality_2026-03-26.md` as of 2026-03-26. This file is historical reference only.
+
+Cover letter quality rules (original 2026-03-20):
 
 1. **Location:** New York City. Never "South Florida" or "Miami" — stale data from old resume.
 

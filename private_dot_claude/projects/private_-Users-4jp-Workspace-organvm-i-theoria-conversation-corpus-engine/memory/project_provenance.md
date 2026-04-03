@@ -17,8 +17,10 @@ type: project
 ```
 ORGAN-I (Theoria) — knowledge AND memory
 ├── conversation-corpus-engine/     ENGINE (git repo, GitHub)
-│   33 modules, 246 tests, 8 providers (ChatGPT + Claude with local-session)
+│   33 modules, 277 tests (verified 2026-03-31), 8 providers (ChatGPT + Claude with local-session)
 │   `local_session_supported` declared on every provider in catalog
+│   Post Office project registry (discover/status/route/sync lifecycle)
+│   Both ChatGPT + Claude have delta-sync (acquisition state + payload cache)
 └── conversation-corpus-site/       RESERVOIR (local, governed, formation.yaml)
     FORM-RES-001, host ORGAN-I, validated by engine
     .cce-env → CCE_PROJECT_ROOT + CCE_SOURCE_DROP_ROOT
@@ -38,12 +40,13 @@ When the CCE was formalized, the Claude local-session path was lifted in but Cha
 
 The orphan staging area `intake/ai-exports/` (empty 0-thread stubs, not git-tracked) was deleted on 2026-03-26. All data lives at `conversation-corpus-site/`.
 
-## Live data (verified 2026-03-26)
+## Live data (last verified 2026-03-31)
 
-- 5 corpora at site: chatgpt-history (55 threads), claude-local-session (351), claude-export (351), brainstorm-transcript (1), ai-exports-markdown (36)
-- ChatGPT local-session adapter operational (Chrome cookie path verified live)
-- 8/8 source-drop inboxes present (chatgpt, deepseek, mistral added 2026-03-26)
-- ChatGPT data export requested but not yet delivered by OpenAI
+- 5 corpora at site: chatgpt-history (55 threads), claude-local-session (351), claude-export (351), brainstorm-transcript (1), ai-exports-markdown (36). Corpus counts from 2026-03-26 — may have grown via LaunchAgent refresh.
+- ChatGPT local-session adapter operational but API scope severely degraded (633→4→2 visible conversations as of 2026-03-30). Scope pre-flight check added in S40 prevents silent partial imports.
+- 8/8 source-drop inboxes present
+- ChatGPT data export requested (S38, 2026-03-26) but not yet delivered by OpenAI
+- LaunchAgent `com.4jp.cce-refresh` deployed and loaded (6-hour interval, S40)
 
 ## Constitutional instruments
 

@@ -12,10 +12,11 @@ Full roadmap at `docs/superpowers/specs/2026-03-26-alpha-omega-roadmap-design.md
 - Phase Ic (responsive polish): PR #75, pending CI
 - Phase II (view transitions): already implemented (transition:name on ProjectDetail)
 - Phase IIIa (mechanical lens improvement): **SHIPPED S36** — rhetorical engine F1-F5, vox governance integration, 22 tests, 100+ transformation rules
+- Phase IIIb (visitor-facing copy wiring): **SHIPPED S-wiring (2026-03-30)** — onboarding panel copy, hero Variant A, bridge label system (70 contextual + 102 default), double-arrow bug fix. 29 files, 526 tests passing.
+- Phase IV-A (stranger test): NEXT — system now wired for visitors, ready to test
 - Phase IV-B (distribution): not started, runs in parallel
-- **CI simplified (S36):** 8 jobs → 1 job, deploys in ~4 minutes, security moved to weekly advisory
 
-**Critical path to hired:** Ia → Ib → IIIa → IV-A (stranger test) → applications
+**Critical path to hired:** Ia → Ib → IIIa → IIIb → **IV-A (stranger test) ← YOU ARE HERE** → applications
 
 **Revised timeline (post-critic-review):**
 - To hired (critical path): ~9-13 sessions + external time

@@ -1,19 +1,16 @@
 ---
-name: IRF superseded by a-organvm project board
-description: V1 IRF (INST-INDEX-RERUM-FACIENDARUM.md) being replaced by a-organvm GitHub project board with 25 issues as new work index
+name: IRF and a-organvm project board (dual index)
+description: V1 IRF (845 items, 20 domains) remains actively maintained. a-organvm GitHub project board complements it for issue-driven work but has NOT replaced it.
 type: project
 ---
 
-The V1 universal work registry at `organvm-corpvs-testamentvm/INST-INDEX-RERUM-FACIENDARUM.md` is being superseded by the **a-organvm GitHub project board**. The 25 issues on that board ARE the new index.
+The universal work registry at `organvm-corpvs-testamentvm/INST-INDEX-RERUM-FACIENDARUM.md` continues growing actively. As of 2026-04-03, it has **845 items across 20 domains** (up from 792 on 2026-04-02, up from the original 25-issue a-organvm board state).
 
-S43 session completed these IRF items but they were NOT logged in V1 IRF:
-- IRF-SYS-031 DONE
-- IRF-SYS-033 equivalent DONE
-- IRF-SYS-034 DONE
-- IRF-SYS-036 DONE
+The **a-organvm GitHub project board** complements the IRF with structured issues carrying richer metadata (labels, assignees, project fields), but the IRF has NOT been superseded — it continues to receive new entries every session.
 
-V1 IRF can be updated when corpus cocoon (MEM-001) is addressed, but it is no longer the primary work tracker.
+**Why:** Earlier sessions (S43) predicted the V1 IRF would be replaced by the a-organvm board. In practice, both coexist: the IRF is the narrative/audit trail (append-only, 845 items), while the board is the execution surface (filtered, actionable).
 
-**Why:** The shift from a monolithic markdown work registry to a GitHub project board with structured issues represents the system's transition from V1 document-driven governance to V2 issue-driven governance. The 25 issues carry the same information as IRF entries but with richer metadata (labels, assignees, project fields).
-
-**How to apply:** When the user says "what needs doing," check the a-organvm project board first, not the V1 IRF. The V1 IRF remains valid for historical reference and items not yet migrated.
+**How to apply:** When the user says "what needs doing," check BOTH:
+1. The a-organvm project board for structured, actionable issues
+2. The IRF for items not yet migrated to issues and for historical context
+Don't treat one as superseding the other — they serve different functions.

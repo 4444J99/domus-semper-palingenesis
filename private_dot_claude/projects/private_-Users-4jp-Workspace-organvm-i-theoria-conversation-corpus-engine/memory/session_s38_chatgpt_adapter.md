@@ -37,4 +37,4 @@ The content-engine--asset-amplifier repo in ORGAN-III was renamed to "Cronus Met
 
 - ChatGPT data export from OpenAI settings was requested but not delivered. When it arrives, drop in `source-drop/chatgpt/inbox/` and run `cce provider import --provider chatgpt --register --build`
 - The full 645-conversation ChatGPT corpus has not been ingested through the CCE pipeline yet (rate limits prevented completion)
-- Engine changes from this session are uncommitted
+- Engine changes from S38 were committed and pushed in S39 (3d86009)

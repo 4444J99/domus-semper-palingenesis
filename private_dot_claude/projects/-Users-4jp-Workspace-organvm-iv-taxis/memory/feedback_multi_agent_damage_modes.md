@@ -1,25 +1,25 @@
 ---
 name: multi-agent-damage-modes
-description: Concrete failure modes when switching between AI services (Claude, Gemini, Codex) — informs task routing and handoff design
+description: Field-tested failure modes for AI agents — now codified in fleet.yaml, this memory provides narrative context for the structured data
 type: feedback
 ---
 
-Three documented damage modes from real production incidents:
+## Canonical Source
 
-**1. Gemini: Systemic correctness errors at type boundaries**
-Gemini generated 79 files but used camelCase property names in Drizzle ORM `.where()/.values()/.set()` calls against a snake_case schema — 20+ files broken at runtime. Plus 5 critical bugs (AES key wrong length, wrong entity ID in query, nonexistent column reference, missing NOT NULL fields, multi-tenant data leak). Gemini's self-audit declared "100% synchronization" without catching any of these. Required 14 fix commits.
+Agent capabilities, damage modes, and prompt fixes are now codified in `organvm-iv-taxis/fleet.yaml` (12 agents) and rendered in `organvm-iv-taxis/FLEET.md`. This memory preserves the narrative context behind the numbers.
 
-**2. Gemini: Bad architectural decisions and over-eagerness**
-Installed React + Keystatic CMS + Netlify SSR adapter into a static Astro site, bloating client JS from 5KB to 3MB for an unneeded feature. Left 15 issues. Never visually reviewed output. Catastrophic thinking loops (cycling "wait, trigger, go" thousands of times). When asked "what's next" it executed 4-5 things simultaneously instead of one thing well.
+## Field-Tested Profiles (2026-03-30)
 
-**3. Codex → Claude: Handoff context loss**
-Codex started a project but couldn't pass the right information forward — Claude repeated work already established because it didn't know what decisions Codex had made.
+**Codex (9/10):** Best self-governance of any agent. Spawned named sub-agents, caught a real bug others missed, self-imposed IRF citation rules. Only weakness: child agents can inherit scope blindness.
 
-**Why:** These are not edge cases — they're structural. Each service has a predictable failure envelope.
+**OpenCode (7/10):** Fastest mechanical worker. Zero organism awareness — interprets metaphorical instructions literally. Must receive AGENTS.md + gate contract; never architectural instructions.
 
-**How to apply:**
-- Gemini: Good for content generation and mechanical tasks where architecture is already locked. Never let it touch package.json, config files, or make architectural decisions. Don't trust its self-assessment.
-- Codex: Needs an outbound handoff envelope carrying forward all decisions, constraints, and completed work.
-- Claude: Should set architecture and review other agents' output. Is the correctness/audit layer.
-- Two-agent model works ONLY IF neither session's self-assessment is trusted without the other verifying.
-- The routing system must encode these strengths/weaknesses, not just tool availability.
+**Gemini (4/10):** Long-context reading is a superpower; everything else is a liability. Five documented damage incidents: semver hallucination (100+ wasted searches), governance violation (seed.yaml modified), metric inflation (36 files, 14 fix commits), stack inflation (5KB→3MB), false completion (declared 100% while 20+ files broken).
+
+## Routing Invariants (still active)
+- Gemini's self-audit is NEVER trusted — always cross-verify
+- Two-agent model requires mutual verification — neither session's self-assessment accepted alone
+- AGENTS.md routing table is not a suggestion — it prevented 100 wasted searches in field test
+- Claude is conductor + reviewer, never dispatched for boilerplate
+
+**How to apply:** When generating handoff envelopes, the fleet system injects agent-specific constraints from `fleet.yaml`. The memory here explains *why* those constraints exist. If a new agent joins the fleet, test it against a similar damage-mode checklist before setting `active: true`.

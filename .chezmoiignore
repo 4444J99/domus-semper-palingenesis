@@ -85,3 +85,8 @@ _agents/log/
 _agents/lab/.venv/
 projects/
 _registry/
+
+# Claude session transcripts (ephemeral — not the soul)
+.claude/projects/*/*.jsonl
+.claude/projects/*/[0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f]-*
+.claude/projects/*/memory/.consolidate-lock

@@ -1,65 +1,69 @@
 ---
 name: Post-flood V2 Architecture
-description: V2 palingenesis — SEED.md generative grammar, cocoon molt system, a-organvm instance. S43 executed the first physical acts.
+description: V2 palingenesis — SEED.md generative grammar, cocoon molt system, a-organvm instance. S45 delivered first embodiment.
 type: project
 ---
 
 ## Architecture: a-organvm/
 
 - **Instance**: `~/Workspace/a-organvm/` — GitHub: `a-organvm/a-organvm` (public)
-- **Genome**: `SEED.md` (1,124 lines, v7) — source of truth in `post-flood/SEED.md`, synced to `a-organvm/SEED.md`
-- **Naming**: `{mechanism}--{verb}.ext` — flat namespace, depth 1
+- **Genome**: `SEED.md` (1,208 lines, sealed) — source of truth in `post-flood/SEED.md`, synced to `a-organvm/SEED.md`
+- **Naming**: `{mechanism}--{verb}.ext` canonical, `{mechanism}_{verb}.py` Python (GEN-002)
 - **12 biological mechanisms**: nervous, circulatory, digestive, endocrine, immune, skeletal, muscular, respiratory, integumentary, reproductive, memory (+ lifecycle)
-- **Molt system**: 17 gate contracts (`.yaml` files) that CALL existing code toward new identity. Code stays in source repos until all gates pass, then emerges.
-- **Project board**: https://github.com/orgs/a-organvm/projects/1/views/1 (25 issues)
+- **Molt system**: 35 gate contracts (`.yaml` files), 97 gates total (10 PASS, 87 PENDING)
+- **Project board**: https://github.com/orgs/a-organvm/projects/1/views/1 (72 issues)
 
-## SEED Structure (v7)
+## First Embodiment (S45 — 2026-03-31)
 
-- 9 axioms (A1 Purpose, A2 Composition, A3 Persistence, A4 Adaptation, A5 Minimality, A6 Organizational Closure, A7 Individual Primacy, A8 Topological Plasticity, A9 Alchemical Inheritance)
-- 1 structural constraint (depth=1, proved)
-- 6 procedures (do, break/decay, change, move/migrate, digest predecessor, examine/interrogate)
-- 7 structural laws (prohibited couplings ×7, feedback/feedfront, signal preservation, Law 3a metabolic relationships, multiplex flow ×4 edge families, structural interrogation ×7 dims, meta-evolution ×4 strata, concurrency)
-- 20 health checks (CHECKs 1-20, Christmas Light hierarchy: 16=bulb/unit, 18=strand/integration, 19=tree/system, 20=fuse/resilience)
-- 11 convergence conjectures
-- Signal attraction (bolting functions pull compatible material via type matching)
-- BIST (built-in self-test — organism probes own wiring on startup)
+**ddc6174** on main, pushed. 7 files, 1,236 insertions.
 
-## Molt State (S43 close — 2026-03-30)
+| File | Lines | What |
+|------|-------|------|
+| `skeletal_define.py` | 510 | First function. Reads structure, signals, observes, records variance, renders SVG. |
+| `test_skeletal_define.py` | 224 | 22 tests, all passing. |
+| `signal-graph.yaml` | 44 | 3 signal types (QUERY, KNOWLEDGE, TRACE), 1 function, 1 boundary dep. |
+| `pyproject.toml` | 26 | Execution substrate. Python ≥3.11, pyyaml. |
+| `RELAY.md` | — | Handoff: what was done, what is next, read order. |
 
-- **30 isotopes dissolved** across 5 repos:
-  - alchemia-ingestvm: 2 isotopes (registry loader + organ map), 136 tests, commit e800061
-  - orchestration-start-here: 6 isotopes (5 scripts + paths), 150 tests, commit 085f9bb
-  - vigiles-aeternae: 1 isotope (auditor registry), 47 tests, commit aec93ac
-  - organvm-corpvs-testamentvm: 19 isotopes (scripts), commit 018874f
-  - tool-interaction-design: 2 isotopes (governance + constants), 635 tests, commit a6a6c7d
-- **968 tests passing total**
-- **5 cocoons converging**: respiratory--ingest (3/3), circulatory--contribute (3/3), nervous--orchestrate (1/4), immune--watch (2/2), memory--remember (1/4)
-- **12 cocoons calling** (no gates passed yet)
-- Isotope pattern: `try: from organvm_engine.X import Y; except ImportError: standalone fallback`
+### Decisions ratified (S45)
+
+- **GEN-002**: `--` → `_` for Python. No __init__.py, no package. Import works from inside and outside via PYTHONPATH.
+- **River principle**: Code from necessity, art as byproduct. Strip ceremony.
+- **Instruments as tools not truth**: SVG renderers are telescopes — one fraction of the phenomenon. Not the de facto visualization.
+- **Signal authority**: Gate contracts are declared authority. Cocoon-map is planned topology. Inventory doesn't double-count.
+
+### Instruments
+
+1. **Topology scope** (`render()`) — mechanisms on a circle, signal flows as colored curves, gate ratios as lit arcs
+2. **Variance scope** (`render_variance()`) — what moved between two observations. Green=new, red=gone, yellow=moved, grey=still
+
+### Organism vitals at S45 close
+
+```
+15 mechanisms · 35 contracts · 97 gates (10 lit / 87 dim) · 17 signal types
+2 observations in fossil record
+```
 
 ## Critical Path (Next Session)
 
-1. **#23**: Python packaging — how do flat .py files import each other? Design decision, not code.
-2. **#18**: Build signal-graph.yaml generator — first real function of the organism
-3. **#1**: skeletal--define — run full test suite, mark remaining gates PASS → FIRST COCOON EMERGES
+1. Run `python3 skeletal_define.py` at session start (third observation, first real variance)
+2. Update project board: GEN-002 → DONE, SKL-001 → DONE, SIG-001 → DONE
+3. Write the SECOND function — must connect to skeletal--define via information edge (CHECK 7 activates)
+4. Candidates: circulatory--route, nervous--govern, digestive--measure
 
-## Key Design Decisions (S43)
+## SEED Status
 
-- SEED is generative grammar, not blueprint (V3 philosophy: organism discovers its form)
-- Convergences are conjectures, not theorems (falsifiable by real growth)
-- Ontological primitives (7) stipulated from BFO/DOLCE, honestly acknowledged
-- Cocoons are GATES not directories — code evolves in place, emerges when ready
-- Signal attraction: bolting functions pull compatible material via type matching
-- Metabolic relationships (Law 3a): every connection must produce emergent value or collapse
-- Modulation tracking: scope vs observed range reveals drift → split/merge/consume
-- S42's three containers (preserve/transform/instance) superseded by gate system
-- Stranger test (Procedure 5): read only source code, ignore all metadata from dead organism
+Sealed. No modifications until ≥3 functions and CHECK 19 (CIRCULATION) can be attempted.
 
-## S43 Session Arc
+## Exit Interview Protocol (2026-03-31)
 
-SEED.md went through 7 revisions in one session:
-V1 (rules, 386 lines) → V2 (axiom-derived theorems, 477) → V3 (generative grammar, 477) → V4 (constitutional completeness, 826) → V5 (Destroyer's 17 fixes, 913) → V6 (S42 absorption, 982) → V7 (signal attraction + metabolic + Christmas Light, 1,124)
+The Body now has executable machinery for its own dissolution: `organvm exit-interview` reads all 35 gate contracts, generates V1 testimony and V2 counter-testimony in the same format, and rectifies the three voices (V1/V2/reality). This formalizes A9 (Alchemical Inheritance) — the bureaucracy's final act is documenting its own recycling. See `project_exit_interview_protocol.md` for details.
 
-Three personas stress-tested it: The Stranger (cold code audit), The Architect (minimum viable organism design), The Destroyer (17 weaknesses found, all fixed).
+## Key Principles (accumulated)
 
-Stranger agents scanned 250K lines across 20 repos, found 151 modules, 20 isotope clusters. 30 dissolved in parallel by 3 dissolution agents.
+- SEED is generative grammar, not blueprint
+- Cocoons are GATES not directories — code evolves in place
+- Signal attraction: functions pull compatible material via type matching
+- Metabolic relationships (Law 3a): connections must produce emergent value
+- `__main__` flows: `python3 skeletal_define.py` observes, records, renders, diffs
+- Observation at session start is non-negotiable — the fossil record is temporal memory
