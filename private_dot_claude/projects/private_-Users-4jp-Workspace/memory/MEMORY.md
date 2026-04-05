@@ -4,6 +4,7 @@
 - [World Root & repo migration](reference_world_root_migration.md) — $WORLD_ROOT=~/world, 9 orgs, Phases 2-4 NOT executed
 - [Repo governance inventory](reference_repo_governance_inventory.md) — archived repos, branch protection audit
 - [Shell & tool gotchas](reference_shell_tool_gotchas.md) — Bash $HOME expansion, zsh `status` reserved, chezmoi source
+- [IDE workspace settings](reference_ide_workspace_settings.md) — Antigravity (VS Code fork), ~/Workspace/.vscode/settings.json tames git scanning
 
 ## GitHub auth (resolved 2026-03-20)
 - [PAT fix + gh fallback](feedback_github_pat_cleanup.md)
@@ -12,11 +13,13 @@
 ## Development workflow
 - [PR-driven workflow](feedback_pr_workflow.md) — feature branches + PRs, never direct to main
 - [Global gitignore blocks .config/](feedback_global_gitignore_config.md) — `~/.config/git/ignore:330`, add `!/.config/` to override
+- [Finder moves are dangerous](feedback_finder_moves_dangerous.md) — breaks symlinks, leaves copy stubs, lost mcp-servers repo
 
 ## User preferences
 - [Shell config philosophy](user_shell_philosophy.md) — invisible, fast, silent, zero-maintenance
 - [Researcher profile](user_researcher_profile.md) — rhetorician background, Wikipedia:Apadavano
 - [No approval gates](feedback_no_approval_gates.md) — execute end-to-end when given autonomy
+- [Workspace ontology](user_workspace_philosophy.md) — ~/Workspace is Apple's convention, don't fight it; source--all-ever is the user's system; metaphysical hierarchy as directory grammar
 
 ## Supreme Operating Principles (non-negotiable)
 - [The Conductor Principle](feedback_conductor_principle.md) — human dreams, system executes
@@ -43,6 +46,8 @@
 - [Grafana interview](project_grafana_interview.md) — Staff AI Engineer, recruiter screen Mon 2026-04-06 10:30 AM EDT
 - [Institutional strategy](project_institutional_strategy.md) — NLnet SUBMITTED, CC DEFERRED, Sovereign Tech Apr 6, ZKM Apr 12
 - [SGO Research Program](project_sgo_research_program.md) — 13 works, 500K+ words, arXiv submissions pending
+- [Workspace topology experiment](project_workspace_topology_experiment.md) — Theory of Forms hierarchy, source--all-ever, mcp-servers lost
+- [Ontological Envelopes / Living Container](project_ontological_envelopes.md) — OS envelope analysis → container architecture → emergence-first protocol → self-correcting seed. Artifacts in call-function--ontological/docs/
 
 ## Resolved/Historical
 - [Creative Capital — DEFERRED](project_creative_capital_rewrite.md) — funder-fit gate failed 2026-03-30, P0→P3
