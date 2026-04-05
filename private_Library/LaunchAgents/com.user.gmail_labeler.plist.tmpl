@@ -26,6 +26,10 @@
     <key>RunAtLoad</key>
     <true/>
 
+    <!-- Kill if running longer than 600 seconds -->
+    <key>ExecTimeout</key>
+    <integer>600</integer>
+
     <!-- Logging -->
     <key>StandardOutPath</key>
     <string>{{ .chezmoi.homeDir }}/.local/state/domus/gmail-labeler-stdout.log</string>

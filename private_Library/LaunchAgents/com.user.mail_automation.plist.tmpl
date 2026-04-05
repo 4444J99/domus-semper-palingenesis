@@ -27,6 +27,10 @@
     <key>RunAtLoad</key>
     <false/>
 
+    <!-- Kill if running longer than 600 seconds -->
+    <key>ExecTimeout</key>
+    <integer>600</integer>
+
     <!-- Logging -->
     <key>StandardOutPath</key>
     <string>{{ .chezmoi.homeDir }}/.local/state/domus/mail-automation-stdout.log</string>

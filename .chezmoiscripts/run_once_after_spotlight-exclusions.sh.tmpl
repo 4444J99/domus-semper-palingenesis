@@ -1,0 +1,24 @@
+{{- if eq .chezmoi.os "darwin" -}}
+#!/usr/bin/env bash
+# Spotlight Exclusions — exclude high-churn directories from indexing
+# Managed by Chezmoi
+#
+# Without these exclusions, mds_stores (Spotlight indexer) burns 87%+ CPU
+# trying to index 128+ repos, CCE state files, and Homebrew binaries.
+# Code search uses ripgrep — Spotlight indexing has zero consumers here.
+
+set -euo pipefail
+
+echo "Configuring Spotlight exclusions..."
+
+VOLUME_CONFIG="/System/Volumes/Data/.Spotlight-V100/VolumeConfiguration.plist"
+
+if [[ -f "$VOLUME_CONFIG" ]]; then
+  # Add exclusions to the volume-level config (where mds_stores reads)
+  sudo plutil -replace Exclusions -json \
+    '["/Users/{{ .chezmoi.username }}/Workspace", "/opt/homebrew"]' \
+    "$VOLUME_CONFIG" 2>/dev/null && echo "Spotlight exclusions set." || echo "Warning: could not set Spotlight exclusions."
+else
+  echo "Warning: $VOLUME_CONFIG not found — skipping Spotlight exclusions."
+fi
+{{- end }}

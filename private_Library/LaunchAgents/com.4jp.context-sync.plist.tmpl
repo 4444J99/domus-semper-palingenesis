@@ -32,6 +32,10 @@
     <key>LowPriorityIO</key>
     <true/>
 
+    <!-- Kill if running longer than 1800 seconds -->
+    <key>ExecTimeout</key>
+    <integer>1800</integer>
+
     <!-- Logging -->
     <key>StandardOutPath</key>
     <string>{{ .chezmoi.homeDir }}/.local/state/domus/context-sync-stdout.log</string>

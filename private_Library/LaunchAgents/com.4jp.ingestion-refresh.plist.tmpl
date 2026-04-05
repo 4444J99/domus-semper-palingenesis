@@ -30,6 +30,10 @@
     <key>LowPriorityIO</key>
     <true/>
 
+    <!-- Kill if running longer than 3600 seconds -->
+    <key>ExecTimeout</key>
+    <integer>3600</integer>
+
     <!-- Logging -->
     <key>StandardOutPath</key>
     <string>{{ .chezmoi.homeDir }}/.local/state/domus/ingestion-refresh-stdout.log</string>
