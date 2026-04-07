@@ -1,0 +1,299 @@
+#!/usr/bin/env python3
+"""organvm-orient — Where am I? What's going on?"""
+
+import json
+import os
+import subprocess
+import sys
+from datetime import datetime, timedelta, timezone
+from pathlib import Path
+
+HOME = Path.home()
+WORKSPACE = HOME / "Workspace"
+
+# ── Known locations ──────────────────────────────────────────────────────────
+
+LOCATIONS = {
+    "organism (a-organvm)": HOME / "sovereign--ground" / "holds--same" / "a-organvm",
+    "formal layer": HOME / "system-system--system",
+    "formal monad": HOME / "system-system--system--monad",
+    "sovereign--ground": HOME / "sovereign--ground",
+    "engine": WORKSPACE / "meta-organvm" / "organvm-engine",
+    "conductor": WORKSPACE / "organvm-iv-taxis" / "tool-interaction-design",
+    "dissolved repos": WORKSPACE / "meta-organvm" / "materia-collider" / "bench" / "organ-reset-2026-03-11",
+    "skills": WORKSPACE / "organvm-iv-taxis" / "a-i--skills",
+    "registry": WORKSPACE / "meta-organvm" / "organvm-corpvs-testamentvm" / "registry-v2.json",
+}
+
+RELAY_PATH = HOME / "sovereign--ground" / "holds--same" / "a-organvm" / "RELAY.md"
+SIGNAL_GRAPH = HOME / "sovereign--ground" / "holds--same" / "a-organvm" / "signal-graph.yaml"
+MANIFEST_PATH = WORKSPACE / "meta-organvm" / "materia-collider" / "bench" / "organ-reset-2026-03-11" / "manifest.json"
+REGISTRY_PATH = WORKSPACE / "meta-organvm" / "organvm-corpvs-testamentvm" / "registry-v2.json"
+
+
+def git_log(repo_path, n=1):
+    """Get last n git log entries as list of (hash, date, message)."""
+    try:
+        out = subprocess.run(
+            ["git", "-C", str(repo_path), "log", f"-{n}", "--format=%h|%aI|%s"],
+            capture_output=True, text=True, timeout=5,
+        )
+        if out.returncode != 0:
+            return []
+        return [line.split("|", 2) for line in out.stdout.strip().splitlines() if line]
+    except Exception:
+        return []
+
+
+def git_worktree_info(repo_path):
+    """Get worktree list for a repo."""
+    try:
+        out = subprocess.run(
+            ["git", "-C", str(repo_path), "worktree", "list", "--porcelain"],
+            capture_output=True, text=True, timeout=5,
+        )
+        if out.returncode != 0:
+            return []
+        worktrees = []
+        current = {}
+        for line in out.stdout.splitlines():
+            if line.startswith("worktree "):
+                if current:
+                    worktrees.append(current)
+                current = {"path": line[9:]}
+            elif line.startswith("branch "):
+                current["branch"] = line[7:].replace("refs/heads/", "")
+        if current:
+            worktrees.append(current)
+        return worktrees
+    except Exception:
+        return []
+
+
+def count_contracts(organism_path):
+    """Count gate contracts and their states."""
+    contracts = list(organism_path.glob("*--*.yaml"))
+    contracts = [c for c in contracts if c.name != "signal-graph.yaml"
+                 and c.name != "cocoon-map.yaml"
+                 and c.name != "ecosystem.yaml"]
+    return len(contracts)
+
+
+def parse_signal_graph(path):
+    """Extract function and signal type counts from signal-graph.yaml."""
+    if not path.exists():
+        return 0, 0
+    try:
+        import yaml
+        with open(path) as f:
+            data = yaml.safe_load(f)
+        funcs = len(data.get("functions", {}))
+        sigs = len(data.get("signal_types", {}))
+        return funcs, sigs
+    except Exception:
+        return 0, 0
+
+
+def parse_relay_next(path):
+    """Extract 'What is next' items from RELAY.md."""
+    if not path.exists():
+        return []
+    items = []
+    in_next = False
+    for line in path.read_text().splitlines():
+        if line.strip().startswith("## What is next"):
+            in_next = True
+            continue
+        if in_next:
+            if line.startswith("## ") or line.startswith("**Do not"):
+                break
+            stripped = line.strip()
+            if stripped.startswith(("1.", "2.", "3.", "4.", "5.", "6.", "7.", "8.", "9.")):
+                # Clean markdown bold and truncate
+                clean = stripped.split(".", 1)[1].strip()
+                clean = clean.replace("**", "").replace("`", "")
+                if clean:
+                    items.append(clean[:78])
+    return items[:6]
+
+
+def count_dissolved(path):
+    """Count dissolved repos from manifest."""
+    if not path.exists():
+        return 0
+    try:
+        with open(path) as f:
+            data = json.load(f)
+        dissolved = data.get("dissolved", {})
+        return sum(len(v) for v in dissolved.values() if isinstance(v, list))
+    except Exception:
+        return 0
+
+
+def count_registry(path):
+    """Count repos by status from registry."""
+    if not path.exists():
+        return {}
+    try:
+        with open(path) as f:
+            data = json.load(f)
+        counts = {"total": 0, "active": 0, "archived": 0, "deployed": 0}
+        for organ_data in data.get("organs", {}).values():
+            for r in organ_data.get("repositories", organ_data.get("repos", [])):
+                counts["total"] += 1
+                status = r.get("status", "").upper()
+                if status == "ACTIVE":
+                    counts["active"] += 1
+                elif status == "ARCHIVED":
+                    counts["archived"] += 1
+                elif status == "DEPLOYED":
+                    counts["deployed"] += 1
+        return counts
+    except Exception:
+        return {}
+
+
+def recent_activity(hours=48):
+    """Find repos with commits in last N hours."""
+    cutoff = datetime.now(timezone.utc) - timedelta(hours=hours)
+    active = []
+
+    scan_dirs = [
+        HOME / "sovereign--ground" / "holds--same" / "a-organvm",
+        HOME / "system-system--system",
+    ]
+    # Add workspace org dirs
+    if WORKSPACE.exists():
+        for org_dir in sorted(WORKSPACE.iterdir()):
+            if org_dir.is_dir() and not org_dir.name.startswith("."):
+                # Check if org_dir itself is a repo
+                if (org_dir / ".git").exists():
+                    scan_dirs.append(org_dir)
+                else:
+                    # Check subdirs
+                    for repo_dir in sorted(org_dir.iterdir()):
+                        if repo_dir.is_dir() and (repo_dir / ".git").exists():
+                            scan_dirs.append(repo_dir)
+
+    for repo in scan_dirs:
+        entries = git_log(repo, n=5)
+        recent = 0
+        last_msg = ""
+        for entry in entries:
+            if len(entry) >= 3:
+                try:
+                    commit_date = datetime.fromisoformat(entry[1])
+                    if commit_date > cutoff:
+                        recent += 1
+                        if not last_msg:
+                            last_msg = entry[2][:50]
+                except Exception:
+                    pass
+        if recent > 0:
+            name = repo.name
+            if repo.parent.name not in ("holds--same", ""):
+                name = f"{repo.parent.name}/{repo.name}"
+            active.append((name, recent, last_msg))
+
+    active.sort(key=lambda x: -x[1])
+    return active
+
+
+def sovereign_ground_status():
+    """Check which sovereign--ground categories are populated."""
+    sg = HOME / "sovereign--ground"
+    if not sg.exists():
+        return []
+    categories = []
+    for d in sorted(sg.iterdir()):
+        if d.is_dir() and not d.name.startswith("."):
+            contents = list(d.iterdir())
+            real = [c for c in contents if not c.name.startswith(".")]
+            categories.append((d.name, len(real)))
+    return categories
+
+
+# ── Main ─────────────────────────────────────────────────────────────────────
+
+def main():
+    now = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
+    print(f"\nORGANVM Orientation — {now}\n")
+
+    # Physical map
+    print("PHYSICAL MAP")
+    reg_counts = count_registry(REGISTRY_PATH)
+    total = reg_counts.get("total", "?")
+    active = reg_counts.get("active", "?")
+    archived = reg_counts.get("archived", "?")
+    print(f"  ~/Workspace/                          {total} registry entries ({active} active, {archived} archived)")
+
+    sg_cats = sovereign_ground_status()
+    if sg_cats:
+        populated = sum(1 for _, n in sg_cats if n > 0)
+        print(f"  ~/sovereign--ground/                  {len(sg_cats)} categories ({populated} populated)")
+
+    formal = HOME / "system-system--system"
+    if formal.exists():
+        wts = git_worktree_info(formal)
+        branches = [w.get("branch", "?") for w in wts]
+        print(f"  ~/system-system--system/              formal layer [{', '.join(branches)}]")
+
+    monad = HOME / "system-system--system--monad"
+    if monad.exists():
+        logs = git_log(monad, 1)
+        if logs:
+            print(f"  ~/system-system--system--monad/       worktree (last: {logs[0][2][:40]})")
+
+    print()
+
+    # Key locations
+    print("KEY LOCATIONS")
+    for label, path in LOCATIONS.items():
+        if label == "registry":
+            exists = path.exists()
+            print(f"  {label:38s} {'exists' if exists else 'MISSING'}")
+            continue
+        if not path.exists():
+            print(f"  {label:38s} MISSING — {path}")
+            continue
+        # Compact path
+        display = str(path).replace(str(HOME), "~")
+        if label == "dissolved repos":
+            n = count_dissolved(MANIFEST_PATH)
+            tag = f"{label} ({n})"
+            print(f"  {tag:38s} {display}")
+        else:
+            print(f"  {label:38s} {display}")
+    print()
+
+    # Organism vitals
+    organism = LOCATIONS["organism (a-organvm)"]
+    if organism.exists():
+        print("ORGANISM VITALS (a-organvm)")
+        funcs, sigs = parse_signal_graph(SIGNAL_GRAPH)
+        contracts = count_contracts(organism)
+        logs = git_log(organism, 1)
+        last = f"{logs[0][0]} — {logs[0][2][:50]}" if logs else "unknown"
+        print(f"  {funcs} functions · {contracts} contracts · {sigs} signal types (in graph)")
+        print(f"  Last commit: {last}")
+
+        next_items = parse_relay_next(RELAY_PATH)
+        if next_items:
+            print(f"  Next:")
+            for item in next_items[:4]:
+                print(f"    - {item[:80]}")
+        print()
+
+    # Recent activity
+    print("RECENT ACTIVITY (48h)")
+    activity = recent_activity(48)
+    if activity:
+        for name, count, msg in activity[:12]:
+            print(f"  {name:40s} {count} commit{'s' if count != 1 else ' '}  {msg}")
+    else:
+        print("  (no commits in last 48h)")
+    print()
+
+
+if __name__ == "__main__":
+    main()
