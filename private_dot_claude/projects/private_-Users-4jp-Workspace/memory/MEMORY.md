@@ -51,12 +51,17 @@
 - [Workspace topology experiment](project_workspace_topology_experiment.md) — Theory of Forms hierarchy, source--all-ever, mcp-servers lost
 - [Ontological Envelopes / Living Container](project_ontological_envelopes.md) — emergence-first container architecture, self-correcting seed Q(here)→shape
 - [Exit-interview dissection](project_exit_interview_dissection.md) — cross-organ post-mortem; V+VI+VII done 2026-04-04, others pending
+- [Empirical structure audit](project_empirical_structure_audit.md) — 6-exercise measurement: 26 import edges, 76% isolates, organs don't predict structure
+- [Multiverse architecture](project_multiverse_architecture.md) — 4 strata (formal→grammar→organism→material), INSTANCE.toml plan approved
 
 ## Resolved/Historical
 - [Creative Capital — DEFERRED](project_creative_capital_rewrite.md) — funder-fit gate failed 2026-03-30, P0→P3
 - [Client Pillar design](project_client_pillar_design.md) — commerce--meta IMPLEMENTED 2026-03-30, 95+ files
 - [S36 email triage](project_email_triage_s36.md) — 300+ emails, P0 emergencies, 11 new IRF items
 - [Wikipedia credential stuffing](project_wikipedia_security_incident.md) — PW changed, TOTP enabled, 4 services + credit freeze still needed
+
+## Development feedback
+- [Ceremony vs specification](feedback_ceremony_vs_specification.md) — YAML/MD are NOT automatically "ceremony"; gate contracts/SOPs/research = future work specs
 
 ## References
 - [Gmail access paths](reference_gmail_access_paths.md) — OAuth (1Password), claude.ai MCP (read-only), Docker (broken), gcloud (no scopes)
