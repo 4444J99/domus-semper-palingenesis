@@ -1,26 +1,20 @@
 ---
-name: conductor-os-activation
-description: Conductor OS live with 34+ MCP tools, fleet elevated to superproject root (12 agents), 56 CANDIDATE repos stuck
+name: Conductor OS — The System IS the Product
+description: ~60 conductor modules, fleet at superproject root (12 agents), session lifecycle — reframed 2026-04-06 as the PRIMARY creative work
 type: project
 ---
 
 Conductor OS activated (2026-03-08) in `tool-interaction-design/`:
 - MCP SDK `mcp 1.26.0` installed into project venv
 - 34+ `conductor_*` tools verified loading from `mcp_server.py`
-- `~/.claude/mcp.json` configured to point to `.venv/bin/python3`
 - Session lifecycle operational (FRAME→SHAPE→BUILD→PROVE→DONE)
 
-**Fleet evolution (2026-04-02):**
-- `fleet.yaml` elevated from `conductor/fleet.yaml` to `organvm-iv-taxis/fleet.yaml` (superproject root)
-- 12 agents registered (was 6): 6 active, 2 inactive, 4 wishlist
-- `FLEET.md` human reference document at superproject root
-- `FleetAgent` dataclass expanded: `mode`, `field_rating`, `damage_modes`, `prompt_fixes`, `best_for`, `installed`
-- `work_types.yaml` expanded: 9 work types (was 8), `preferred_agents`/`excluded_agents` per type
-- All 129 fleet/dispatch/router tests passing
+**Fleet (2026-04-02):** `fleet.yaml` at superproject root, 12 agents (6 active, 2 inactive, 4 wishlist). `FleetRouter` + `TaskDispatcher` score and route work across 9 types.
 
-**Why:** The Conductor is the operational heart of ORGAN-IV — routes 578 tools across 64 clusters, manages session lifecycle, enforces governance.
+**Dissection (2026-04-04):** ~60 conductor modules, 42 test files, 15 JSON schemas, 10 playbooks, 36 archived sessions.
 
-**How to apply:**
-- Conductor tools available in Claude Code sessions after MCP config reload
-- Fleet dispatch: `python3 -m conductor fleet dispatch --description "..."` routes to best agent
-- Guardian Angel (as of 2026-03-08): 0% ship rate, 56 repos stuck in CANDIDATE
+**REFRAME (2026-04-06):** "Control of system is in fact the system to speak on as prime thing of my labores." The orchestration layer is NOT support infrastructure for art — it IS the primary creative work. The system that builds systems is the masterwork. META and Taxis aren't backstage crew; they're the performance.
+
+**Why:** This reframing changes the priority ordering. The conductor, governance, and fleet management are not infrastructure debt — they're the product. The top-level directory structure (`organvm/{organvm, meta, taxis}`) puts taxis as a co-equal sibling precisely because orchestration is a first-class creative output.
+
+**How to apply:** Don't treat conductor work as "infrastructure" or deprioritize it vs product repos. It IS the product.
