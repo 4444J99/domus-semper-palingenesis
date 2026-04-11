@@ -1,22 +1,28 @@
 ---
-name: Claude memory local-only parity gap
-description: Claude project memories (~/.claude/projects/) exist ONLY on local disk — not tracked by chezmoi. Machine death = total memory loss. Issue #74 in a-organvm tracks this.
+name: Claude memory parity — meta-organvm RESOLVED, system-wide gap remains
+description: meta-organvm memory parity achieved 2026-04-08 (17 files added to chezmoi). System-wide gap: 57 files across 6 projects still untracked. IRF-DOM-030.
 type: project
 ---
 
-**Identified 2026-04-03 (session 8c127cad).** Confirmed still unresolved 2026-04-04.
+**Originally identified 2026-04-03.** meta-organvm gap **RESOLVED 2026-04-08** (S-Audit session). System-wide gap discovered 2026-04-11 (S-Audit-2).
 
-Claude project memory directories at `~/.claude/projects/` contain 70+ memory files for meta-organvm alone, and dozens more across ~90 project directories. This memory substrate is the **only** place where:
-- User behavioral feedback persists (22 feedback rules)
-- Project state survives between sessions (40+ project memories)
-- System snapshots are stored (~5 files)
+## meta-organvm — RESOLVED
 
-**None of this is tracked by chezmoi.** The `private_dot_claude/` source in domus-semper-palingenesis tracks `CLAUDE.md.tmpl` and `settings.json.tmpl`, but the `projects/` subdirectory is in `.chezmoiignore`.
+17 memory files were added to chezmoi in commit `4728e34` (domus-semper-palingenesis). Auto-pushed to remote. Parity: 86 disk / 86 chezmoi.
 
-If the machine dies, the source tree and all 88+ GitHub issues survive (remote parity). The session memory — behavioral rules, philosophical grounding, organism state — dies with the disk.
+## System-wide — 57 files UNPROTECTED
 
-**Issue #74** in a-organvm tracks this. Resolution path: `chezmoi add ~/.claude/projects/` (requires human hand — chezmoi won't add directories it's told to ignore).
+| Project | Gap | chezmoi coverage |
+|---------|-----|-----------------|
+| `system-system--system` | 21 | 0% (zero chezmoi entries) |
+| `sovereign-systems--elevate-align` | 15 | 0% |
+| `aerarium--res-publica` | 8 | 0% |
+| `Workspace` (root) | 6 | 88% (46/52) |
+| `~` (home) | 4 | 60% (6/10) |
+| `void--edge-object...` (worktree) | 3 | 0% |
 
-**Why:** This violates the local:remote 1:1 parity rule. The rule exists precisely for this scenario.
+**Resolution**: `chezmoi add ~/.claude/projects/<project>/memory/` for each project. Tracked as IRF-DOM-030.
 
-**How to apply:** When closing sessions, note this gap persists. Do not claim "parity achieved" until chezmoi tracks the memory substrate. The gap is known; it needs action, not re-discovery.
+**Why:** Violates [(local):(remote)={1:1}]. Machine death = 57 memory files lost permanently. Three projects have ZERO remote backup of any memory.
+
+**How to apply:** When auditing close-out, check system-wide parity (not just the current project). The `for proj in ... done` loop from S-Audit-2 is the diagnostic.
