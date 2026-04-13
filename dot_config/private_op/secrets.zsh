@@ -28,6 +28,7 @@ _op_cache_refresh() {
     echo "GEMINI_API_KEY=$(op read 'op://Personal/Gemini API Key/credential' 2>/dev/null)"
     echo "NPM_TOKEN=$(op read 'op://Personal/NPM Token/credential' 2>/dev/null)"
     echo "SONATYPE_GUIDE_TOKEN=$(op read 'op://Personal/Sonatype Guide/credential' 2>/dev/null)"
+    echo "NEON_API_KEY=$(op read 'op://Personal/Neon API Key/credential' 2>/dev/null)"
   } > "$_OP_CACHE.tmp" && mv "$_OP_CACHE.tmp" "$_OP_CACHE"
   chmod 600 "$_OP_CACHE"
 
@@ -39,7 +40,7 @@ _op_cache_refresh() {
 if [[ -f "$_OP_CACHE" ]]; then
   [[ "$(stat -f '%Lp' "$_OP_CACHE" 2>/dev/null)" != "600" ]] && chmod 600 "$_OP_CACHE"
   source "$_OP_CACHE"
-  export GEMINI_API_KEY NPM_TOKEN SONATYPE_GUIDE_TOKEN
+  export GEMINI_API_KEY NPM_TOKEN SONATYPE_GUIDE_TOKEN NEON_API_KEY
   export GOOGLE_API_KEY="$GEMINI_API_KEY"
   export NODE_AUTH_TOKEN="$NPM_TOKEN"
 fi
