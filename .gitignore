@@ -28,5 +28,9 @@ _registry/
 projects/
 !private_dot_claude/projects/
 
+# Auto-generated context files (from organvm context sync — not chezmoi source)
+/AGENTS.md
+/GEMINI.md
+
 # Ruff cache
 .ruff_cache/
