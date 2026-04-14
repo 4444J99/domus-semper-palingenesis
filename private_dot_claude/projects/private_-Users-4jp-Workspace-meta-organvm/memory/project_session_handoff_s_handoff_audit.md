@@ -18,8 +18,10 @@ Session on 2026-04-03, continuing from S-Brahma (Logos Layer).
 - No staleness detection, no context rollback mechanism
 - Stale `.git/index.lock` (0 bytes, from 11:32) found and removed in meta-organvm superproject
 
-**Unresolved:**
-- `organvm-corpvs-testamentvm` has 2 uncommitted submodule pointer updates in superproject (commits: docs(fossil) and feat(IRF-SYS-056))
-- Plan file at `~/.claude/plans/synthetic-exploring-treasure.md` should be copied to repo per plan discipline
+**Partially resolved:**
+- `organvm-corpvs-testamentvm` submodule pointer was committed (6597306, 2026-04-04) but remains dirty in current working tree (still ahead of pinned SHA per dissection session)
+- Plan file at `~/.claude/plans/synthetic-exploring-treasure.md` should be copied to repo per plan discipline (still pending)
 
-**How to apply:** Next session should consider fixing the duplicate handoff injection bug (templates.py emits the block, AND it's in the REPO_SECTION template — double emission). The corpus submodule drift should be committed or investigated.
+**Update 2026-04-13:** The "collapse duplicated Active Handoff Protocol" fix was committed in 4 repos (.github, cvrsvs-honorvm, materia-collider, vigiles-aeternae) in a prior session but left UNPUSHED. Discovered during audit session and pushed 2026-04-13. Corpus submodule pointer also synced.
+
+**How to apply:** The duplicate handoff injection ROOT CAUSE (templates.py double emission) may still exist in the context sync codegen. Verify before next `organvm context sync` run.
