@@ -43,27 +43,28 @@
 - [Plans are artifacts](feedback_plans_are_artifacts.md) — every plan committed to repo, never local-only
 
 ## Active Projects
-- [Signal Closure Cascade](project_signal_closure_cascade.md) — Phase 1 DONE, NLnet submitted, CC deferred, portal hardening DONE
-- [Portal avalanche architecture](project_portal_avalanche_architecture.md) — 5-file genome, RECEIPT.md relay, scaffold-portal.py (S51→S52)
-- [Grafana interview](project_grafana_interview.md) — Staff AI Engineer, recruiter screen Mon 2026-04-06 10:30 AM EDT
-- [Institutional strategy](project_institutional_strategy.md) — NLnet SUBMITTED, CC DEFERRED, Sovereign Tech Apr 6, ZKM Apr 12
+- [Signal Closure Cascade](project_signal_closure_cascade.md) — Phase 1 DONE, NLnet submitted, CC deferred, Sovereign Tech PASSED
+- [Portal avalanche architecture](project_portal_avalanche_architecture.md) — 5-file genome, RECEIPT.md relay, scaffold-portal.py
+- [Grafana interview](project_grafana_interview.md) — Staff AI Engineer, recruiter screen 2026-04-06 PASSED, outcome unknown
+- [Institutional strategy](project_institutional_strategy.md) — NLnet SUBMITTED, CC DEFERRED, Sovereign Tech PASSED, ZKM Apr 12
 - [SGO Research Program](project_sgo_research_program.md) — 13 works, 500K+ words, arXiv submissions pending
-- [Workspace topology experiment](project_workspace_topology_experiment.md) — Theory of Forms hierarchy, source--all-ever, mcp-servers lost
-- [Ontological Envelopes / Living Container](project_ontological_envelopes.md) — emergence-first container architecture, self-correcting seed Q(here)→shape
-- [Exit-interview dissection](project_exit_interview_dissection.md) — cross-organ post-mortem; V+VI+VII done 2026-04-04, others pending
-- [Empirical structure audit](project_empirical_structure_audit.md) — 6-exercise measurement: 26 import edges, 76% isolates, organs don't predict structure
-- [Multiverse architecture](project_multiverse_architecture.md) — 4 strata (formal→grammar→organism→material), INSTANCE.toml plan approved
+- [Ontological Envelopes / Living Container](project_ontological_envelopes.md) — emergence-first container architecture, Q(here)→shape
+- [Exit-interview dissection](project_exit_interview_dissection.md) — cross-organ post-mortem; V+VI+VII done, others pending
+- [Empirical structure audit](project_empirical_structure_audit.md) — organs don't predict structure; GH#315-317, IRF-SYS-098-101
+- [Multiverse architecture](project_multiverse_architecture.md) — 4 strata, INSTANCE.toml approved (IRF-SYS-101), 3 repos GitHub-only
+
+## Development feedback
+- [Ceremony vs specification](feedback_ceremony_vs_specification.md) — non-code files unique to a repo = specs, not waste
 
 ## Resolved/Historical
 - [Creative Capital — DEFERRED](project_creative_capital_rewrite.md) — funder-fit gate failed 2026-03-30, P0→P3
 - [Client Pillar design](project_client_pillar_design.md) — commerce--meta IMPLEMENTED 2026-03-30, 95+ files
 - [S36 email triage](project_email_triage_s36.md) — 300+ emails, P0 emergencies, 11 new IRF items
-- [Wikipedia credential stuffing](project_wikipedia_security_incident.md) — PW changed, TOTP enabled, 4 services + credit freeze still needed
-
-## Development feedback
-- [Ceremony vs specification](feedback_ceremony_vs_specification.md) — YAML/MD are NOT automatically "ceremony"; gate contracts/SOPs/research = future work specs
+- [Wikipedia credential stuffing](project_wikipedia_security_incident.md) — PW changed, TOTP enabled, 4 services still needed
+- [Workspace topology experiment](project_workspace_topology_experiment.md) — evolved into multiverse architecture
 
 ## References
-- [Gmail access paths](reference_gmail_access_paths.md) — OAuth (1Password), claude.ai MCP (read-only), Docker (broken), gcloud (no scopes)
-- [Prompt history data sources](reference_prompt_history_sources.md) — Claude history.jsonl (richest), Warp SQLite, Gemini metadata, Codex binary
-- [Prompt accountability law](feedback_prompt_accountability.md) — every prompt is an ORDER; artifact is RECEIPT; gap = system debt
+- [GitHub-only repos](reference_github_only_repos.md) — a-organvm, sovereign--ground, system-system--system not cloned locally
+- [Gmail access paths](reference_gmail_access_paths.md) — OAuth (1Password), claude.ai MCP (read-only), Docker (broken)
+- [Prompt history data sources](reference_prompt_history_sources.md) — Claude history.jsonl, Warp SQLite, Gemini metadata
+- [Prompt accountability law](feedback_prompt_accountability.md) — every prompt is an ORDER; artifact is RECEIPT
