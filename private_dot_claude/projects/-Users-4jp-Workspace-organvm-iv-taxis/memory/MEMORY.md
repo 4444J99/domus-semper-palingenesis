@@ -18,10 +18,11 @@
 
 ## Active Projects
 - [Synthesizer Derivation](project-synthesizer-derivation.md) — UMFAS: 4 axioms, 15 ideal forms, honest modular synthesis mapping (4/7 real), oscillation as universal primitive
-- [Sovereign Ground Analysis](project-sovereign-ground-analysis.md) — ~/sovereign--ground/ 6 categories populated; SYNTHESIS.md unifies streams; INVESTIGATION-PROTOCOL.md for unbiased audits
-- [Empirical Structure Tests](project-empirical-structure-tests.md) — 21-exercise suite, 13 ran; organ boundaries carry ZERO structural information (misalignment=1.0); hierarchy↔complexity correlation=0.009
-- [Palingenesis Transition](project-organ-iv-transition.md) — ORGAN-IV dissolving into a-organvm; TRIPTYCH now 4 strata (FORMAL added); evolved tree designed
+- [Sovereign Ground Analysis](project-sovereign-ground-analysis.md) — ~/sovereign--ground/ 6 categories populated; SYNTHESIS.md unifies streams
+- [Empirical Structure Tests](project-empirical-structure-tests.md) — 21-exercise suite, 13 ran; organ boundaries carry ZERO structural information
+- [Palingenesis Transition](project-organ-iv-transition.md) — ORGAN-IV dissolving into a-organvm; TRIPTYCH now 4 strata (FORMAL added)
 - [Conductor OS](project-conductor-activation.md) — ~60 conductor modules, fleet at superproject root; reframed as PRIMARY product
+- [Contrib Upstream PRs](project-contrib-upstream-prs.md) — 7 PRs total: 1 merged (temporalio), 5 open (grafana/k6 + openai need responses), 1 closed (Hive)
 
 ## Architectural Patterns
 - [Substrate Threshold Topology](project-substrate-threshold-topology.md) — 2D governance membrane (UMFAS×AtomicClock), 32 rules, executable validator
@@ -29,23 +30,24 @@
 - [Xenograft Protocol](project-xenograft-protocol.md) — SOP-IV-XGR-001: 7-phase alien material ingestion, multi-model verification
 
 ## Recent Milestones
-- **2026-04-07** — Empirical test suite built and ran (13/21 exercises). Organ boundaries empirically arbitrary. Ceremony-as-specification correction received.
-- **2026-04-07** — 15 ideal forms classified. Modular synthesis mapping honestly assessed (4/7 real, 3/7 forced). Oscillation thesis articulated.
-- **2026-04-06** — sovereign--ground fully populated. Rosetta Stone mapped 3 taxonomies. Gemini cross-examined (prompt injection found). `organvm-orient` built.
-- **2026-04-06** — UMFAS named. WHY document articulated. Epistemological warning: ground truth ≠ derivative ≠ foundational.
-- **2026-04-05** — Full 8-organ census. Corpus-First architecture (1,066 atoms). Taxis→Seed fortification (101→107 gates). 20 new SOPs.
+- **2026-04-13** — Full contrib reassessment (Gmail + GitHub API). 7 upstream PRs found (not 4): temporalio #1385 MERGED, grafana/k6 #5770 + openai #2802 need responses, coinbase #1054 + dapr #9719 + notion #242 zero reviews. Hive abandoned. 14 repos on disk (7 undocumented).
+- **2026-04-07** — Empirical test suite built and ran (13/21). Organ boundaries empirically arbitrary. Ceremony-as-specification correction.
+- **2026-04-07** — 15 ideal forms classified. Modular synthesis mapping honestly assessed (4/7 real). Oscillation thesis articulated.
+- **2026-04-06** — sovereign--ground populated. Rosetta Stone mapped 3 taxonomies. `organvm-orient` built.
+- **2026-04-06** — UMFAS named. WHY document articulated. Ground truth ≠ derivative ≠ foundational.
+- **2026-04-05** — Full 8-organ census. Corpus-First architecture (1,066 atoms). 20 new SOPs.
 - **2026-04-04** — Full ORGAN-IV dissection (24 dirs mapped). Xenograft Protocol designed.
 - **2026-04-02** — Fleet elevated to superproject root. Cross-agent drift codified.
 - **2026-03-31** — Organ obituary reports. Contribution ledger Wave 1+2.
 
 ## Completed (Archived)
-- [Archaeological Decomposition](project-archaeological-decomposition.md) — sequential containment, primitive extraction; superseded by empirical test suite
-- [META-ORGANVM Analysis](project-meta-organvm-analysis.md) — structural census 2026-04-06; findings absorbed into SYNTHESIS.md
-- [Process Crystallization](project-process-crystallization.md) — 20 SOPs; findings absorbed into empirical tests
-- [Corpus-First Architecture](project-corpus-first-architecture.md) — 1,066 atoms; superseded by UMFAS unified corpus thesis
+- [Archaeological Decomposition](project-archaeological-decomposition.md) — superseded by empirical test suite
+- [META-ORGANVM Analysis](project-meta-organvm-analysis.md) — structural census 2026-04-06; absorbed into SYNTHESIS.md
+- [Process Crystallization](project-process-crystallization.md) — 20 SOPs; absorbed into empirical tests
+- [Corpus-First Architecture](project-corpus-first-architecture.md) — 1,066 atoms; superseded by UMFAS
 - [AI Service Orchestration Gap](project-ai-service-orchestration-gap.md) — CLOSED 2026-04-02
 - [Organ Obituary Reports](project-organ-obituaries.md) — COMPLETED 2026-03-31
-- [AdenHQ/Hive PR #6707](adenhq-hive-postop.md) — STALE 17+ days as of 2026-04-07
+- [AdenHQ/Hive PR #6707](adenhq-hive-postop.md) — CLOSED by bot 2026-03-24 (not assigned to issue)
 - [AdenHQ/Hive Contribution](adenhq-hive-contribution.md) — 5-organ contribution, PR #6707
 - [Outbound Contribution Engine](outbound-contribution-engine.md) — `contrib_engine` CLI, 111+ tests
 - [Cross-Organ Symbiote Pattern](cross-organ-symbiote-pattern.md) — 5-organ contribution template
