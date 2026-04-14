@@ -9,6 +9,7 @@
 - [Docker/storage cleanup](project_docker_storage_design.md) — Internal SSD 81→74%, external 2.7→1.1TB (2026-03-25)
 - [iCloud folder sync broken](project_icloud_folder_sync_broken.md) — Runaway conflict loop, needs Apple server-side reset
 - [Time Machine SSD conversion](project_timemachine_ssd_conversion.md) — exFAT→APFS reformat deferred, needs staging drive
+- [Reconciliation Sprint 2026-04-14](project_reconciliation_sprint_2026-04-14.md) — Omega 9/17, registry 145, memory 460/460, 10 IRF items closed
 
 ## Feedback
 - [Full implementations required](feedback_full_implementations.md) — No stubs, placeholders, or partial code ever
