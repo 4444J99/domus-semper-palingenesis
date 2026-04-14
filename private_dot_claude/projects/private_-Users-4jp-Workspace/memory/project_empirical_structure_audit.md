@@ -27,6 +27,10 @@ Full empirical audit of ~/Workspace/ conducted 2026-04-06/07 (session S57 equiva
 
 **How to apply:** When evaluating system structure, use import graphs and co-change data, not organ labels. The 8 organs are filing cabinets, not functional units. The real clusters are: core engine (META+IV), personal output (4444J99), outer ring (V+VI+VII).
 
+**IRF items (added 2026-04-07):** IRF-SYS-098 (boundary misalignment), IRF-SYS-099 (15 ideal forms), IRF-SYS-100 (ceremony-as-specification), IRF-SYS-101 (multiverse INSTANCE.toml). DONE-337 (audit completion).
+
+**GitHub issues (created 2026-04-07):** meta-organvm/organvm-corpvs-testamentvm #315, #316, #317.
+
 **Plans produced:**
 - `~/.claude/plans/2026-04-06-fortify-organvm-postmortem.md` — governance threshold map
 - `~/.claude/plans/2026-04-06-fortify-organvm-gap-analysis-v2.md` — a-organvm gap analysis + naming/placement/nesting
