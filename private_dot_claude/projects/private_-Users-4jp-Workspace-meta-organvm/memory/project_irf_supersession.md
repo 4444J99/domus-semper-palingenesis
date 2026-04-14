@@ -1,10 +1,10 @@
 ---
 name: IRF and a-organvm project board (dual index)
-description: V1 IRF (845 items, 20 domains) remains actively maintained. a-organvm GitHub project board complements it for issue-driven work but has NOT replaced it.
+description: V1 IRF (877 items, 20 domains, 510 open) remains actively maintained. a-organvm GitHub project board complements it for issue-driven work but has NOT replaced it.
 type: project
 ---
 
-The universal work registry at `organvm-corpvs-testamentvm/INST-INDEX-RERUM-FACIENDARUM.md` continues growing actively. As of 2026-04-03, it has **845 items across 20 domains** (up from 792 on 2026-04-02, up from the original 25-issue a-organvm board state).
+The universal work registry at `organvm-corpvs-testamentvm/INST-INDEX-RERUM-FACIENDARUM.md` continues growing actively. As of 2026-04-13, it has **877 items across 20 domains** (510 open, 363 completed). Most recent addition: IRF-SYS-106 (Compilatio Cognitionis, 2026-04-13). Stats last refreshed 2026-04-11 (S-Audit-2 close-out).
 
 The **a-organvm GitHub project board** complements the IRF with structured issues carrying richer metadata (labels, assignees, project fields), but the IRF has NOT been superseded — it continues to receive new entries every session.
 
