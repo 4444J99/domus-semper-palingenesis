@@ -12,23 +12,33 @@ metadata:
   implementation_status: ACTIVE
   tier: infrastructure
   promotion_status: GRADUATED
-  last_validated: "2026-03-23"
+  last_validated: "2026-04-14"
   language: shell
   note: >-
     The operator's machine configuration — shell environment, tool setup,
     secrets management, agent infrastructure. Managed by chezmoi with
     autoCommit + autoPush. If domus breaks, every organ loses its shell,
-    secrets, and context files.
+    secrets, and context files. Registered in PERSONAL section of
+    registry-v2.json (IRF-DOM-002, 2026-04-13).
 
 produces:
   - type: environment-config
-    description: "Shell environment, PATH, XDG dirs, tool initialization"
+    description: "Shell environment, PATH, XDG dirs, tool initialization (50ms startup, S32 rewrite)"
     consumers: [ALL]
   - type: agent-infrastructure
     description: "Claude/Gemini/Codex agent configuration, MCP servers, LaunchAgents"
     consumers: [ORGAN-IV, META-ORGANVM]
   - type: secrets-management
-    description: "1Password CLI integration, API key provisioning"
+    description: "1Password CLI integration, API key provisioning via op-refresh"
+    consumers: [ALL]
+  - type: cache-primitive
+    description: "_domus_cache_init — DRY shell init caching for tool startup"
+    consumers: [ALL]
+  - type: self-heal
+    description: "chezmoi self-heal daemon + domus-maintain for autonomous environment recovery"
+    consumers: [ALL]
+  - type: memory-parity
+    description: "Claude memory files tracked via chezmoi (460 files, [(local):(remote)={1:1}])"
     consumers: [ALL]
 
 consumes:
@@ -38,3 +48,6 @@ consumes:
   - type: governance-policy
     description: "System governance rules and standards"
     producers: [META-ORGANVM]
+  - type: cloud-storage
+    description: "Dropbox, Google Drive, Backblaze (Homebrew casks, not org repos)"
+    producers: [EXTERNAL]
