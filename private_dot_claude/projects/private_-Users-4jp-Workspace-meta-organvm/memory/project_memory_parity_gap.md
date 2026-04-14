@@ -1,6 +1,6 @@
 ---
-name: Claude memory parity — meta-organvm RESOLVED, system-wide gap remains
-description: meta-organvm memory parity achieved 2026-04-08 (17 files added to chezmoi). System-wide gap: 57 files across 6 projects still untracked. IRF-DOM-030.
+name: Claude memory parity — meta-organvm VERIFIED 2026-04-13, system-wide gap remains
+description: meta-organvm parity re-verified 2026-04-13 (86 disk = 86 chezmoi = pushed to origin). System-wide gap: 57 files across 6 projects still untracked. IRF-DOM-030.
 type: project
 ---
 
@@ -8,7 +8,7 @@ type: project
 
 ## meta-organvm — RESOLVED
 
-17 memory files were added to chezmoi in commit `4728e34` (domus-semper-palingenesis). Auto-pushed to remote. Parity: 86 disk / 86 chezmoi.
+17 memory files were added to chezmoi in commit `4728e34` (domus-semper-palingenesis). Auto-pushed to remote. Parity: 86 disk / 86 chezmoi. **Re-verified 2026-04-13** — count still 86/86, domus pushed to origin/master (0 unpushed, 0 dirty).
 
 ## System-wide — 57 files UNPROTECTED
 
