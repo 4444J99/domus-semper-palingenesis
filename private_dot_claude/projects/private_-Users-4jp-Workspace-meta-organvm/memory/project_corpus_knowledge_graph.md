@@ -10,4 +10,4 @@ Corpus knowledge graph planned (S-corpus-graph, 2026-04-07) but NOT yet built. D
 
 **How to apply:** When implementing, build as `organvm_engine/corpus/` module extending `RelationType` (8 existing + 5 new: DEFINES, REFERENCES, IMPLEMENTS, GROUNDS, EXTRACTED_FROM) and `EntityType` (7 existing + 3 new: CONCEPT, SPEC, TRANSCRIPT). Storage: single JSON file. Output: 6 navigable markdown indices including gap analysis. Integration: `organvm corpus build|render|query|gaps|stats` CLI commands.
 
-**IRF:** IRF-ENG-0XX (needs assignment). **GH:** Needs issue creation on organvm-engine.
+**IRF:** IRF-SYS-104 (P2). **GH:** meta-organvm/organvm-engine#81.
