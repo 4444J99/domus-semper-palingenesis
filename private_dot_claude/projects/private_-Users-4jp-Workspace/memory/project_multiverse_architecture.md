@@ -24,4 +24,8 @@ Session 2026-04-06/07 discovered the full system topology extends beyond ~/Works
 
 **Multiverse concept:** Operator reframed the scattered locations not as a consolidation problem but as contained instances in a multiverse, connected by isomorphic laws (same piece/v2 schema). Plan approved for INSTANCE.toml identity files at each location.
 
+**GitHub-only repos (confirmed 2026-04-07):** sovereign--ground, system-system--system, and a-organvm/a-organvm exist on GitHub but are NOT cloned in ~/Workspace/. They live outside the material layer by design. To operate on them: shallow clone to /tmp, edit, push, clean up. The gh CLI works; the MCP GitHub file-write tool gets 401 on cross-org repos. system-system--system had local worktree changes that were LOST when the worktree was cleaned — check GitHub state (latest: `aa6ce9f`) before assuming local currency.
+
+**IRF:** INSTANCE.toml plan is IRF-SYS-101 (P2, approved but not executed).
+
 **How to apply:** When starting work, identify which stratum you're in. The laws (system-system--system) govern the grammar (SEED). The grammar governs the organism (a-organvm). The organism absorbs the material (Workspace). Don't work on material as if it's the organism.
