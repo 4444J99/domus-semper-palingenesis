@@ -1,17 +1,19 @@
 ---
 name: adenhq-hive-postop
-description: Post-op monitoring for AdenHQ/Hive PR #6707 — STALE 16+ days as of 2026-04-06, verify before acting
+description: AdenHQ/Hive PR #6707 — CLOSED by bot 2026-03-24, author not assigned to issue #6613. No human review ever occurred.
 type: project
 ---
 
-PR #6707 submitted 2026-03-21. Issue #6613 claimed, awaiting assignment.
+PR #6707 submitted 2026-03-21. **CLOSED** by contribution-requirements bot on 2026-03-24.
 
-**STALE WARNING (2026-04-06):** PR #6707 is 16+ days old with no known activity. Verify status before acting: `gh pr view 6707 --repo adenhq/hive --json state,reviews,comments`.
+**What happened:** Bot flagged on 2026-03-22 that author (`@4444J99`) was not assigned to linked issue #6613. After 24-hour grace period, bot auto-closed on 2026-03-24. No human reviewer ever commented or reviewed.
 
-**Why:** The 24h assignment window is the critical gate. CI `check-requirements` will fail until assigned. Once assigned, CI re-runs automatically.
+**Why this matters:** The PR content (design versioning system) was never evaluated on merit. It died to process — a `check-requirements` gate that requires issue assignment before review.
 
-**How to apply:** On any session start in ORGAN-IV, check:
-1. `gh pr view 6707 --repo adenhq/hive --json state,reviews,comments,labels`
-2. If closed/rejected: journal the outcome, archive the workspace
-3. If merged: begin Phase 2, promote seed.yaml
-4. If stale: consider whether to ping or close
+**Recovery path (if desired):**
+1. Self-assign to issue #6613
+2. Reopen PR #6707
+3. Rebase onto current main
+4. `micro-fix` label exempts from assignment requirement, but this is a `feat:` — likely doesn't qualify
+
+**How to apply:** Consider whether the contribution is still worth pursuing given 23+ days of staleness and zero maintainer engagement. The cross-organ symbiote pattern and contrib engine infrastructure remain valid regardless of this PR's outcome.
