@@ -23,9 +23,9 @@ type: project
 **Phase 3 — INFRASTRUCTURE (in progress):**
 - 3.1 Portal avalanche hardening: **DONE** (S52, 2026-04-02) — scaffold-portal.py, RECEIPT.md, CORRESPONDENCE domain
 - 3.2 Client Pillar implementation: **DONE** (2026-03-30, 95+ files)
-- 3.3 Sovereign Tech Fellowship (2026-04-06)
+- 3.3 Sovereign Tech Fellowship (2026-04-06) — **DEADLINE PASSED, status unknown**
 
 **Phase 4 — FLYWHEEL (2026-04-07+):**
 - ZKM Rauschenberg (2026-04-12), SGO arXiv, companion indices, omega #9
 
-**How to apply:** The immediate open deadlines are Sovereign Tech (Apr 6) and ZKM (Apr 12). Creative Capital is dead weight — do not re-engage without V2 art layer.
+**How to apply:** ZKM (Apr 12) is the next known open deadline. Sovereign Tech status needs user confirmation. Creative Capital is dead weight — do not re-engage without V2 art layer.
