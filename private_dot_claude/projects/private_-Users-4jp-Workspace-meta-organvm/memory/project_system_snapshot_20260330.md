@@ -33,7 +33,7 @@ New since this snapshot: governance/exit_interview/ (7 files, ~2,088 lines total
 
 **MCP server:** 132 tool registrations, 34 source files
 
-**Submodules:** 12 (.github, alchemia-ingestvm, organvm-corpvs-testamentvm, organvm-engine, schema-definitions, system-dashboard, organvm-mcp-server, praxis-perpetua, stakeholder-portal, materia-collider, organvm-ontologia, vigiles-aeternae--agon-cosmogonicum)
+**Submodules:** 14 as of 2026-04-04 (.github, alchemia-ingestvm, organvm-corpvs-testamentvm, organvm-engine, schema-definitions, system-dashboard, organvm-mcp-server, praxis-perpetua, stakeholder-portal, materia-collider, organvm-ontologia, vigiles-aeternae--agon-cosmogonicum, cvrsvs-honorvm, aerarium--res-publica). Was 12 at original snapshot; +2 added between 2026-03-30 and 2026-04-04.
 
 **Word count canonical:** ~739K (last computed 2026-03-20, likely higher now)
 
