@@ -1,6 +1,6 @@
 ---
 name: Grafana Labs interview — Staff AI Engineer
-description: Active job opportunity. Recruiter screen Mon 2026-04-06 10:30 AM EDT with Ryan McKellips. 6-stage loop. Adversarial analysis completed.
+description: Grafana Staff AI Engineer — recruiter screen bombed 2026-04-06 (health issues, unprepared). Effectively closed. Broader market traction rising independently.
 type: project
 ---
 
@@ -17,7 +17,7 @@ type: project
 6. Offer
 
 **Scheduled:** Mon 2026-04-06, 10:30-11:00 AM EDT, Recruiter Screen with Ryan McKellips
-**Status (as of 2026-04-07):** Date has passed. Outcome unknown from memory — ask user for update.
+**Status (as of 2026-04-15):** Recruiter screen went poorly. User was dealing with personal health issues and was unprepared. Self-assessment: scattered, uncertain presentation. Likely dead. Do not invest further time here unless the user receives a callback.
 **Portal:** Guide.co candidate portal at app3.guide.co/guide/grafana/hEmYUXEc
 
 **Sovereign position (from S49 adversarial analysis):**
@@ -27,4 +27,6 @@ type: project
 - DECISION: Consulting pipeline (Tony + Scott + ventures) has higher expected value per hour
 - TRADE-OFF: If accepted, ORGANVM becomes nights-and-weekends for 12-18 months
 
-**How to apply:** When the user mentions Grafana prep, reference the adversarial analysis. Don't over-optimize for this — the pipeline scores it 7.0, which is below the scoring rubric threshold.
+**Broader market signal (2026-04-15):** LinkedIn showing 9 recruiter views + profile views from Railway, dbt Labs, Deepgram, W&B, Elastic, Wikimedia. GitHub followers at 33 with organic Aden/Hive team cluster (5 follows). Market interest is rising across platforms independent of Grafana pipeline.
+
+**How to apply:** Grafana is effectively closed. Don't bring it up unless the user does. The adversarial analysis was correct — pipeline scored it 7.0, below threshold, and the sovereign position was "don't over-invest." Active threads (Datadog, Aden/Hive, Elastic, Together AI) are higher-value now.
