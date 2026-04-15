@@ -24,6 +24,7 @@ if status is-interactive
     set -gx KUBECONFIG $XDG_CONFIG_HOME/kube/config
     set -gx NPM_CONFIG_CACHE $XDG_CACHE_HOME/npm
     set -gx CLOUDSDK_CONFIG $XDG_CONFIG_HOME/gcloud
+    set -gx CLOUDSDK_PYTHON /opt/homebrew/bin/python3.13
     set -gx CURL_HOME $XDG_CONFIG_HOME/curl
     set -gx INPUTRC $XDG_CONFIG_HOME/readline/inputrc
     set -gx LESSKEYIN $XDG_CONFIG_HOME/less/lesskey

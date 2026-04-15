@@ -86,7 +86,8 @@ _agents/lab/.venv/
 projects/
 _registry/
 
-# Claude session transcripts (ephemeral — not the soul)
+# Claude session data — managed by Claude Code, preserved via per-project archival
 .claude/projects/*/*.jsonl
 .claude/projects/*/[0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f]-*
-.claude/projects/*/memory/.consolidate-lock
+.claude/projects/*/memory/
+.claude/projects/*/sessions-index.json

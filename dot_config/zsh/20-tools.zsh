@@ -91,11 +91,11 @@ if command -v navi &>/dev/null; then
 fi
 
 # Google Cloud SDK
-if [[ -d "$HOME/google-cloud-sdk" ]]; then
+if [[ -d "/opt/homebrew/share/google-cloud-sdk" ]]; then
   gcloud() {
     unfunction gcloud
-    [[ -f "$HOME/google-cloud-sdk/path.zsh.inc" ]] && source "$HOME/google-cloud-sdk/path.zsh.inc"
-    [[ -f "$HOME/google-cloud-sdk/completion.zsh.inc" ]] && source "$HOME/google-cloud-sdk/completion.zsh.inc"
+    [[ -f "/opt/homebrew/share/google-cloud-sdk/path.zsh.inc" ]] && source "/opt/homebrew/share/google-cloud-sdk/path.zsh.inc"
+    [[ -f "/opt/homebrew/share/google-cloud-sdk/completion.zsh.inc" ]] && source "/opt/homebrew/share/google-cloud-sdk/completion.zsh.inc"
     gcloud "$@"
   }
 fi

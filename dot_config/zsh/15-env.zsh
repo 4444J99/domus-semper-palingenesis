@@ -54,6 +54,7 @@ export TMUX_PLUGIN_MANAGER_PATH="$XDG_DATA_HOME/tmux/plugins"
 
 # Google Cloud SDK
 export CLOUDSDK_CONFIG="$XDG_CONFIG_HOME/gcloud"
+export CLOUDSDK_PYTHON="/opt/homebrew/bin/python3.13"
 
 # curl config dir
 export CURL_HOME="$XDG_CONFIG_HOME/curl"

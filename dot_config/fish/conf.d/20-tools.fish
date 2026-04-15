@@ -108,10 +108,10 @@ if status is-interactive
     end
 
     # Google Cloud SDK - lazy load on first `gcloud` call
-    if test -d $HOME/google-cloud-sdk
+    if test -d /opt/homebrew/share/google-cloud-sdk
         function gcloud
             functions -e gcloud
-            test -f $HOME/google-cloud-sdk/path.fish.inc; and source $HOME/google-cloud-sdk/path.fish.inc 2>/dev/null
+            test -f /opt/homebrew/share/google-cloud-sdk/path.fish.inc; and source /opt/homebrew/share/google-cloud-sdk/path.fish.inc 2>/dev/null
             gcloud $argv
         end
     end
