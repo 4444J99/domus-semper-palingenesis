@@ -933,6 +933,47 @@ cmd_doctor() {
 }
 
 # ─────────────────────────────────────────────────────────────────────────────
+# Sessions
+# ─────────────────────────────────────────────────────────────────────────────
+
+cmd_sessions() {
+  local subcmd="${1:-status}"
+  [[ $# -gt 0 ]] && shift
+
+  case "$subcmd" in
+    sync)
+      info "Archiving sessions to project directories..."
+      local since="${1:-7d}"
+      if command -v organvm &>/dev/null; then
+        organvm session archive --since "$since" "$@"
+      else
+        warn "organvm CLI not found — install organvm-engine"
+        return 1
+      fi
+      ;;
+    status)
+      if command -v organvm &>/dev/null; then
+        local total
+        total=$(organvm session archive --dry-run 2>&1 | head -1)
+        echo "$total"
+      else
+        warn "organvm CLI not found"
+        return 1
+      fi
+      ;;
+    *)
+      # Pass through to organvm session
+      if command -v organvm &>/dev/null; then
+        organvm session "$subcmd" "$@"
+      else
+        warn "organvm CLI not found"
+        return 1
+      fi
+      ;;
+  esac
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
 # Main
 # ─────────────────────────────────────────────────────────────────────────────
 
@@ -1010,6 +1051,9 @@ main() {
     doctor | doc)
       check_deps
       cmd_doctor "$@"
+      ;;
+    sessions | sess)
+      cmd_sessions "$@"
       ;;
     shell-parity | parity)
       if [[ -x "${BIN_DIR}/domus-shell-parity" ]]; then
