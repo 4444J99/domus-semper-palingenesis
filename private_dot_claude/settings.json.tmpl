@@ -5,7 +5,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "find /Users/4jp/.claude/plugins/cache -name '*.sh' -path '*/hooks*' -exec chmod +x {} + 2>/dev/null; true"
+            "command": "find {{ .chezmoi.homeDir }}/.claude/plugins/cache -name '*.sh' -path '*/hooks*' -exec chmod +x {} + 2>/dev/null; true"
           }
         ]
       }
@@ -48,7 +48,7 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "/bin/bash /Users/4jp/.claude/statusline-command.sh"
+    "command": "/bin/bash {{ .chezmoi.homeDir }}/.claude/statusline-command.sh"
   },
   "enabledPlugins": {
     "context7@claude-plugins-official": true,
