@@ -103,6 +103,7 @@ domus-semper-palingenesis/
 | `dot_config/private_op/secrets.zsh` | `~/.config/op/secrets.zsh` | API keys and secrets via 1Password CLI |
 | `modify_dot_claude.json.tmpl` | `~/.claude.json` | Claude Code config — uses modify mode to merge, not overwrite |
 | `private_dot_claude/CLAUDE.md.tmpl` | `~/.claude/CLAUDE.md` | Global Claude instructions (rendered from template) |
+| `private_dot_claude/settings.json.tmpl` | `~/.claude/settings.json` | Claude Code hooks (PreToolUse outbound guards), plugins, statusLine — **WARNING:** JSON linters/formatters strip unknown `if` fields; always verify hook conditionals after any formatting pass |
 | `symlink_dot_gemini` | `~/.gemini` | Symlink to `~/.local/share/gemini` |
 
 ## Secrets Management

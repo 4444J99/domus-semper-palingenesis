@@ -40,6 +40,9 @@ produces:
   - type: memory-parity
     description: "Claude memory files tracked via chezmoi (460 files, [(local):(remote)={1:1}])"
     consumers: [ALL]
+  - type: claude-code-config
+    description: "Claude Code settings.json: PreToolUse outbound-action hooks, plugin registry, statusLine — managed as private_dot_claude/settings.json.tmpl (GH#26, IRF-DOM-031)"
+    consumers: [ALL]
 
 consumes:
   - type: skills
