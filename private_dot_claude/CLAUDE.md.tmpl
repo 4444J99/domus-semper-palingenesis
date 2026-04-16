@@ -21,3 +21,13 @@
 {{- $skillIndex := include "dot_config/ai-skills/skill-index.md.tmpl" }}
 {{ $skillIndex }}
 {{ $voicePolicy }}
+## Universal Rules (All Projects, All Sessions)
+
+These rules are mechanically enforced where possible (hooks in `settings.json`).
+They are restated here for passive context reinforcement across all sessions.
+
+1. **N/A is a vacuum** — never a resting state. Every N/A must become a named IRF item.
+2. **Nothing local only** — every artifact: git-tracked AND pushed. "On disk" = not done.
+3. **Rules are additive** — new rules amend, never overwrite. Every rule ever given accumulates.
+4. **Conductor principle** — the human directs vision. Everything else is the system's job.
+   Before deferring to the human: ask "can I do this?" If yes → do it. State only real blockers.

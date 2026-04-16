@@ -17,7 +17,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"additionalContext\":\"OUTBOUND ACTION PREFLIGHT — Mandatory before posting PR comment:\\n1. AUDIT: Did you read the full PR thread (comments, reviews, CI status, bot instructions) BEFORE composing this comment?\\n2. PROTOCOLS: Did you check organvm-iv-taxis/orchestration-start-here/contrib_engine/outreach_protocol.md?\\n3. SEQUENCE: If multi-step, are all steps planned and is this the correct order?\\n4. EDIT-NOT-ERRATA: Should you edit an existing comment instead of appending?\\n5. THREAD-STATE: Does this comment address what the thread actually needs?\"}}'",
+            "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"additionalContext\":\"OUTBOUND ACTION PREFLIGHT — Mandatory before posting PR comment:\\n1. AUDIT: Did you read the full PR thread (comments, reviews, CI status, bot instructions) BEFORE composing this comment?\\n2. PROTOCOLS: Did you check organvm-iv-taxis/orchestration-start-here/contrib_engine/outreach_protocol.md?\\n3. SEQUENCE: If multi-step, are all steps planned and is this the correct order?\\n4. EDIT-NOT-ERRATA: Should you edit an existing comment instead of appending?\\n5. THREAD-STATE: Does this comment address what the thread actually needs?\\n6. CADENCE: Is this part of a cross-repo burst (<90s between repos)? Stagger if so — rapid multi-repo posting signals bot behavior.\\n7. UPSTREAM RULES: If external/upstream repo, did you read its CONTRIBUTING.md? We are guests.\"}}'",
             "statusMessage": "Outbound action preflight..."
           }
         ]
@@ -28,7 +28,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"additionalContext\":\"OUTBOUND ACTION PREFLIGHT — Mandatory before posting issue comment:\\n1. AUDIT: Did you read the full issue thread (comments, assignees, labels) BEFORE composing this comment?\\n2. PROTOCOLS: Did you check organvm-iv-taxis/orchestration-start-here/contrib_engine/outreach_protocol.md?\\n3. SEQUENCE: If multi-step, are all steps planned and is this the correct order?\\n4. EDIT-NOT-ERRATA: Should you edit an existing comment instead of appending?\\n5. THREAD-STATE: Does this comment address what the issue actually needs?\"}}'",
+            "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"additionalContext\":\"OUTBOUND ACTION PREFLIGHT — Mandatory before posting issue comment:\\n1. AUDIT: Did you read the full issue thread (comments, assignees, labels) BEFORE composing this comment?\\n2. PROTOCOLS: Did you check organvm-iv-taxis/orchestration-start-here/contrib_engine/outreach_protocol.md?\\n3. SEQUENCE: If multi-step, are all steps planned and is this the correct order?\\n4. EDIT-NOT-ERRATA: Should you edit an existing comment instead of appending?\\n5. THREAD-STATE: Does this comment address what the issue actually needs?\\n6. CADENCE: Is this part of a cross-repo burst (<90s between repos)? Stagger if so.\\n7. UPSTREAM RULES: If external/upstream repo, did you read its CONTRIBUTING.md? We are guests.\"}}'",
             "statusMessage": "Outbound action preflight..."
           }
         ]
@@ -39,8 +39,19 @@
         "hooks": [
           {
             "type": "command",
-            "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"additionalContext\":\"OUTBOUND ACTION PREFLIGHT — Mandatory before submitting PR review:\\n1. AUDIT: Did you read the full PR diff, existing reviews, and CI status?\\n2. PROTOCOLS: Did you check workspace contribution protocols?\\n3. SEQUENCE: Is this review part of a larger action sequence? Plan atomically.\\n4. THREAD-STATE: Does the review address what the PR actually needs?\"}}'",
+            "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"additionalContext\":\"OUTBOUND ACTION PREFLIGHT — Mandatory before submitting PR review:\\n1. AUDIT: Did you read the full PR diff, existing reviews, and CI status?\\n2. PROTOCOLS: Did you check workspace contribution protocols?\\n3. SEQUENCE: Is this review part of a larger action sequence? Plan atomically.\\n4. THREAD-STATE: Does the review address what the PR actually needs?\\n5. CADENCE: Part of a cross-repo burst? Stagger — 90s minimum between repos.\\n6. UPSTREAM RULES: Read CONTRIBUTING.md for this repo first. We are guests.\"}}'",
             "statusMessage": "Outbound action preflight..."
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"Stop\",\"additionalContext\":\"SESSION HYGIENE (always-on):\\n• CLOSE GATE: Ending session? Run 13-step protocol (meta-organvm/memory/feedback_close_protocol.md)\\n• PARITY: local:remote=1:1 — git status clean, all commits pushed, memory backed up\\n• VACUUM: N/A is never a resting state — convert to named IRF items with IDs\\n• ADDITIVE: rules only accumulate — new rules amend old ones, never replace\"}}'",
+            "statusMessage": "Session hygiene..."
           }
         ]
       }
