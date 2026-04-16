@@ -47,7 +47,7 @@
 - [Signal Closure Cascade](project_signal_closure_cascade.md) — Phase 1 DONE, NLnet submitted, CC deferred, Sovereign Tech PASSED
 - [Portal avalanche architecture](project_portal_avalanche_architecture.md) — 5-file genome, RECEIPT.md relay, scaffold-portal.py
 - [Grafana interview](project_grafana_interview.md) — Staff AI Engineer, recruiter screen bombed, effectively closed
-- [Institutional strategy](project_institutional_strategy.md) — NLnet SUBMITTED, CC DEFERRED, Sovereign Tech PASSED, ZKM Apr 12
+- [Institutional strategy](project_institutional_strategy.md) — NLnet SUBMITTED, CC DEFERRED, Sovereign Tech PASSED, ZKM LAPSED
 - [SGO Research Program](project_sgo_research_program.md) — 13 works, 500K+ words, arXiv submissions pending
 - [Ontological Envelopes / Living Container](project_ontological_envelopes.md) — emergence-first container architecture, Q(here)→shape
 - [Exit-interview dissection](project_exit_interview_dissection.md) — cross-organ post-mortem; V+VI+VII done, others pending

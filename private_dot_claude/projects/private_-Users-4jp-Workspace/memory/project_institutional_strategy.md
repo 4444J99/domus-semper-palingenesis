@@ -19,7 +19,7 @@ ORGANVM's legal/financial institutionalization strategy was researched and desig
 | 2026-04-01 | NLnet NGI0 Commons | EUR 37,080 | **SUBMITTED** — 153-line application, "Cvrsvs Honorvm" governance engine extraction, 11 milestones. Awaiting review. |
 | ~~2026-04-02~~ | ~~Creative Capital~~ | ~~$50K~~ | **DEFERRED** — funder-fit gate failed (CC funds sensory art, not infrastructure). See project_creative_capital_rewrite.md |
 | 2026-04-06 | Sovereign Tech Fellowship | TBD | **DEADLINE PASSED** (as of 2026-04-07) — status unknown, check with user |
-| 2026-04-12 | ZKM Rauschenberg Residency | TBD | Not yet drafted |
+| ~~2026-04-12~~ | ~~ZKM Rauschenberg Residency~~ | ~~TBD~~ | **LAPSED** — deadline passed 2026-04-12, draft never composed. Health issues during window. |
 | ~~2026-05-01~~ | ~~Shuttleworth Fellowship~~ | — | CLOSED permanently July 2022. Misinformation from aggregator sites. |
 
 **Phased roadmap:**
