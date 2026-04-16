@@ -1,0 +1,70 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "find /Users/4jp/.claude/plugins/cache -name '*.sh' -path '*/hooks*' -exec chmod +x {} + 2>/dev/null; true"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "if": "Bash(gh pr comment *)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"additionalContext\":\"OUTBOUND ACTION PREFLIGHT — Mandatory before posting PR comment:\\n1. AUDIT: Did you read the full PR thread (comments, reviews, CI status, bot instructions) BEFORE composing this comment?\\n2. PROTOCOLS: Did you check organvm-iv-taxis/orchestration-start-here/contrib_engine/outreach_protocol.md?\\n3. SEQUENCE: If multi-step, are all steps planned and is this the correct order?\\n4. EDIT-NOT-ERRATA: Should you edit an existing comment instead of appending?\\n5. THREAD-STATE: Does this comment address what the thread actually needs?\"}}'",
+            "statusMessage": "Outbound action preflight..."
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "if": "Bash(gh issue comment *)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"additionalContext\":\"OUTBOUND ACTION PREFLIGHT — Mandatory before posting issue comment:\\n1. AUDIT: Did you read the full issue thread (comments, assignees, labels) BEFORE composing this comment?\\n2. PROTOCOLS: Did you check organvm-iv-taxis/orchestration-start-here/contrib_engine/outreach_protocol.md?\\n3. SEQUENCE: If multi-step, are all steps planned and is this the correct order?\\n4. EDIT-NOT-ERRATA: Should you edit an existing comment instead of appending?\\n5. THREAD-STATE: Does this comment address what the issue actually needs?\"}}'",
+            "statusMessage": "Outbound action preflight..."
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "if": "Bash(gh pr review *)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"additionalContext\":\"OUTBOUND ACTION PREFLIGHT — Mandatory before submitting PR review:\\n1. AUDIT: Did you read the full PR diff, existing reviews, and CI status?\\n2. PROTOCOLS: Did you check workspace contribution protocols?\\n3. SEQUENCE: Is this review part of a larger action sequence? Plan atomically.\\n4. THREAD-STATE: Does the review address what the PR actually needs?\"}}'",
+            "statusMessage": "Outbound action preflight..."
+          }
+        ]
+      }
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "/bin/bash /Users/4jp/.claude/statusline-command.sh"
+  },
+  "enabledPlugins": {
+    "context7@claude-plugins-official": true,
+    "serena@claude-plugins-official": true,
+    "explanatory-output-style@claude-plugins-official": true,
+    "warp@claude-code-warp": true
+  },
+  "extraKnownMarketplaces": {
+    "claude-code-warp": {
+      "source": {
+        "source": "github",
+        "repo": "warpdotdev/claude-code-warp"
+      }
+    }
+  },
+  "effortLevel": "high",
+  "autoDreamEnabled": true,
+  "skipDangerousModePermissionPrompt": true
+}
