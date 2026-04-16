@@ -98,6 +98,30 @@ export AGENTS_LOG="$AGENTS_ROOT/log"
 export WORKSPACE_ROOT="$DOMUS_ROOT/projects"
 
 # ─────────────────────────────────────────────────────────────────────────────
+# Domain Infrastructure (derived from identity vars in ~/.zshenv)
+# Subdomains per organ — used by deploy scripts, seed.yaml sync, and SOPs
+# ─────────────────────────────────────────────────────────────────────────────
+
+# Organ → subdomain mapping (.dev = making organs, .org = speaking organs)
+export DOMAIN_ORGAN_I="theoria.${DOMAIN_SYSTEM}"
+export DOMAIN_ORGAN_II="poiesis.${DOMAIN_SYSTEM}"
+export DOMAIN_ORGAN_III="ergon.${DOMAIN_SYSTEM}"
+export DOMAIN_ORGAN_IV="taxis.${DOMAIN_SYSTEM}"
+export DOMAIN_ORGAN_V="logos.${DOMAIN_SYSTEM_ORG}"
+export DOMAIN_ORGAN_VI="koinonia.${DOMAIN_SYSTEM_ORG}"
+export DOMAIN_ORGAN_VII="kerygma.${DOMAIN_SYSTEM_ORG}"
+export DOMAIN_ORGAN_META="meta.${DOMAIN_SYSTEM}"
+
+# Service subdomains
+export DOMAIN_API="api.${DOMAIN_SYSTEM}"
+export DOMAIN_STATUS="status.${DOMAIN_SYSTEM}"
+export DOMAIN_SHORTENER="go.${DOMAIN_HANDLE}"
+
+# Portfolio canonical URL
+export DOMAIN_PORTFOLIO="https://${DOMAIN_NAME}"
+export DOMAIN_RESUME="https://resume.${DOMAIN_NAME}"
+
+# ─────────────────────────────────────────────────────────────────────────────
 # Python Toolchain (uv / pipx)
 # Pin agent frameworks to 3.11 for broadest compatibility
 # ─────────────────────────────────────────────────────────────────────────────

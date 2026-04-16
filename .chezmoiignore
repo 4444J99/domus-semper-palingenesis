@@ -86,8 +86,7 @@ _agents/lab/.venv/
 projects/
 _registry/
 
-# Claude session data — managed by Claude Code, preserved via per-project archival
+# Claude session data — transcripts/UUIDs excluded; memory/ tracked (local:remote=1:1 invariant)
 .claude/projects/*/*.jsonl
 .claude/projects/*/[0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f]-*
-.claude/projects/*/memory/
 .claude/projects/*/sessions-index.json

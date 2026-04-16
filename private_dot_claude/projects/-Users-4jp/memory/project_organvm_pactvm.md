@@ -1,75 +1,56 @@
 ---
-name: ORGANVM-PACTVM eight-organ system
-description: Complete build history of the eight-organ creative-institutional GitHub system — orgs, repos, READMEs, CI, validation, launch
+name: ORGANVM system state
+description: Current state of the eight-organ creative-institutional system — 10 organs, 145 repos, omega 9/20, ~896 IRF items, launched 2026-02-11
 type: project
 ---
 
-Eight-organ creative-institutional system. Planning corpus at `~/Workspace/organvm-pactvm/ingesting-organ-document-structure/`.
+Eight-organ creative-institutional system with PERSONAL + META umbrella. Planning corpus at `~/Workspace/meta-organvm/organvm-corpvs-testamentvm/`.
 
-**Why:** Central portfolio architecture — 8 GitHub orgs, ~80 repos, ~289K words of documentation.
+**Why:** Central portfolio architecture. Single-operator system running at institutional scale.
 
-**How to apply:** When working on any organvm repo, this history provides context for naming, governance, and deployment patterns.
+**How to apply:** When working on any organvm repo, check the IRF for P0/P1 items in the relevant domain. Use `organvm` CLI for registry, governance, omega queries.
 
 ---
 
-## Naming & Structure
+## Current State (as of 2026-04-15)
 
-- Org naming: `organvm-{i-theoria,ii-poiesis,iii-ergon,iv-taxis,v-logos,vi-koinonia,vii-kerygma}` (prefix is `organvm`, NOT `organvum`)
-- Meta-org: `meta-organvm` — 8th umbrella org above the 7 organ orgs
-- Config files: `organvm.env` (template), `organvm.env.local` (gitignored), `organvm.config.json` (machine-readable)
-- `archive/` directory is frozen — never modify v1 files
-- `registry-v2.json` is single source of truth for all repo state
-- `there+back-again.md` contains the full phased execution plan
-- Planning corpus has NO project-level git repo (home dir is root — don't commit there)
+- **Omega:** 9/20 MET, 0 IN PROGRESS, 11 NOT MET
+- **Registry:** 145 repos across 10 organ sections (ORGAN-I through VII, ORGAN-PSG, PERSONAL, META-ORGANVM)
+- **Testament chain:** 5953+ events, verified from genesis to seq 5952
+- **Memory parity:** 460/460 files chezmoi-tracked
+- **IRF:** ~896 items (~522 open, ~374 completed, ~42% completion rate) — grew from 779 on 4/14 via networking signal items (APP-081–086) and inbox review
+- **Conductor MCP:** live (mcp 1.27.0)
+- **Voice-scorer MCP:** connected
 
-## Build Timeline
+## Organ Counts (2026-04-14)
 
-| Date | Milestone | Key Facts |
-|------|-----------|-----------|
-| 2026-02-09 | Phase -1 complete | Org architecture + config files |
-| 2026-02-10 | Phase -1 deployed | All 8 orgs live, 22 repo transfers, registry reconciled (79 total) |
-| 2026-02-10 | Personal consolidation | 15 repos transferred from @4444J99. Only domus + etceter4 remain public |
-| 2026-02-10 | Bronze Sprint | 7 flagship READMEs deployed, 34/34 validation items |
-| 2026-02-10 | Silver Sprint | 58 repo READMEs at 2,000+ words, ~202K total words |
-| 2026-02-10 | Gold Sprint | 22 descriptions set, 5 meta-system essays (21,625w), 18 community health files, orchestration repo created |
-| 2026-02-10 | Phase 2 Validation | 1,267 links scanned, 7 broken fixed, all 8 organs LOCKED |
-| 2026-02-10 | Phase 3 Tier 1+2 | 46 descriptions synced, 5 workflows upgraded, 7/9 launch criteria |
-| 2026-02-11 | SYSTEM LAUNCHED | 9/9 criteria met, all 8 organs OPERATIONAL, POSSE verified |
-| 2026-02-11 | Gap-Fill Sprint | 11 new repos, 13 new READMEs (~41K words), ~270K total |
-| 2026-02-11 | Platinum Sprint | 65 repos elevated, 228/228 checks, 65 CI + CHANGELOGs + 130 ADRs, ~289K total |
+I=26, II=32, III=32, IV=22, V=6, VI=6, VII=6, PSG=0, PERSONAL=2, META=13
 
-## Registry Stats (as of Platinum)
+## Key Paths
 
-- 79 entries (77 on GH + 2 cross-refs), 0 planned remaining
-- Tiers: 7 flagship, 57 standard, 2 stub, 5 archive, 8 infrastructure
-- Implementation: 29 PRODUCTION, 10 PROTOTYPE, 21 SKELETON, 20 DESIGN_ONLY
-- Registry v0.3 fields: implementation_status, ci_workflow, platinum_status
+- Registry: `meta-organvm/organvm-corpvs-testamentvm/registry-v2.json`
+- IRF: `meta-organvm/organvm-corpvs-testamentvm/INST-INDEX-RERUM-FACIENDARUM.md`
+- Evidence map: `meta-organvm/organvm-corpvs-testamentvm/docs/evaluation/omega-evidence-map.md`
+- Engine: `meta-organvm/organvm-engine/` (23 domain modules, unified `organvm` CLI)
+- Concordance: `meta-organvm/organvm-corpvs-testamentvm/docs/operations/concordance.md`
+- Testament chain: `~/.organvm/testament/chain.jsonl`
 
-## Organ Counts
+## Build Timeline (abbreviated)
 
-I=18, II=22, III=21, IV=9, V=2, VI=3, VII=4 (includes .github infra)
+| Date | Milestone |
+|------|-----------|
+| 2026-02-11 | SYSTEM LAUNCHED — 9/9 criteria, all 8 organs OPERATIONAL |
+| 2026-02-28 | Omega 4/17 — 12 products deployed, LobeHub organic link |
+| 2026-03-18 | Omega 7/17 — soak test passed (32/30 days, 0 incidents) |
+| 2026-04-13 | Domus registered — PERSONAL section created, 5 vacuums closed |
+| 2026-04-14 | Reconciliation Sprint — omega 9/20, registry 145, 13 IRF items closed |
+| 2026-04-15 | Inbox review (Apr 9-15), session archival system built, networking outreach signals (APP-081–086) |
 
 ## Known Gotchas
 
-- ORGAN-I `.github` repo has broken .gitattributes symlink — API writes fail, must use git clone+push
-- GitHub API does NOT support pinning repos to user profiles — must use web UI
-- metasystem-master uses `master` branch (not `main`) — important for branch protection
-- organvm-iii-ergon is on free plan — branch protection API fails, use rulesets API instead
-- public-record-data-scrapper has rulesets (not branch protection) — must disable/re-enable for API writes
+- `status` is a read-only variable in zsh — never use in shell scripts
+- ORGAN-I billing lock inflates CI failure counts (soak test noise)
+- GitHub MCP content filter blocks security terms — use local reads
+- `modify_dot_claude.json.tmpl` uses chezmoi modify mode — merges, doesn't overwrite
 - ORGAN-III private repos: rulesets API returns 403 on free plan (false positive)
-- Must unarchive before updating GitHub descriptions, then re-archive
-
-## Key Scripts
-
-- `scripts/`: v1-v2-link-tbd-audit.py, v3-registry-reconciliation.py, v4-dependency-validation.py, v5-v6-constitution-organ-checks.py, fix-broken-links.py
-- `orchestration-start-here/`: organ-audit.py, validate-deps.py, calculate-metrics.py
-- Platinum: platinum-deploy.py, platinum-validation.py, platinum-registry-update.py, platinum-polish-vi-vii.py
-- Templates: ci-workflows/, badges/, changelog/, adr/
-
-## Profile & Links
-
-- Profile README: github.com/4444J99/4444J99 — artistic voice, eight-organ map
-- Blog: meta-organvm URL
-- Jekyll/Pages: https://organvm-v-logos.github.io/public-process/
-- RSS: 10 essays in Atom feed (~40K words total)
-- Launch issue: https://github.com/organvm-iv-taxis/orchestration-start-here/issues/3
+- Scorecard has 20 criteria (was 17, then 19, now 20 — #20 is sigma-E formal validation)

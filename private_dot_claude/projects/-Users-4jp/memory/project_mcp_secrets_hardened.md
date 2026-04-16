@@ -15,6 +15,6 @@ MCP server secrets in `~/.claude.json` are now managed by `modify_dot_claude.jso
 - If env vars are missing, those server configs are skipped (guard: `if gh_token:` / `if neon_key:`)
 - The modify script also manages `conductor` and `voice-scorer` MCP servers
 
-**Remaining vacuums (IRF-DOM-029, IRF-DOM-030):**
-- Voice-scorer non-functional: missing `textstat` dep + PYTHONPATH not set for src/ layout
-- Conductor untested: injected but connectivity not verified
+**Previously remaining vacuums (both resolved 2026-04-14):**
+- ~~IRF-DOM-029: Voice-scorer non-functional~~ → confirmed working (IRF description was stale, reconciliation sprint 2026-04-14)
+- ~~IRF-DOM-030: Conductor untested~~ → mcp 1.27.0 installed in venv, connectivity verified (reconciliation sprint 2026-04-14)

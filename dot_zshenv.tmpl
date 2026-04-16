@@ -37,6 +37,17 @@ export ORG_META="meta-organvm"
 export ORG_LIMINAL="{{ .org_liminal }}"
 export GITHUB_PRIMARY="{{ .github_primary }}"
 
+# ── Domain identity (from chezmoi.toml) ──
+# Three concentric circles: handle → name → system
+export DOMAIN_HANDLE="{{ .domain_handle }}"
+export DOMAIN_NAME="{{ .domain_name }}"
+export DOMAIN_NAME_DEF="{{ .domain_name_defensive }}"
+export DOMAIN_SYSTEM="{{ .domain_system }}"
+export DOMAIN_SYSTEM_ORG="{{ .domain_system_org }}"
+export DOMAIN_SYSTEM_DEF="{{ .domain_system_defensive }}"
+export DOMAIN_EMAIL="{{ .domain_email }}"
+export DOMAIN_REGISTRAR="{{ .domain_registrar }}"
+
 # ── Non-interactive shell essentials (Claude Code, scripts, cron) ──
 export PAGER=cat
 export CLAUDE_INTERACTIVE=0
