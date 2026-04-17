@@ -1,0 +1,37 @@
+# INSTANCE.toml — World (ii): Workspace
+# Work for others. Non-complex. Legible. The profane labor that feeds.
+# Schema: piece/v2 | Protocol: IRF-SYS-101
+
+[instance]
+name = "Workspace"
+type = "world"
+sigma = 1
+created = "2026-04-16"
+note = "Repurposed from Apple convention. Currently holds World (iii) content during migration."
+
+[identity]
+description = "The legible workspace — client projects, deployable products, consulting deliverables. What others can engage with."
+function = "delivery"
+mode = "actuality"                # energeia — being-at-work, what is happening now
+
+[composition]
+parent = "~/"                     # The multiverse root
+siblings = ["i--me--mine", "chaos--incarnate"]
+
+[commerce]
+frame = "profanae-labores"
+products = [
+    "client engagements (brand-build, platform-partnership, creative-collaboration, service-product)",
+    "SaaS products",
+    "consulting deliverables",
+    "content automation services",
+]
+
+[laws]
+schema = "piece/v2"
+instance_protocol = "IRF-SYS-101"
+governance = "system-system--system/LAWS.md"
+
+[migration]
+status = "in-progress"
+note = "Currently holds ORGANVM organ dirs (World iii content). These migrate to ~/chaos--incarnate/ incrementally."

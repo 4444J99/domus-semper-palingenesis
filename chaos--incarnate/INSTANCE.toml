@@ -1,0 +1,42 @@
+# INSTANCE.toml — World (iii): chaos--incarnate
+# Experimental zones. The hades-mind painting broad. Chaos made flesh.
+# Schema: piece/v2 | Protocol: IRF-SYS-101
+
+[instance]
+name = "chaos--incarnate"
+type = "world"
+sigma = 1
+created = "2026-04-16"
+
+[identity]
+description = "The experimental organism — ORGANVM, all organs, theory, art, governance, the 15 ideal forms fighting for phase-in."
+function = "experimentation"
+mode = "becoming"                 # dynamis — potentiality, what could be
+
+[composition]
+parent = "~/"                     # The multiverse root
+siblings = ["i--me--mine", "Workspace"]
+
+[commerce]
+frame = "profanae-labores"        # Everything is commerce
+products = [
+    "system architecture (the organism itself)",
+    "governance frameworks",
+    "AI orchestration tools",
+    "generative art",
+    "research & theory",
+    "knowledge systems",
+    "narrative computation",
+    "multi-agent infrastructure",
+]
+
+[laws]
+schema = "piece/v2"
+instance_protocol = "IRF-SYS-101"
+governance = "system-system--system/LAWS.md"
+
+[containment]
+# Chaos is bounded, not killed
+rule = "No new repos without revenue signal for 90 days"
+energy = "scheduled, not stolen"
+value = "the greenhouse — not the garden, not the market"

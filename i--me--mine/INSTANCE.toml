@@ -1,0 +1,33 @@
+# INSTANCE.toml — World (i): i--me--mine
+# The stable self. What I am. What I do. Full and whole existence.
+# Schema: piece/v2 | Protocol: IRF-SYS-101
+
+[instance]
+name = "i--me--mine"
+type = "world"
+sigma = 1
+created = "2026-04-16"
+
+[identity]
+description = "The stable ground of personal existence — identity, portfolio, professional presence, infrastructure of self."
+function = "persistence"
+mode = "being"                    # ousia — substance, what persists through change
+
+[composition]
+parent = "~/"                     # The multiverse root
+siblings = ["Workspace", "chaos--incarnate"]
+
+[commerce]
+frame = "profanae-labores"        # Everything is commerce
+products = [
+    "consulting identity (Padavano)",
+    "portfolio",
+    "professional presence",
+    "research publications",
+    "application pipeline",
+]
+
+[laws]
+schema = "piece/v2"
+instance_protocol = "IRF-SYS-101"
+governance = "system-system--system/LAWS.md"

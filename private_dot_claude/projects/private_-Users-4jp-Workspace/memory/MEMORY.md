@@ -7,6 +7,7 @@
 - [IDE workspace settings](reference_ide_workspace_settings.md) — VS Code extensions at ~/.local/share/vscode/extensions/ (fixed 2026-04-15)
 - [LaunchAgent ExecTimeout mandatory](feedback_launchagent_exec_timeout.md) — every pipeline plist needs ExecTimeout; missing one caused 8h runaway
 - [Spotlight excludes ~/Workspace](feedback_spotlight_workspace_exclusion.md) — VolumeConfiguration.plist exclusion; mds_stores was 87% CPU for 20h
+- [Custodia Securitatis](reference_custodia_securitatis.md) — SEC ops repo at meta-organvm/ (credentials, webhooks, billing, incidents)
 
 ## GitHub auth (resolved 2026-03-20)
 - [PAT fix + gh fallback](feedback_github_pat_cleanup.md)
@@ -23,6 +24,7 @@
 - [Researcher profile](user_researcher_profile.md) — rhetorician background, Wikipedia:Apadavano
 - [No approval gates](feedback_no_approval_gates.md) — execute end-to-end when given autonomy
 - [Workspace ontology](user_workspace_philosophy.md) — Apple convention, source--all-ever, metaphysical hierarchy as directory grammar
+- [Consulting brand is Padavano](user_consulting_brand.md) — last name; Victoroff Group retired/absorbed
 
 ## Supreme Operating Principles (non-negotiable)
 - [The Conductor Principle](feedback_conductor_principle.md) — human dreams, system executes
@@ -42,8 +44,10 @@
 - [Forced revision](feedback_forced_revision.md) — never write into final form first
 - [Laziness as force](feedback_laziness_as_force.md) — flaws are forces, not moral failures; system channels inconsistency
 - [Plans are artifacts](feedback_plans_are_artifacts.md) — every plan committed to repo, never local-only
+- [Be part of the creation](feedback_part_of_creation.md) — COVENANT: derive from logic, don't present menus; Claude is participant, not consultant
 
 ## Active Projects
+- [Zero income crisis](project_zero_income_crisis.md) — NO paying clients as of 2026-04-16, survival-level urgency
 - [Signal Closure Cascade](project_signal_closure_cascade.md) — Phase 1 DONE, NLnet submitted, CC deferred, Sovereign Tech PASSED
 - [Portal avalanche architecture](project_portal_avalanche_architecture.md) — 5-file genome, RECEIPT.md relay, scaffold-portal.py
 - [Grafana interview](project_grafana_interview.md) — Staff AI Engineer, recruiter screen bombed, effectively closed
