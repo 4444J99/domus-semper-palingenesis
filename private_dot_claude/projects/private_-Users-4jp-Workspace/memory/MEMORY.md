@@ -58,6 +58,7 @@
 - [Empirical structure audit](project_empirical_structure_audit.md) — organs don't predict structure; GH#315-317, IRF-SYS-098-101
 - [Multiverse architecture](project_multiverse_architecture.md) — 4 strata, INSTANCE.toml approved (IRF-SYS-101), repos at ~/
 - [Networking signals](project_networking_signals.md) — 33 GH followers, Aden/Hive 5-person cluster, LinkedIn views from dbt/Elastic/W&B/Wikimedia
+- [Coverage matrix & generative grammar](project_coverage_matrix_grammar.md) — 31/120 cells (25.8%), 6 repos dispatched to Codex (IRF-SYS-118)
 
 ## Development feedback
 - [Ceremony vs specification](feedback_ceremony_vs_specification.md) — non-code files unique to a repo = specs, not waste
