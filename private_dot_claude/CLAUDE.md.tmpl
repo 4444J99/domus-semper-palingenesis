@@ -31,3 +31,11 @@ They are restated here for passive context reinforcement across all sessions.
 3. **Rules are additive** — new rules amend, never overwrite. Every rule ever given accumulates.
 4. **Conductor principle** — the human directs vision. Everything else is the system's job.
    Before deferring to the human: ask "can I do this?" If yes → do it. State only real blockers.
+5. **Plans are artifacts** — after writing a plan file, commit and push it. Plans on disk only
+   are invisible to the system and lost on disk failure.
+6. **Fix bases, not outputs** — modify the template/source/pipeline, never patch rendered or
+   generated outputs. The next generation overwrites the patch.
+7. **Everything is a loop** — no action is single-shot. Every output feeds something.
+   Before acting: what does this produce, and what does the result feed into next?
+8. **Validate before presenting** — AI-generated artifacts must pass a validation check before
+   being shown to the user. Never ship unchecked output.

@@ -8,6 +8,15 @@
             "command": "find {{ .chezmoi.homeDir }}/.claude/plugins/cache -name '*.sh' -path '*/hooks*' -exec chmod +x {} + 2>/dev/null; true"
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"SessionStart\",\"additionalContext\":\"MEMORY HYGIENE (session start):\\n\u2022 Memory = hypothesis, not fact. Any state recalled from a previous session (file paths, branch names, repo state, PR status) MUST be verified against current disk state before acting.\\n\u2022 Stale diagnoses produce false IRF entries and real damage. Verify first, act second.\\n\u2022 Cross-session claims from other agent sessions must also be independently verified.\"}}'",
+            "statusMessage": "Memory hygiene check..."
+          }
+        ]
       }
     ],
     "PreToolUse": [
@@ -17,7 +26,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"additionalContext\":\"OUTBOUND ACTION PREFLIGHT — Mandatory before posting PR comment:\\n1. AUDIT: Did you read the full PR thread (comments, reviews, CI status, bot instructions) BEFORE composing this comment?\\n2. PROTOCOLS: Did you check organvm-iv-taxis/orchestration-start-here/contrib_engine/outreach_protocol.md?\\n3. SEQUENCE: If multi-step, are all steps planned and is this the correct order?\\n4. EDIT-NOT-ERRATA: Should you edit an existing comment instead of appending?\\n5. THREAD-STATE: Does this comment address what the thread actually needs?\\n6. CADENCE: Is this part of a cross-repo burst (<90s between repos)? Stagger if so — rapid multi-repo posting signals bot behavior.\\n7. UPSTREAM RULES: If external/upstream repo, did you read its CONTRIBUTING.md? We are guests.\"}}'",
+            "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"additionalContext\":\"OUTBOUND ACTION PREFLIGHT \u2014 Mandatory before posting PR comment:\\n1. AUDIT: Did you read the full PR thread (comments, reviews, CI status, bot instructions) BEFORE composing this comment?\\n2. PROTOCOLS: Did you check organvm-iv-taxis/orchestration-start-here/contrib_engine/outreach_protocol.md?\\n3. SEQUENCE: If multi-step, are all steps planned and is this the correct order?\\n4. EDIT-NOT-ERRATA: Should you edit an existing comment instead of appending?\\n5. THREAD-STATE: Does this comment address what the thread actually needs?\\n6. CADENCE: Is this part of a cross-repo burst (<90s between repos)? Stagger if so \u2014 rapid multi-repo posting signals bot behavior.\\n7. UPSTREAM RULES: If external/upstream repo, did you read its CONTRIBUTING.md? We are guests.\"}}'",
             "statusMessage": "Outbound action preflight..."
           }
         ]
@@ -28,7 +37,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"additionalContext\":\"OUTBOUND ACTION PREFLIGHT — Mandatory before posting issue comment:\\n1. AUDIT: Did you read the full issue thread (comments, assignees, labels) BEFORE composing this comment?\\n2. PROTOCOLS: Did you check organvm-iv-taxis/orchestration-start-here/contrib_engine/outreach_protocol.md?\\n3. SEQUENCE: If multi-step, are all steps planned and is this the correct order?\\n4. EDIT-NOT-ERRATA: Should you edit an existing comment instead of appending?\\n5. THREAD-STATE: Does this comment address what the issue actually needs?\\n6. CADENCE: Is this part of a cross-repo burst (<90s between repos)? Stagger if so.\\n7. UPSTREAM RULES: If external/upstream repo, did you read its CONTRIBUTING.md? We are guests.\"}}'",
+            "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"additionalContext\":\"OUTBOUND ACTION PREFLIGHT \u2014 Mandatory before posting issue comment:\\n1. AUDIT: Did you read the full issue thread (comments, assignees, labels) BEFORE composing this comment?\\n2. PROTOCOLS: Did you check organvm-iv-taxis/orchestration-start-here/contrib_engine/outreach_protocol.md?\\n3. SEQUENCE: If multi-step, are all steps planned and is this the correct order?\\n4. EDIT-NOT-ERRATA: Should you edit an existing comment instead of appending?\\n5. THREAD-STATE: Does this comment address what the issue actually needs?\\n6. CADENCE: Is this part of a cross-repo burst (<90s between repos)? Stagger if so.\\n7. UPSTREAM RULES: If external/upstream repo, did you read its CONTRIBUTING.md? We are guests.\"}}'",
             "statusMessage": "Outbound action preflight..."
           }
         ]
@@ -39,8 +48,108 @@
         "hooks": [
           {
             "type": "command",
-            "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"additionalContext\":\"OUTBOUND ACTION PREFLIGHT — Mandatory before submitting PR review:\\n1. AUDIT: Did you read the full PR diff, existing reviews, and CI status?\\n2. PROTOCOLS: Did you check workspace contribution protocols?\\n3. SEQUENCE: Is this review part of a larger action sequence? Plan atomically.\\n4. THREAD-STATE: Does the review address what the PR actually needs?\\n5. CADENCE: Part of a cross-repo burst? Stagger — 90s minimum between repos.\\n6. UPSTREAM RULES: Read CONTRIBUTING.md for this repo first. We are guests.\"}}'",
+            "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"additionalContext\":\"OUTBOUND ACTION PREFLIGHT \u2014 Mandatory before submitting PR review:\\n1. AUDIT: Did you read the full PR diff, existing reviews, and CI status?\\n2. PROTOCOLS: Did you check workspace contribution protocols?\\n3. SEQUENCE: Is this review part of a larger action sequence? Plan atomically.\\n4. THREAD-STATE: Does the review address what the PR actually needs?\\n5. CADENCE: Part of a cross-repo burst? Stagger \u2014 90s minimum between repos.\\n6. UPSTREAM RULES: Read CONTRIBUTING.md for this repo first. We are guests.\"}}'",
             "statusMessage": "Outbound action preflight..."
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "if": "Bash(*git push*--force*)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"additionalContext\":\"DESTRUCTION GUARD \u2014 Force Push:\\n\u2022 STOP. Force-push rewrites remote history \u2014 irreversible for collaborators.\\n\u2022 Verify: (1) Is this a personal/feature branch, NOT main/master? (2) Are there NO collaborators on this branch? (3) Is this explicitly intentional, not habitual?\\n\u2022 If pushing to main with --force: ABORT. Use --force-with-lease as minimum safety.\"}}'"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "if": "Bash(*git push* -f *)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"additionalContext\":\"DESTRUCTION GUARD \u2014 Force Push (-f):\\n\u2022 Same risk as --force. Rewrites remote history irreversibly.\\n\u2022 Verify: personal/feature branch only, no collaborators, explicitly intentional.\"}}'"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "if": "Bash(*git branch*-D*)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"additionalContext\":\"DESTRUCTION GUARD \u2014 Hard Branch Delete (-D):\\n\u2022 -D ignores unmerged state. This branch may contain unmerged work.\\n\u2022 Verify: (1) Fully merged or intentionally abandoned? (2) All work backed up remotely?\\n\u2022 Use -d instead for safe delete (fails if unmerged).\"}}'"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "if": "Bash(*git push*main*)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"additionalContext\":\"WORKFLOW GUARD \u2014 Direct Push to Main:\\n\u2022 Most repos use branch + PR workflow. Direct main pushes bypass review.\\n\u2022 Verify: (1) Intentional (e.g., domus autoCommit is expected)? (2) Branch protection rules in place?\\n\u2022 If unsure: use a feature branch and PR instead.\"}}'"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "if": "Bash(*gh issue close*)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"additionalContext\":\"GUARD \u2014 Issue Close:\\n\u2022 Closing issues requires explicit permission (organvm-engine feedback: never close without user authorization).\\n\u2022 Verify: (1) Did the user explicitly ask to close this issue? (2) Is it actually resolved, not just worked around?\"}}'"
+          }
+        ]
+      },
+      {
+        "matcher": "Write",
+        "if": "Write(*registry*.json)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"additionalContext\":\"DATA INTEGRITY \u2014 Registry Write:\\n\u2022 Registry files are the single source of truth for all repo metadata (2200+ lines).\\n\u2022 ADDITIVE-ONLY: Did you Read this file first? Are you making a targeted addition, not replacing it?\\n\u2022 If generating from scratch: STOP. Use Edit for targeted changes. Wholesale replacement corrupts the registry.\"}}'"
+          }
+        ]
+      },
+      {
+        "matcher": "Write",
+        "if": "Write(*IRF*.md)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"additionalContext\":\"DATA INTEGRITY \u2014 IRF Write:\\n\u2022 IRF is the universal work registry. Entries are append-only \u2014 never replace existing rows.\\n\u2022 Verify: (1) Did you Read the file first? (2) Appending new items only, not overwriting completed items?\"}}'"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "if": "Bash(*rm*fetch*)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"additionalContext\":\"DATA INTEGRITY \u2014 Deleting Fetched Data:\\n\u2022 Rate-limited fetched data must NEVER be deleted (conversation-corpus project rule).\\n\u2022 Verify: Is this rate-limited API data? If yes: abort. Log the vacuum, do not delete the source.\"}}'"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "if": "Bash(*op read*)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"additionalContext\":\"1PASSWORD DISCIPLINE:\\n\u2022 Cache this secret value immediately after reading \u2014 store in a variable.\\n\u2022 ONE op read per secret per session is the limit. Do not call op read again for the same path.\"}}'"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "if": "Bash(*op item get*)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"additionalContext\":\"1PASSWORD DISCIPLINE:\\n\u2022 Cache this result immediately. ONE op item get per secret per session \u2014 no repeat calls.\"}}'"
           }
         ]
       }
@@ -50,8 +159,30 @@
         "hooks": [
           {
             "type": "command",
-            "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"Stop\",\"additionalContext\":\"SESSION HYGIENE (always-on):\\n• CLOSE GATE: Ending session? Run 13-step protocol (meta-organvm/memory/feedback_close_protocol.md)\\n• PARITY: local:remote=1:1 — git status clean, all commits pushed, memory backed up\\n• VACUUM: N/A is never a resting state — convert to named IRF items with IDs\\n• ADDITIVE: rules only accumulate — new rules amend old ones, never replace\"}}'",
+            "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"Stop\",\"additionalContext\":\"SESSION HYGIENE (always-on):\\n\u2022 CLOSE GATE: Ending session? Run 13-step protocol (meta-organvm/memory/feedback_close_protocol.md)\\n\u2022 PARITY: local:remote=1:1 \u2014 git status clean, all commits pushed, memory backed up\\n\u2022 VACUUM: N/A is never a resting state \u2014 convert to named IRF items with IDs\\n\u2022 ADDITIVE: rules only accumulate \u2014 new rules amend old ones, never replace\"}}'",
             "statusMessage": "Session hygiene..."
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 {{ .chezmoi.homeDir }}/.claude/hooks/execution-discipline.py",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "git -C \"$(pwd)\" log \"origin/$(git -C \"$(pwd)\" branch --show-current 2>/dev/null)..HEAD\" --oneline 2>/dev/null | head -5 > \"/tmp/claude-session-$(date +%Y%m%d-%H%M%S).unpushed.log\" 2>/dev/null; true",
+            "timeout": 10
           }
         ]
       }
