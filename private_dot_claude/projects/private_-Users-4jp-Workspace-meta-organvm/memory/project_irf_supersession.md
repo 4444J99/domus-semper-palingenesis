@@ -4,7 +4,7 @@ description: V1 IRF (877 items, 20 domains, 510 open) remains actively maintaine
 type: project
 ---
 
-The universal work registry at `organvm-corpvs-testamentvm/INST-INDEX-RERUM-FACIENDARUM.md` continues growing actively. As of 2026-04-13, it has **877 items across 20 domains** (510 open, 363 completed). Most recent addition: IRF-SYS-106 (Compilatio Cognitionis, 2026-04-13). Stats last refreshed 2026-04-11 (S-Audit-2 close-out).
+The universal work registry at `organvm-corpvs-testamentvm/INST-INDEX-RERUM-FACIENDARUM.md` continues growing actively. As of 2026-04-14, it has **883+ items across 20+ domains** (~516 open, 367+ completed). Stats refreshed 2026-04-14 (S-contrib-execution close-out): +6 completions (DONE-366..371), OSS-042/043 updated. Always run `grep -c "^|" INST-INDEX-RERUM-FACIENDARUM.md` for live count.
 
 The **a-organvm GitHub project board** complements the IRF with structured issues carrying richer metadata (labels, assignees, project fields), but the IRF has NOT been superseded — it continues to receive new entries every session.
 
