@@ -16,13 +16,13 @@ Code doesn't move. Identity moves. Each repo's essence is expressed as a verb; t
 - 9 tracked submodules in `.gitmodules` (7 original + tool-interaction-design + contrib--adenhq-hive)
 - 15 additional directories (11 contrib workspaces, 3 full forks, 1 duplicate `agentkit/`)
 - ORGAN-REPORT.md is a post-mortem/obituary, not a status report
-- 14 contrib workspaces set up; only 1 (AdenHQ/Hive PR #6707) produced a PR
+- 14 contrib workspaces set up; initially only 1 PR (AdenHQ/Hive #6707), but by 2026-04-15: 20 upstream PRs discovered across these workspaces (2 merged, 17 open, 1 closed)
 - tool-interaction-design has ~60 conductor modules and 42 test files (largest codebase in IV)
 - a-i--skills has 144 skills across 12 categories with multi-target build pipeline
 
 **Why:** The user is performing an exit interview — systematically dissecting every directory to surface redundancy and dependencies before the transition to a-organvm completes.
 
-**How to apply:** When working in ORGAN-IV, consult ORGAN-REPORT.md for the verb map (what each repo does) and TRIPTYCH.md for the transition model. The obituary is frank about what failed — 14/14 contrib workspaces underdelivered, governance repos (petasum, collective-persona, system-governance-framework) had zero executable enforcement.
+**How to apply:** When working in ORGAN-IV, consult ORGAN-REPORT.md for the verb map (what each repo does) and TRIPTYCH.md for the transition model. The obituary was frank about what failed — contrib workspaces appeared underdelivered at dissection time, but by 2026-04-15 had produced 20 upstream PRs (2 merged). Governance repos (petasum, collective-persona, system-governance-framework) had zero executable enforcement.
 
 **Fortification session (2026-04-05):**
 - 10 meta-learnings extracted from taxis interaction data, 7 injected as gate conditions into a-organvm (3 already captured). 101→107 gates. Commit f5f8941.
