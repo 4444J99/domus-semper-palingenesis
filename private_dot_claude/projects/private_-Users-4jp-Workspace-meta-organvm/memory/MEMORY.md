@@ -30,6 +30,7 @@
 - [Generative not copied](feedback_generative_not_copied.md) — redundant structures = one generative source, not N copies; programmable idealized materia
 - [Governance Genome](feedback_signal_tracing_reduction.md) — seven irreducible predicates, signal tracing, constitutional logic; telos of loop/alchemy/generative axioms
 - [Upstream house rules](feedback_upstream_house_rules.md) — read CONTRIBUTING.md + house rules before ANY upstream action
+- [Nothing unique ignored](feedback_nothing_unique_ignored.md) — NEVER gitignore/skip unique content; commit and push everything
 
 ## User Identity
 - [Identity](user_identity.md) — artist-technologist, MFA, building life's work in isolation

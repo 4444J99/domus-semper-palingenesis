@@ -25,7 +25,7 @@ on:
 permissions:
   contents: read
   pages: write
-  id-token: write <!-- allow-secret -->
+  id-token: write
 
 concurrency:
   group: ci-${{ github.ref }}

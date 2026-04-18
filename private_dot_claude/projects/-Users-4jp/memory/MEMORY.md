@@ -2,6 +2,7 @@
 
 ## User
 - [Personal situation](user_personal_situation.md) — Housing/employment/family crisis; Staten Island; survival-level instability alongside technical work
+- [Core identity](user_core_identity.md) — Not a coder; humanities creator building ideal forms; every system has failed him; ORGANVM must not fail
 
 ## Active Projects
 - [Becka McKay thread](project_becka_mckay_thread.md) — Outreach to former MFA thesis advisor (FAU); 5-email thread; awaiting reply after redirecting substance question to practical asks (2026-04-18)

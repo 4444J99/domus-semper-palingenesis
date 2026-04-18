@@ -33,9 +33,9 @@ Cross-references: `materon--formalization.md`, `primitives--classification.md`, 
 - **ATM-P-023** — Common structure extracted: all three share (substrate primitive + combination rules + emergence from combination). They differ on what the primitive IS, not on combinatorial architecture. Nature: FRAMEWORK
 
 ### Section 2: "Formal Translation of Each Framing" (3 atoms)
-- **ATM-P-024** — Physics: maps to Layers 0–2 (distinction=field/vacuum, token=particle, 0 <!-- allow-secret -->
-- **ATM-P-025** — Information: maps to Layers 0–2 (distinction=0/1, token=register, 0 <!-- allow-secret -->
-- **ATM-P-026** — Philosophy: maps to Layers 0–2 (distinction=self/other, token=substance, 0 <!-- allow-secret -->
+- **ATM-P-024** — Physics: maps to Layers 0–2 (distinction=field/vacuum, token=particle, relation=coupling). Stops at L2 — physical laws (L3+) are given, not derived. Violates Law 4: commits to a bottom scale.
+- **ATM-P-025** — Information: maps to Layers 0–2 (distinction=0/1, token=register, relation=conditional entropy). Covers Law 1 natively. But conflates measure with measured — cannot distinguish two systems with identical entropy but different substrates. Lacks L3–L6 entirely.
+- **ATM-P-026** — Philosophy: maps to Layers 0–2 (distinction=self/other, token=substance, relation=harmony/prehension). Strongest on self-referential closure (L5 native). Weakest on falsifiability — no measurable ΔS. Most compatible with Law 4 but lacks formal δ.
 
 ### Section 3: "Convergence Map" (1 atom)
 - **ATM-P-027** — Formal convergence table:

@@ -1,0 +1,117 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+python3 - <<'PY'
+import re
+import subprocess
+import sys
+
+ALLOW_MARKER_RE = re.compile(r"(allow-secret|op-allow-secret|secret-scan:ignore)", re.I)
+SKIP_VALUE_RE = re.compile(r"(?i)\b(changeme|example|placeholder|your[_-]?(key|token|secret|password)|todo)\b")
+
+# Paths containing captured content corpora — false-positive-heavy, real secrets
+# must be redacted before reaching these files. Only 'assignment' type is skipped;
+# high-confidence patterns (aws keys, github tokens, private keys) still block.
+CORPUS_PATHS = (
+    "data/prompt-registry/",
+    "data/session-transcripts/",
+    "private_dot_claude/plans/",     # chezmoi: Claude plan files (theoretical content)
+    ".claude/plans/",                # Claude plan files in any repo
+)
+
+PATTERNS = [
+    ("aws_access_key_id", re.compile(r"\b(?:AKIA|ASIA)[0-9A-Z]{16}\b")),
+    ("aws_secret_access_key", re.compile(r"(?i)aws_secret_access_key\s*[:=]\s*['\"]?[A-Za-z0-9/+=]{40}['\"]?")),
+    ("github_token", re.compile(r"\bgh[opusr]_[A-Za-z0-9]{36,}\b")),
+    ("google_api_key", re.compile(r"\bAIza[0-9A-Za-z\-_]{35}\b")),
+    ("slack_token", re.compile(r"\bxox[baprs]-[A-Za-z0-9-]{10,}\b")),
+    ("private_key", re.compile(r"-----BEGIN (?:RSA|EC|OPENSSH|PGP|PRIVATE) KEY-----")),
+    ("jwt", re.compile(r"\beyJ[a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]+\b")),
+]
+
+ASSIGNMENT_RE = re.compile(
+    r"(?i)\b(?:api[_-]?key|secret|token|password|passphrase|auth[_-]?token)\b\s*[:=]\s*([\"']?)([^\"'\s]+)\1"
+)
+
+try:
+    diff = subprocess.check_output(
+        ["git", "diff", "--cached", "-U0", "--no-color"],
+        text=True,
+        errors="replace",
+    )
+except Exception:
+    diff = ""
+
+current_file = None
+current_line = 0
+hits = []
+
+for line in diff.splitlines():
+    if line.startswith("diff --git "):
+        current_file = None
+        current_line = 0
+        continue
+    if line.startswith("+++ b/"):
+        current_file = line[6:]
+        continue
+    if line.startswith("+++ /dev/null"):
+        current_file = None
+        continue
+    if line.startswith("@@ "):
+        m = re.search(r"\+(\d+)", line)
+        current_line = int(m.group(1)) if m else 0
+        continue
+
+    if not current_file:
+        continue
+
+    if line.startswith("+") and not line.startswith("+++"):
+        content = line[1:]
+        if ALLOW_MARKER_RE.search(content):
+            current_line += 1
+            continue
+        if "op://" in content or "op read" in content or "op run" in content:
+            current_line += 1
+            continue
+
+        for name, rx in PATTERNS:
+            if rx.search(content):
+                hits.append((current_file, current_line, name))
+                break
+
+        if not hits or hits[-1][0] != current_file or hits[-1][1] != current_line:
+            m = ASSIGNMENT_RE.search(content)
+            if m:
+                value = m.group(2)
+                if value.startswith("$") or value.startswith("${"):
+                    pass
+                elif value.startswith("op://"):
+                    pass
+                elif SKIP_VALUE_RE.search(value):
+                    pass
+                elif current_file and any(current_file.startswith(p) for p in CORPUS_PATHS):
+                    pass  # corpus content — assignment FPs only; real patterns still caught above
+                else:
+                    hits.append((current_file, current_line, "assignment"))
+
+        current_line += 1
+        continue
+
+    if line.startswith(" "):
+        current_line += 1
+        continue
+
+# Do not block if no hits
+if not hits:
+    sys.exit(0)
+
+print("Secret scan blocked this commit:", file=sys.stderr)
+for path, line_no, kind in hits:
+    line_info = f":{line_no}" if line_no else ""
+    print(f"- {path}{line_info} ({kind})", file=sys.stderr)
+
+print("\nMove secrets to 1Password and reference them via op read or .env.op.sh loaders.", file=sys.stderr)
+print("Add 'allow-secret' to a line to bypass a specific false positive.", file=sys.stderr)
+
+sys.exit(1)
+PY
