@@ -17,8 +17,8 @@ type: project
 
 **How to apply:** If plugin errors recur, first check `ls ~/.claude/plugins/marketplaces/claude-plugins-official/` — if absent, re-clone. If `if` fields disappear from hooks again, restore them manually (the schema validator strips unknown fields).
 
-## Persistence vacuum identified
+## Persistence vacuum — PARTIALLY RESOLVED
 
-`~/.claude/settings.json`, `~/.claude/projects/*/memory/`, and `~/.claude/plans/` are NOT in the chezmoi source (`~/domus-semper-palingenesis/private_dot_claude/` does not exist). These are local-only. If the machine dies, Claude Code config is lost.
+**Correction (2026-04-17):** `private_dot_claude/` DOES exist in the chezmoi source at `~/Workspace/4444J99/domus-semper-palingenesis/private_dot_claude/`. It contains `CLAUDE.md.tmpl`, `settings.json.tmpl`, hooks, plans, projects, scripts, templates, and `README.md`. The original claim that "private_dot_claude does not exist" was wrong — it referenced the deployment artifact path (`~/domus-semper-palingenesis/`) instead of the chezmoi source path.
 
-**Needs:** Add `private_dot_claude/` to chezmoi with settings.json (and optionally memory/ symlink). IRF item logged.
+**Remaining gap:** `~/.claude/projects/*/memory/` files are NOT chezmoi-tracked. Memory parity for these files depends on the session archival system, not chezmoi.
