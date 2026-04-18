@@ -1,40 +1,56 @@
 ---
 name: OSS contribution portfolio
-description: 16 contrib repos in ORGAN-IV, 2 active PRs (k6 #5770, openai #2802), structured tracking dirs with seed.yaml + CLAUDE.md per upstream
+description: 16 contrib repos in ORGAN-IV, 2 active PRs, 3 active collaborators, contributing since 2026-03-23. Consolidation + external research committee planned.
 type: project
 ---
 
-## Portfolio (as of 2026-04-14)
+## Timeline
 
-16 contribution directories at `~/Workspace/organvm-iv-taxis/contrib--{name}/`. Each has a seed.yaml (ORGANVM metadata) and CLAUDE.md (status, maintainer feedback, house rules, next steps). Convention: `contrib--{org}-{repo}`.
+- **2026-03-23:** First contrib scaffolding — 16 repos under `organvm-iv-taxis/contrib--*`
+- **2026-03-28:** First PRs opened — k6 #5770 (TagSet.ForEach), openai #2802 (MCP semaphore fix)
+- **2026-04-08:** k6 maintainer (mstoykov) requests changes — integrate ForEach into call sites
+- **2026-04-13-14:** S-contrib-reassessment + S-contrib-execution — CLA signed, 6 IRF items closed
+- **2026-04-14-15:** S-contrib-execution-2 — k6 merge-ready (4 commits, 46/46 CI), openai root-cause traced, 3 relationships re-engaged, parity fixed
+- **Total active contributing:** ~3 weeks (2026-03-23 → 2026-04-15)
 
-### Active PRs
+## Active PRs
 
 | Upstream | PR | Status | Blocker | IRF |
 |----------|-----|--------|---------|-----|
-| grafana/k6 | #5770 | OPEN, 3 commits pushed (ForEach API + call site integrations + atlas.Node bypass) | Awaiting mstoykov review | OSS-042 |
-| openai/openai-agents-python | #2802 | OPEN, typecheck fixed, rebased | Awaiting seratch response; root cause traced to `modelcontextprotocol/python-sdk#1960` | OSS-043 |
+| grafana/k6 | #5770 | Merge-ready, 4 commits, 46/46 CI | mstoykov review | OSS-042 |
+| openai/openai-agents-python | #2802 | Root cause traced (python-sdk#1960→#2268) | seratch direction | OSS-043 |
 
-### Completed (2026-04-14)
+## Active Collaborators (see also: project_agentic_titan_collaborators.md)
 
-- coinbase/agentkit #1054 — duplicate acknowledged (DONE-366)
-- dapr/dapr #9719 — pinged, offered rebase (DONE-367)
-- notion/notion-mcp-server #242 — pinged, low expected response (DONE-368)
+| Person | Thread | Status | IRF |
+|--------|--------|--------|-----|
+| m13v (Matthew Diakonov) | agentic-titan #20 | Work split proposed | OSS-050 |
+| voidborne-d ("d") | agentic-titan #72 | Lambda Lang questions | OSS-051 |
+| Thomas King (Canteen) | Email | Draft pending send | OSS-052 |
 
-### Scaffolded, No PR Yet
+## Portfolio (16 repos)
 
-anthropic-skills, adenhq-hive, clyra-gait, dbt-mcp, langchain-langgraph, temporal-sdk-python, ipqwery-ipapi-py, primeinc-github-stars
+**Active PRs:** contrib--grafana-k6, contrib--openai-agents-python
+**Pinged (awaiting):** contrib--dapr-dapr (#9719), contrib--notion-mcp-server (#242), contrib--coinbase-agentkit (#1054)
+**Scaffolded (no PR):** contrib--adenhq-hive, contrib--anthropic-skills, contrib--clyra-gait, contrib--dbt-mcp, contrib--langchain-langgraph, contrib--temporal-sdk-python, contrib--ipqwery-ipapi-py, contrib--primeinc-github-stars
+**Stubs (deprioritized):** contrib--indeedeng-iwf, contrib--jairus-dagster-sdlc, contrib--m13v-summarize-recent-commit
 
-### Stubs (deprioritized)
-
-clyra-gait, indeedeng-iwf, jairus-dagster-sdlc, m13v-summarize-recent-commit — fully scaffolded Mar 23, no upstream PRs, kept at minimal cost.
-
-**Why:** OSS contributions serve dual purpose — visibility/credibility AND real engineering practice at scale. The contrib portfolio IS ORGAN-IV's external-facing production work.
-
-**How to apply:** When starting a contrib session, read the specific `contrib--{name}/CLAUDE.md` for status, maintainer feedback, and house rules before acting. Check IRF OSS-domain items for blockers. The fork clone may be at `~/Workspace/{name}-contrib/` (separate from tracking dir).
-
-### Key Locations
+## Key Locations
 
 - Tracking dirs: `~/Workspace/organvm-iv-taxis/contrib--*/`
 - Fork clones: `~/Workspace/k6-contrib/` (k6), `~/Workspace/openai-agents-contrib/` (openai)
-- IRF: `OSS-042` through `OSS-049` (and growing)
+- IRF: OSS-042 through OSS-053 (and growing)
+
+## Architectural Intent (design seeds — not yet implemented)
+
+### [2] Consolidation
+
+All 16 contrib repos should be collected under one directory or superproject instead of sprawling across organvm-iv-taxis. Location TBD — possibly a dedicated organ function as the ecosystem evolves upward. The current `contrib--*` pattern was scaffolded quickly (Mar 23) and works but doesn't scale. Needs design session to determine: single repo with subdirs? Dedicated superproject? New organ function?
+
+### [3] External Research Committee
+
+Every repo in the ORGANVM ecosystem should have an intelligence surface that finds similar/peer external projects for: contribution opportunities, study, feedback + feedforward + feedthrough. This is not a one-time audit but a structural per-repo mechanism — a standing committee that maintains awareness of the peer landscape and routes discoveries into the contribution pipeline.
+
+**Why:** Contribution is currently opportunistic (find issue → scaffold → PR). Systematic peer awareness transforms it into a continuous intelligence loop where each ORGANVM repo actively knows its neighborhood.
+
+**How to apply:** Both design seeds need their own planning sessions. Log as IRF items when next session opens. The consolidation question blocks on the broader ecosystem evolution ("floating everything upwards into a new lifeform").
