@@ -86,3 +86,169 @@ is even in play. That's the conductor's job.
 ### Verification
 - `chezmoi diff` to confirm AGENTS.md.tmpl renders correctly
 - Check memory file is indexed in MEMORY.md
+
+**Status:** EXECUTED (2026-04-18). All artifacts committed and pushed.
+
+---
+
+# Session Atomization — S-cleanup-2026-04-18
+
+**Added:** 2026-04-18
+**Task:** Comprehensive session logging — every action, discovery, decision, and artifact from this session must be atomized, ID'd, and persisted.
+
+## Context
+
+The user's principle: "everything, everything, everything, everything, everything." Nothing ephemeral. Every action feeds something. Every N/A is a vacuum. The session produced significant infrastructure changes (Docker uninstall, 1Password recovery, 4 IRF items, omega evidence updates, GitHub issue, governance policy) but the session ITSELF is not yet a first-class artifact with atomized events.
+
+## What exists already
+
+| Artifact | Location | Status |
+|----------|----------|--------|
+| IRF DOM-033–036 | `INST-INDEX-RERUM-FACIENDARUM.md` | Committed+pushed |
+| GH Issue #27 | `4444J99/domus-semper-palingenesis#27` | Created |
+| Omega evidence updates | `docs/evaluation/omega-evidence-map.md` | Committed+pushed |
+| Memory: Docker decision | `reference_docker_decision.md` | Committed+pushed |
+| Memory: Storage design (updated) | `project_docker_storage_design.md` | Committed+pushed |
+| Memory: MEMORY.md index | Updated with docker reference | Committed+pushed |
+| AGENTS.md.tmpl | Docker Governance section | Committed+pushed |
+| This plan file | Docker framework + this addendum | Committed+pushed |
+
+## What is missing
+
+1. **Session record** — a dated session export with every discrete event atomized
+2. **Event IDs** — each action in the session needs an atom ID (S-cleanup-2026-04-18-NNN)
+3. **Memory index update** — MEMORY.md needs the new feedback entry indexed
+4. **Plan archive** — this plan should be copied to the domus project plans directory per plan discipline
+
+## Plan: Session Atomization
+
+### Step 1 — Create session record
+
+File: `~/.claude/projects/-Users-4jp/memory/project_session_cleanup_2026-04-18.md`
+
+Atomized event log with IDs:
+
+| ID | Time | Action | Result | Cross-ref |
+|----|------|--------|--------|-----------|
+| EVT-001 | Session start | Analyzed `mo` cleanup output | Identified Docker (15.4GB), CoreSim (1.6GB), caches, downloads | — |
+| EVT-002 | Docker analysis | `docker system df -v` | 14 unused images (~4.2GB), 10 dangling volumes, 1.4GB anon vol | — |
+| EVT-003 | Docker image prune | `docker rmi` × 14 images | All stale MCP server images removed (desktop-commander, fetch, git, filesystem, etc.) | — |
+| EVT-004 | Docker volume prune | `docker volume rm` × 10 | All dangling volumes removed (peer-audited, minio, postgres, claude-memory, etc.) | — |
+| EVT-005 | CoreSimulator cleanup | `xcrun simctl delete unavailable` | 1.6GB→1.1GB, 2 devices remaining | — |
+| EVT-006 | Apple cache cleanup | rm textunderstandingd, python, Music | ~611MB freed | — |
+| EVT-007 | Downloads cleanup | rm Backblaze DMG, drive-download zip | ~155MB freed | — |
+| EVT-008 | Docker education | Explained Docker via chezmoi analogy | User understood: shape determines Docker need | — |
+| EVT-009 | Docker decision framework | Created governance heuristic | Single-question: "how many processes talk to each other?" | — |
+| EVT-010 | Memory: reference_docker_decision.md | Created + indexed | Committed `dfd6a1a` | MEMORY.md |
+| EVT-011 | AGENTS.md.tmpl | Docker Governance section added | Committed `dfd6a1a` | Deploys to ~/.AGENTS.md |
+| EVT-012 | Docker uninstall | Full removal: app, VM, helpers, daemons, caches | 17GB freed (92Gi→109Gi) | — |
+| EVT-013 | MCP server breakage discovered | 2 servers depend on Docker | `MCP_DOCKER` + `github` broken | IRF-DOM-033, GH#27 |
+| EVT-014 | 1Password failure discovered | App binary missing since Apr 17 03:41 AM | Squirrel auto-update failure on macOS 26 beta | IRF-DOM-035 |
+| EVT-015 | 1Password reinstalled | `brew install --cask 1password` | op-ssh-sign restored, signing works | — |
+| EVT-016 | Session audit — gaps found | 6 issues: uncommitted work, untracked files, stale memory, no IRF update | All fixed | — |
+| EVT-017 | Memory: project_docker_storage_design.md | Updated (Docker capped→uninstalled) | Committed `dfd6a1a` | — |
+| EVT-018 | IRF DOM-033–036 created | 4 new items in PERSONAL domain | Committed `0013012` | IRF |
+| EVT-019 | GH Issue #27 | P0: broken Docker-dependent MCP servers | Created on domus repo | IRF-DOM-033 |
+| EVT-020 | Omega evidence updated | #1 soak: incident 0→1; #17 autonomous: propagation gap | Committed `37ee084` | omega-evidence-map.md |
+| EVT-021 | N/A vacuum audit | Re-examined all 10-index SKIPs | 3 SKIPs→DONE, 7 genuinely N/A with reasons | — |
+| EVT-022 | Feedback: never overwrite plans | Plan mode vs universal rule #3 conflict caught | Memory created | feedback_never_overwrite_plans.md |
+
+### Step 2 — Update MEMORY.md index
+
+Add entries for:
+- `feedback_never_overwrite_plans.md`
+- `project_session_cleanup_2026-04-18.md`
+
+### Step 3 — chezmoi add + commit + push
+
+All new files added to chezmoi, committed with signing, pushed.
+
+### Verification
+- `chezmoi managed | grep cleanup` confirms session record tracked
+- `chezmoi managed | grep never_overwrite` confirms feedback tracked
+- `git log --oneline -3` in domus shows commits
+- All repos clean: `git status` in domus + corpus
+
+---
+
+# Systemic Fix: Automatic Memory Persistence Pipeline
+
+**Added:** 2026-04-18
+**Priority:** P0 — current system is broken by design
+**Problem:** Memory writes are local-only until a human manually runs `chezmoi add` AND 1Password is running. This violates `[(local):(remote)={1:1}]`.
+
+## Root Cause
+
+The investigation found:
+- **0 PostToolUse hooks** fire on memory writes
+- **0 LaunchAgents** watch memory paths
+- **0 scripts** handle memory sync
+- `chezmoi add` is manual, autoCommit requires 1Password SSH signing
+- The 1Password signing dependency is a single point of failure
+
+Meanwhile, the system has rich automation for everything ELSE (registry sync, context sync, desktop routing, downloads tidying, naming conventions).
+
+## Design: Two-Layer Persistence
+
+### Layer 1 — Claude PostToolUse Hook (immediate)
+
+**File:** `private_dot_claude/settings.json.tmpl` (add to existing hooks)
+
+Hook fires after every `Write` to `~/.claude/projects/*/memory/*` or `~/.claude/plans/*`:
+- Runs `~/.local/bin/domus-memory-sync <filepath>`
+- Script handles: chezmoi add → git add → git commit → git push
+- Signing fallback: try signed, fall back to unsigned if 1Password unavailable
+- Non-blocking: runs in background, doesn't delay Claude's response
+
+### Layer 2 — LaunchAgent Watcher (backstop)
+
+**File:** `private_Library/LaunchAgents/com.4jp.memory-sync.plist.tmpl`
+
+- WatchPaths: `~/.claude/projects/*/memory/`, `~/.claude/plans/`
+- Also runs on 30-min timer as catch-all
+- Calls same `domus-memory-sync --all` script
+- Catches anything the hook missed (crashes, hook failures, manual edits)
+
+### The Sync Script
+
+**File:** `dot_local/bin/executable_domus-memory-sync`
+
+```
+domus-memory-sync [<filepath>|--all]
+```
+
+Logic:
+1. If `<filepath>` given: `chezmoi add <filepath>`
+2. If `--all`: find all untracked memory/plan files, `chezmoi add` each
+3. `cd $(chezmoi source-path)`
+4. `git add -A` (stage everything chezmoi just added)
+5. Try: `git commit -S -m "memory: auto-persist $(date +%Y-%m-%dT%H:%M:%S)"`
+6. If signing fails: `git commit --no-gpg-sign -m "memory: auto-persist (UNSIGNED) $(date)"`
+   - Write flag file `~/.local/state/domus/unsigned-commits-pending`
+7. `git push || echo "push failed" >> ~/.local/state/domus/memory-sync.log`
+8. If unsigned commits exist AND 1Password is now available: re-sign with `git rebase --exec`
+
+### Critical Files to Create/Modify
+
+| File | Action | Purpose |
+|------|--------|---------|
+| `dot_local/bin/executable_domus-memory-sync` | CREATE | Sync script |
+| `private_dot_claude/settings.json.tmpl` | MODIFY | Add PostToolUse hook for memory writes |
+| `private_Library/LaunchAgents/com.4jp.memory-sync.plist.tmpl` | CREATE | Backstop watcher |
+| `dot_local/state/domus/` | Ensure exists | State dir for logs and flags |
+
+### Signing Fallback Policy
+
+The user's git config requires `commit.gpgsign = true`. But the principle `[(local):(remote)={1:1}]` outranks signing — an unsigned commit on remote is better than a signed commit that only exists locally. The script tries signed first, falls back to unsigned, and flags for re-signing when 1Password becomes available.
+
+### Session Atomization (from previous section)
+
+Once the persistence pipeline is built, the session record (EVT-001 through EVT-022) should be the first artifact it auto-syncs.
+
+### Verification
+
+1. Create a test memory file → verify it appears in domus git log within 30 seconds
+2. Kill 1Password → create memory file → verify unsigned commit pushed
+3. Restart 1Password → verify unsigned commit gets re-signed
+4. Reboot → verify LaunchAgent catches any gap
+5. `chezmoi managed | grep memory` shows all memory files tracked
