@@ -1,16 +1,17 @@
 ---
 name: April 2026 grant applications
-description: 10 grant applications totaling $230K+. Creative Capital ($50K) deadline 2026-04-02 has PASSED. Check application-pipeline for submission outcomes.
+description: 10 grant applications ($230K+). All deadlines PASSED. 3 rejections confirmed (Snorkel AI, Twilio, Awesome NYC Foundation). Remaining outcomes unknown.
 type: project
 ---
 
-10 grant applications drafted ($230K+ total). 20 GitHub issues in organvm-corpvs-testamentvm tracking blockers.
+10 grant applications drafted ($230K+ total). All deadlines have passed.
 
-**Why:** Revenue is critical for sustainability. These are the first external funding pushes.
+**Known outcomes (as of 2026-04-15):**
+- **Snorkel AI:** Rejection received 2026-04-14
+- **Twilio:** Rejection received 2026-04-14
+- **Awesome NYC Foundation:** Grant rejection received 2026-04-09
+- **NEH, Bread Loaf, Google Creative, Creative Capital, others:** Outcomes unknown
 
-**Status as of 2026-04-03:**
-- **Creative Capital ($50K, deadline 2026-04-02):** DEADLINE PASSED. Outcome unknown — check `~/Workspace/4444J99/application-pipeline/` for submission confirmation.
-- **March deadlines PASSED:** NEH (2026-03-06), Bread Loaf (2026-03-15), Google Creative (2026-03-18). Outcomes unknown.
-- Pipeline lives at `~/Workspace/4444J99/application-pipeline/`
+**Why:** Revenue is critical for sustainability. These were the first external funding pushes.
 
-**How to apply:** If the user mentions grants or applications, check the application-pipeline repo for current state rather than relying on this memory. All deadlines listed here have now passed — the relevant question is submission confirmation and outcomes, not preparation.
+**How to apply:** All deadlines have passed. The relevant question now is outcomes, not preparation. Check `~/Workspace/4444J99/application-pipeline/` for current state. Pipeline lives at `organvm-iii-ergon/application-pipeline/` in the registry.
