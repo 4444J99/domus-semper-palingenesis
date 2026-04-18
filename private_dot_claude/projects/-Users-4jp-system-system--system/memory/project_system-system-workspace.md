@@ -1,45 +1,36 @@
 ---
 name: system-system--system workspace
-description: Formal ontological system with 7 Laws, 9 axiom files, 21 derivations, 135 atoms, IRF registry, 15 CLI tools, 38 entities — GitHub remote at 4444J99/system-system--system
+description: Formal ontological system with 7 Laws, 9 axiom files, 21 derivations, 166 atoms, IRF registry, 15 CLI tools, 38 entities — GitHub remote at 4444J99/system-system--system
 type: project
+originSessionId: bc7cac05-4cf1-4a24-a656-0e21dc933cfc
 ---
-
 `~/system-system--system` is a formal ontological system. Git repo with remote at `4444J99/system-system--system` (private).
 
 **Why:** The user is building a complete formal ontology of foundational concepts — system, primitive, existence, rendering, observation, governance — through layered formalization (IS > MUST > COMPUTE). This includes both formal theory AND operational tooling/visualization.
 
 **How to apply:** This is a live, fully instantiated system. Treat it as a formal research project with Laws > Axioms > Derivations hierarchy. Every change must respect the meta-rule: no derivation overrides an axiom, no axiom overrides a Law. The system also has engineering infrastructure (CLI tools, registry, visualizations) that must stay consistent with the formal layer.
 
-### System state (verified 2026-04-16)
+### System state (verified 2026-04-18)
 
 **Laws:** 7 in LAWS.md
-- Law 1: System Existence (H(S) < Sigma H(e_i))
-- Law 2: Well-Founded Composition (unique ordered tree decomposition)
-- Law 3: Primitive Stratification (7 layers, cone of contingency)
-- Law 4: Scale Invariance (manifest schema = fixed point)
-- Law 5: Energetic Output (Mandate of Telemetry)
-- Law 6: Isomorphic Validation (Escrow Threshold)
-- Law 7: Tripartite Convergence — "The Three Heartbeats" (|H(x)|=3)
 
 **Axiom files:** 9 in axioms/
 
-**Derivation files:** 21 in derivations/ (latest: phenomenologia--systematis.md + neighborhood--lateral-adjacency.md added 2026-04-16)
+**Derivation files:** 21 in derivations/
 
-**Atoms:** 135 in atom-registry.yaml (v1.1.0) across 15 documents, 10 categories (S:3, F:15, P:31, M:21, O:13, G:12, V:7, TC:12, CC:12, PH:9)
+**Atoms:** 166 in atom-registry.yaml (v1.1.0) across 19 documents, 10 categories (S:3, F:26, P:46, M:21, O:13, G:17, V:7, TC:12, CC:12, PH:9). FORMAL ratio ~42%.
 
-**Registry:** 38 entities, 37 relations, JSONL event ledger, IRF registry (irf-registry.yaml with 22 items, IRF-SYS-056 through IRF-SYS-113)
-- Entity types in use: system, axiom, derivation, primitive, constellation, organ, document
-- Relationship types in use: PARENT_CHILD, DEPENDENCY, IMPLEMENTS, REFERENCE
-- **Convergence audit: 38/38 canonical (100%), 15/15 docs wired, 11/22 IRF fully wired**
+**Registry:** 38 entities, 38 relations, JSONL event ledger, IRF registry (24 items)
+- **Convergence: 38/38 canonical (100%), 19/19 docs wired, 11/22 IRF fully wired**
 
-**Manifest:** 18 pieces across 7 layers — manifest.toml schema piece/v2
+**Session ses_5EA6A additions:** Atom decomposition of 3 orphaned derivations + DOC-G-01 collision repair:
+- DOC-P-04 (parameter-decomposition, ent_231BC): 10 FORMAL atoms (ATM-P-032:041)
+- DOC-F-03 (verification--truth-striving, ent_B8A48): 11 FORMAL atoms (ATM-F-016:026)
+- DOC-P-05 (plane-existence--variables, ent_E786E): 5 atoms (ATM-P-042:046), 4 FORMAL + 1 SKETCHED
+- DOC-G-02 (governance--teleology, ent_A804E): 5 atoms (ATM-G-013:017), collision repaired from DOC-G-01
 
-**CLI tools:** 15 in bin/ — sys-cascade, sys-check-pulse, sys-convergence-audit, sys-e2g-review, sys-extract-ideal, sys-extract-snapshots, sys-heartbeat, sys-log-event, sys-project, sys-session-ingest, sys-session-ingest-jsonl, sys-session-record, sys-session-view, sys-uid, sys-visualize
+**3 orphan derivations remain undecomposed:** existence--critique (ent_201CB), primitives--classification (ent_9DC44), gap-analysis--cartography (ent_67C08). escrow-protocol (ent_4E79B) also undecomposed but classified as incomplete.
 
-**Recent additions (ses_C4B98):** phenomenologia--systematis (DOC-PH-01, ent_1C510, IRF-SYS-107 RESOLVED — 9 atoms, 3 theorems, 3 invariants), neighborhood--lateral-adjacency (DOC-O-02, ent_A3424, IRF-SYS-108 RESOLVED — 5 atoms, 1 theorem, 4 properties).
+**Open IRF items:** IRF-SYS-059, 060, 063, 064, 065, 068, 069 (all with null cross-refs, tied to GH-#5). 11 GitHub issues open.
 
-**Session Recording:** 4-channel JSONL stream at archive/sessions/sessions.jsonl — hooks configured for SessionStart/Stop.
-
-**Key config:** sys.toml now includes TC, CC, PH in [categories]. Escrow protocol references body_path=meta-organvm, mind_path=organvm-iv-taxis.
-
-**Open formal VACUUMs (ses_F3BE4 origin):** NONE remaining from VSA audit. Residual gaps: pulse frequency (band drift, harmonic optimization, cross-organ sync), phenomenology (PH-G1 qualia specificity, PH-G2 phenomenal binding, PH-G3 cross-organ phenomenology), compilatio (CC-G1–G5). Open IRF items: IRF-SYS-059 (materon proofs), IRF-SYS-060 (escrow tests), IRF-SYS-063 (omega scorecard), IRF-SYS-064 (non-organ entities), IRF-SYS-065 (testament chain), IRF-SYS-068 (SGO commission), IRF-SYS-069 (companion indices).
+**CLI tools:** 15 in bin/. Session recording via 4-channel JSONL stream.
