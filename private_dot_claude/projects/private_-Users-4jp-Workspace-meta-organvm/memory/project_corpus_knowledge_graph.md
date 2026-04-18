@@ -1,13 +1,15 @@
 ---
 name: Corpus Knowledge Graph
-description: Plan to build computational bridge between post-flood constitutional corpus (225 files) and praxis-perpetua operational corpus (2,728 files) via knowledge graph in organvm-engine
+description: Phase 1 COMPLETE (2026-04-14) — organvm_engine/corpus/ module with scanner, graph builder. 118 nodes, 172 edges, 17 tests. Phases 2-4 pending.
 type: project
 ---
 
-Corpus knowledge graph planned (S-corpus-graph, 2026-04-07) but NOT yet built. Draft plan at `post-flood/.claude/plans/2026-04-07-corpus-knowledge-graph.md`.
+Corpus knowledge graph **Phase 1 COMPLETE** (S-Zettelkasten-Successor, 2026-04-14). Module at `organvm-engine/src/organvm_engine/corpus/` (scanner.py, graph.py).
 
-**Why:** Two major knowledge bodies — post-flood (constitutional source, 225 md files, 18 transcripts, SPEC-000 through SPEC-023, 15 preprints) and praxis-perpetua (operational university, 2,728 md files, 181 research docs, 69 SOPs, 1,322 session logs) — have no computational bridge. Cross-reference analysis revealed strong connections (AMMOI, Alpha-Omega, Formation Protocol) and gaps (SVSE under-referenced, Faculty/Commission/Defense governance minimally cross-linked).
+**What exists:** Scanner reads `.zettel-index.yaml` + Layer 2 frontmatter + `seed.yaml implements[]` → builds `corpus-graph.json`. 118 nodes, 172 edges, 12/12 concepts at 100% coverage. 17 tests passing. 5 ORGAN-I repos + engine bound via `implements[]`.
 
-**How to apply:** When implementing, build as `organvm_engine/corpus/` module extending `RelationType` (8 existing + 5 new: DEFINES, REFERENCES, IMPLEMENTS, GROUNDS, EXTRACTED_FROM) and `EntityType` (7 existing + 3 new: CONCEPT, SPEC, TRANSCRIPT). Storage: single JSON file. Output: 6 navigable markdown indices including gap analysis. Integration: `organvm corpus build|render|query|gaps|stats` CLI commands.
+**Why:** Bridges post-flood (constitutional source, ~260 md files) and praxis-perpetua (operational university, ~2,700+ md files) into a navigable computational graph. Cross-reference analysis drove the design: AMMOI/Alpha-Omega/Formation Protocol strongly connected, SVSE under-referenced.
 
-**IRF:** IRF-SYS-104 (P2). **GH:** meta-organvm/organvm-engine#81.
+**How to apply:** When the user asks about post-flood → implementation traceability, the corpus module is the tool. `organvm corpus build|render|query|gaps|stats` CLI commands are planned but not yet wired.
+
+**Remaining (Phases 2-4):** praxis-perpetua scan, concept expansion, CLI wiring, markdown indices. **IRF:** IRF-SYS-104 (P2). **GH:** meta-organvm/organvm-engine#81.
