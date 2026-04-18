@@ -16,12 +16,10 @@ On 2026-04-03, the user experimented with restructuring `~/Workspace/` using a P
 5. `~/Workspace/` restored to original flat state with all content
 6. `~/source--all-ever/` created as new meta-container: `form--workspace/` + `substance-subtrate/`
 
-**Current state (end of session):**
+**Current state (verified 2026-04-15):**
 - `~/Workspace/` = flat, restored, working. `.vscode/settings.json` in place.
-- `~/source--all-ever/` = new directory at home level for future ideal-form design
-- `~/source--all-ever/form--workspace/` = has broken symlinks from old void--edge paths
-- `~/source--all-ever/substance-subtrate/organvm--major-instance/a-organvm/` = organism (git repo, has content)
-- `~/source--all-ever/substance-subtrate/organvm--major-instance/organvm-origin/` = emptied (content moved back)
+- `~/source--all-ever/` = **DELETED** (no longer exists as of 2026-04-15)
+- The concept evolved into sovereign--ground and system-system--system--monad at `~/` (see project_multiverse_architecture.md)
 
 **Data loss:** `mcp-servers` repo was LOCAL-ONLY (no git remote). Lost during Finder moves — the directory was a symlink (`~/Workspace/mcp-servers → organvm-iv-taxis/mcp-servers`) and the actual content disappeared during the restructuring. Needs recovery from Time Machine or Backblaze. LaunchAgent `com.4jp.mcp.servers.plist` expects it at `~/Workspace/mcp-servers/`.
 
