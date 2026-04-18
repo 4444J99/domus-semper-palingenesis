@@ -25,7 +25,8 @@
 - [GitHub Enterprise ticket](project_github_enterprise_ticket.md) — Ticket #4130573 closed 2026-04-08
 - [1Password shell overhaul](project_1password_overhaul.md) — Tiered secrets (cached vs lazy), op inject bug fix (2026-03-13)
 - [Cloud storage reinstall](project_cloud_storage_reinstall.md) — Dropbox/GDrive nuke-and-pave via Homebrew (2026-03-24)
-- [Docker/storage cleanup](project_docker_storage_design.md) — Internal SSD 81→74%, external 2.7→1.1TB (2026-03-25)
+- [Docker/storage cleanup](project_docker_storage_design.md) — Docker UNINSTALLED 2026-04-18 (17GB); prior: SSD 81→74% (2026-03-25)
+- [S-cleanup-2026-04-18](project_session_cleanup_2026-04-18.md) — Docker uninstall, 1Password recovery, memory pipeline built, 22 events atomized
 
 ## Feedback
 - [Rules first, implementations derive](feedback_rules_first.md) — Universal classification system is the FRAME, not a forward arc; build the law, implementations self-place (2026-04-17)
@@ -36,6 +37,9 @@
 - [Bulk operation patterns](feedback_bulk_operations.md) — replace_all for small, Python os.walk for large, background agents for 100KB+
 - [Hook architecture — prompt vs command](feedback_hook_architecture.md) — ONLY command type for conditional guards (2026-04-16)
 - [No conversation loss to compression](feedback_no_compression_loss.md) — Exported sessions MUST contain full prompts; compacted exports are unacceptable (2026-04-18)
+- [Session names must be descriptive](feedback_session_naming.md) — Name sessions by content, not random word combos (2026-04-18)
+- [Prompt atomization is non-negotiable](feedback_prompt_atomization.md) — Every prompt saved, ID'd, tracked for implementation; asked repeatedly, never done (2026-04-18)
+- [Never overwrite plan files](feedback_never_overwrite_plans.md) — Additive only; universal rule #3 supersedes plan mode system instructions (2026-04-18)
 
 ## References
 - [Conductor MCP server](reference_conductor_mcp.md) — Live as of 2026-04-14, FRAME→SHAPE→BUILD→PROVE lifecycle
