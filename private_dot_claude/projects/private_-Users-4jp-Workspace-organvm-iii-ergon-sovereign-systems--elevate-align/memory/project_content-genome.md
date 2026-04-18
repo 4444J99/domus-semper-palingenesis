@@ -50,5 +50,5 @@ On 2026-04-04, Phase 2 pipeline (commit ec61be1):
 - Summary at docs/archive/content-units-summary.md — human-readable index
 - Social calendar at docs/social-content-calendar/ — immediate client deliverable
 - Scripts: build-content-units.py, extract-social-content.py, enrich-branches.py
-- Phase 3 (node page assembly) blocked by GH#13 — content units are ready when decision drops
+- Phase 3 (node page assembly) UNBLOCKED since 2026-04-04 — GH#13 closed with 13-node architecture locked. Content units ready for assembly into node deep-dive pages.
 - Branch enrichment needs editorial curation (#16) before going live
