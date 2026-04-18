@@ -167,25 +167,30 @@ Aliases: `dm`, `dms`, `dma`, `dmp`, `dmpd`, `dmm`, `dmmq`
 
 Deployed to `~/Library/LaunchAgents/` from `private_Library/LaunchAgents/`:
 
-| Agent | Purpose |
-|-------|---------|
-| `com.4jp.mcp.servers.plist` | MCP server infrastructure auto-start |
-| `com.chezmoi.self-heal.plist` | Periodic chezmoi apply (self-heal) |
-| `com.domus.daemon.plist` | Domus background daemon |
-| `com.domus.sort.plist` | File sort daemon |
-| `com.4jp.desktop-router.plist` | Desktop file routing |
-| `com.4jp.downloads-tidy.plist` | Downloads directory tidying |
-| `com.4jp.naming-maintenance.plist` | File naming conventions enforcement |
-| `com.4jp.agents-policy-sync.plist` | Agent policy sync |
-| `com.4jp.context-sync.plist` | ORGANVM context sync (registry watcher + 30min timer) |
-| `com.4jp.env.mcp.plist` | Set MCP environment variables via launchctl |
-| `com.4jp.home-root-guard.plist` | Home directory clutter prevention |
-| `com.user.gmail_labeler.plist` | Gmail label automation (disabled — repo not yet created) |
-| `com.user.mail_automation.plist` | Mail automation (disabled — repo not yet created) |
+| Agent | Purpose | Status |
+|-------|---------|--------|
+| `com.4jp.mcp.servers.plist` | MCP server infrastructure auto-start | Active |
+| `com.4jp.cce-refresh.plist` | Conversation Corpus Engine session refresh (6h interval) | Active |
+| `com.4jp.cloudflared.organvm.plist` | Cloudflare tunnel for ORGANVM | Active |
+| `com.4jp.env.mcp.plist` | Set MCP environment variables via launchctl | Active |
+| `com.4jp.memory-sync.plist` | Claude memory local→remote sync | Active |
+| `com.4jp.organvm.soak-snapshot.plist` | Daily soak test snapshot (06:00) | Active |
+| `com.4jp.session-archive.plist` | Claude session transcript archival | Active |
+| `com.chezmoi.self-heal.plist` | Periodic chezmoi apply (self-heal) | Gated (`domus_auto_enabled`) |
+| `com.domus.daemon.plist` | Domus background daemon | Gated (`domus_auto_enabled`) |
+| `com.domus.sort.plist` | File sort daemon | Gated (`domus_auto_enabled`) |
+| `com.4jp.desktop-router.plist` | Desktop file routing | Gated (`domus_auto_enabled`) |
+| `com.4jp.downloads-tidy.plist` | Downloads directory tidying | Gated (`domus_auto_enabled`) |
+| `com.4jp.naming-maintenance.plist` | File naming conventions enforcement | Gated (`domus_auto_enabled`) |
+| `com.4jp.agents-policy-sync.plist` | Agent policy sync | Gated (`domus_auto_enabled`) |
+| `com.4jp.context-sync.plist` | ORGANVM context sync (registry watcher + 30min timer) | Gated (`domus_auto_enabled`) |
+| `com.4jp.home-root-guard.plist` | Home directory clutter prevention | Gated (`domus_auto_enabled`) |
+| `com.user.gmail_labeler.plist` | Gmail label automation | Blocked (`.chezmoiignore` — repo not created) |
+| `com.user.mail_automation.plist` | Mail automation | Blocked (`.chezmoiignore` — repo not created) |
 
 Conditional deployment: file-automation agents are suppressed when `domus_auto_enabled = false`
-in chezmoi config. Mail automation agents are suppressed via `.chezmoiignore` until their
-repos exist.
+in chezmoi config. Mail automation agents are blocked unconditionally via `.chezmoiignore` until
+their repos exist.
 
 ## Apply-Time Scripts (`.chezmoiscripts/`)
 
