@@ -1,6 +1,6 @@
 ---
 name: IDE workspace configuration for ~/Workspace/
-description: Antigravity (VS Code fork) is the primary IDE. ~/Workspace/.vscode/settings.json tames git scanning across 77+ repos. GitLens throttling, file watcher exclusions, npm/TS limits.
+description: Antigravity (VS Code fork) + VS Code + VS Code Insiders + Cursor installed. ~/Workspace/.vscode/settings.json tames git scanning. VS Code extensions stored locally at ~/.local/share/vscode/extensions/ (fixed 2026-04-15).
 type: reference
 ---
 
@@ -21,3 +21,12 @@ type: reference
 **Why:** The 7 organ directories each have `.gitmodules` pointing to 5-31 submodules (108 total). Without these settings, Antigravity tries to initialize all 77+ git repos on startup, consuming excessive RAM on a 16GB machine.
 
 **Global gitignore** already whitelists `.vscode/settings.json` (line 101 of `dot_config/git/ignore`).
+
+**VS Code extensions path (fixed 2026-04-15):**
+- Symlink chain: `~/.vscode` → `~/.local/share/vscode/` (XDG compliance)
+- Previously, `~/.local/share/vscode/extensions` was a symlink → `/Volumes/4444-iivii/.vscode/extensions` (external drive)
+- External drive `4444-iivii` was not mounted, causing dangling symlink → `code --install-extension` failed with ENOENT on mkdir
+- Fix: Replaced dangling symlink with a real local directory at `~/.local/share/vscode/extensions/`
+- **Pattern:** External drive dependencies create silent breakage when the drive isn't mounted. Check for dangling symlinks to `/Volumes/` paths when diagnosing tool failures.
+
+**Installed IDEs (as of 2026-04-15):** Antigravity, VS Code, VS Code Insiders, Cursor, Codex. The `code` command at `/opt/homebrew/bin/code` maps to VS Code (not Antigravity).
