@@ -25,13 +25,10 @@ type: project
 - **ID scheme: TRX-{trunk}.{branch}** — tree-encoded, human-readable
 - Plan saved to `post-flood/.claude/plans/2026-04-13-zettelkasten-conversion.md`
 
-### What Was NOT Done
-- Zettelkasten conversion NOT IMPLEMENTED (plan approved, build phase not started)
-- CLAUDE.md tree diagram NOT CORRECTED (error discovered but not fixed)
-- No `.zettel-index.yaml` created
-- No frontmatter added to any file
-- No IRF items created for discoveries
-- No GitHub issues created
+### What Was NOT Done (at time of handoff — subsequently completed)
+- ~~Zettelkasten conversion NOT IMPLEMENTED~~ → **COMPLETED** in a later session. `validate-zettelkasten.py` exists, `.zettel-index.yaml` sidecar created, frontmatter added to all files, CLAUDE.md tree diagram corrected with verified TRX- IDs.
+- No IRF items created for discoveries (may still be open)
+- No GitHub issues created (may still be open)
 
 ### IRF Items Discovered (NOT YET LOGGED)
 1. **CLAUDE.md tree error** — `post-flood/CLAUDE.md` lines 174-197 have wrong TDR tree structure. P1.
