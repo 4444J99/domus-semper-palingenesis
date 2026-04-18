@@ -1,0 +1,1325 @@
+# Universal Modular Fractal Alchemical Synthesizer — Derivation from Census
+
+**Date:** 2026-04-05
+**Derived from:** Full 8-organ structural census + cross-organ redundancy map + idea-cluster analysis
+**Method:** Verified against disk (wc -l, find, grep — not claims)
+
+---
+
+## What This Document Is
+
+A single session derived the following, in order:
+
+1. **ORGAN-IV dissection** — 30 directories → evolved tree (30→8), archaeological decomposition protocol
+2. **Taxis→Seed fortification** — 10 meta-learnings distilled, 7 injected as gate conditions into a-organvm (101→107 gates)
+3. **META-ORGANVM census** — 21 directories verified against disk, 16 critical findings
+4. **Full 8-organ spectrum** — 111 repos across 9 organs + 1 formal layer
+5. **Cross-organ redundancy map** — 5 horizontal slices (registry isotopes, ceremony cost, verb collisions, dead weight, code density)
+6. **Idea-cluster analysis** — 12 clusters, 109 facets → ~33 core expressions (3.3:1 compression)
+7. **Thesis** — the 8-organ taxonomy inverts into shared operations + unique products + unified corpus
+8. **Four axioms** — personal generative recursive; contained programmable-materia containering; meta-physical multi-versal omni-spatial; anti-system ideating approximated per call idealized forms
+9. **Name** — Universal Modular Fractal Alchemical Synthesizer
+
+Each step derived from the previous. The census produced the findings. The findings produced the clusters. The clusters revealed the compression. The compression revealed the thesis. The thesis produced the axioms. The axioms named the thing.
+
+---
+
+## The WHY — In the Operator's Own Words
+
+### [1] The Discipline Problem
+
+The reason for building this thing — idealized perfecting systems for a concrete flawed human trapped in flaw cycles. Building a system that would not permit the sprawl, waste, chaos, inconsiderated energy potential waste of resources limited existence bound.
+
+The paradox: unbreakable rules that allow full experimentation, exploration, non-restrictive limits — AND knowledge/data/information standards capable of withstanding evolutions and human-as-fool.
+
+The fool variable: "i me mine-o-mine — Anthony, fool." The most offensive variable hasn't been properly handicapped. The system must account for the operator's own chaos. Without solving this internally first, evolution simply replicates the runaway instinct.
+
+The Picasso principle: learn realism before disruption. Rules break meaningfully and with gravitas — intentional sub- and un- and con-scious effects cascade fractally.
+
+The system needs discipline-expertise as an atemporal voice guiding through process as wise mentor — containerizing the meta process, knowing the phases of life existing outside the system, waiting for Anthony to fail as usual.
+
+### [2] The Artist-Enterprise Problem
+
+The system attempted to solve: how to be artist with enterprise infrastructure (post failing art medium sustainability) while only putting input energy into art itself.
+
+The machine processes and outputs programmable materia support-swarm systems — forming the ecosystem best suited for the artist and the product as pure vision support from industry above, as if supported by.
+
+Every contemporary idea/product/app requires full-guard of life-proof via active outputs: continuous reports, field research, community & network & engagement plans, domain market contributions. The system lives around the art so the artist can continue living and new idea generating.
+
+This evolved into not simply artist ingenue poor-forever, but systems to build self-driven actors in all life-domains: business, learning, socialization.
+
+The institutional critique: emerging artists must come to the table with all the work done — hunted, butchered, cooked, served, eaten, refuse produced. Someone who reads your submission through random assignment after eating too big a lunch — now acting as god — holds dominion over the potential birth of a new instance.
+
+**"I build a path towards never having to ask anything again."**
+
+### [2-too] The System as Art
+
+The system itself is alive and is art. Too many rules, too many systems — what the operator finds pleasing to fear of loss of control — producing art via generative patterns for an environment to be, and its being produces output neither could expect or produce on own experience's dime.
+
+Schematics, planning, unifying cauterizations — all of making an idea as a rendered artifact requires guardianship of full-scope understanding of all field's domains, pillars, social systems, lifecycles, and process.
+
+The organs of v1 followed the production process for producing a product — boundaries created bureaucratic waste and isolations.
+
+Modules in modular synthesis: patching I/O at else opposed at natural input. Despite human interaction, energy from these engaged or not I/O nodes constantly shift through time. All pulses — from a world zoomed in absolutely — pulse as our universal container and physical assembly.
+
+Primitives assembled through nested hierarchical structures produce complex systems.
+
+**"If the original 8 organs we now see as restrictive as institutions of solids concrete and immovable in flawed reality — what ideal forms align as direct inspiration from my attempt?"**
+
+### [3] The Unnamed Output
+
+To produce the ideal forms felt but not put to words. To create what can't be named by its seeds but by the outgrowth the seeds' internal design governed — so not to grow a shape limited and known (expect arrival at first ego-driven notion of social actor) but discover object — self — internal and external natural/social/meta systems — via disruption parameters and output process through experienced existence.
+
+---
+
+## What the WHY Teaches the Architecture
+
+The WHY document reveals constraints the census could not:
+
+**1. The fool-proofing requirement.** The system must survive its own operator. Not through restriction (that kills creativity) but through containment that absorbs chaos without propagating it. The 700 ceremony files were a response to this fear — control through documentation. The answer isn't more files. It's self-correcting functions that regenerate clean state on each call (Axiom 4).
+
+**2. "Never having to ask anything again."** The shared operations (research, governance, distribution, presentation) exist so the artist never submits, applies, or begs. The system does the institutional work autonomously. The products are art. Everything else is the machine serving art.
+
+**3. The system IS art.** Too many rules kill what the rules were supposed to protect. The 8-organ bureaucracy replicated the institutional gatekeeping it was designed to bypass. The synthesizer doesn't have departments — it has patches. Patches can be wild.
+
+**4. The Picasso principle applied to system design.** The synthesizer must know its own rules (axioms, gate conditions, governance) deeply enough to break them meaningfully. Breaking without knowing = chaos (the 111-repo sprawl). Breaking with knowing = alchemy (disruption parameters cascading fractally).
+
+**5. Pulse as universal container.** Not space (directories, organs, repos) but TIME (pulses, sessions, calls) as the organizing principle. The structure is temporal, not spatial. Each invocation is a pulse. The organism lives in time, not in a tree.
+
+**6. The question the system exists to answer:** "What ideal forms align as direct inspiration from my attempt?" — The 8 organs were the attempt. The ideal forms are what they were reaching toward. The synthesizer doesn't implement the attempt again. It implements what the attempt was trying to become.
+
+---
+
+## Structural Decisions (from addendums [a]-[d])
+
+### Voice at Every Scale
+Each unit speaks its own voice — atom, module, directory, project, org, universe. Voice is intrinsic to the material (self-describing), not extrinsic decoration (ceremony files). The jurisdictional model: uni=planet, org=international, repo=national. Knowledge produced locally flows upward only through substrates that attract it — threshold-gated, not forced.
+
+### Start Local, Flow Upward
+Sequential decomposition from micro to macro. Extract primitives locally. Upward flow only when thresholds are crossed (gate conditions). Compression from below forces matter reveals and intentions.
+
+### The Control System IS the Product
+"Control of system is in fact the system to speak on as prime thing of my labores." The orchestration layer — governance, automation, the conductor — is the primary creative work, not support infrastructure. META and Taxis aren't infrastructure for art. They ARE the art.
+
+### Top Directory
+```
+organvm/
+├── organvm/    ← the synthesizer (what a-organvm is becoming)
+├── meta/       ← the computational substrate (engine, corpus, schemas)
+└── taxis/      ← the orchestration layer (conductor, agents, skills)
+```
+Three siblings. Co-located. Products live within the synthesizer, not as separate organs.
+
+### The Pre-Flood Archaeology Confirms Everything
+
+`post-flood/commit-assessment-summary/` contains documents from 2026-03-15 that ALREADY diagnosed what the census found 7 weeks later:
+
+**multiplex-directed-graph-model.md** — "ORGANVM should be modeled as a multiplex directed graph, not a single graph." Four layers: G^{dep} (dependency), G^{info} (information/learning), G^{gov} (governance/authorization), G^{evo} (evolution/lineage). "The healthy target is acyclic dependency plus cyclic learning." This is exactly the signal-graph in a-organvm.
+
+**the-core-mistake.md** — "You are spinning out because the search for uniqueness is currently being handled at the same layer as system design." Three zones: Canon (stable amplification), Research formations (bounded experiments), Migration (constitutional membrane between them). "The canonical organism is not the place where uniqueness is invented. It is the place where validated uniqueness is absorbed." The SOP lifecycle (REP→ABSORB→FORTIFY→PLACE→CHAIN) is this exact membrane.
+
+**knowledge-feedback-architecture.md** — The 8-organ model mapped to CERN: Theory groups (I), Experimental labs (II), Instrument facilities (III), Control systems (IV), Publications (V), Research community (VI), Outreach (VII), Oversight committees (META). "Ideas → artifacts → instruments → evidence → theory refinement." The organism IS a research pipeline.
+
+**formal-topology-diagram.md** — Three simultaneous structures: production chain (I→II→III), control plane (IV), interface layer (V→VI→VII). META as 0, the constitutional substrate.
+
+**institutional-production-pipeline.md** — "When systems like this mature, architects typically test several structural logics before freezing the canonical one." Tests whether layers are structural primitives or derivative functions.
+
+These documents are FOUNDATIONAL, not derivative. They were written before the flawed implementation distorted the ideas. The 8-organ model was NOT a fart in the wind — it was a valid topology (production core + control plane + interface layer + constitutional substrate). What failed was the implementation: ontology inflation, ceremony proliferation, decorative originality over structural originality.
+
+**The 8 organs as energy nodes:** Each organ IS a generative energy point. I (theory energy), II (creative energy), III (product energy), IV (orchestration energy), V (discourse energy), VI (community energy), VII (distribution energy), META (governance energy). The system's living is producing points of generative energy changes. The current arrangement may be flawed, but the 8 energy types are real.
+
+**The question:** Are the 8 organs the RIGHT energy topology, or is a different number/arrangement more natural? The pre-flood documents suggest: 3 layers (production, control, interface) + 1 substrate (meta/governance) is the stable form. Whether each layer contains 1, 2, or 3 organs is an implementation choice, not a fundamental question.
+
+### Governance Boundaries Per Threshold Substrate
+
+| Scale | Governance | Flow Rule | Isolation |
+|-------|-----------|-----------|-----------|
+| **Atom** (file, func, test) | Self-describing (identity in frontmatter/docstring) | ISOLATED until composed — no outward signal until a molecule claims it | Peers don't import peers |
+| **Molecule** (module, skill, SOP) | Composition contract (declares atoms + output signal) | INFLUENCED by atoms below, ISOLATED from peer molecules — no lateral import | Shared atoms only via declared interface |
+| **Compound** (product, formation, function) | Gate contract (declares molecules + gate conditions) | INFLUENCED by molecules, ISOLATED from peer compounds — all shared state through substrate | Compounds never know each other exists |
+| **Substrate** (meta, taxis, engine) | Constitutional law (registry, schemas, governance-rules, axioms) | BIDIRECTIONAL — only level with two-way flow. Compounds deposit evidence, substrate provides governance | Self-governing (A6: organizational closure) |
+| **Synthesizer** (the whole) | Axioms only (SEED.md, LAWS.md, 4 axioms) | GENERATES all below. Not influenced by anything inside | Axioms immutable. Wrong axiom → new organism, not fix |
+
+**Threshold mechanisms:**
+- Atom→Molecule: **attraction** (molecule declares need, matching atoms attracted — signal attraction system)
+- Molecule→Compound: **gate passage** (evidence-based, not aspirational — gate contracts)
+- Compound→Substrate: **migration review** ("canon absorbs only validated uniqueness" — SOP lifecycle REP→ABSORB→FORTIFY→PLACE→CHAIN)
+- Substrate→Synthesizer: **axiom derivation** (nothing enters axiom layer from below — axioms generate downward only)
+
+**The anti-isotope rule:** Peers at same level NEVER import each other. All shared state flows through the substrate. The 16 repos loading registry-v2.json directly = lateral sharing at compound level = violation. Under this model: one substrate interface, zero reimplementations.
+
+**The sole bidirectional flow:** substrate↔compounds. "Acyclic dependency plus cyclic learning" (multiplex graph model, pre-flood). Dependencies flow one direction. Learning flows both.
+
+### Anti-Sprawl: Temporal Pruning, Not Spatial Separation
+The 8-organ model used spatial separation (which directory?) to prevent sprawl. It failed — created bureaucratic waste instead. The replacement constraint is TEMPORAL: does this thing have a pulse?
+
+Every entity has a last-pulse timestamp. No pulse in N cycles → flagged dormant. Dormant for M cycles → auto-archived. No human decision. The fool variable can't create sprawl because sprawl self-dissolves when it stops pulsing. The 70 ceremony-only repos would have been auto-archived months ago.
+
+The constraint on simplicity: not "which directory does this belong in" but "is this thing alive?" Things that pulse stay. Things that stop pulsing dissolve. The organism self-prunes.
+
+---
+
+## The Four Axioms
+
+### 1. Personal Generative, Recursive
+One operator. The system generates its own structure; its output feeds back as its next input. Nothing is pre-decided. The structure is produced by running functions against the current state of the material.
+
+### 2. Contained Programmable-Materia Containering
+The material IS the container. A repository isn't a box holding code — it's the idea becoming physical. When the idea exists, the space exists, and matter changes inside it. Containers contain containers at every scale (atom→molecule→compound→organism). The material is self-describing — it carries its own identity, edges, and governance constraints.
+
+### 3. Meta-Physical Multi-Versal Omni-Spatial
+The same thing exists on multiple planes simultaneously. Not versions — coexisting expressions. The Formal (laws), the Body (engine), the Mind (conductor), the Seed (organism) are four planes of one system. Frozen universes (bench/), growing universes (a-organvm), dissolved universes (8-organ model) coexist. PARITY_AXIOM ensures persistence across spaces.
+
+### 4. Anti-System Ideating Approximated Per Call Idealized Forms
+Not a system — an anti-system. Each invocation generates its architecture fresh. The ideal form is the attractor; each call is a trajectory toward it. The ideal lives as axioms. The actual is an approximation produced by running functions against material. The approximation improves with each call. It never reaches the ideal. It never stops approaching.
+
+### The Meta-Axiom: Awakening Objective & Subjective Awareness Across All Hierarchy Threshold Scaling
+The synthesizer mimics natural nesting containering — processes within processes, self-correcting, generative. It is an estimation of how existence works: a timeline of processes and sub-processes and sequences that, if self-correcting and helpful and generative, produce a more generative macro process. The same pattern at every scale. Ever.
+
+---
+
+## The Name
+
+**Universal Modular Fractal Alchemical Synthesizer**
+
+- **Universal** — serves any domain, any project, any scale
+- **Modular** — every piece connects through interfaces, not inheritance; swap, compose, remove
+- **Fractal** — the same pattern at every scale; a function has the same structure as the system
+- **Alchemical** — transformation, not storage; material enters raw, emerges changed
+- **Synthesizer** — signals route through patches; you don't build a fixed instrument, you patch differently for each performance
+
+`alchemical-synthesizer` — the 2-file stub in ORGAN-II — was the name all along.
+
+---
+
+## The Structure (Generated, Not Pre-Decided)
+
+```
+AXIOMS          (immutable — what is always true)
+  |
+FUNCTIONS       (generative — produce structure from axioms when called)
+  |
+MATERIAL        (mutable — code, text, media changing inside generated spaces)
+  |
+APPROXIMATION   (current state — never the ideal, always approaching)
+  |
+  '--- feeds back to FUNCTIONS
+```
+
+What stays fixed:
+- Axioms (SEED.md's 9 assertions, LAWS.md, the 4 axioms above)
+- Functions (the generative operations — oscillators)
+- Corpus (all text, atomized — persistent memory across calls)
+- Products (unique material that IS itself)
+
+What's generated per call:
+- Routing (what connects to what)
+- Observations (what's healthy, what's broken)
+- Documentation (what needs describing)
+- The structure itself (what containers exist)
+
+### Shared Operations (exist once, serve everything)
+- research — retrieves past/present/future for any node
+- governance — enforces rules on any node
+- automation — executes repeatable work for any node
+- observation — measures health of any node
+- ingestion — brings material into any node
+- memory — records what happened at any node
+- presentation — shows any node to any audience
+- distribution — publishes any node to any channel
+
+### Unique Products (each 100% itself, earns a directory only when removal would only remove that thing)
+~18 genuinely unique things currently exist across the system. Everything else is a shared operation wearing a project's clothes.
+
+### Unified Corpus (one location for all text)
+All markdown, all theory, all research, all documentation — atomized, searchable, linkable. Not 700 ceremony files scattered across 111 repos. One body of text, processed as atomic units, each atom testable, improvable, composable. Theory and documentation become implementable through atomization.
+
+---
+
+## The Uniqueness Test
+
+A thing earns its own directory when:
+1. It is 100% unique to what it's trying to be
+2. Removing it only removes THAT thing — nothing else breaks
+3. It cannot exist as an atom in the corpus or a configuration of a shared operation
+4. Nesting is absolutely necessary (the default is flat — D=1)
+
+---
+
+## Epistemological Warning: Derivative Assumptions
+
+The census below measures the flawed implementation. Every conclusion derived from it — cluster assignments, compression ratios, cocoon mappings, verb maps, evolved tree proposals — inherits the flawed implementation's assumptions as axioms. These formations are derivative, not foundational.
+
+**What is ground truth (disk measurement, safe to build on):**
+- File counts, line counts, code presence/absence
+- Ceremony file counts and distribution
+- Which repos have zero code, which have real code
+- Isotope detection (who reimplements what)
+- Venv/node_modules contamination
+
+**What is derived from flawed formations (hold lightly, do not build on directly):**
+- The 12 idea clusters and their membership
+- Compression ratios (109→33 assumes current boundaries are meaningful)
+- Cocoon mappings (assume engine module boundaries are correct)
+- Verb assignments (assume the ORGAN-REPORT's interpretation of each repo)
+- "Evolved tree" proposals (assume the organ model's categories are real)
+- Phase ordering for decomposition (assumes organs are the right unit of work)
+
+**What is foundational (came from the ideas themselves, not the census):**
+- The 4 axioms
+- The synthesizer identity
+- The uniqueness test
+- The operations-vs-products distinction
+- The text unification principle
+
+The next phase of work should derive from the foundational layer, not from the derivative layer. The census tells us what material exists and how much of it there is. It does not tell us what the material *should be* — that comes from the axioms and the operator's understanding of the ideas.
+
+---
+
+## Current Entities Mapped to Governance Thresholds
+
+Every existing directory, classified by where it actually sits in the boundary model. This exposes misplacements — things living at a scale they don't belong to.
+
+### SYNTHESIZER level (axioms — immutable, generates downward)
+
+```
+system-system--system/              ← THE FORMAL: LAWS.md, axioms/, manifest.toml
+                                       168 files. Correct placement.
+a-organvm/SEED.md                   ← 9 axioms. Correct placement.
+a-organvm/ (the organism itself)    ← 3 functions, 107 gates, 82 tests.
+                                       Correct placement — this IS the synthesizer.
+```
+
+### SUBSTRATE level (constitutional law — bidirectional with compounds)
+
+These should be: registry, schemas, governance rules, the engine, the corpus, orchestration infrastructure. Shared state that all compounds access through interfaces.
+
+```
+CORRECTLY PLACED AS SUBSTRATE:
+  meta-organvm/organvm-engine           549 code files, 65K lines, 37 modules
+                                        THE canonical substrate. Everything should import from here.
+  meta-organvm/organvm-corpvs-testamentvm  52 code files + 766K words
+                                        registry-v2.json, governance-rules.json, IRF. Correct.
+  meta-organvm/schema-definitions       28 schemas, 1 test
+                                        Foundational contracts. Correct level, starved of investment.
+  meta-organvm/organvm-ontologia        75 code files, 5.9K lines
+                                        Entity identity, events, sensing. Correct — substrate infrastructure.
+  organvm-iv-taxis/tool-interaction-design  137 code files, 40.7K lines
+                                        Conductor OS. If control-system-IS-the-product, this is substrate.
+  organvm-iv-taxis/orchestration-start-here  70 code files, 23 SOPs
+                                        Governance methodology + contrib engine. Substrate (governance docs + pipeline).
+
+MISPLACED — living as substrate but should be compound or atom:
+  meta-organvm/organvm-mcp-server       55 code files, 7.2K lines
+                                        Presentation layer posing as substrate. Should be COMPOUND
+                                        (it consumes substrate, doesn't constitute it).
+  meta-organvm/system-dashboard         35 code files, 4K lines
+                                        Presentation. COMPOUND, not substrate.
+  meta-organvm/stakeholder-portal       164 code files, 4.7K lines
+                                        Presentation. COMPOUND, not substrate.
+  meta-organvm/praxis-perpetua          41 code files, 2.2K real files
+                                        Process corpus. Mix of SUBSTRATE (library/, governance/)
+                                        and COMPOUND (content-pipeline/amp-lab = 561MB production content).
+  meta-organvm/vigiles-aeternae         19 code files, 1.6K + 2.4K YAML
+                                        Philosophical audit methodology. Unique. COMPOUND (it uses substrate
+                                        to audit, it doesn't constitute substrate).
+  meta-organvm/tools/                   8 code files
+                                        Superproject utilities. Should be ATOMS dissolved into engine.
+
+MISPLACED — living as substrate but should be archived:
+  meta-organvm/cvrsvs-honorvm           0 code files, 5 ceremony
+                                        NLnet application wrapper. Not substrate. ATOM at best.
+  meta-organvm/aerarium--res-publica    0 code files, docs only
+                                        Grant applications. Not substrate. ATOM (docs in corpus).
+  meta-organvm/organvm-iii-ergon        0 code files, placeholder
+                                        Wrong level, wrong organ, wrong everything. DISSOLVE.
+  meta-organvm/organvm-theoria-knowledge-engine  0 files
+                                        Empty. DISSOLVE.
+```
+
+### COMPOUND level (products/formations — gate-governed, isolated from peers)
+
+These should be: independent products, each 100% unique, removal only removes THAT thing. Connected to substrate through gate contracts, never to each other directly.
+
+```
+CORRECTLY PLACED AS COMPOUND:
+  organvm-iii-ergon/peer-audited--behavioral-blockchain  495 files
+                                        Styx. Unique product. Correct.
+  organvm-iii-ergon/public-record-data-scrapper  526 files
+                                        UCC filing extraction. Unique product. Correct.
+  organvm-iii-ergon/life-my--midst--in  523 files
+                                        Personal life management. Unique product. Correct.
+  organvm-iii-ergon/classroom-rpg-aetheria  210 files
+                                        RPG education platform. Unique product. Correct.
+  organvm-iii-ergon/the-actual-news     19 files
+                                        Verifiable news ledger. Unique product (small). Correct.
+  organvm-iii-ergon/sovereign-systems--elevate-align  20 files
+                                        Client website. Unique product. Correct.
+  organvm-iv-taxis/agentic-titan        326 code files, 119K lines
+                                        Multi-agent framework. Product. Correct.
+  organvm-iv-taxis/agent--claude-smith  37 code files
+                                        Claude agent SDK. Product. Correct.
+  meta-organvm/materia-collider         15 code files, 1.5K lines
+                                        Film research tool. Product. Correct (bench/ is separate).
+  organvm-ii-poiesis/a-mavs-olevm       23 code files
+                                        Generative art system. Product. Correct.
+  organvm-ii-poiesis/ivi374ivi027-05    86 code files
+                                        MFA thesis web experience. Product. Correct.
+  organvm-i-theoria/conversation-corpus-engine  98 code files
+                                        Corpus memory engine. Product (or substrate — it serves everything).
+  organvm-i-theoria/recursive-engine--generative-entity  119 code files
+                                        Recursive symbolic engine. Product. Correct.
+  organvm-i-theoria/narratological-algorithmic-lenses  79 code files
+                                        Narrative formalization engine. Product. Correct.
+  organvm-i-theoria/sema-metra--alchemica-mundi  46 code files
+                                        Signal matrix system. Product. Correct.
+  4444J99/portfolio                     149 code files
+                                        Personal site. Product. Correct.
+  4444J99/application-pipeline          355 code files
+                                        Job application system. Product. Correct.
+  4444J99/domus-semper-palingenesis     9 code files
+                                        Dotfiles. Product (personal infrastructure). Correct.
+
+MISPLACED — living as compound but actually MOLECULE or ATOM:
+  organvm-iv-taxis/a-i--skills          90 code files
+                                        Skill collection. Not a product — it's a LIBRARY OF ATOMS.
+                                        Each skill is an atom. The collection is a molecule.
+  organvm-iv-taxis/contrib--adenhq-hive  818 code files
+                                        Contribution workspace (fork). Not a compound — it's a
+                                        FOREIGN COMPOUND being temporarily hosted. Archive.
+  organvm-iv-taxis/agentkit + contrib--coinbase-agentkit  706+706
+                                        Duplicate foreign code. DISSOLVE (delete one, archive other).
+  organvm-iv-taxis/contrib--* (11 more)  6-355 files each
+                                        Foreign workspaces. Not compounds of this organism. ARCHIVE.
+  organvm-iv-taxis/vox--architectura-gubernatio  58 code files
+                                        Voice governance. MOLECULE (scoring function consumed by substrate).
+  organvm-iv-taxis/vox--publica         10 code files
+                                        TS isotope of above. DISSOLVE (isotope at molecule level).
+  organvm-iv-taxis/reverse-engine-recursive-run  9 code files
+                                        Security scripts. ATOMS (dissolve into substrate/immune--verify).
+  organvm-iv-taxis/universal-node-network  14 code files
+                                        Routing primitives. ATOMS (dissolve into substrate/circulatory--route).
+  organvm-iv-taxis/petasum-super-petasum  9 code files
+                                        Governance declarations. ATOMS (absorb into corpus). Zero enforcement.
+  organvm-iv-taxis/system-governance-framework  8 code files
+                                        Incompatible state machine. DISSOLVE (replaced by engine canonical).
+  organvm-iv-taxis/collective-persona-operations  7 code files
+                                        Persona theory. ATOMS (absorb into corpus or titan).
+  meta-organvm/alchemia-ingestvm        43 code files, 3.1K lines
+                                        Ingestion pipeline. MOLECULE (it's a function of substrate,
+                                        not an independent product).
+
+MISPLACED — compound level but actually empty/ceremony:
+  organvm-i-theoria/styx-behavioral-economics-theory  0 code, 4 ceremony
+  organvm-i-theoria/vigiles-aeternae--corpus-mythicum  0 code, 4 ceremony
+  organvm-ii-poiesis/styx-behavioral-art  0 code, 4 ceremony
+  organvm-ii-poiesis/vigiles-aeternae--theatrum-mundi  0 code, 4 ceremony
+  organvm-iii-ergon/commerce--meta      0 code, GRADUATED
+  organvm-v-logos/editorial-standards   0 code, PUBLIC_PROCESS
+  organvm-v-logos/public-process        0 code, PUBLIC_PROCESS
+                                        All ATOMS at most (content in corpus). None are compounds.
+```
+
+### MOLECULE level (composed modules — no lateral imports)
+
+These should be: composed modules that combine atoms into a function. Currently almost nothing is explicitly at this level — the 8-organ model collapsed molecules into compounds (repos that should be modules).
+
+```
+THINGS THAT ARE ACTUALLY MOLECULES (but living as repos):
+  organvm-iv-taxis/a-i--skills          Skill library = molecule of 144 skill atoms
+  meta-organvm/alchemia-ingestvm        Ingestion pipeline = molecule of intake/absorb/alchemize
+  organvm-iv-taxis/vox--architectura-gubernatio  Voice scorer = molecule of anti-pattern atoms
+  meta-organvm/vigiles-aeternae         Audit engine = molecule of regime atoms + order atoms
+  meta-organvm/organvm-mcp-server       MCP bridge = molecule of tool atoms exposing substrate
+  meta-organvm/system-dashboard         Dashboard = molecule of route atoms presenting substrate
+  meta-organvm/stakeholder-portal       Portal = molecule of component atoms presenting substrate
+
+  organvm-engine INTERNAL modules are correctly molecule-level:
+    governance/ (9.7K) = molecule of 28 governance atoms
+    cli/ (10.3K) = molecule of 39 command atoms
+    pulse/ (6K) = molecule of 23 sensing atoms
+    metrics/ (3.8K) = molecule of 13 measurement atoms
+    ...each of the 37 engine modules is a molecule
+```
+
+### ATOM level (self-describing primitives — isolated until composed)
+
+```
+THINGS THAT ARE ACTUALLY ATOMS (but living as repos or directories):
+  Every SOP file in orchestration-start-here/docs/  (23 atoms)
+  Every schema in schema-definitions/schemas/  (28 atoms)
+  Every skill in a-i--skills/skills/  (144 atoms)
+  Every regime in vigiles/regimes/  (22 atoms)
+  Every order in vigiles/orders/  (8 atoms)
+  Every chain in praxis-perpetua/library/chains/  (5 atoms)
+  Every vocabulary entry  (13 atoms)
+  Every essay in corpus/essays/  (8 atoms)
+  Every spec in corpus/specs/  (33 atoms)
+  Every template  (9 atoms)
+  Every grant application in aerarium/applications/  (12 atoms)
+  Every governance declaration in praxis/governance/  (9 atoms)
+
+  TOTAL identifiable atoms: ~314 discrete atoms currently scattered
+  across 111 repos, living at compound or substrate level when they
+  should be in a unified corpus, self-describing, independently
+  addressable.
+```
+
+---
+
+### THRESHOLD VIOLATION SUMMARY
+
+| Violation | Count | Pattern |
+|-----------|-------|---------|
+| Atoms living as repos | ~29 | ceremony-only repos, single-purpose docs repos, skill/regime/SOP collections |
+| Molecules living as repos | ~7 | alchemia, vigiles, vox, MCP server, dashboard, portal, a-i--skills |
+| Compounds living in wrong organ | ~13 | contrib workspaces (foreign), isotopes (vox--publica), duplicates (agentkit×2) |
+| Substrate items living as compounds | ~6 | tools/, cvrsvs-honorvm, aerarium, organvm-iii-ergon placeholder, theoria-knowledge-engine, empty dirs |
+| Presentation compounds living as substrate | 3 | MCP server, dashboard, portal — all consume substrate, none constitute it |
+| Lateral imports (anti-isotope violation) | 16 repos | registry-v2.json loaded directly instead of through substrate interface |
+
+**~58 of 111 repos are at the wrong governance threshold.** Only ~53 are correctly placed (mostly the real products in ORGAN-III and the engine itself).
+
+## Density Comparison: V1 → V2 → V3
+
+| Metric | V1 (8 orgs) | V2 (1 org, merged) | V3 (synthesizer) |
+|--------|------------|-------------------|-----------------|
+| GitHub orgs | 8+1 | 1 | 1 |
+| Directories | 123 | 42 | ~25 |
+| Code files | 9,689 | 9,689 | 9,689 |
+| Ceremony files | 381 | ~30 | 0 (generated) |
+| Code/dir ratio | 79 | 231 | 388 |
+| Empty dirs | ~29 | 0 | 0 |
+| Isotope surfaces | 16 | 0 | 0 |
+| Governance levels | mixed/unlabeled | 4 explicit thresholds | 5 pulse-governed |
+
+V1→V2: collapse orgs, dissolve dead weight (123→42). V2→V3: eliminate static ceremony, generate context on demand (42→~25). Code never moves. Containers change.
+
+---
+
+## ATOMIC DECOMPOSITION — Operator's Ideas as Self-Contained Implications
+
+Each atom extracted from the operator's exact words. Each checked against what exists in the system. Status: EXISTS (implemented), SPECIFIED (documented but not built), ABSENT (neither specified nor built), CONTRADICTED (exists but in conflicting form).
+
+---
+
+### FROM [1] — The Discipline Problem
+
+**ATOM-01: Unbreakable rules that allow full experimentation**
+*"how then do we build unbreakable rules that allow full experimentation, exploration, non-restrictive limits"*
+- Implication: axioms are immutable; everything below axioms is mutable. The constraint lives at the top only.
+- EXISTS: SEED.md 9 axioms (immutable). a-organvm gate contracts (mutable targets under immutable conditions).
+- ABSENT: no mechanism prevents axiom violation at runtime. Axioms are prose, not enforcement.
+- EVOLUTION: axioms need machine-checkable invariants (SPEC-003 INV-000-001 through 005 were drafted but only INV-000-001 is machine-checkable).
+
+**ATOM-02: Knowledge standards that withstand the fool**
+*"knowledge/data/information standards capable of withstanding evolutions and human--as fool"*
+- Implication: data formats must be versioned, validated, and resilient to careless operator writes.
+- EXISTS: schema-definitions/ (28 JSON schemas). registry-v2.json as SSOT. seed.yaml contracts.
+- EXISTS: engine `save_registry()` refuses to write <50 repos (fool-proof guard).
+- ABSENT: no similar guard on any other data file. CLAUDE.md, AGENTS.md, seed.yaml can all be corrupted by a careless write.
+- EVOLUTION: every canonical data file needs a write guard (minimum viable content check before overwrite).
+
+**ATOM-03: The atemporal mentor voice**
+*"discipline-expertise--an atemporal voice guiding through our process as wise mentor"*
+- Implication: the system should speak back to the operator with accumulated wisdom, not just execute commands.
+- EXISTS: close-protocol.yaml (12-step liturgical close). SOPs (23 formalized). RELAY.md "do not" lists.
+- SPECIFIED: heartbeat-affect grounding (post-flood) — "the affect is in the operator, not the system."
+- ABSENT: no runtime mechanism delivers the mentor voice. The wisdom exists as docs, not as active guidance.
+- EVOLUTION: a function that reads the operator's current action against accumulated SOPs/principles and surfaces relevant guidance. The conductor's oracle module (tool-interaction-design) was reaching toward this.
+
+**ATOM-04: Containerize the meta process around the fool**
+*"containerizes the meta process, knows phases of the life existing outside the system waiting for Anthony to fail as usual"*
+- Implication: the system's governance should constrain the OPERATOR, not just the CODE. The meta-process (how Anthony works) needs guardrails.
+- EXISTS: session lifecycle (FRAME→SHAPE→BUILD→PROVE). Close protocol. Vacuum fill protocol.
+- ABSENT: no mechanism detects "Anthony is spinning out" at runtime. The session lifecycle is opt-in, not enforced.
+- EVOLUTION: the pulse module (6,070 lines) was an attempt at this — sensing mood/density/rhythm. The idea was right; the implementation was metaphorical instead of operational.
+
+**ATOM-05: The Picasso principle — learn rules before breaking them**
+*"Picasso learns realism before disrupting his distilled alchemical synthesis render rules disrupted"*
+- Implication: the system must have mastered its own rules before permitting rule-breaking. Rule-breaking without mastery = chaos.
+- SPECIFIED: post-flood "the-core-mistake.md" — "canon, research formation, migration review, archive."
+- EXISTS: SOP lifecycle (REP→ABSORB→FORTIFY→PLACE→CHAIN) — you can't place an SOP until it's been run twice.
+- ABSENT: no equivalent for code or structural changes. You can restructure the entire system in one session without proving you understand its current rules.
+- EVOLUTION: a "mastery gate" — before any structural change, the agent must demonstrate understanding of the current structure's rules (run the dissection protocol first, then propose changes).
+
+**ATOM-06: Rules break meaningfully, cascade fractally**
+*"rules break meaningfully and with gravitas intentional sub and un and con conscious effects cascade fractally"*
+- Implication: when a rule is intentionally broken, the system should trace the cascade — what other rules are affected, at what scales.
+- EXISTS: engine governance/impact.py — blast-radius impact analysis.
+- ABSENT: the blast-radius analysis operates on repos, not on rules. No tool traces "if we break THIS invariant, what cascades?"
+- EVOLUTION: invariant dependency graph. Each invariant declares which other invariants it depends on. Breaking one shows the cascade.
+
+---
+
+### FROM [2] — The Artist-Enterprise Problem
+
+**ATOM-07: Input energy only into art, machine handles the rest**
+*"while only putting input energy into art itself, the machine processes and outputs programmable materia support-swarm systems"*
+- Implication: the shared operations (research, governance, distribution, community, applications) must be AUTOMATED, not manually operated.
+- EXISTS: contextmd/ (auto-generates CLAUDE.md/AGENTS.md). CI workflows. Dependabot.
+- ABSENT: no automated research. No automated grant writing. No automated community engagement. No automated distribution. These are specified as organs (V, VI, VII) but have 247 code files total — they don't run.
+- EVOLUTION: the shared operations must become actual running services, not empty repos with ceremony files. Each operation = a function in the synthesizer that runs on a schedule or trigger.
+
+**ATOM-08: The system lives around the art**
+*"the system lives around the art so the artist can continue living and new idea generating"*
+- Implication: products (art) are the center. Everything else orbits.
+- CONTRADICTED: the current system has the ENGINE (meta) at the center and products at the periphery. 65K lines of infrastructure, 526 lines in the largest product's src/ directory.
+- EVOLUTION: invert the gravity. Products at center, operations orbit them. The products/ directory in V3 is primary; functions/ serve products/, not the other way around.
+
+**ATOM-09: Never having to ask anything again**
+*"I build a path towards never having to ask anything again"*
+- Implication: the system must be able to produce grant applications, portfolio presentations, market analysis, community outreach WITHOUT the operator submitting to external gatekeepers.
+- ABSENT: no automated external-facing output. portfolio-site is 17 Astro files (static). No automated grant pipeline. No automated distribution. AdenHQ/Hive PR was a one-time manual effort.
+- EVOLUTION: the distribution function (Kerygma) + the presentation function (integumentary) + the institutional function (aerarium) must actually RUN. Currently they're names, not code.
+
+**ATOM-10: Control of system IS the product**
+*"control of system is in fact the system to speak on as prime thing of my labores"*
+- Implication: the orchestration layer (taxis) isn't support infrastructure — it's the primary creative output. The system that builds systems is itself the work.
+- EXISTS: tool-interaction-design (40.7K lines conductor OS). agentic-titan (119K lines multi-agent framework). These are real products.
+- EVOLUTION: reframe taxis from "ORGAN-IV: orchestration support" to "the flagship product of the synthesizer." Everything else either serves the conductor or is served by it.
+
+---
+
+### FROM [2-too] — The System as Art
+
+**ATOM-11: Too many rules kill what rules protect**
+*"too many rules, too many systems, too many--what i find to be pleasing to my fear of loss control"*
+- Implication: the 700 ceremony files, the 8-organ bureaucracy, the promotion pipeline — these are control anxiety, not governance.
+- EXISTS: the problem is manifested. 700 ceremony files. 381 ceremony across 123 dirs. Promotion pipeline that GRADUATED repos with 0 code.
+- EVOLUTION: ceremony elimination is V2→V3. Static ceremony → generated context on demand. 381→0 static ceremony files.
+
+**ATOM-12: Pulse as universal container**
+*"all pulses--from a world zoomed in absolutely pulse as our universal container and physical assembly"*
+- Implication: organize by TIME (which pulse), not by SPACE (which directory). Temporal structure over spatial structure.
+- EXISTS: engine/pulse/ (6,070 lines — heartbeat, rhythm, density, flow). engine/metrics/heartbeat.py.
+- SPECIFIED: post-flood heartbeat-affect spec. AMMOI sense cycle (observe→normalize→compare→infer→decide→revise→propagate→archive).
+- ABSENT: no actual temporal organization. The system is 100% spatial (directories, repos, orgs). Pulse module senses but doesn't organize.
+- EVOLUTION: temporal pruning (pulse timestamps → dormancy detection → auto-archive). Each entity's last-pulse determines its governance state, not a manually set promotion_status.
+
+**ATOM-13: Primitives assembled through nested hierarchical structures produce complex systems**
+*direct quote*
+- Implication: the atom→molecule→compound→organism scale is correct. Complex behavior emerges from composed primitives, not from top-down design.
+- EXISTS: a-organvm's atomic clock pattern. Gate contracts compose modules. Signal graph wires functions.
+- EVOLUTION: the governance boundary model (5 thresholds) formalizes this. Atoms self-describe, molecules compose via contract, compounds pass gates, substrate governs bidirectionally, synthesizer generates from axioms.
+
+---
+
+### FROM [2, institutional critique] — The Submission Problem
+
+**ATOM-14: The system replaces institutional gatekeepers**
+*"a submission or grant or application denied bc someone who reads yours through random assignment after that someone ate too big of a lunch"*
+- Implication: the system must produce outputs that bypass submission-based gatekeeping entirely. POSSE (Publish on Own Site, Syndicate Elsewhere), not submission-to-jury.
+- SPECIFIED: ORGAN-VII (Kerygma) was designed for this. POSSE architecture specified.
+- EXISTS: social-automation (32 files), distribution-strategy (26 files), kerygma-pipeline (8 files).
+- ABSENT: none of these are operational. Combined code: 88 files. They're configuration, not running services.
+- EVOLUTION: the distribution function must actually publish. Automated posting, automated syndication, automated engagement tracking. This is one of the 8 shared operations that needs to become a running function.
+
+**ATOM-15: Come to the table with everything done**
+*"emerging musicians and writers and artists must come to the table with their institutional fore-slavers with all the work done"*
+- Implication: when the system DOES interact with institutions (grants, applications, exhibitions), it should arrive with complete packages — not submissions, but presentations of fait accompli.
+- EXISTS: aerarium--res-publica has grant SOPs, funder-fit protocols, application templates. Creative Capital 2027 application in development.
+- ABSENT: no automated package assembly. Each application is manual.
+- EVOLUTION: the presentation function generates complete institutional packages from the corpus + products. The "never ask again" principle applied to grant writing.
+
+---
+
+### FROM [3] — The Unnamed Output
+
+**ATOM-16: Produce ideal forms that can't be named by their seeds**
+*"to create what cant be named by its seeds but by the outgrowth the seeds internal design governed"*
+- Implication: the system's output should be emergent, not predetermined. You don't specify the output — you specify the generative grammar, and the output surprises.
+- EXISTS: a-organvm SEED.md — "It has no memory of what produced it. Every structural decision is derived from axioms through formal procedures at the moment the decision is needed."
+- EVOLUTION: this IS the anti-system axiom (Axiom 4). Each call generates fresh structure. The ideal form is the attractor, never reached, always approached.
+
+**ATOM-17: Discover self through disruption parameters**
+*"discover object--self--via disruption parameters and output process through experienced existence"*
+- Implication: the system must support deliberate disruption — introducing entropy to discover what's robust and what collapses.
+- SPECIFIED: post-flood — meta-evolution architecture with "evolutionary throttling" (MAX_META_MUTATIONS_PER_WEEK = 2).
+- ABSENT: no disruption function exists. No chaos engineering. No deliberate perturbation to test robustness.
+- EVOLUTION: a "disruption function" that introduces controlled entropy — randomly removes a module, reverses an edge, breaks a contract — and measures what survives. The vigiles regimes (22 mythological governance philosophies auditing the same state) were reaching toward this from the philosophical side.
+
+---
+
+### FROM [a] — Voice at Every Scale
+
+**ATOM-18: Every unit speaks its own voice**
+*"each organizing containered systema must each speak a voice unique to smallest unit, smallest collective, module as whole"*
+- Implication: identity is fractal. An atom has voice. A molecule has voice. A compound has voice. Each scale's voice is distinct and self-describing.
+- EXISTS: vox--architectura-gubernatio (voice scorer, 58 code files, 11 anti-patterns, 8 invariants).
+- ABSENT: vox scores at the document level only. No mechanism for module-level, function-level, or atom-level voice identity.
+- EVOLUTION: voice becomes a property of every formation.yaml — each formation declares its voice constraints, and the voice scorer operates at every scale.
+
+**ATOM-19: Jurisdictional knowledge containment (uni/org/repo = planet/international/national)**
+*"uni - planet, org - international, repo - national"*
+- Implication: data flows are jurisdictional. Knowledge produced at repo level is nationally bound. It only flows to org level (international) through declared interfaces. And only to uni level (planet) through further thresholds.
+- ABSENT: no jurisdictional model exists. Data flows freely across all levels. Registry-v2.json is consumed directly by 16 repos (lateral imports at the same level — the anti-isotope violation).
+- EVOLUTION: the governance boundary model's threshold mechanisms (attraction→gates→migration→axiom-derivation) implement this. Each threshold is a jurisdictional border.
+
+---
+
+### FROM [b] — Start Local, Flow Upward
+
+**ATOM-20: Attraction as the intake mechanism**
+*"instincts tell me start local micro and up thresholds permitting external flow only through substrates for collecting via properties of attraction"*
+- Implication: material doesn't push upward — it's attracted upward. The higher level declares what it needs, and matching material is attracted.
+- EXISTS: a-organvm circulatory_route.py computes 482 attractions from declared signal types. This IS the mechanism.
+- EVOLUTION: attractions need to operate across the full system, not just within a-organvm's gate contracts. Every formation.yaml should declare signal needs; the routing function matches needs to producers.
+
+**ATOM-21: Compression from below forces matter reveals**
+*"then compression from below on upwards to force matter reveals and intentions"*
+- Implication: when enough material accumulates at a lower level, it compresses upward — forcing the higher level to acknowledge and integrate it.
+- SPECIFIED: SOP lifecycle (REP→ABSORB) — a process performed twice forces absorption. Gate contracts (enough evidence → gate passes).
+- ABSENT: no pressure mechanism. Material can accumulate indefinitely without forcing upward integration. The 2GB intake/ graveyard is material that accumulated but never compressed upward.
+- EVOLUTION: threshold pressure — when material at a level exceeds a count/size threshold, the system automatically triggers ingestion/compression. The respiratory function runs when intake pressure builds.
+
+---
+
+### FROM [c] — Top Directory Structure
+
+**ATOM-22: organvm / {organvm, meta, taxis} as three siblings**
+*"meta and taxis, i imagine require to be in the top directory"*
+- Implication: the synthesizer (organvm), the computational substrate (meta), and the orchestration layer (taxis) are co-equal siblings at the root.
+- ABSENT: currently scattered across ~/Workspace/meta-organvm/, ~/Workspace/organvm-iv-taxis/, ~/sovereign--ground/holds--same/a-organvm/
+- EVOLUTION: IRF-SYS-087 (P0, GH#310) — the birth. Create the space. Three siblings.
+
+---
+
+### FROM [d] — Anti-Sprawl
+
+**ATOM-23: Temporal pruning prevents spatial sprawl**
+*"designing how to prevent same directory context agreements bc simplicity"*
+- Implication: if everything is flat and simple, what prevents dumping-ground sprawl? Answer: temporal governance. Things that pulse stay; things that stop pulsing auto-archive.
+- EXISTS: engine/metrics/heartbeat.py senses activity. staleness-mapping SOP (SOP-IV-STL-001) formalizes the detection.
+- ABSENT: no auto-archive mechanism. Staleness is detected but not acted on. 29 zero-code repos continue to exist.
+- EVOLUTION: an automated dormancy detector that runs on schedule. Repos below activity threshold → flagged → if still dormant after grace period → auto-archived. The immune function's job.
+
+---
+
+### FROM [8 organs] — Cannibalistic Dissection
+
+**ATOM-24: The 8 organs are 3 layers + 1 substrate, not 8 departments**
+*"8 organs is either the answer or it was a fart in the wind"*
+- EXISTS: post-flood formal-topology-diagram.md already identified: Production Core (I-III), Control Plane (IV), Interface Layer (V-VII), Meta as zero-order.
+- EVOLUTION: the 8 energy types (Theoria, Poiesis, Ergon, Taxis, Logos, Koinonia, Kerygma, Mneme) persist as named functions, not as organizational containers. SPEC-019 specified this. V3 diagram implements it.
+
+**ATOM-25: Energy nodes producing generative energy changes**
+*"the system's living body, organs, cell intake energy > process energy > outputs energy...it's living is producing points of generative energy changes"*
+- Implication: each node in the system is an energy transformer. It takes input, processes, produces output. The output IS the generative energy.
+- EXISTS: signal-graph.yaml in a-organvm — functions have inputs and outputs, connected by typed signals.
+- SPECIFIED: post-flood knowledge-feedback-architecture — "Ideas → artifacts → instruments → evidence → theory refinement."
+- EVOLUTION: every formation.yaml declares signal_inputs and signal_outputs. The routing function computes the energy flow graph. Nodes that produce energy stay alive; nodes that consume without producing are parasitic (detected by immune function).
+
+---
+
+## BIRTH REFRAMING (2026-04-06, late session)
+
+IRF-SYS-087 was written as "create empty space + secure with SEED.md." This is wrong. The birth is a COMPRESSION, not a creation from nothing.
+
+Before the directory exists, ALL accumulated foundational material must be surfaced:
+- 766K+ words of constitutional corpus (organvm-corpvs-testamentvm)
+- 160+ post-flood documents (foundational, pre-implementation)
+- 269 plan files across all organs
+- 23 SOPs (orchestration-start-here/docs/)
+- 99 SOPs (praxis-perpetua library)
+- 22 mythological regimes + 8 Watcher Orders (vigiles)
+- 28 JSON schemas (schema-definitions)
+- 25 operator-articulated atoms (this session)
+- Session exports, brainstorm documents, internal research — everything deeply nested in meta and taxis
+- External research references, post-flood specs (SPEC-000 through SPEC-023)
+- The pre-flood archive_original/ transcripts (LaTeX formalizations, mathematical models)
+
+The birth sequence:
+1. **Inventory** — catalogue every origin document across meta + taxis (deeply nested, not just top-level)
+2. **Atomize** — decompose each document into self-contained atoms with identity, type, edges
+3. **The atomized corpus IS the space** — the directory is born containing everything, not empty
+4. **Functions grow from the corpus** — the first functions read the atomized material and produce structure
+
+The space is born full. It contains the compressed memory of everything that came before. Nothing is lost. The birth is alchemical — raw material transformed into a new form, not discarded.
+
+---
+
+## PATH FROM HIDDEN TO CLEAR
+
+### Problem
+12.6M words across 7,467 files in 123 directories across 9 workspaces. The operator cannot find their own work. Files are named generically. Tools are quarantined in one organ when they serve the whole system.
+
+### Solution sequence
+1. **DONE** — Inventory (birth-inventory.py → inventory-manifest.json, 7,467 entries)
+2. **DONE** — Search surface (birth-search.py queries the manifest)
+3. **NEXT** — Idea-graph: scan documents for cross-references, build `idea-graph.json` where nodes are manifest entries and edges are references between them. birth-search.py extended to traverse the graph ("show me everything connected to THIS").
+4. **THEN** — Cluster the graph into idea families (documents that reference each other densely = same idea from different angles). The clusters become the navigable map.
+5. **THEN** — Birth compression: the idea-graph + clustered manifest + atomized corpus become the content of the new directory. Files move from scattered paths into the synthesizer's corpus/, organized by idea, not by organ.
+6. **THEN** — Tools move to synthesizer root: birth-search, birth-inventory, and future functions live in `organvm/functions/` (or equivalent), accessible from anywhere.
+
+### What makes it clear vs hidden
+- **Hidden**: classification by PATH (which organ dir → which repo dir → which subdir). Path tells you where something was put, not what it IS.
+- **Clear**: classification by IDENTITY (self-describing atoms in a queryable graph). Identity tells you what it IS regardless of where it sits.
+
+The manifest is the bridge. It sits over the existing mess and makes it queryable without reorganizing anything yet. The birth is when the mess dissolves into organized corpus.
+
+---
+
+## ATOM STATUS SUMMARY
+
+| Status | Count | Atoms |
+|--------|-------|-------|
+| EXISTS (implemented) | 6 | 01 (partial), 02 (partial), 10, 13, 20, 24 |
+| SPECIFIED (documented, not built) | 5 | 03 (partial), 05, 14, 17, 21 |
+| ABSENT (neither specified nor built) | 10 | 04, 06, 07, 08, 09, 11, 12, 18, 19, 23 |
+| CONTRADICTED | 1 | 08 (system is infrastructure-centric, not art-centric) |
+| PARTIAL (some exists, gaps remain) | 3 | 15, 16, 22 |
+
+**The 10 ABSENT atoms are the implementation frontier:**
+- ATOM-04: Fool-containerization at runtime
+- ATOM-06: Invariant cascade tracing
+- ATOM-07: Automated shared operations (research, distribution, community)
+- ATOM-08: Art at center, infrastructure orbiting (gravity inversion)
+- ATOM-09: Automated external-facing output (never ask again)
+- ATOM-11: Ceremony elimination (381→0)
+- ATOM-12: Temporal organization (pulse over space)
+- ATOM-18: Fractal voice identity at every scale
+- ATOM-19: Jurisdictional knowledge containment
+- ATOM-23: Automated dormancy detection + auto-archive
+
+These 10 atoms are what the synthesizer needs to implement that doesn't exist in any form today.
+
+---
+
+## Evidence Base (Census Data)
+
+The following sections contain verified structural measurements. Conclusions drawn from them are flagged as derivative above.
+
+---
+
+## CURRENT — Verified Structure
+
+```
+meta-organvm/                                  ← superproject (allowlist .gitignore)
+│
+├── CLAUDE.md, AGENTS.md, GEMINI.md            ╮
+├── ORGAN-REPORT.md, TRIPTYCH.md, VISION.md    │ root context + portal + historical
+├── README-superproject.md                      │
+├── session-ses_*.md (2)                        │ loose session transcripts (uncatalogued)
+├── ChatGPT-*.md (2)                           │ loose research notes (uncatalogued)
+├── storm-record_meta-org_031026.md            ╯
+│
+│  ── FLAGSHIPS ───────────────────────────────────────────────────────
+│
+├── organvm-engine/                            ← [enforce] 65K lines, 37 modules, 219 tests
+│   ├── cli/           10,307 lines (39 .py)   │  CLI: 38 subcommands
+│   ├── governance/     9,782 lines (33 .py)   │  promotion, deps, state machine, audit
+│   ├── pulse/          6,070 lines (23 .py)   │  heartbeat/mood/density — marginal value
+│   ├── metrics/        3,854 lines (13 .py)   │  time-series, organism health
+│   ├── testament/      3,201 lines (12 .py)   │  self-witness renderings
+│   ├── session/        3,022 lines  (5 .py)   │  transcript parsing
+│   ├── prompts/        2,962 lines (14 .py)   │  prompt extraction
+│   ├── fossil/         2,472 lines  (9 .py)   │  git fossil record excavation
+│   ├── ontologia/      1,993 lines  (5 .py)   │  inference bridge (ISOTOPE: 2 copies)
+│   ├── network/        1,973 lines  (8 .py)   │  dependency graph
+│   ├── plans/          1,909 lines  (6 .py)   │  plan atomization
+│   ├── contextmd/      1,853 lines  (4 .py)   │  CLAUDE.md/AGENTS.md generation
+│   ├── trivium/        1,812 lines  (9 .py)   │  structural isomorphism — marginal value
+│   ├── ecosystem/      1,764 lines (10 .py)   │  ecosystem profiles
+│   ├── pitchdeck/      1,719 lines  (7 .py)   │  pitch deck generation
+│   ├── atoms/          1,580 lines  (6 .py)   │  content atomization
+│   ├── ci/             1,550 lines  (5 .py)   │  CI health triage
+│   ├── indexer/          778 lines  (5 .py)   │  content indexing
+│   ├── audit/          1,176 lines  (9 .py)   │  infrastructure audit
+│   ├── coordination/   1,091 lines  (3 .py)   │  multi-agent claims
+│   ├── seed/             945 lines  (7 .py)   │  seed contract discovery
+│   ├── registry/         991 lines  (5 .py)   │  registry loading
+│   ├── ledger/           977 lines  (7 .py)   │  action ledger
+│   ├── verification/     870 lines  (4 .py)   │  formal verification
+│   ├── omega/            831 lines  (2 .py)   │  19-criterion scorecard
+│   ├── git/              815 lines  (3 .py)   │  git superproject ops
+│   ├── distill/          791 lines  (4 .py)   │  distillation
+│   ├── ontology/         761 lines  (3 .py)   │  entity ontology bridge
+│   ├── sop/              519 lines  (3 .py)   │  SOP lifecycle
+│   ├── fabrica/          482 lines  (3 .py)   │  cyclic dispatch (NEW)
+│   ├── events/           473 lines  (1 .py)   │  event spine
+│   ├── content/          428 lines  (4 .py)   │  content analysis
+│   ├── distillatio/      385 lines  (1 .py)   │  executable proofs
+│   ├── dispatch/         380 lines  (4 .py)   │  signal dispatch
+│   ├── irf/              286 lines  (2 .py)   │  IRF parsing
+│   ├── deadlines/        270 lines  (1 .py)   │  deadline tracking
+│   ├── debt/             217 lines  (1 .py)   │  tech debt scanner
+│   ├── prompting/        160 lines  (2 .py)   │  prompt generation
+│   └── organ_config.py    338, paths.py 152, project_slug.py 131, domain.py 34
+│
+├── organvm-corpvs-testamentvm/                ← [witness] 766K+ words, PUBLIC_PROCESS
+│   ├── registry-v2.json (2,847 lines)         │  SSOT for 128 repos
+│   ├── governance-rules.json (769 lines)      │  codified governance
+│   ├── INST-INDEX-RERUM-FACIENDARUM.md        │  universal work registry
+│   ├── scripts/ (14,040 lines, 20+ scripts)   │  ISOTOPES of engine functions
+│   ├── docs/ (370 files)                      │  governance documentation
+│   ├── testament/ (128 files)                 │  witness records
+│   ├── data/ (87 files)                       │  metrics, fossil records
+│   ├── portfolio-site/ (11,010 files)         │  ★ FINDING: full Next.js site nested here
+│   ├── essays/ (8 essay files)                │  public essays
+│   ├── specs/ (33 files)                      │  specifications
+│   ├── applications/ (14 files)               │  grant/NLnet applications
+│   └── templates/, registry/, site-data/, sops/
+│
+│  ── STANDARD ────────────────────────────────────────────────────────
+│
+├── praxis-perpetua/                           ← [commission] GRADUATED
+│   ├── 26 directories, ~2,200 real files      │  ★ FINDING: 9K .py was a .venv
+│   ├── library/ (13 files)                    │  chains, vocabulary, research, templates
+│   ├── governance/ (9 files)                  │  trilemma, naming, charter, defense
+│   ├── prompt-corpus/ (20 actual .py files)   │  extraction + merge scripts + 8 tests
+│   ├── content-pipeline/siglip-spike/.venv/   │  ★ 9,064 .py files = venv bloat
+│   └── 22 more dirs (commissions, publications, studies, lessons, etc.)
+│
+├── organvm-ontologia/                         ← [identify] LOCAL (despite imports)
+│   ├── 5,902 lines, 11 modules, 24 tests     │  ULID entity, events, governance,
+│   └── registry/store (635), events/bus (265) │  inference, sensing, state, structure
+│
+├── alchemia-ingestvm/                         ← [ingest] CANDIDATE
+│   ├── 3,102 src lines, 1,756 test lines      │  intake→absorb→alchemize pipeline
+│   ├── channels: gdocs, ai_chats, bookmarks   │  + aesthetic cascade (taste.yaml)
+│   └── 18 test files                          │  cleanest architecture in META
+│
+├── vigiles-aeternae--agon-cosmogonicum/       ← [watch] LOCAL
+│   ├── 1,608 lines, 9 tests                  │  auditor, orders, reporter, divergence,
+│   ├── regimes/ ← EMPTY                      │  ★ FINDING: "22 regimes" = 0 files
+│   └── chronicles/, constitutional/, orders/  │  regime, phaethon, consensus, chronicle
+│
+├── materia-collider/                          ← [collide] LOCAL
+│   ├── src/: 1,536 actual code lines          │  film-scrubbing tool (SQLite + CLI)
+│   ├── bench/: 9GB organ-reset dump           │  ★ FINDING: frozen Organs I/II/III here
+│   └── genesis/, experiments/, protocols/     │  623K files, 118K .py = all in bench/
+│
+├── cvrsvs-honorvm/                            ← [extract] INCUBATOR
+│   └── 5 files (README, context files, seed)  │  ★ FINDING: 1 commit, zero code
+│
+├── aerarium--res-publica/                     ← [fund] LOCAL, tier:flagship (!)
+│   ├── applications/, entity-formation/       │  grant apps, IP policy, strategy
+│   └── sops/, research/, strategy/            │  ★ FINDING: flagship for docs-only = inflation
+│
+├── stakeholder-portal/                        ← [interpret] PUBLIC_PROCESS
+│   ├── 112 TS files, 4,684 src lines          │  ★ FINDING: claimed 24K, actual src 4.7K
+│   ├── 286 test files                         │  Next.js + SSE + Groq + pgvector
+│   └── 596MB node_modules/                    │  never integrated with system-dashboard
+│
+│  ── INFRASTRUCTURE ──────────────────────────────────────────────────
+│
+├── schema-definitions/                        ← [define] CANDIDATE
+│   ├── 28 JSON Schema files                   │  ★ FINDING: 1 test for foundational schemas
+│   └── ~200 lines validation code             │  consumed by every other repo
+│
+├── organvm-mcp-server/                        ← [expose] LOCAL
+│   ├── 7,246 lines total                      │  ★ FINDING: server.py = 2,825 lines (39%)
+│   ├── 13 tool modules                        │  132 tools (tool sprawl)
+│   └── 21 test files                          │  monolith in a single file
+│
+├── system-dashboard/                          ← [present] CANDIDATE
+│   ├── 4,003 lines, 21 templates              │  FastAPI + Jinja2 + HTMX
+│   └── 8 test files                           │  lean, right-sized, correct stack
+│
+├── .github/                                   ← org health + organ-aesthetic.yaml
+│
+│  ── UNTRACKED LOCAL ─────────────────────────────────────────────────
+│
+├── intake/            8,369 files, 2GB        ← untrusted personal material, never processed
+├── post-flood/        281 files               ← disaster recovery / pre-system archaeology
+├── topological-mythos/ 29 files               ← ChatGPT research transcripts
+├── tools/             36 files                ← superproject audit scripts (should be engine or dissolved)
+├── data/              3 files                 ← lightweight mappings
+├── docs/              4 files                 ← superproject documentation
+├── organvm-iii-ergon/ 6 files                 ← empty placeholder for Organ III
+└── organvm-theoria-knowledge-engine/          ← empty scaffolding, zero content
+```
+
+---
+
+## CRITICAL FINDINGS (Verified)
+
+### 1. The portfolio-site problem
+`organvm-corpvs-testamentvm/portfolio-site/` is 11,010 files — a full Next.js web project nested inside a documentation/governance corpus. This is a deployment artifact living inside an archive repo. It should be its own submodule or belong in integumentary--present.
+
+### 2. The bench/ dump
+`materia-collider/bench/organ-reset-2026-03-11/` is 9GB containing frozen snapshots of Organs I, II, and III. This is not the film tool — it's an archaeological dump parked in the wrong repo. The 623K file count and 118K Python lines are entirely from this dump.
+
+### 3. Venv contamination
+`praxis-perpetua/content-pipeline/siglip-spike/.venv/` contains 9,064 .py files that inflated the file count from 2,200 to 18,000. Not tracked by git, but distorts any automated analysis.
+
+### 4. Promotion pipeline pathology
+- schema-definitions: CANDIDATE (1 test, foundational to everything)
+- organvm-ontologia: LOCAL (imported by 3+ repos)
+- organvm-mcp-server: LOCAL (operationally essential)
+- aerarium--res-publica: LOCAL but `tier: flagship` (docs only)
+- The pipeline valued code volume over structural criticality.
+
+### 5. Engine over-scoping (verified)
+- pulse/ (6,070 lines): heartbeat/mood/density/rhythm. The ORGAN-REPORT called this marginal. 23 Python files for metaphorical sensing.
+- trivium/ (1,812 lines): structural isomorphism detection. 9 files for an intellectual exercise.
+- session/ (3,022 lines) + prompts/ (2,962 lines): nearly 6K lines for transcript/prompt parsing — niche utility.
+- Combined: 13.9K lines (~21% of engine) for marginal-value modules.
+
+### 6. server.py monolith
+MCP server: 2,825 lines in one file (39% of repo). 132 tools exposed. This file cannot be held in context by the AI agents that need to modify it.
+
+### 7. Isotope census (engine)
+- ontologia/inference_bridge exists in BOTH engine/ontologia/ AND engine/pulse/ (internal isotope)
+- corpus scripts/ (14K lines) reimplement engine CLI functions
+- MCP server reimplements engine path resolution
+- Total isotope surface: ~16K lines of reimplemented code across 3 repos
+
+### 8. Empty promises (CORRECTED)
+- vigiles regimes/: **22 YAML files DO exist** (1,832 lines) at repo root `regimes/`, NOT `src/vigiles_engine/regimes/`. Initial finding was wrong — checked wrong path. PLUS 8 Watcher Orders (576 lines). Total YAML knowledge: 2,461 lines.
+- cvrsvs-honorvm: 5 ceremony files, 1 commit, zero extraction code — this one stands.
+- organvm-theoria-knowledge-engine: empty scaffolding — this one stands.
+- organvm-iii-ergon: placeholder (Organ III has its own workspace) — this one stands.
+
+### 9. Parallel presentation layers (never integrated)
+- system-dashboard: 4K lines, FastAPI+HTMX (operators)
+- stakeholder-portal: 4.7K lines, Next.js+SSE+Groq (stakeholders)
+- corpus/portfolio-site: 11K files, Next.js (public)
+- MCP server: 7.2K lines (AI agents)
+- Four separate presentation surfaces for one system.
+
+### 10. The intake graveyard
+intake/: 8,369 files, 2GB. Material entered but never exited through alchemia's pipeline. The respiratory system had lungs (alchemia) but the air (intake) never reached them.
+
+### 11. Praxis content-pipeline = production content, not process governance
+`praxis-perpetua/content-pipeline/amp-lab/` is 561MB of AMP Lab / Object Lessons production material (docx, png, jpg, html, astro, mdx). 798 files. This is active creative production content — episodes, outlines, cross-object reports — parked inside a process governance repo. Cross-references materia-collider (the film scrubbing tool feeds this).
+
+### 12. Internal engine isotope confirmed
+`pulse/inference_bridge.py` (248 lines) and `ontologia/inference_bridge.py` (318 lines) are two implementations of the same bridge — one wiring ontologia into pulse, the other wiring ontologia into its own detectors. No cross-imports between them. They could be the same module with two entry points.
+
+### 13. Governance module is the real flagship
+governance/ (9,782 lines, 28 .py files) contains: dictums (1,006), excavation (763), invariants (416), feedback_loops (399), state_machine (371), interrogation (358), audit (352), conformance (320), placement (301), temporal (290), plus authority, authorization, evolution, lineage, meta_evolution, signal_algebra, and more. This is the densest domain module — nearly 10K lines of governance enforcement logic.
+
+### 14. Portfolio-site is Astro, not Next.js
+The portfolio at `organvm-corpvs-testamentvm/portfolio-site/` is Astro (not Next.js as I initially assumed). 17 source files (.astro, .css, .json). Site: organvm.dev. Small static site with 157MB node_modules and 92K dist. The 11K file count comes almost entirely from node_modules (not checked into git but present locally).
+
+### 15. Stakeholder portal is substantial
+112 TypeScript files, 4,684 lines. 53 directories under src/. Routes: repos, ask, admin/intel, planning, about, organs, constitution (bibliography, specs, author, traceability), dashboard, testament. APIs: metrics, chat, auth (NextAuth), health/llm, admin (intel, session), planning (with reorder, CRUD), feedback, knowledge, cron (ingest, maintenance), analytics (word-frequency). Components: ChatInterface (532 lines largest), AdminIntelPanel, KanbanBoard, CardDetail, BibliographyGrid, EvidencePanel. This is a real application — not a dashboard, an intelligence portal.
+
+### 16. Materia-collider actual code
+6 Python modules totaling 1,533 lines: cli (512), export (235), db (200), assemble (200), ingest (196), search (190). Plus 907 lines of tests. Clean, focused film research tool. The 9GB bench/ is a separate archaeological artifact unrelated to the tool's function.
+
+---
+
+## FULL 8-ORGAN SPECTRUM — Structural Census
+
+### ORGAN-I: Theoria (Foundational Theory) — `ivviiviivvi`
+
+17 repos. 1 GRADUATED, 4 PUBLIC_PROCESS, 4 CANDIDATE, 4 LOCAL, 2 ARCHIVED.
+
+| Repo | Real Code | Tests | Promo | Note |
+|------|-----------|-------|-------|------|
+| conversation-corpus-engine | 98 py | 67 | GRADUATED | flagship: corpus search + evaluation |
+| recursive-engine--generative-entity | 119 py | 57 | PUBLIC_PROCESS | flagship: recursive symbolic computing |
+| conversation-corpus-site | 136 py, 32 ts | 55 | LOCAL | web frontend for corpus |
+| my-knowledge-base | 325 real files | 584 | CANDIDATE | personal knowledge base (9,638 ts was node_modules) |
+| linguistic-atomization-framework | **72 real py** (12,363 was new_venv/) | ~30 | CANDIDATE | ★ VENV INFLATION: claimed 12K py, actual 72 |
+| narratological-algorithmic-lenses | 69 py, 10 ts | 70 | PUBLIC_PROCESS | narrative algorithm analysis |
+| call-function--ontological | 137 files | — | PUBLIC_PROCESS | ontological function calling |
+| auto-revision-epistemic-engine | 91 files | — | PUBLIC_PROCESS | epistemic self-revision |
+| scale-threshold-emergence | 332 files | — | LOCAL | emergence theory |
+| atomic-substrata | 278 files | — | LOCAL | atomic theory substrate |
+| cognitive-archaelogy-tribunal | 200 files | — | CANDIDATE | cognitive archaeology |
+| sema-metra--alchemica-mundi | 100 files | — | CANDIDATE | semiotic measurement |
+| vigiles-aeternae--corpus-mythicum | 70 files | — | — | mythic corpus (vigiles variant) |
+| studium-generale | 28 files | — | ARCHIVED | (absorbed into praxis-perpetua) |
+| nexus--babel-alexandria | 189 files | — | ARCHIVED | |
+| rules-system-bound | 19 files | — | LOCAL | |
+| styx-behavioral-economics-theory | 19 files | — | — | |
+
+**Organ-I finding:** ORGAN-I has the most active theoretical codebase. conversation-corpus-engine is the real flagship (98 py, 67 tests, GRADUATED). Two venv contaminations: linguistic-atomization-framework (new_venv/, 12,363 phantom py) and likely my-knowledge-base (node_modules inflating ts count). ORGAN-I billing lock blocks all CI including CodeQL (per memory).
+
+### ORGAN-II: Poiesis (Generative Art) — `omni-dromenon-machina`
+
+11 repos (8 real + 3 placeholder dirs). 2 PUBLIC_PROCESS, 2 CANDIDATE, 2 LOCAL.
+
+| Repo | Real Code | Tests | Promo | Note |
+|------|-----------|-------|-------|------|
+| a-mavs-olevm | ~325 real ts (src/) | 48 | PUBLIC_PROCESS | flagship: generative art system |
+| metasystem-master | 75 py, 65 ts | 17 | PUBLIC_PROCESS | flagship: meta-system engine |
+| ivi374ivi027-05 | 53 ts (src/) | 228 | LOCAL | generative art project |
+| krypto-velamen | 73 py, 10 ts | 0 | CANDIDATE | cryptographic art veil |
+| alchemical-synthesizer | 1 py, 1 ts | 0 | CANDIDATE | synthesis tool |
+| chthon-oneiros | 2 py | 3 | LOCAL | dream/underworld engine |
+| vigiles-aeternae--theatrum-mundi | 39 files | — | — | theatrical vigiles variant |
+| styx-behavioral-art | 19 files | — | — | behavioral art |
+| docs/ | 4 files | — | — | placeholder |
+| intake/ | 0 files | — | — | empty |
+| contributions/ | 0 files | — | — | empty |
+
+**Organ-II finding:** Lean. Two real flagships (a-mavs-olevm, metasystem-master), two experiments (ivi374ivi027-05, krypto-velamen), rest is minimal or empty. TypeScript-heavy (creative coding targets browser).
+
+### ORGAN-III: Ergon (Commerce/Products) — `organvm-iii-ergon`
+
+14 repos. 1 GRADUATED, 5 PUBLIC_PROCESS, 1 LOCAL, 7 without seed.yaml.
+
+| Repo | Real Code | Tests | Promo | Note |
+|------|-----------|-------|-------|------|
+| classroom-rpg-aetheria | 207 ts (src/) | 2,070 | PUBLIC_PROCESS | RPG education platform |
+| public-record-data-scrapper | 526 real files | 1,755 | PUBLIC_PROCESS | flagship: public records |
+| life-my--midst--in | 523 real files | 1,205 | PUBLIC_PROCESS | personal life management app |
+| peer-audited--behavioral-blockchain | 3,926 files | 837 | PUBLIC_PROCESS | flagship: behavioral blockchain |
+| sovereign-systems--elevate-align | 12 py, 5 ts (src/) | 300 | — | client engagement (Sovereign Systems) |
+| the-actual-news | 286 files | 22 | PUBLIC_PROCESS | news platform |
+| content-engine--asset-amplifier | 248 files | — | LOCAL | content amplification |
+| commerce--meta | 119 files, 0 code | 0 | GRADUATED | ★ GRADUATED with zero code |
+| growth-auditor | 202 files | — | — | growth analysis |
+| sign-signal--voice-synth | 34 files | — | — | voice synthesis |
+| post-proto--mousike--nomos | 12 files | — | — | music/law prototype |
+| consult-consul--console | 2 files | — | — | scaffold only |
+| docs/ | 1 file | — | — | placeholder |
+| intake/ | 0 files | — | — | empty |
+
+**Organ-III finding:** Most product-like organ. Real applications (classroom-rpg, public-records, life-my-midst, behavioral-blockchain). commerce--meta is GRADUATED with zero code — pure tier inflation. sovereign-systems is the active client engagement that produced the 10 reusable processes (now SOPs). Test counts are high relative to other organs.
+
+### ORGAN-V: Logos (Public Discourse) — `organvm-v-logos`
+
+8 repos (5 real + 3 placeholder). 3 PUBLIC_PROCESS, 2 LOCAL.
+
+| Repo | Real Code | Tests | Promo | Note |
+|------|-----------|-------|-------|------|
+| public-process | 3,343 files | — | PUBLIC_PROCESS | flagship: public-facing process docs |
+| essay-pipeline | 21 files | — | PUBLIC_PROCESS | essay publishing pipeline |
+| editorial-standards | 24 files | — | PUBLIC_PROCESS | editorial rules |
+| analytics-engine | 16 files | — | LOCAL | analytics |
+| reading-observatory | 14 files | — | LOCAL | reading tracking |
+| tools/ | 4 files | — | — | placeholder |
+| docs/ | 4 files | — | — | placeholder |
+| intake/ | 0 files | — | — | empty |
+
+**Organ-V finding:** Sparse. public-process has 3,343 files (needs verification — likely includes generated content or node_modules). The rest are small. This organ was supposed to observe (read-many-write-one) but produced little observable output.
+
+### ORGAN-VI: Koinonia (Community) — `organvm-vi-koinonia`
+
+8 repos (5 real + 3 placeholder). All 5 real repos at PUBLIC_PROCESS.
+
+| Repo | Real Code | Tests | Promo | Note |
+|------|-----------|-------|-------|------|
+| adaptive-personal-syllabus | 24 files | — | PUBLIC_PROCESS | personal learning |
+| community-hub | 22 files | — | PUBLIC_PROCESS | flagship: community platform |
+| koinonia-db | 25 files | — | PUBLIC_PROCESS | community database |
+| salon-archive | 13 files | — | PUBLIC_PROCESS | salon records |
+| reading-group-curriculum | 10 files | — | PUBLIC_PROCESS | reading group design |
+| tools/ | 1 file | — | — | placeholder |
+| docs/ | 1 file | — | — | placeholder |
+| intake/ | 0 files | — | — | empty |
+
+**Organ-VI finding:** Everything at PUBLIC_PROCESS, nothing at GRADUATED. Small repos (10-25 real code files each). Community infrastructure exists but is lightweight.
+
+### ORGAN-VII: Kerygma (Distribution) — `organvm-vii-kerygma`
+
+7 repos. All 5 real repos GRADUATED.
+
+| Repo | Real Code | Tests | Promo | Note |
+|------|-----------|-------|-------|------|
+| social-automation | 32 files | — | GRADUATED | social media automation |
+| distribution-strategy | 26 files | — | GRADUATED | distribution planning |
+| announcement-templates | 14 files | — | GRADUATED | template library |
+| kerygma-profiles | 8 files | — | GRADUATED | platform profiles |
+| kerygma-pipeline | 8 files | — | GRADUATED | publishing pipeline |
+| tmp_organvm-i-theoria.github.io | 2 files | — | — | temp/orphan |
+| tools/ | 1 file | — | — | placeholder |
+
+**Organ-VII finding:** ALL GRADUATED with tiny code counts (8-32 files). This is either the lightest organ done right (distribution is config-heavy, not code-heavy) or the most inflated (GRADUATED for 8 files). Needs verification — is 8 files enough to be GRADUATED, or is this the same tier inflation pattern?
+
+### Personal: 4444J99
+
+| Repo | Real Code | Tests | Promo | Note |
+|------|-----------|-------|-------|------|
+| application-pipeline | 356 files | — | LOCAL | job application system |
+| portfolio | 149 files | — | PUBLIC_PROCESS | personal portfolio site |
+| domus-semper-palingenesis | 25 files (sh/zsh) | — | GRADUATED | dotfiles (chezmoi) |
+| 4444J99 | 12 files | — | — | GitHub profile README |
+| victoroff-group | 19 files | — | — | group project |
+| intake/ | 4 files | — | — | placeholder |
+
+### THE FORMAL: system-system--system
+
+(Referenced in TRIPTYCH.md at `/Users/4jp/system-system--system/`)
+
+Not yet explored. Contains manifest.toml and LAWS.md per TRIPTYCH.
+
+---
+
+## CROSS-ORGAN SUMMARY
+
+| Organ | Repos | GRADUATED | PUBLIC | CANDIDATE | LOCAL | Code Weight |
+|-------|-------|-----------|--------|-----------|-------|-------------|
+| I Theoria | 17 | 1 | 4 | 4 | 4 | **heavy** (98-325 real files each) |
+| II Poiesis | 11 | 0 | 2 | 2 | 2 | medium (TS-heavy, creative coding) |
+| III Ergon | 14 | 1 | 5 | 0 | 1 | **heavy** (real products, high test counts) |
+| IV Taxis | 18 | 11 | 0 | 0 | 7 | heavy (already dissected) |
+| V Logos | 8 | 0 | 3 | 0 | 2 | light (sparse output) |
+| VI Koinonia | 8 | 0 | 5 | 0 | 0 | light (10-25 files each) |
+| VII Kerygma | 7 | 5 | 0 | 0 | 0 | **minimal** (8-32 files, all GRADUATED) |
+| META | 21 | 2 | 2 | 4 | 4 | **heaviest** (engine 65K lines) |
+| Personal | 7 | 1 | 1 | 0 | 1 | medium (dotfiles + portfolio) |
+| **TOTAL** | **111** | **21** | **22** | **10** | **21** | |
+
+47 repos without seed.yaml (docs/, intake/, tools/ placeholders + unseed repos).
+
+### System-Wide Patterns
+
+1. **Venv contamination is systemic**: Found in praxis-perpetua (.venv → +9K phantom py), linguistic-atomization-framework (new_venv/ → +12K phantom py). Likely exists in other repos not yet deep-checked.
+
+2. **Tier inflation is systemic**: commerce--meta (GRADUATED, 0 code), aerarium--res-publica (flagship, docs only), ORGAN-VII (all GRADUATED with 8-32 files). The promotion pipeline consistently over-promoted lightweight repos.
+
+3. **The I→II→III dependency flow has real code to back it**: ORGAN-I produces theory frameworks, ORGAN-II transforms them into generative art, ORGAN-III ships products. The code weights confirm this: I has engines, II has creative code, III has full applications with high test counts.
+
+4. **V, VI, VII are infrastructure-light**: Logos (discourse), Koinonia (community), Kerygma (distribution) all have small repos with few code files. They're configuration/content organs, not computation organs. This is architecturally correct — they consume output from I→II→III, they don't produce computation.
+
+5. **Every organ has intake/ and tools/ placeholders**: Standard ceremony. Most are empty. The intake graveyard in META (8,369 files, 2GB) is the worst case; other organs' intake/ are clean.
+
+6. **46 repos have CLAUDE.md**: Across all organs. This is the footprint of AI-assisted development across the system.
+
+---
+
+## EVOLVED — Archaeological Decomposition Targets
+
+Each entry below is a containment target for sequential decomposition. Order follows dependency flow (upstream first).
+
+### Phase 2a: Dissolve first (zero code, pure ceremony or empty)
+
+```
+DISSOLVE:
+  organvm-theoria-knowledge-engine/  → empty scaffolding, delete
+  organvm-iii-ergon/                 → placeholder, delete (real Organ III exists elsewhere)
+  cvrsvs-honorvm/                    → extract NLnet application → aerarium, delete repo
+
+ARCHIVE:
+  topological-mythos/                → 29 ChatGPT exports → intake archaeology
+  post-flood/                        → 281 files → system memory (pre-system era)
+```
+
+### Phase 2b: Decouple the engine (the 10-cocoon question)
+
+The engine's 37 modules map to 10+ cocoons. Rather than decomposing the engine as one entity, decompose by **cocoon destination** — each destination pulls the modules it needs:
+
+```
+ENGINE → COCOON MAPPING (verified line counts):
+
+nervous--govern:     governance/ (9,782) + coordination/ (1,091)     = 10,873
+digestive--measure:  metrics/ (3,854) + atoms/ (1,580) + indexer/ (778)
+                     + ecosystem/ (1,764) + trivium/ (1,812) + plans/ (1,909)
+                     + prompts/ (2,962) + session/ (3,022) + deadlines/ (270)
+                     + irf/ (286) + sop/ (519) + content/ (428)
+                     + distill/ (791) + domain/ (34)               = 20,009
+muscular--execute:   cli/ (10,307) + git/ (815)                    = 11,122
+memory--remember:    events/ (473) + fossil/ (2,472) + ledger/ (977)
+                     + testament/ (3,201)                          =  7,123
+endocrine--regulate: pulse/ (6,070)                                =  6,070
+skeletal--define:    registry/ (991) + organ_config (338) + paths (152)
+                     + project_slug (131) + ontology/ (761) + prompting/ (160)
+                     + schemas/ (0)                                =  2,533
+circulatory--route:  dispatch/ (380) + seed/ (945) + network/ (1,973) = 3,298
+immune--verify:      audit/ (1,176) + ci/ (1,550) + omega/ (831)
+                     + verification/ (870) + debt/ (217)
+                     + distillatio/ (385)                          =  5,029
+reproductive--gen:   contextmd/ (1,853) + fabrica/ (482)           =  2,335
+integumentary:       pitchdeck/ (1,719)                            =  1,719
+                                                        ENGINE TOTAL: 70,111
+```
+
+### Phase 2c: Non-engine repos — one at a time
+
+```
+1. schema-definitions       → skeletal--define (28 schemas, 1 test — needs fortification)
+2. organvm-ontologia        → distributed: skeletal + endocrine + memory + nervous
+3. alchemia-ingestvm        → respiratory--ingest (cleanest, 2 isotopes already dissolved in a-organvm)
+4. organvm-mcp-server       → integumentary--expose (needs server.py decomposition first)
+5. system-dashboard         → integumentary--present (lean, preservable as-is)
+6. vigiles-aeternae         → immune--watch (verify where regimes actually live)
+7. praxis-perpetua          → memory--remember (2,200 real files, .venv to clean)
+8. corpus-testamentvm       → memory--remember + skeletal--define (portfolio-site extraction first)
+9. stakeholder-portal       → integumentary--render (4.7K real src, not 24K)
+10. aerarium--res-publica   → no cocoon (institutional, human-only) — deflate tier
+11. materia-collider        → digestive--collider (extract 1.5K code, bench/ is separate archaeology)
+```
+
+### Phase 2d: Loose material
+
+```
+intake/ (2GB)               → respiratory--ingest via xenograft protocol
+tools/ (36 files)           → dissolve into engine or immune--verify
+data/ (3 files)             → skeletal--consolidate
+docs/ (4 files)             → memory--remember
+bench/ (9GB in materia)     → separate archaeological operation (frozen organ snapshots)
+portfolio-site/ (in corpus) → extract to integumentary--present or its own repo
+```
+
+---
+
+## Verification
+
+After decomposition of each repo:
+1. Primitive catalogue matches actual code (no phantom claims)
+2. Line counts verified against `wc -l` (not ORGAN-REPORT estimates)
+3. Isotopes identified by `grep` for reimplemented patterns (registry loading, organ mapping, state machine)
+4. Each primitive has a named destination cocoon
+5. Nothing is "gone" — everything is either placed, archived, or explicitly deleted with documented reason
+
+---
+
+---
+
+## CROSS-ORGAN REDUNDANCY MAP (Five Horizontal Slices)
+
+### Slice 1: Registry Isotopes
+
+16 repos across 5 organs load registry-v2.json directly. Zero import from canonical source.
+
+| Repo | Refs | Organ |
+|------|------|-------|
+| organvm-corpvs-testamentvm | 28 | META |
+| organvm-engine | 24 | META (canonical) |
+| orchestration-start-here | 12 | IV |
+| tool-interaction-design | 8 | IV |
+| vigiles-aeternae | 7 | META |
+| organvm-ontologia | 5 | META |
+| organvm-mcp-server | 5 | META |
+| + 9 more repos | 1-2 each | VII, Personal, META |
+
+### Slice 2: Ceremony Cost
+
+700 ceremony files system-wide: 103 CLAUDE.md, 98 seed.yaml, 91 README.md, 89 AGENTS.md, 87 GEMINI.md, 62 LICENSE, 59 ecosystem.yaml, 49 CHANGELOG.md, 32 CONTRIBUTING.md, 30 network-map.yaml.
+
+27 repos carry the full 6-file ceremony stamp. 26 repos carry zero (empty placeholders).
+
+### Slice 3: Verb Collisions
+
+- styx-×3 across I, II, META: only META has content (6 files in a placeholder). All 3 have 0 code.
+- vigiles-aeternae-×3 across I, II, META: only META has real code (1,608 lines + 2,461 lines YAML). Other 2 are empty ceremony.
+- vox-×2 in IV: gubernatio (Python, real) and publica (TS isotope).
+
+### Slice 4: Dead Weight
+
+29 repos with zero code files. 6 are ceremony-only (have CLAUDE.md/seed.yaml but no code). 2 PUBLIC_PROCESS repos (ORGAN-V) have zero executable code.
+
+### Slice 5: Code Density
+
+9,663 real code files total. Distribution:
+- IV: 4,053 (42%) — already dissected
+- III: 2,061 (21%) — real products
+- I: 1,270 (13%) — theory engines
+- META: ~1,500 (16%) — infrastructure
+- II: 336 (3%) — creative code
+- V+VI+VII: 247 (2.6%) — 23 repos for 247 files
+
+### Systemic Findings
+
+1. **Registry is the spine, but nobody imports it canonically.** 16 repos × direct JSON loading = simplification target #1.
+2. **Ceremony scales linearly, value doesn't.** 700 files for 9,663 code files = 1 ceremony per 14 code files. For V-VII the ratio inverts.
+3. **Named-but-empty is systemic.** styx-×3, vigiles-×3 — concepts named before implementation. 5 of 8 instances are empty.
+4. **4 computational organs, 4 configuration organs.** I/III/IV/META produce code. V/VI/VII produce configuration dressed as code repos. II is creative code (small).
+5. **The system's real weight:** ~9,600 code files across ~40 repos that actually have code. The other ~70 repos are ceremony, placeholders, or content.
+
+---
+
+## Open Questions (rolling, not blocking)
+
+1. **Engine as 1 or 10?** The engine distributes to 10+ cocoons. Decompose as one entity (engine-first) or as 10 extraction targets (cocoon-first)? → To be resolved during execution, informed by sequential learning.
+2. **portfolio-site**: Should it stay in corpus, become its own repo, or merge with stakeholder-portal? → Depends on whether it's actively deployed.
+3. **bench/ archaeology**: The 9GB organ dump in materia-collider — is this intentional cold storage or accidental? → Determines whether it gets preserved or cleaned.
+4. ~~**vigiles regimes**~~: **RESOLVED** — 22 YAML files exist at repo root `regimes/`, not inside `src/`. 1,832 lines. Plus 8 Watcher Orders (576 lines). Total knowledge base: 2,461 lines YAML.
+5. **pulse + trivium**: 7.9K lines of "marginal value" per ORGAN-REPORT. Verify — some sub-modules may carry unique primitives despite the genus being marginal.
