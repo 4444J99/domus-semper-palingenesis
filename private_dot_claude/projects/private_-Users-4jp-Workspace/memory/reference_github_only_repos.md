@@ -1,24 +1,21 @@
 ---
-name: GitHub-only repos (not cloned in ~/Workspace/)
-description: Three key repos exist on GitHub but have no local checkout — sovereign--ground, system-system--system, a-organvm. Must use GitHub API or shallow clone to operate.
+name: Repos cloned outside ~/Workspace/
+description: sovereign--ground and system-system--system--monad exist at ~/ (not ~/Workspace/). a-organvm is nested inside sovereign--ground. These are higher-stratum repos in the multiverse architecture.
 type: reference
 ---
 
-As of 2026-04-07, three repos central to the multiverse architecture exist ONLY on GitHub, not in ~/Workspace/:
+As of 2026-04-15, three repos central to the multiverse architecture exist at `~/` rather than `~/Workspace/`:
 
-| Repo | GitHub | Purpose | Stratum |
-|------|--------|---------|---------|
-| `a-organvm/a-organvm` | github.com/a-organvm/a-organvm | The organism (3 functions, 107 gates, 82 tests) | Organism |
-| `4444J99/sovereign--ground` | github.com/4444J99/sovereign--ground | Categorical decomposition frame + empirical test suite | Grammar |
-| `4444J99/system-system--system` | github.com/4444J99/system-system--system | Formal laws, piece/v2 schema, session recording | Formal |
+| Repo | Local path | GitHub | Stratum |
+|------|-----------|--------|---------|
+| `4444J99/sovereign--ground` | `~/sovereign--ground/` | github.com/4444J99/sovereign--ground | Grammar |
+| `4444J99/system-system--system` | `~/system-system--system--monad/` | github.com/4444J99/system-system--system | Formal |
+| `a-organvm/a-organvm` | `~/sovereign--ground/holds--same/a-organvm/` (nested clone) | github.com/a-organvm/a-organvm | Organism |
 
-**Why not local:** These repos live outside the material layer (~/Workspace/) by design. The multiverse architecture places them at higher strata. They were created/used in git worktrees during sessions, and the worktrees were cleaned up.
+**Why outside ~/Workspace/:** These repos live at higher strata in the multiverse architecture. ~/Workspace/ is the material layer. The formal and grammar layers sit above it at `~/`.
 
-**How to operate on them:**
-1. **Read-only:** `gh api repos/<owner>/<repo>/contents/<path>` — works for individual files
-2. **Write:** Shallow clone to /tmp, edit, commit, push, clean up: `cd /tmp && git clone --depth 1 git@github.com:<owner>/<repo>.git <name> && ... && rm -rf /tmp/<name>`
-3. **Do NOT use** `mcp__github__create_or_update_file` — gets 401 on cross-org repos. Use `gh` CLI instead.
+**Nested clone divergence (2026-04-07):** The nested a-organvm clone at `~/sovereign--ground/holds--same/a-organvm/` diverged from the canonical GitHub repo during a Gemini session. Local HEAD `e3ce27c` (Gemini's S57 relay update) vs remote HEAD `2b36c46` (Claude's S-empirical relay update). This nested copy is an analytical artifact, not the canonical source.
 
-**Lost state:** system-system--system had uncommitted worktree changes that were lost when the worktree was cleaned (discovered 2026-04-07). Latest GitHub commit: `aa6ce9f`.
+**Recovery (session 92e, 2026-04-07):** seed.yaml, SYNTHESIS.md, and RELAY.md were restored to sovereign--ground root after a minimax session had renamed them to namespace-prefixed variants. Both renamed and root copies now coexist.
 
-**RELAY.md:** Both a-organvm and sovereign--ground have RELAY.md files (updated 2026-04-07). system-system--system does not.
+**GitHub MCP limitation:** `mcp__github__create_or_update_file` gets 401 on cross-org repos. Use `gh` CLI instead.
