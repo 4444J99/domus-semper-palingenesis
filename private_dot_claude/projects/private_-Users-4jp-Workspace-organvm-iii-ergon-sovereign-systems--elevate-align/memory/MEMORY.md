@@ -4,11 +4,13 @@
 - [user_client-relationship.md](user_client-relationship.md) — Studio practitioner building Maddie's multi-domain health brand
 
 ## Project
-- [project_content-genome.md](project_content-genome.md) — 1,821 atoms tiered (SIGNAL 1,153 / CONTEXT 557 / NOISE 111), routing map, intent register
-- [project_board-state.md](project_board-state.md) — 19 open GitHub issues, P0 blockers #13 + #5, critical path #13→#15→#6
-- [project_maddie-hydration-node.md](project_maddie-hydration-node.md) — Hydration Node funnel spec arrived 2026-04-03, major scope expansion on #6
+- [project_board-state.md](project_board-state.md) — ARCH MISALIGNMENT: site water-heavy, Maddie wants spiral-first. Water="mini version"
+- [project_content-genome.md](project_content-genome.md) — 1,821 atoms tiered, 241 content units, Phase 3 UNBLOCKED since #13 closed
+- [project_maddie-hydration-node.md](project_maddie-hydration-node.md) — Hydration Node funnel spec (2026-04-03), scope reduced by GHL delineation decision
 - [project_single-authority-model.md](project_single-authority-model.md) — GitHub board is single source of truth; tracking table auto-generated; IRF = pointers
-- [project_maddie-decisions-20260404.md](project_maddie-decisions-20260404.md) — Revenue 10% of everything confirmed, node arch progressing, creature selves locked, bones-first approach
+- [project_maddie-decisions-20260404.md](project_maddie-decisions-20260404.md) — Revenue 10% confirmed, node arch LOCKED+CLOSED (13 nodes), creature selves locked, bones-first
+- [project_maddie-decisions-20260414.md](project_maddie-decisions-20260414.md) — GHL branch delineation, written revenue terms (broader), water/filter ASAP, #36 walkthrough, nonprofit vision
+- [project_nonprofit-pervasive.md](project_nonprofit-pervasive.md) — Nonprofit is THE mission, not P3 side item. Commercial spiral funds it. Pervasive in all Maddie context
 
 ## Feedback
 - [feedback_additive-only.md](feedback_additive-only.md) — Never overwrite, always add; audit sorts after
@@ -17,6 +19,9 @@
 - [feedback_na-vacuum-rule.md](feedback_na-vacuum-rule.md) — N/A values are vacuums demanding action; research, plan, log each one
 - [feedback_session-close-rigor.md](feedback_session-close-rigor.md) — Session close requires hall-monitor audit: commit+push, 10-index, additive-only, memory
 - [feedback_client-facing-first.md](feedback_client-facing-first.md) — Client-visible fixes ship FIRST, before infrastructure; Maddie reads the live site
+- [feedback_secret-scanner-session-artifacts.md](feedback_secret-scanner-session-artifacts.md) — Pre-commit hook flags session JSONL/transcripts; split commits, use allow-secret markers
+- [feedback_pr-per-phase.md](feedback_pr-per-phase.md) — PR per phase, submit for GH feedback, move on; merge only after all feedback addressed
+- [feedback_atomized-wants-primacy.md](feedback_atomized-wants-primacy.md) — Atomized wants doc IS the artifact, not a stepping stone. Cartographical fossil record.
 
 ## Reference
 - [reference_maddie-credentials.md](reference_maddie-credentials.md) — Client platform credentials and contact
