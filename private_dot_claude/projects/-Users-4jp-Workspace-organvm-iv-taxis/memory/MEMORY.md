@@ -18,6 +18,7 @@
 - [Upstream House Rules First](feedback_upstream_house_rules.md) — read CONTRIBUTING.md before any upstream PR action; we are guests
 - [Comment Cadence](feedback_comment_cadence.md) — stagger cross-repo comments; 90-second bursts look inhuman
 - [Compose Against Conversation](feedback_compose_against_conversation.md) — PR comments address the maintainer's words, not CI metadata
+- [Semantic Naming Protection](feedback_semantic_naming_protection.md) — directory names must not lie; .build/→distributions/ after Mole purged 3,129 files
 
 ## Active Projects
 - [Synthesizer Derivation](project-synthesizer-derivation.md) — UMFAS: 4 axioms, 15 ideal forms, honest modular synthesis mapping (4/7 real), oscillation as universal primitive
