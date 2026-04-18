@@ -209,6 +209,15 @@
             "timeout": 10
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "{{ .chezmoi.homeDir }}/.claude/hooks/session-prompt-capture.sh 2>/dev/null; true",
+            "timeout": 30
+          }
+        ]
       }
     ]
   },
