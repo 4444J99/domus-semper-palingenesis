@@ -35,6 +35,7 @@
 - [GitHub MCP content filter](feedback_github_mcp_workaround.md) — Use local reads or gh CLI, not mcp__github__* for content
 - [Bulk operation patterns](feedback_bulk_operations.md) — replace_all for small, Python os.walk for large, background agents for 100KB+
 - [Hook architecture — prompt vs command](feedback_hook_architecture.md) — ONLY command type for conditional guards (2026-04-16)
+- [No conversation loss to compression](feedback_no_compression_loss.md) — Exported sessions MUST contain full prompts; compacted exports are unacceptable (2026-04-18)
 
 ## References
 - [Conductor MCP server](reference_conductor_mcp.md) — Live as of 2026-04-14, FRAME→SHAPE→BUILD→PROVE lifecycle
