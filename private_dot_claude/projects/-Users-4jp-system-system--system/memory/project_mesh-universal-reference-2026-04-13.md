@@ -1,30 +1,44 @@
 ---
 name: mesh — Universal Reference Mesh
-description: 5-primitive patch bay (Seed|Crawl|Atomize|Link|Query) — Wikipedia dead zones as first patch. Steps 0-2 implemented (43 tests), steps 3-9 remaining.
+description: 5-primitive patch bay (Seed|Crawl|Atomize|Link|Query) — fully operational, entity ent_F0F88, IRF-SYS-113 RESOLVED.
 type: project
 ---
 
-Design spec completed 2026-04-13 (ses_F3BE4). Implementation started same day (ses_6E91D). Repo at `~/Workspace/organvm-i-theoria/mesh/`.
+Design spec completed 2026-04-13 (ses_F3BE4). Implementation ses_6E91D + ses_64F97. Repo at `~/Workspace/organvm-i-theoria/mesh/`.
 
 **Spec:** `docs/superpowers/specs/2026-04-13-mesh-universal-reference-mesh-design.md` (in σ_E repo)
-**Plan:** `.claude/plans/shiny-pondering-whale.md` (full spec + 9-step implementation plan)
-**IRF:** IRF-SYS-110
+**Entity:** `ent_F0F88` (child of ent_16736 TC constellation)
+**IRF:** IRF-SYS-113 (RESOLVED)
+**Status:** All 9 steps complete + 2 bugfixes. 12 commits, 123 tests, 11 CLI commands, 3 export formats, 3 patches.
 
-**Why:** Five existing repos (my-knowledge-base, nexus--babel-alexandria, alchemia-ingestvm, atomic-substrata, auto-revision-epistemic-engine) independently discovered the same primitives. mesh makes the convergence explicit — every text project becomes a named patch configuration of the same composable stages.
+**Why:** Five repos independently discovered the same primitives. mesh makes the convergence explicit.
 
-**How to apply:** Python 3.11+, Click CLI, SQLite default, streaming JSON between pipe stages. Implementation follows 9-step order. Next session picks up at Step 3 (seed resolvers).
+**Operational status (2026-04-14, ses_9FA52):**
+- Flagship pipeline: 500 pages crawled → 32K atoms, 39K edges (structural — no OpenAI)
+- workspace-compiler pipeline: 65 σ_E pages → 3.2K atoms, 6K edges
+- Seed validation: entity_names (35/35 entities), browser_history (45 Wikipedia URLs)
+- 2 bugs fixed: lazy openai import in pipeline.py, union-Jaccard scoring in crawl.py
+  - Per-seed max-Jaccard replaced union-set Jaccard (8 pages → 500 pages crawled)
+- YAML patches: `test-small.yaml`, `wikipedia-dead-zones.yaml`, `workspace-compiler.yaml`
+- Stores: `mesh.db` (Wikipedia), `workspace-mesh.db` (σ_E local files)
 
-**Implementation status (2026-04-13):**
-- Step 0: Scaffold ✓ (pyproject.toml, src layout, venv)
-- Step 1: Model + Store ✓ (model.py, SQLite + memory backends, 30 tests)
-- Step 2: Atomizer ✓ (SectionSplitter, extract_refs, 13 tests)
-- Steps 3-9: Pending (seeds, fetchers, crawler, link engine, dead zones, CLI, export)
+**Convergence Engine (2026-04-14, ses_47897):**
+- `StructuralDeadZoneEngine` — name/term matching without embeddings (88% coverage, 46 dead zones)
+- `LocalEmbedder` via sentence-transformers (all-MiniLM-L6-v2, 384 dims) — no API key needed
+- Pipeline embedder cascade: OpenAI → Local → skip
+- `extract_refs` fixed for relative markdown paths → cross-file REFERENCE edges
+- Dead zone reports: structural (88%) vs semantic (40.3%) — semantic is stricter/more precise
+- `workspace-compiler-full.yaml` — 70K seeds across 7 organs + meta + σ_E
+- 135 tests, 12 new (from 123)
 
-**Key decisions:**
-- Five primitives (Seed, Crawl, Atomize, Link, Query) — Address demoted to built-in
-- CLI pipes are the patch bay; YAML patches are saved presets
-- Dead zones scoped by crawl distance from seeded concepts (not all of Wikipedia)
+**Next moves:**
+- Cross-organ compilation completing (workspace-full-mesh.db)
+- Run structural dead zones against cross-organ store
+- Frontier noise: "Energy" seed → ~200 country pages; semantic filtering helps but needs tuning
+- Growth vectors → new atoms/derivations (Compilatio Cognitionis loop)
+
+**Key decisions (unchanged):**
+- Five primitives, CLI pipes as patch bay, YAML patches as saved presets
+- Dead zones scoped by crawl distance from seeded concepts
 - Two-tier relevance: cheap keyword pass then expensive embedding pass
-- Governing principle: the tool reveals the system's next direction of growth, not a static gap map
-- Content hash truncated to 12 hex chars (48 bits) — human-readable, practically unique
-- FTS5 uses standalone table (not content=atoms sync) to avoid JSON extraction issues
+- Content hash: SHA-256 truncated to 12 hex chars
