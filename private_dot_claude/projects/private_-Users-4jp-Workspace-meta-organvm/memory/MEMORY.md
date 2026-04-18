@@ -19,6 +19,8 @@
 - [River principle](feedback_river_principle.md) — code from necessity, art as byproduct, strip ceremony
 - [Hot hands](feedback_hot_hands.md) — don't build function N+1 in the same session as function N; cold eyes pick better
 - [Structural order](feedback_structural_order.md) — don't offer ordering choices when dependency graph determines the sequence
+- [Comment cadence](feedback_comment_cadence.md) — stagger cross-repo comments by 3-5 min; parallel posting fingerprints as non-human
+- [Compose against conversation](feedback_compose_against_conversation.md) — read full human thread before commenting; metadata-driven pings ignore maintainer feedback
 - [System time](feedback_system_time.md) — time = mathematical micro-to-macro cycles, not human timezones
 - [Memory reconciliation](feedback_memory_reconciliation.md) — memory is hypothesis, not fact. Load → verify → present delta.
 - [Plans are artifacts](feedback_plans_are_artifacts.md) — every plan/audit committed to repo. ~/.claude/plans/ is draft; repo copy is record.
@@ -27,6 +29,7 @@
 - [Seed not specification](feedback_seed_not_specification.md) — design at seed level; details grow during implementation, not planning
 - [Generative not copied](feedback_generative_not_copied.md) — redundant structures = one generative source, not N copies; programmable idealized materia
 - [Governance Genome](feedback_signal_tracing_reduction.md) — seven irreducible predicates, signal tracing, constitutional logic; telos of loop/alchemy/generative axioms
+- [Upstream house rules](feedback_upstream_house_rules.md) — read CONTRIBUTING.md + house rules before ANY upstream action
 
 ## User Identity
 - [Identity](user_identity.md) — artist-technologist, MFA, building life's work in isolation
@@ -53,7 +56,7 @@
 - [Dependabot Rationalization](project_dependabot_rationalization.md) — 305+ PRs closed, 5 production repos
 - [SGO Convergence](project_sgo_convergence.md) — Studium Generale converged into praxis-perpetua
 - [AMP Lab](project_amp_lab.md) — collaborative channel with Chris, SigLIP validated
-- [April Grants](project_grants_april2026.md) — 10 apps ($230K+). All deadlines PASSED. Check pipeline for outcomes.
+- [April Grants](project_grants_april2026.md) — 10 apps ($230K+). All deadlines PASSED. 3 rejections confirmed. Check pipeline.
 - [Pipeline Integration](project_pipeline_integration.md) — 11 data surfaces connecting app pipeline
 - [SPEC Implementation](project_spec_implementation.md) — Layer 1 methodology v3, hard gates
 - [Patch Signal Architecture](project_patch_signal_architecture.md) — SOPs as synth modules, patches as presets, revenue from patch packs
@@ -65,11 +68,12 @@
 - [Post-flood inventory](project_postflood_inventory.md) — 36 models, 10 topologies, 29 Qs, 5 novel contributions, axiom instability
 - [Structural vacuums](project_vacuums_discovered.md) — 10+ unregistered repos, 4 TBD orgs, axiom/primitive competition, Mneme absent
 - [UMFAS birth inventory](project_umfas_birth_inventory.md) — 7,467 docs, 12.6M words, 26 categories. Step 1 of 4. birth-inventory.py + birth-search.py
-- [Corpus Knowledge Graph](project_corpus_knowledge_graph.md) — plan to bridge post-flood (225 files) + praxis-perpetua (2,728 files) via engine corpus module. DRAFT.
+- [Corpus Knowledge Graph](project_corpus_knowledge_graph.md) — Phase 1 COMPLETE: 118 nodes, 172 edges, 17 tests. Phases 2-4 pending (CLI, praxis scan).
+- [OSS Contributions](project_oss_contributions.md) — 16 contrib repos in ORGAN-IV, 2 active PRs (k6 #5770, openai #2802), fork clones + tracking dirs
 
 ## System State
 - [Cross-session synthesis 2026-03-31](project_cross_session_synthesis_20260331.md) — 6+ sessions across 4 repos, multi-agent dispatch proven
-- [Snapshot 2026-03-30](project_system_snapshot_20260330.md) — 128 repos, now 14 submodules (was 12), ~5,858 tests (point-in-time)
+- [Snapshot 2026-04-16](project_system_snapshot_20260330.md) — 145 repos, 5,109 engine tests, 20 validators, omega 9/20
 - [Handoff 2026-03-30](project_session_handoff_20260330.md) — death cantation, throttle: embody don't expand
 - [Handoff 2026-03-31](project_session_handoff_20260331.md) — S45: first embodiment landed
 - [Handoff S47](project_session_handoff_s47.md) — twin recovery, circulatory_route.py landed
@@ -82,8 +86,12 @@
 - [Handoff S-UMFAS](project_session_handoff_s_umfas.md) — UMFAS birth inventory (7,467 docs), superproject manifest, triple-reference backfill
 - [Handoff S-Audit-2](project_session_handoff_s_audit2.md) — 2026-04-08..11: plan artifact, corpus sync, IRF +3, memory parity gap discovered
 - [Handoff S-Audit-3](project_session_handoff_s_audit3.md) — 2026-04-13: pure audit, 4 unpushed repos recovered, VSA revert, no new code
-- [Handoff S-Zettelkasten](project_session_handoff_s_zettelkasten.md) — 2026-04-13: parity recovery, zettelkasten plan (NOT impl'd), TDR tree error found
-- [IRF dual index](project_irf_supersession.md) — IRF (877 items, 510 open) + a-organvm board coexist, neither supersedes
+- [Handoff S-Zettelkasten](project_session_handoff_s_zettelkasten.md) — 2026-04-13: parity recovery, zettelkasten plan (subsequently completed)
+- [Handoff S-contrib](project_session_handoff_s_contrib.md) — 2026-04-13..14: OSS contrib portfolio, 6 items done, k6+openai advanced
+- [Handoff S-contrib-exec-2](project_session_handoff_s_contrib_exec2.md) — 2026-04-14/15: k6 merge-ready, openai root-cause traced, 3 relationships re-engaged
+- [Handoff Session F](project_session_handoff_s_sessionF.md) — 2026-04-15/16: 4 validators (AX-7/8/9, RR-9), inter-organ edges, metrics fix. UNCOMMITTED.
+- [Agentic-titan collaborators](project_agentic_titan_collaborators.md) — m13v (fission-fusion), voidborne-d (emergence/Lambda Lang), Thomas King (SWARMs)
+- [IRF dual index](project_irf_supersession.md) — IRF (883+ items, ~516 open) + a-organvm board coexist, neither supersedes
 - [Session 2026-03-19 synthesis](project_session_20260319_synthesis.md) — the inflection point: 126 commits
 - [S45 close-out concerns](project_closeout_concerns_s45.md) — 8 inherited debt items (some still open)
 
