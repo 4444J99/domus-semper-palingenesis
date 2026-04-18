@@ -154,6 +154,30 @@
         ]
       }
     ],
+    "PostToolUse": [
+      {
+        "matcher": "Write",
+        "if": "Write(*/.claude/projects/*/memory/*)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "{{ .chezmoi.homeDir }}/.local/bin/domus-memory-sync \"$CLAUDE_TOOL_ARG_FILE_PATH\" &",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Write",
+        "if": "Write(*/.claude/plans/*)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "{{ .chezmoi.homeDir }}/.local/bin/domus-memory-sync \"$CLAUDE_TOOL_ARG_FILE_PATH\" &",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
     "Stop": [
       {
         "hooks": [

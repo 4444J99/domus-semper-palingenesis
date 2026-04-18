@@ -1,0 +1,120 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# domus-memory-sync — Persist Claude memory and plan files to remote via chezmoi.
+#
+# Usage:
+#   domus-memory-sync <filepath>    Sync a single file
+#   domus-memory-sync --all         Sync all untracked memory/plan files
+#
+# Principle: [(local):(remote)={1:1}]
+# An unsigned commit on remote beats a signed commit that only exists locally.
+
+readonly CHEZMOI_SOURCE="$(chezmoi source-path 2>/dev/null)"
+readonly STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/domus"
+readonly LOG_FILE="$STATE_DIR/memory-sync.log"
+readonly UNSIGNED_FLAG="$STATE_DIR/unsigned-commits-pending"
+readonly LOCK_FILE="$STATE_DIR/memory-sync.lock"
+
+log() { printf '%s %s\n' "$(date +%Y-%m-%dT%H:%M:%S)" "$*" >> "$LOG_FILE"; }
+
+# Prevent concurrent runs
+if [[ -f "$LOCK_FILE" ]]; then
+  lock_age=$(( $(date +%s) - $(stat -f %m "$LOCK_FILE" 2>/dev/null || echo 0) ))
+  if (( lock_age < 60 )); then
+    log "SKIP: lock held (age ${lock_age}s)"
+    exit 0
+  fi
+  log "WARN: stale lock (age ${lock_age}s), removing"
+  rm -f "$LOCK_FILE"
+fi
+trap 'rm -f "$LOCK_FILE"' EXIT
+touch "$LOCK_FILE"
+
+mkdir -p "$STATE_DIR"
+
+if [[ -z "$CHEZMOI_SOURCE" ]]; then
+  log "ERROR: chezmoi source-path not found"
+  exit 1
+fi
+
+# Determine files to sync
+files_to_add=()
+
+if [[ "${1:-}" == "--all" ]]; then
+  # Find all memory and plan files not yet tracked by chezmoi
+  while IFS= read -r f; do
+    if ! chezmoi managed --include=files 2>/dev/null | grep -qF "${f#$HOME/}"; then
+      files_to_add+=("$f")
+    fi
+  done < <(find "$HOME/.claude/projects" -path "*/memory/*.md" -newer "$LOCK_FILE" 2>/dev/null; \
+           find "$HOME/.claude/plans" -name "*.md" -newer "$LOCK_FILE" 2>/dev/null)
+
+  # Also re-add changed tracked files (chezmoi detects content changes)
+  while IFS= read -r f; do
+    files_to_add+=("$f")
+  done < <(find "$HOME/.claude/projects" -path "*/memory/*.md" 2>/dev/null; \
+           find "$HOME/.claude/plans" -name "*.md" 2>/dev/null)
+elif [[ -n "${1:-}" && -f "$1" ]]; then
+  files_to_add+=("$1")
+else
+  log "USAGE: domus-memory-sync <filepath> | --all"
+  exit 1
+fi
+
+if [[ ${#files_to_add[@]} -eq 0 ]]; then
+  log "SKIP: no files to sync"
+  exit 0
+fi
+
+# Add files to chezmoi (copies to source dir without autoCommit triggering per-file)
+added=0
+for f in "${files_to_add[@]}"; do
+  if chezmoi add "$f" 2>>"$LOG_FILE"; then
+    log "ADD: $f"
+    ((added++)) || true
+  fi
+done
+
+if [[ $added -eq 0 ]]; then
+  log "SKIP: chezmoi add produced no changes"
+  exit 0
+fi
+
+# Commit and push from chezmoi source
+cd "$CHEZMOI_SOURCE"
+
+# Stage any changes chezmoi add created
+git add -A 2>>"$LOG_FILE"
+
+# Check if there's anything to commit
+if git diff --cached --quiet 2>/dev/null; then
+  log "SKIP: nothing staged after chezmoi add"
+  exit 0
+fi
+
+timestamp="$(date +%Y-%m-%dT%H:%M:%S)"
+
+# Try signed commit first
+if git commit -m "memory: auto-persist $timestamp" 2>>"$LOG_FILE"; then
+  log "COMMIT: signed ($added files)"
+else
+  # Signing failed — fall back to unsigned
+  if git commit --no-gpg-sign -m "memory: auto-persist (UNSIGNED) $timestamp" 2>>"$LOG_FILE"; then
+    log "COMMIT: unsigned ($added files) — 1Password unavailable"
+    echo "$timestamp" >> "$UNSIGNED_FLAG"
+  else
+    log "ERROR: commit failed entirely"
+    exit 1
+  fi
+fi
+
+# Push to remote
+if git push 2>>"$LOG_FILE"; then
+  log "PUSH: success"
+else
+  log "ERROR: push failed — will retry on next sync"
+  exit 1
+fi
+
+log "DONE: $added files synced"
