@@ -2,12 +2,12 @@
 - [Formal ontologist](user_formal-ontologist.md) — builds formalizations AND operational tooling; terse imperative; architects 8-organ ORGANVM
 
 ## System State
-- [Workspace overview](project_system-system-workspace.md) — 7 Laws, 113 atoms, 34 entities, 18 derivations, 35 relations
+- [Workspace overview](project_system-system-workspace.md) — 7 Laws, 135 atoms, 38 entities, 21 derivations, 37 relations; 100% canonical convergence
 - [Session recording](project_session-recording-2026-04-07.md) — 4-channel JSONL stream, hooks, backfilled records
 - [Monad vacuum resolution S57](project_monad-vacuum-resolution-2026-04-07.md) — 16→0 VACUUM, enricher process fixed
 
 ## Project History
-- [mesh — Universal Reference Mesh 2026-04-13](project_mesh-universal-reference-2026-04-13.md) — 5-primitive patch bay (Seed|Crawl|Atomize|Link|Query), Wikipedia dead zones as first patch
+- [mesh — Universal Reference Mesh 2026-04-13](project_mesh-universal-reference-2026-04-13.md) — convergence engine: structural+semantic dead zones, LocalEmbedder, cross-organ (259K atoms), 5 patches, 135 tests
 - [Compilatio Cognitionis 2026-04-13](project_compilatio-cognitionis-2026-04-13.md) — ent_6576E, 12 CC atoms, Prover-Verifier architecture, child of TC
 - [Transmutatio Cognitionis 2026-04-08](project_transmutatio-cognitionis-2026-04-08.md) — constellation ent_16736 + 7 organ entities, 12 TC atoms, new derivation
 - [Subsumption derivation 2026-04-05](project_subsumption-derivation-2026-04-05.md) — ent_E7D9B, 10 P atoms, external primitives as projections
