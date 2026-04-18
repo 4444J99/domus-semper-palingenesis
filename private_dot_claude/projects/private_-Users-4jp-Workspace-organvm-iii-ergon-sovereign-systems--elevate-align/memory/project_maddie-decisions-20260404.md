@@ -1,6 +1,6 @@
 ---
 name: maddie-decisions-20260404
-description: Client decisions from 2026-04-04 evening session — revenue confirmed, node arch progressing, creature selves locked, hydration flow confirmed
+description: Client decisions from 2026-04-04 evening — revenue confirmed, node arch LOCKED+CLOSED, creature selves locked, hydration flow confirmed
 type: project
 ---
 
@@ -8,7 +8,7 @@ Maddie reviewed the full report suite on 2026-04-04 evening and made key decisio
 
 1. **Revenue (#5): CONFIRMED** — 10% of EVERYTHING (not just water) until $10K. Start after 3 sign-ups. She identified 6 revenue streams: water sales, business funnel ($99), filter commissions (IonFaucet/Multipure), subscription ($11/mo), premium tiers ($22-33/mo), virtual store.
 
-2. **Node architecture (#13): PROGRESSING** — She wants to merge nodes 3+4, rename node 5. Will send finalized list. "Let me just really lock them in and then send you finalized list."
+2. **Node architecture (#13): DECIDED + CLOSED** — Final 13-node structure confirmed 2026-04-04 9:30 PM. Three arcs: ELEVATE (1-5), ALIGN (6-10), UNLOCK (11-13). Pillar mapping: Physical→{1,3,4,5}, Inner→{2,6,7,8,9}, Identity→{10,11,12}, Financial→{13}. Issue CLOSED 2026-04-05. Full doc: `docs/client-decisions/2026-04-04-node-architecture-locked.md`.
 
 3. **Creature Selves (#20): CONFIRMED** — Original IP, she's keeping it. Locked in.
 
