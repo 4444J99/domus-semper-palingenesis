@@ -18,6 +18,7 @@ Library/LaunchAgents/com.4jp.naming-maintenance.plist
 Library/LaunchAgents/com.4jp.agents-policy-sync.plist
 Library/LaunchAgents/com.4jp.context-sync.plist
 Library/LaunchAgents/com.4jp.ingestion-refresh.plist
+Library/LaunchAgents/com.4jp.mail-triage.plist
 {{ end }}
 
 # Broken LaunchAgents — repos not yet created

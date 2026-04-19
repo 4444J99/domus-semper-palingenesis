@@ -1,0 +1,868 @@
+#!/usr/bin/env python3
+# ruff: noqa: E501
+"""
+Triage unread INBOX messages into SPAM/NOISE/HUMAN/ACTION mailboxes.
+
+Uses Mail.app's AppleScript interface to read unread messages from the
+Gmail INBOX, classifies each by sender and content heuristics, and moves
+them to [Gmail]/Triage/* mailboxes (which sync as Gmail labels).
+
+Dry run by default; pass --apply to actually move messages.
+Logs to ~/.local/state/domus/mail-triage.log.
+"""
+from __future__ import annotations
+
+import argparse
+import logging
+import re
+import subprocess
+import sys
+from datetime import datetime
+from pathlib import Path
+
+# ---------------------------------------------------------------------------
+# Constants
+# ---------------------------------------------------------------------------
+
+MAIL_ACCOUNT = "padavano.anthony@gmail"
+MAILBOX_INBOX = "INBOX"
+FIELD_SEP = "|||"
+RECORD_SEP = "^^^"
+
+LOG_DIR = Path.home() / ".local" / "state" / "domus"
+LOG_FILE = LOG_DIR / "mail-triage.log"
+
+# Gmail labels exposed as IMAP mailboxes
+TRIAGE_MAILBOXES = [
+    "Triage/Spam",
+    "Triage/Noise",
+    "Triage/Human",
+    "Triage/Action",
+    "Triage/Action/Today",
+    "Triage/Action/This-Week",
+    "Triage/Action/Someday",
+]
+
+# ---------------------------------------------------------------------------
+# Sender pattern databases
+# ---------------------------------------------------------------------------
+
+# SPAM: bulk marketing and known junk sender domains/substrings.
+# Matched against the full sender address (case-insensitive).
+SPAM_SENDER_PATTERNS: list[str] = [
+    # Bulk marketing platforms
+    "marketing.",
+    "promo.",
+    "deals.",
+    "offers.",
+    "bounce.",
+    "info@groupon",
+    "reply@groupon",
+    "noreply@wish.com",
+    "noreply@temu.com",
+    "noreply@shein.com",
+    "noreply@aliexpress",
+    "@couponfollow",
+    "@retailmenot",
+    "@slickdeals",
+    "@dealmoon",
+    "@woot.com",
+    "@stacksocial",
+    "@appsumo.com",
+    # Known spam farms
+    "@mailcharts.com",
+    "mailer-daemon",
+    "@spamexperts",
+    # Crypto/finance spam
+    "@coinmarketcap.com",
+    "@crypto-newsletters",
+    "noreply@binance.com",
+    "noreply@kucoin.com",
+    # Survey/sweepstakes
+    "@survey",
+    "@sweepstakes",
+    "@prizelogic",
+    # SEO / marketing outreach
+    "@semrush.com",
+    "@ahrefs.com",
+    "@hubspot.com",
+]
+
+# SPAM subject patterns (case-insensitive substring match)
+SPAM_SUBJECT_PATTERNS: list[str] = [
+    "limited time offer",
+    "act now",
+    "exclusive offer",
+    "congratulations! you",
+    "you've been selected",
+    "claim your",
+    "free gift",
+    "winner",
+    "lottery",
+    "earn money",
+    "make money",
+    "work from home opportunity",
+    "pills",
+    "discount code",
+    "flash sale",
+    "clearance sale",
+    "buy now",
+    "order now",
+    "special promotion",
+    "unbeatable price",
+]
+
+# NOISE: automated notifications from known services.
+# Each entry: (sender_pattern, noise_subcategory)
+NOISE_SENDER_PATTERNS: list[tuple[str, str]] = [
+    # GitHub
+    ("noreply@github.com", "github"),
+    ("notifications@github.com", "github"),
+    # Social media
+    ("@linkedin.com", "social"),
+    ("@facebookmail.com", "social"),
+    ("@twitter.com", "social"),
+    ("@x.com", "social"),
+    ("notify@twitter.com", "social"),
+    ("@instagram.com", "social"),
+    ("@tiktok.com", "social"),
+    ("@reddit.com", "social"),
+    ("noreply@medium.com", "social"),
+    ("noreply@substack.com", "social"),
+    ("noreply@quora.com", "social"),
+    ("noreply@threads.net", "social"),
+    ("noreply@mastodon", "social"),
+    ("noreply@bluesky", "social"),
+    # CI/CD notifications
+    ("builds@travis-ci.com", "ci"),
+    ("noreply@circleci.com", "ci"),
+    ("noreply@vercel.com", "ci"),
+    ("noreply@netlify.com", "ci"),
+    ("noreply@render.com", "ci"),
+    ("noreply@railway.app", "ci"),
+    ("noreply@fly.io", "ci"),
+    ("noreply@heroku.com", "ci"),
+    # Cloud / service notifications
+    ("noreply@google.com", "service"),
+    ("no-reply@accounts.google.com", "service"),
+    ("googleplay-noreply@google.com", "service"),
+    ("noreply@youtube.com", "service"),
+    ("noreply@apple.com", "service"),
+    ("no_reply@email.apple.com", "service"),
+    ("noreply@dropbox.com", "service"),
+    ("noreply@dropboxmail.com", "service"),
+    ("noreply@backblaze.com", "service"),
+    ("noreply@zoom.us", "service"),
+    ("noreply@slack.com", "service"),
+    ("notification@slack.com", "service"),
+    ("noreply@notion.so", "service"),
+    ("noreply@figma.com", "service"),
+    ("noreply@canva.com", "service"),
+    ("noreply@trello.com", "service"),
+    ("noreply@atlassian.com", "service"),
+    ("noreply@bitbucket.org", "service"),
+    ("noreply@docker.com", "service"),
+    ("noreply@npmjs.com", "service"),
+    ("no-reply@1password.com", "service"),
+    ("no-reply@sentry.io", "service"),
+    ("noreply@cloudflare.com", "service"),
+    # Shopping / e-commerce order confirmations (non-spam, but noise)
+    ("auto-confirm@amazon.com", "commerce"),
+    ("ship-confirm@amazon.com", "commerce"),
+    ("order-update@amazon.com", "commerce"),
+    ("noreply@amazon.com", "commerce"),
+    ("noreply@ebay.com", "commerce"),
+    ("noreply@etsy.com", "commerce"),
+    # Newsletters / content (automated bulk sends)
+    ("@mailchimp.com", "newsletter"),
+    ("@convertkit.com", "newsletter"),
+    ("@buttondown.email", "newsletter"),
+    ("@revue.email", "newsletter"),
+    ("@beehiiv.com", "newsletter"),
+    ("@ghost.io", "newsletter"),
+    ("@substack.com", "newsletter"),
+    ("@getrevue.co", "newsletter"),
+    ("@tinyletter.com", "newsletter"),
+    ("@campaignmonitor.com", "newsletter"),
+    ("@constantcontact.com", "newsletter"),
+    ("@sendinblue.com", "newsletter"),
+    ("@brevo.com", "newsletter"),
+    ("@mailgun.com", "newsletter"),
+    ("@sendgrid.net", "newsletter"),
+    # ATS / job board automated notifications
+    ("no-reply@us.greenhouse-mail.io", "ats"),
+    ("no-reply@ashbyhq.com", "ats"),
+    ("no-reply@hire.lever.co", "ats"),
+    ("no-reply@gem.com", "ats"),
+    ("no-reply@appreview.gem.com", "ats"),
+    ("jobs-noreply@linkedin.com", "ats"),
+    ("jobalerts-noreply@linkedin.com", "ats"),
+    ("noreply@indeed.com", "ats"),
+    ("noreply@glassdoor.com", "ats"),
+    ("noreply@ziprecruiter.com", "ats"),
+    ("noreply@wellfound.com", "ats"),
+    ("noreply@angel.co", "ats"),
+    ("noreply@smartrecruiters.com", "ats"),
+    ("noreply@icims.com", "ats"),
+    ("noreply@workday.com", "ats"),
+    ("noreply@taleo.net", "ats"),
+    ("noreply@bamboohr.com", "ats"),
+    ("noreply@jobvite.com", "ats"),
+    # Banking / financial notifications
+    ("alerts@notify.chase.com", "finance"),
+    ("noreply@citi.com", "finance"),
+    ("alerts@bankofamerica.com", "finance"),
+    ("noreply@capitalone.com", "finance"),
+    ("noreply@discover.com", "finance"),
+    ("noreply@americanexpress.com", "finance"),
+    ("noreply@paypal.com", "finance"),
+    ("noreply@venmo.com", "finance"),
+    ("noreply@cashapp.com", "finance"),
+    ("noreply@squareup.com", "finance"),
+    ("noreply@stripe.com", "finance"),
+    ("noreply@mint.com", "finance"),
+    ("noreply@ynab.com", "finance"),
+    # Shipping / delivery
+    ("noreply@ups.com", "shipping"),
+    ("noreply@fedex.com", "shipping"),
+    ("noreply@usps.com", "shipping"),
+    ("tracking-noreply@google.com", "shipping"),
+]
+
+# ACTION: known senders whose messages always require action (bills, invoices)
+ACTION_SENDER_PATTERNS: list[str] = [
+    # Utility / bill senders
+    "noreply@coned.com",
+    "noreply@nationalgrid",
+    "noreply@spectrum.com",
+    "noreply@optimum.com",
+    "noreply@verizon.com",
+    "noreply@t-mobile.com",
+    "noreply@att.com",
+    "noreply@xfinity.com",
+    # Insurance / medical
+    "noreply@anthem.com",
+    "noreply@aetna.com",
+    "noreply@unitedhealthcare.com",
+    "noreply@cigna.com",
+    "noreply@bluecross",
+    # Government / legal
+    "noreply@irs.gov",
+    "noreply@ny.gov",
+    "noreply@ssa.gov",
+    "noreply@dmv",
+]
+
+# ---------------------------------------------------------------------------
+# Subject / body classification patterns
+# ---------------------------------------------------------------------------
+
+# ACTION subject keywords (case-insensitive)
+ACTION_SUBJECT_KEYWORDS: list[str] = [
+    "invoice",
+    "payment due",
+    "statement ready",
+    "bill is ready",
+    "past due",
+    "payment reminder",
+    "action required",
+    "action needed",
+    "requires your attention",
+    "respond by",
+    "response needed",
+    "deadline",
+    "due by",
+    "expires",
+    "expiring soon",
+    "renewal notice",
+    "appointment",
+    "scheduled for",
+    "verification required",
+    "verify your",
+    "confirm your",
+    "two-factor",
+    "security alert",
+    "suspicious activity",
+    "unauthorized",
+]
+
+# ACTION body keywords (case-insensitive, checked only when sender/subject don't classify)
+ACTION_BODY_KEYWORDS: list[str] = [
+    "can you",
+    "could you",
+    "please",
+    "need you to",
+    "your response",
+    "let me know",
+    "get back to me",
+    "reply to this",
+    "follow up",
+    "following up",
+    "meeting",
+    "interview",
+    "call",
+    "availability",
+    "schedule",
+    "urgent",
+    "important",
+    "time-sensitive",
+    "at your earliest",
+    "as soon as possible",
+]
+
+# ACTION sub-triage: Today urgency markers
+TODAY_KEYWORDS: list[str] = [
+    "today",
+    "urgent",
+    "asap",
+    "immediately",
+    "end of day",
+    "eod",
+    "right away",
+    "time-sensitive",
+    "critical",
+    "emergency",
+]
+
+# ACTION sub-triage: This-Week markers
+THIS_WEEK_KEYWORDS: list[str] = [
+    "this week",
+    "by friday",
+    "by monday",
+    "by tuesday",
+    "by wednesday",
+    "by thursday",
+    "within the week",
+    "next few days",
+    "end of week",
+    "eow",
+]
+
+# ---------------------------------------------------------------------------
+# Logging setup
+# ---------------------------------------------------------------------------
+
+def setup_logging(log_to_file: bool = True) -> None:
+    """Configure logging to both stderr and optionally a file."""
+    handlers: list[logging.Handler] = [logging.StreamHandler(sys.stderr)]
+    if log_to_file:
+        LOG_DIR.mkdir(parents=True, exist_ok=True)
+        handlers.append(logging.FileHandler(LOG_FILE, encoding="utf-8"))
+    logging.basicConfig(
+        format="%(asctime)s [%(levelname)s] %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S",
+        level=logging.INFO,
+        handlers=handlers,
+    )
+
+
+# ---------------------------------------------------------------------------
+# osascript helpers
+# ---------------------------------------------------------------------------
+
+def run_osascript(script: str, timeout: int = 60) -> tuple[bool, str]:
+    """Run an AppleScript via osascript. Returns (success, stdout)."""
+    try:
+        result = subprocess.run(
+            ["osascript", "-e", script],
+            capture_output=True,
+            text=True,
+            timeout=timeout,
+        )
+    except subprocess.TimeoutExpired:
+        return False, "osascript timeout"
+    except FileNotFoundError:
+        return False, "osascript not found (not macOS?)"
+
+    if result.returncode != 0:
+        return False, result.stderr.strip()
+    return True, result.stdout.strip()
+
+
+def check_mail_available() -> bool:
+    """Verify Mail.app is running and the Gmail account is accessible."""
+    script = f'''
+tell application "Mail"
+    try
+        set acct to account "{MAIL_ACCOUNT}"
+        return "ok"
+    on error
+        return "not found"
+    end try
+end tell
+'''
+    ok, output = run_osascript(script, timeout=15)
+    return ok and "ok" in output
+
+
+# ---------------------------------------------------------------------------
+# Mailbox management
+# ---------------------------------------------------------------------------
+
+def ensure_triage_mailboxes(apply: bool) -> None:
+    """Create the Triage/* mailbox hierarchy if it doesn't exist.
+
+    Gmail syncs IMAP folder creation as label creation. This is idempotent --
+    if the mailbox already exists, the 'on error' block silently catches it.
+    """
+    for mbox in TRIAGE_MAILBOXES:
+        script = f'''
+tell application "Mail"
+    try
+        mailbox "{mbox}" of account "{MAIL_ACCOUNT}"
+    on error
+        make new mailbox with properties {{name:"{mbox}"}} at account "{MAIL_ACCOUNT}"
+    end try
+end tell
+'''
+        if apply:
+            ok, err = run_osascript(script, timeout=20)
+            if not ok:
+                logging.warning("Failed to ensure mailbox %s: %s", mbox, err)
+            else:
+                logging.debug("Mailbox ensured: %s", mbox)
+        else:
+            logging.info("[dry-run] Would ensure mailbox: %s", mbox)
+
+
+# ---------------------------------------------------------------------------
+# Message fetching
+# ---------------------------------------------------------------------------
+
+def fetch_unread_inbox(days: int = 7) -> list[dict]:
+    """Fetch unread messages from INBOX within the time window.
+
+    Returns list of dicts with keys: id, subject, sender, date_str.
+    The 'id' is the AppleScript message id (integer).
+    """
+    script = f'''
+tell application "Mail"
+    set cutoff to (current date) - {days} * days
+    set msgs to (messages of mailbox "{MAILBOX_INBOX}" of account "{MAIL_ACCOUNT}" whose read status is false and date received > cutoff)
+    set results to ""
+    repeat with m in msgs
+        set results to results & (id of m) & "{FIELD_SEP}" & (subject of m) & "{FIELD_SEP}" & (sender of m) & "{FIELD_SEP}" & ((date received of m) as string) & "{RECORD_SEP}"
+    end repeat
+    return results
+end tell
+'''
+    ok, output = run_osascript(script, timeout=90)
+    if not ok:
+        logging.error("Failed to fetch unread inbox: %s", output)
+        return []
+
+    if not output:
+        return []
+
+    messages = []
+    for record in output.split(RECORD_SEP):
+        record = record.strip()
+        if not record:
+            continue
+        parts = record.split(FIELD_SEP)
+        if len(parts) >= 4:
+            messages.append({
+                "id": parts[0].strip(),
+                "subject": parts[1].strip(),
+                "sender": parts[2].strip(),
+                "date_str": parts[3].strip(),
+            })
+    return messages
+
+
+def fetch_message_body(msg_id: str) -> str | None:
+    """Fetch the plain-text body of a specific message by its AppleScript id.
+
+    Used for content-based classification when sender alone doesn't classify.
+    Truncates to first 2000 characters to avoid AppleScript string limits.
+    """
+    script = f'''
+tell application "Mail"
+    try
+        set theMsg to (first message of mailbox "{MAILBOX_INBOX}" of account "{MAIL_ACCOUNT}" whose id is {msg_id})
+        set bodyText to content of theMsg
+        if length of bodyText > 2000 then
+            set bodyText to text 1 thru 2000 of bodyText
+        end if
+        return bodyText
+    on error errMsg
+        return ""
+    end try
+end tell
+'''
+    ok, output = run_osascript(script, timeout=30)
+    if not ok or not output:
+        return None
+    return output
+
+
+# ---------------------------------------------------------------------------
+# Classification engine
+# ---------------------------------------------------------------------------
+
+def _sender_lower(msg: dict) -> str:
+    """Extract a lowercase sender string for matching."""
+    return msg.get("sender", "").lower()
+
+
+def _subject_lower(msg: dict) -> str:
+    """Extract a lowercase subject string for matching."""
+    return msg.get("subject", "").lower()
+
+
+def classify_spam_by_sender(sender: str) -> bool:
+    """Check if the sender matches known spam patterns."""
+    for pattern in SPAM_SENDER_PATTERNS:
+        if pattern in sender:
+            return True
+    return False
+
+
+def classify_spam_by_subject(subject: str) -> bool:
+    """Check if the subject matches known spam patterns."""
+    for pattern in SPAM_SUBJECT_PATTERNS:
+        if pattern in subject:
+            return True
+    return False
+
+
+def classify_noise_by_sender(sender: str) -> str | None:
+    """Check if sender matches known noise patterns.
+
+    Returns the noise subcategory (e.g. 'github', 'social') or None.
+    """
+    for pattern, category in NOISE_SENDER_PATTERNS:
+        if pattern in sender:
+            return category
+    return None
+
+
+def classify_action_by_sender(sender: str) -> bool:
+    """Check if sender matches known action-required patterns."""
+    for pattern in ACTION_SENDER_PATTERNS:
+        if pattern in sender:
+            return True
+    return False
+
+
+def classify_action_by_subject(subject: str) -> bool:
+    """Check if subject contains action-required keywords."""
+    for kw in ACTION_SUBJECT_KEYWORDS:
+        if kw in subject:
+            return True
+    return False
+
+
+def classify_action_by_body(body: str) -> bool:
+    """Check if body contains action-required keywords.
+
+    Requires at least 2 keyword hits to reduce false positives --
+    a single 'please' in a newsletter doesn't make it action-required.
+    """
+    hits = 0
+    body_lower = body.lower()
+    for kw in ACTION_BODY_KEYWORDS:
+        if kw in body_lower:
+            hits += 1
+            if hits >= 2:
+                return True
+    return False
+
+
+def sub_triage_action(subject: str, body: str | None) -> str:
+    """Determine the urgency sub-tier for ACTION messages.
+
+    Returns 'Today', 'This-Week', or 'Someday'.
+    """
+    combined = subject.lower()
+    if body:
+        combined += " " + body.lower()
+
+    for kw in TODAY_KEYWORDS:
+        if kw in combined:
+            return "Today"
+
+    for kw in THIS_WEEK_KEYWORDS:
+        if kw in combined:
+            return "This-Week"
+
+    return "Someday"
+
+
+def classify_message(msg: dict, body: str | None = None) -> tuple[str, str | None, str]:
+    """Classify a message into a tier.
+
+    Returns (tier, sub_tier, reason) where:
+    - tier: 'SPAM', 'NOISE', 'ACTION', or 'HUMAN'
+    - sub_tier: noise category or action urgency (or None)
+    - reason: human-readable explanation for the classification
+    """
+    sender = _sender_lower(msg)
+    subject = _subject_lower(msg)
+
+    # 1. SPAM check (sender first, then subject)
+    if classify_spam_by_sender(sender):
+        return "SPAM", None, f"spam sender pattern matched: {sender[:60]}"
+    if classify_spam_by_subject(subject):
+        return "SPAM", None, f"spam subject pattern: {subject[:60]}"
+
+    # 2. NOISE check (sender-based only -- conservative)
+    noise_cat = classify_noise_by_sender(sender)
+    if noise_cat:
+        return "NOISE", noise_cat, f"noise sender ({noise_cat}): {sender[:60]}"
+
+    # 3. ACTION check by sender (bills, utilities)
+    if classify_action_by_sender(sender):
+        urgency = sub_triage_action(subject, body)
+        return "ACTION", urgency, f"action sender (bill/utility): {sender[:60]}"
+
+    # 4. ACTION check by subject keywords
+    if classify_action_by_subject(subject):
+        urgency = sub_triage_action(subject, body)
+        return "ACTION", urgency, f"action subject keyword: {subject[:60]}"
+
+    # 5. Body-based classification (lazy fetch -- only if sender/subject didn't classify)
+    if body is not None:
+        # Check for spam: unsubscribe link + no personal greeting
+        body_lower = body.lower()
+        has_unsubscribe = "unsubscribe" in body_lower
+        has_greeting = any(g in body_lower[:200] for g in [
+            "hi ", "hello ", "dear ", "hey ",
+            msg.get("subject", "").split()[0].lower() if msg.get("subject") else "",
+        ])
+        if has_unsubscribe and not has_greeting:
+            # Bulk email with unsubscribe and no personal greeting -> likely spam/noise
+            # But be conservative: classify as NOISE, not SPAM
+            return "NOISE", "bulk-email", "bulk email (unsubscribe link, no personal greeting)"
+
+        # Check for action keywords in body
+        if classify_action_by_body(body):
+            urgency = sub_triage_action(subject, body)
+            return "ACTION", urgency, "action keywords in body (2+ hits)"
+
+    # 6. Default: HUMAN -- real people, unknown senders, anything uncertain
+    return "HUMAN", None, "no automated pattern matched -- likely human"
+
+
+# ---------------------------------------------------------------------------
+# Message movement
+# ---------------------------------------------------------------------------
+
+def move_message_to_mailbox(msg_id: str, target_mailbox: str) -> bool:
+    """Move a message from INBOX to a target Triage/* mailbox via osascript.
+
+    The message is identified by its AppleScript id. Moving in Mail.app
+    is equivalent to applying the corresponding Gmail label.
+    """
+    script = f'''
+tell application "Mail"
+    try
+        set theMsg to (first message of mailbox "{MAILBOX_INBOX}" of account "{MAIL_ACCOUNT}" whose id is {msg_id})
+        set targetMbox to mailbox "{target_mailbox}" of account "{MAIL_ACCOUNT}"
+        move theMsg to targetMbox
+        return "ok"
+    on error errMsg
+        return "error: " & errMsg
+    end try
+end tell
+'''
+    ok, output = run_osascript(script, timeout=20)
+    if not ok or "error" in output.lower():
+        logging.error("Failed to move message %s to %s: %s", msg_id, target_mailbox, output)
+        return False
+    return True
+
+
+def mark_as_junk(msg_id: str) -> bool:
+    """Mark a message as junk in Mail.app (for SPAM-classified messages)."""
+    script = f'''
+tell application "Mail"
+    try
+        set theMsg to (first message of mailbox "{MAILBOX_INBOX}" of account "{MAIL_ACCOUNT}" whose id is {msg_id})
+        set junk mail status of theMsg to true
+        return "ok"
+    on error errMsg
+        return "error: " & errMsg
+    end try
+end tell
+'''
+    ok, output = run_osascript(script, timeout=15)
+    return ok and "error" not in output.lower()
+
+
+# ---------------------------------------------------------------------------
+# Tier -> mailbox mapping
+# ---------------------------------------------------------------------------
+
+def tier_to_mailbox(tier: str, sub_tier: str | None) -> str:
+    """Map a classification tier to the target IMAP mailbox path."""
+    if tier == "SPAM":
+        return "Triage/Spam"
+    if tier == "NOISE":
+        return "Triage/Noise"
+    if tier == "HUMAN":
+        return "Triage/Human"
+    if tier == "ACTION":
+        if sub_tier in ("Today", "This-Week", "Someday"):
+            return f"Triage/Action/{sub_tier}"
+        return "Triage/Action/Someday"
+    return "Triage/Human"
+
+
+# ---------------------------------------------------------------------------
+# Main triage loop
+# ---------------------------------------------------------------------------
+
+def triage(days: int, apply: bool, limit: int = 0) -> dict:
+    """Run the triage pipeline.
+
+    Returns a summary dict with counts per tier.
+    """
+    summary: dict[str, int] = {
+        "SPAM": 0,
+        "NOISE": 0,
+        "HUMAN": 0,
+        "ACTION": 0,
+        "errors": 0,
+        "total": 0,
+    }
+
+    # Ensure mailbox hierarchy exists
+    ensure_triage_mailboxes(apply)
+
+    # Fetch unread messages
+    logging.info("Fetching unread INBOX messages (last %d days)...", days)
+    messages = fetch_unread_inbox(days)
+    logging.info("Found %d unread messages", len(messages))
+
+    if not messages:
+        return summary
+
+    if limit > 0:
+        messages = messages[:limit]
+        logging.info("Processing first %d messages (--limit)", limit)
+
+    summary["total"] = len(messages)
+
+    for msg in messages:
+        msg_id = msg["id"]
+        subject_preview = msg["subject"][:80]
+        sender_preview = msg["sender"][:60]
+
+        # Phase 1: classify by sender + subject (no body fetch needed)
+        tier, sub_tier, reason = classify_message(msg)
+
+        # Phase 2: if HUMAN (default), fetch body for deeper classification
+        if tier == "HUMAN":
+            body = fetch_message_body(msg_id)
+            if body:
+                tier, sub_tier, reason = classify_message(msg, body)
+
+        target_mbox = tier_to_mailbox(tier, sub_tier)
+        sub_label = f"/{sub_tier}" if sub_tier else ""
+
+        if apply:
+            # HUMAN messages stay in inbox -- no move needed
+            if tier == "HUMAN":
+                logging.info(
+                    "HUMAN (inbox) | %s | %s | %s",
+                    sender_preview, subject_preview, reason,
+                )
+                summary["HUMAN"] += 1
+                continue
+
+            moved = move_message_to_mailbox(msg_id, target_mbox)
+            if moved:
+                # Also mark spam as junk
+                if tier == "SPAM":
+                    mark_as_junk(msg_id)
+                logging.info(
+                    "%s%s -> %s | %s | %s | %s",
+                    tier, sub_label, target_mbox,
+                    sender_preview, subject_preview, reason,
+                )
+                summary[tier] += 1
+            else:
+                logging.error(
+                    "MOVE FAILED | %s%s -> %s | %s | %s",
+                    tier, sub_label, target_mbox,
+                    sender_preview, subject_preview,
+                )
+                summary["errors"] += 1
+        else:
+            logging.info(
+                "[dry-run] %s%s -> %s | %s | %s | %s",
+                tier, sub_label, target_mbox,
+                sender_preview, subject_preview, reason,
+            )
+            summary[tier] += 1
+
+    return summary
+
+
+# ---------------------------------------------------------------------------
+# CLI entry point
+# ---------------------------------------------------------------------------
+
+def main() -> None:
+    parser = argparse.ArgumentParser(
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    parser.add_argument(
+        "--apply",
+        action="store_true",
+        help="Actually move messages (default: dry run)",
+    )
+    parser.add_argument(
+        "--days",
+        type=int,
+        default=7,
+        help="Search window in days (default: 7)",
+    )
+    parser.add_argument(
+        "--limit",
+        type=int,
+        default=0,
+        help="Process at most N messages (0 = no limit)",
+    )
+    parser.add_argument(
+        "--no-log",
+        action="store_true",
+        help="Disable file logging (stderr only)",
+    )
+    args = parser.parse_args()
+
+    setup_logging(log_to_file=not args.no_log)
+
+    mode = "APPLY" if args.apply else "DRY-RUN"
+    logging.info("=== mail-triage %s (days=%d) ===", mode, args.days)
+
+    # Verify Mail.app access
+    if not check_mail_available():
+        logging.error(
+            "Cannot access Mail.app or account '%s' not found. "
+            "Ensure Mail.app is running with the account configured.",
+            MAIL_ACCOUNT,
+        )
+        sys.exit(1)
+    logging.info("Mail.app access OK (account: %s)", MAIL_ACCOUNT)
+
+    summary = triage(args.days, args.apply, args.limit)
+
+    logging.info(
+        "=== Summary: %d total | SPAM=%d NOISE=%d HUMAN=%d ACTION=%d errors=%d ===",
+        summary["total"],
+        summary["SPAM"],
+        summary["NOISE"],
+        summary["HUMAN"],
+        summary["ACTION"],
+        summary["errors"],
+    )
+
+    if summary["errors"] > 0:
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()
