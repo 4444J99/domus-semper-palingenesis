@@ -204,6 +204,32 @@ NOISE_SENDER_PATTERNS: list[tuple[str, str]] = [
     ("@updates.patreon.com", "newsletter"),
     ("no-reply@patreon.com", "newsletter"),
     ("@thefloweryny.com", "commerce"),
+    # Car dealerships / local businesses
+    ("@holmanhonda", "newsletter"),
+    ("@acura", "newsletter"),
+    # Dev tools / newsletters
+    ("@gitkraken.com", "newsletter"),
+    ("@socket.dev", "newsletter"),
+    ("@builtin.com", "newsletter"),
+    ("@audiblegenius.com", "newsletter"),
+    ("@huggingface.co", "service"),
+    # Entertainment / tickets
+    ("@ticketmaster.com", "newsletter"),
+    ("@email.ticketmaster.com", "newsletter"),
+    ("@livenation.com", "newsletter"),
+    ("@sniffieshush.com", "newsletter"),
+    # Banking / fintech statements
+    ("@mail.dave.com", "finance"),
+    ("@dave.com", "finance"),
+    # Retail
+    ("@oe.target.com", "service"),
+    ("@target.com", "service"),
+    ("@walmart.com", "service"),
+    # Lending / fintech spam-adjacent
+    ("@moneylion.com", "newsletter"),
+    ("@lenme.com", "newsletter"),
+    ("@medallia.com", "newsletter"),
+    ("@sendfoxmail.com", "newsletter"),
     # Publishing / content platforms
     ("@ghost.org", "newsletter"),
     # Dev tool / product marketing
