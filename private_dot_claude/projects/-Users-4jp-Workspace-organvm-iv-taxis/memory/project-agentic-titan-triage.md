@@ -1,9 +1,9 @@
 ---
 name: Agentic-Titan Issue Triage & Emergence Work
-description: Emergence chain + chaos engineering ALL COMMITTED AND PUSHED. 323 hive+chaos tests. 6 GitHub issues closed (#35 added). IRF DONE-378+379+386.
+description: Emergence chain + chaos engineering complete. Triage round 2 (2026-04-19): 30→15 open issues. 16 closed, 6 labeled research. Real frontier: observability (#25-26), resilience (#27), composability (#29-31).
 type: project
+originSessionId: a835474a-271b-4460-b264-2d6822cdf914
 ---
-
 ## Status: COMPLETE — ALL COMMITTED, PUSHED, CLOSED
 
 As of 2026-04-16 session close-out, ALL emergence chain work is:
@@ -44,6 +44,16 @@ As of 2026-04-16 session close-out, ALL emergence chain work is:
 ## Conflict Detection: #64
 
 `ConflictDetector` scans `PheromoneField._traces` for opposing pairs (RESOURCE↔WARNING, PATH↔FAILURE, SUCCESS↔FAILURE, EXPLORATION↔TERRITORY). Both must exceed intensity_threshold (0.6) within recency_window_seconds (300). Conflict intensity = geometric mean. Crisis signal = sum(capped at 1.0). Wired into `FissionFusionManager` via `conflict_detector=` param. `_conflict_crisis_level` is an absolute floor in `_resolve_crisis_level()`. `CONFLICT_DETECTED` event type added.
+
+## Triage Round 2 (2026-04-19)
+
+30 open → 15 open.
+
+**Closed (16):** #35 (chaos, implemented), #44 (Hive PR shipped), #65 (biological blueprint → a-organvm cocoon-map). Paused fusion: #40-43, #46-47. Expired contrib schedule: #48-54.
+
+**Labeled `research` (6):** #57 (terms of venery), #58 (programmable matter), #59 (prey dynamics), #60 (continuous morphing), #62 (formation-as-interface), #63 (spawning topology).
+
+**Real frontier (9 actionable):** #25 (AI quality gate), #26 (cross-model replay), #27 (lost-in-middle), #29 (PTC), #30 (config abstraction), #31 (Unix pipe), #37 (docs epic), #38 (local inference), #45 (journal series).
 
 ## Next Natural Work
 
