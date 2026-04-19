@@ -35,6 +35,7 @@
 - [Xenograft Protocol](project-xenograft-protocol.md) — SOP-IV-XGR-001: 7-phase alien material ingestion, multi-model verification
 
 ## Recent Milestones
+- **2026-04-19** — Phase Transition Sprint: signal graph LIT (9 integration tests, 91 total), governance CI enforcement live, σ_E in registry (147 repos), agentic-titan 30→15 issues. System shifts from manual governance to self-governing.
 - **2026-04-17** — #35 chaos engineering: 16 tests validating full emergence loop under adversarial conditions. 35 total chaos tests, 1543 full suite. Discovery: `should_transition()` hysteresis gates on task_correlation not crisis_level. IRF DONE-386.
 - **2026-04-16** — Emergence chain ALL COMMITTED AND PUSHED: #70→#71→#61→#72→#73→#64. 307/307 hive tests. 5 issues closed. IRF DONE-378+379.
 - **2026-04-15** — Agentic-titan triage: 57→40 issues. Emergence chain started: #70 crisis_level fix (committed 6881534), #71 detection algorithm (hive/emergence.py, untracked).
@@ -69,6 +70,9 @@
 - Pre-flood docs at `meta-organvm/post-flood/commit-assessment-summary/` are FOUNDATIONAL, not dead archaeology
 - 91 repos on disk (not 128), 78 with code, 13 without (as of 2026-04-07 disk scan)
 - agentic-titan emergence chain + chaos engineering: ALL committed and pushed as of 2026-04-17 (no lingering local-only state)
+- a-organvm signal graph: PRODUCTS section populated 2026-04-19 (signal-propagation-proof). 91 tests pass. RELAY.md at S58
+- governance-enforcement.yml: validates Articles I, VI, tier enum, count consistency. Added to orchestration-start-here
+- σ_E (system-system--system) registered in registry-v2.json as PERSONAL/sovereign, total_repos=147
 
 ## GitHub Org Mapping
 - I: `organvm-i-theoria` / II: `omni-dromenon-machina` / III: `organvm-iii-ergon` (NOT `labores-profani-crux`)
