@@ -89,9 +89,9 @@ All of these registries need ONE entry point:
 
 ## Execution Status (2026-04-19)
 
-Stream A (atomizer improvements): Agent planned, needs direct execution. Three changes: universe inheritance, governance UNIVERSAL default, response linking.
-Stream B (email triage): Agent dispatched, building Mail.app/osascript classifier + LaunchAgent.
-Stream C (backlog injection): Agent dispatched, injecting 34 cross-audit items + building atoms status CLI.
+Stream A (atomizer improvements): DONE. Universe inheritance, governance UNIVERSAL, response linking. Committed 61dc86c.
+Stream B (email triage): DONE. 900+ line classifier, 190+ sender patterns, tested on 51 msgs. Tuning iteration after user feedback (9 false HUMAN → all reclassified as NOISE). Committed 049eb45, pending final tuning commit.
+Stream C (backlog injection): DONE. 34 items injected, organvm_atoms_status.py dashboard built. Committed e851e9b.
 
 ## Execution order
 
