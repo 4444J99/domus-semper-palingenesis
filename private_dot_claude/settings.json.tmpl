@@ -17,6 +17,16 @@
             "statusMessage": "Memory hygiene check..."
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "{{ .chezmoi.homeDir }}/.claude/hooks/session-atoms-context.sh 2>/dev/null; true",
+            "timeout": 15,
+            "statusMessage": "Loading atom status..."
+          }
+        ]
       }
     ],
     "PreToolUse": [
