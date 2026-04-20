@@ -62,6 +62,7 @@ packages:
       - gemini-cli
       - huggingface-cli
       - kimi-cli
+      - github-mcp-server
       # Local inference backend (Goose + Ollama integration)
       - ollama
       # Security & code quality
