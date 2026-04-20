@@ -74,7 +74,6 @@ domus-semper-palingenesis/
 ├── private_dot_ssh/            # ~/.ssh/ — SSH config (private)
 ├── private_Library/
 │   ├── LaunchAgents/           # macOS LaunchAgent plists (templated)
-│   │   ├── com.4jp.mcp.servers.plist.tmpl
 │   │   ├── com.chezmoi.self-heal.plist.tmpl
 │   │   ├── com.domus.daemon.plist.tmpl
 │   │   └── … (sort, desktop-router, downloads-tidy, naming-maintenance, …)
@@ -169,10 +168,10 @@ Deployed to `~/Library/LaunchAgents/` from `private_Library/LaunchAgents/`:
 
 | Agent | Purpose | Status |
 |-------|---------|--------|
-| `com.4jp.mcp.servers.plist` | MCP server infrastructure auto-start | Active |
+| ~~`com.4jp.mcp.servers.plist`~~ | ~~MCP server infrastructure auto-start~~ | Removed (DONE-391, 2026-04-20 — redundant, servers client-managed) |
 | `com.4jp.cce-refresh.plist` | Conversation Corpus Engine session refresh (6h interval) | Active |
 | `com.4jp.cloudflared.organvm.plist` | Cloudflare tunnel for ORGANVM | Active |
-| `com.4jp.env.mcp.plist` | Set MCP environment variables via launchctl | Active |
+| ~~`com.4jp.env.mcp.plist`~~ | ~~Set MCP environment variables via launchctl~~ | Removed (DONE-391, 2026-04-20 — only consumer was mcp.servers) |
 | `com.4jp.memory-sync.plist` | Claude memory local→remote sync | Active |
 | `com.4jp.organvm.soak-snapshot.plist` | Daily soak test snapshot (06:00) | Active |
 | `com.4jp.session-archive.plist` | Claude session transcript archival | Active |
