@@ -95,9 +95,12 @@ Stream C (backlog injection): DONE. 34 items injected, 11 now DONE (including BA
 
 ## Phase 2: Propulsion (2026-04-20)
 
-Stream D (Stripe integration): Agent building checkout for public-record-data-scrapper. Reading codebase.
-Stream E (Sovereign Systems): ALREADY DONE — PRs #44-#48 merged 2026-04-19. BACKLOG-012 closed.
-Stream F (Codex 6-repo): Handoff envelope ready at .conductor/active-handoff.md. Awaiting dispatch.
+Stream D (Stripe — public-record-data-scrapper): ✅ DONE. Commit 0744abd, 13 files, 800 insertions. BACKLOG-007 closed.
+Stream E (Sovereign Systems): ✅ ALREADY DONE — PRs #44-#48 merged 2026-04-19. BACKLOG-012 closed.
+Stream F (Codex 6-repo): Handoff envelope ready. Awaiting dispatch.
+Stream G (Stripe — content-engine): Agent executing (3rd attempt after plan-mode leaks).
+Stream H (Padavano booking): Agent building CSS grid for booking page.
+Stream I (SessionStart atoms hook): ✅ DONE. Every new session sees top OPEN backlog items.
 
 ## Execution order
 
