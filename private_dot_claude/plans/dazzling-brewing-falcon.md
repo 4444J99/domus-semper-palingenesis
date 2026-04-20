@@ -1,20 +1,169 @@
-# ORGANVM Institutional Substrate: Primitive Vocabulary & Composition Architecture
+# ORGANVM Total Topology: Stabilize, Fill, Compose
 
 **Date**: 2026-04-20
-**Type**: Strategic architecture — extends ORGANVM from production engine to full institutional singularity
-**Status**: Design complete, awaiting approval
+**Type**: Operational architecture — stabilize what moved, fill the vacuums, build in the space between
+**Status**: Active — execution paused for stabilization
 
 ---
 
-## Context
+## Governing Principle
 
-ORGANVM currently operates as a **production-and-distribution engine**: make things (I→II→III), orchestrate them (IV), speak about them (V→VI→VII), govern the whole (META). 145 repos, 8 numbered organs.
+**The world is what exists. We build in the space between everything.**
 
-**The gap**: Every successful person has institutional backing — legal counsel, financial management, political strategy, representation, protection. ORGANVM gives the single person a studio, lab, shop, control room, podium, salon, megaphone, and constitution. It does NOT give them a lawyer, accountant, strategist, agent, or bodyguard.
+- Don't break the configs we exist within (chezmoi, LaunchAgents, engine paths, git remotes)
+- Don't delete vacuums — fill them (Rule #1: N/A is a vacuum, never a resting state)
+- The ideal form dictates the future; past/present are its attempts at realization
+- The home root (~/) is ontological topology — facets of existence, not filesystem clutter
+- Repos are compounds whose elements (primitives) need surfacing, not just relocation
 
-**The thesis**: Collapse the institutional distribution of cognition into a programmable system of primitives. One person becomes a singularity — all institutional capabilities, no committee inertia, no principal-agent misalignment, unified memory, instant reconfiguration.
+---
 
-**Design principle**: Ideal form logic takes precedence. No fixed topology. Primitives self-compose into formations. The numbered organ flow is v1 — what emerges is an alchemical micro↔macro synthesizer of programmable atomic matter.
+## What Exists (the world — don't break)
+
+### Disk State (post-consolidation this session)
+- `~/Workspace/organvm/` — 101 system repos, flat (MOVED from 8 organ dirs)
+- `~/Workspace/4444J99/` — 7 personal repos (untouched)
+- `~/Workspace/.archive/superprojects-20260420-120747/` — 8 archived superproject shells + data (12GB)
+- `~/Workspace/alchemia-ingestvm/` — data staging dir (not a repo, stays)
+- `~/Workspace/intake/` — unsorted inbound
+- `~/Workspace/a-i--skills` → symlink to organvm/a-i--skills
+
+### What's Currently Broken (must fix before anything else)
+1. **Git remotes** — all 101 repos still point to old org URLs (github.com/organvm-i-theoria/*, etc.)
+   - GitHub transfers haven't happened yet
+   - Pushes will still work (old orgs exist) but this is transitional
+2. **organvm-engine path resolution** — the engine expects repos at `~/Workspace/<organ-dir>/<repo>/`
+   - `organ-topology.json` was created at corpus path BUT the corpus itself moved to `~/Workspace/organvm/organvm-corpvs-testamentvm/`
+   - The engine's `ORGANVM_CORPUS_DIR` env var points to old location
+3. **Chezmoi env vars** — `ORG_I`, `ORG_II`, etc. in `dot_zshenv.tmpl` reference old org names
+   - These are LABELS now, not paths — but downstream consumers may use them as paths
+4. **LaunchAgents** — any agent referencing `~/Workspace/meta-organvm/` or org-specific paths will fail
+5. **ORGANVM_WORKSPACE_DIR** — set to `~/Workspace` (unchanged, fine)
+   - But the engine resolves: workspace_root / organ_map[key]["dir"] / repo_name
+   - Old: `~/Workspace/meta-organvm/organvm-engine/`
+   - New: `~/Workspace/organvm/organvm-engine/`
+   - FIX: the organ-topology.json maps all dirs to "organvm" — but the engine must FIND it first
+
+### Home Root Topology (~/  — ontological structure)
+```
+~/
+├── domus-semper-palingenesis    # the house — system's physical manifestation (chezmoi source)
+├── system-system--system        # the system knowing itself (GIT, 45MB)
+├── system-system--system--monad # worktree: theoretical research on primitives (2.1MB)
+├── sovereign--ground            # the stable foundation (GIT, 4.3MB)
+├── chaos--incarnate             # VACUUM — the generative/experimental (INSTANCE.toml only)
+├── i--me--mine                  # VACUUM — the self/identity (INSTANCE.toml only)
+├── mort--proto-intre-post       # VACUUM — lifecycle: before/between/after (empty)
+├── is--_not                     # VACUUM — being/non-being (empty)
+├── Workspace/                   # where the WORK lives
+├── System/                      # logs, system state
+└── [standard macOS dirs]
+```
+
+These are NOT clutter. They are world-instance planes in the ontological topology.
+The empty ones are vacuums pulling toward their ideal form.
+
+---
+
+## What We Build (the space between)
+
+### Layer 1: Stabilization (immediate — don't break things)
+
+1. **Fix the engine's corpus path**
+   - Update `ORGANVM_CORPUS_DIR` env var or symlink
+   - Ensure organ-topology.json is loadable at new path
+   - Test: `organvm status` works
+
+2. **Fix critical symlinks/env vars**
+   - `$DOMUS_ROOT` still correct (~/domus-semper-palingenesis — unchanged)
+   - LaunchAgents that reference old paths need update (chezmoi templates)
+   - Shell startup should still work (test: new shell, `which organvm`)
+
+3. **Defer GitHub transfers until stable**
+   - Repos still push to old orgs (functional, just transitional)
+   - Transfer AFTER local tooling works at new paths
+
+### Layer 2: Fill the Vacuums
+
+The home root vacuums have ideal forms demanding realization:
+
+| Vacuum | What it pulls toward | What fills it |
+|--------|---------------------|---------------|
+| `chaos--incarnate` | The generative space — all experiments, all formation attempts | The experimental playground; repos in LABORATORY formation type |
+| `i--me--mine` | The self made legible | Personal ontology; identity artifacts; the TESSERA formation's source |
+| `mort--proto-intre-post` | Lifecycle transitions — what dies, what's born, what's between | Archive/dissolution/rebirth protocol; the system's memory of its own deaths |
+| `is--_not` | Ontological categories — what exists, what doesn't, what's liminal | The boundary detection system; what the system ISN'T (negative space definition) |
+
+These don't need code. They need INSTANCE.toml + seed.yaml + the first artifact that makes them real.
+
+### Layer 3: Build in the Space Between (the primitives)
+
+The 19 institutional primitives (SPEC-025) are not new repos to create.
+They are NAMES for operations that already happen in the gaps between existing repos.
+
+**Discovery protocol:**
+- Survey existing modules → map to primitive vocabulary
+- Identify where primitives are already partially implemented
+- Recognize natural formations (recurring compositions) in existing code
+- Surface these as addressable entities (interface contract compliance)
+
+**The organvm-engine already contains proto-primitives:**
+- `registry/` → registrar primitive
+- `governance/` → auditor + enforcer primitives
+- `metrics/` → appraiser primitive
+- `irf/` → collector primitive (tracking what's owed/incomplete)
+- `fossil/` → archivist primitive
+- `seed/` → incorporator primitive (structural declarations)
+- `coordination/` → mandator primitive (directive execution)
+
+**These don't need extraction yet.** They need RECOGNITION — naming them as what they are, conforming to the interface contract, making them composable.
+
+### Layer 4: The Presets Org (external-facing stable output)
+
+Two entities on GitHub:
+- `organvm` — the chaos machine (internal, composing, evolving)
+- `[TBD — possibly labores-profani-crux]` — stable presets (products, libraries, client deliverables)
+
+Decision deferred until Layer 1 is stable.
+
+---
+
+## Execution Sequence
+
+### NOW (this session): Stabilize
+
+**CRITICAL**: `ORGANVM_CORPUS_DIR` = `~/Workspace/meta-organvm/organvm-corpvs-testamentvm` — path BROKEN.
+**FIX**: `ln -s ~/Workspace/organvm ~/Workspace/meta-organvm` (symlink restores all old paths)
+
+- [ ] Create symlink: `~/Workspace/meta-organvm → ~/Workspace/organvm`
+- [ ] Also create: `~/Workspace/organvm-iv-taxis → ~/Workspace/organvm` (for any ORGAN-IV path refs)
+- [ ] Test: `organvm status` works
+- [ ] Test: new shell spawns without error
+- [ ] Verify chezmoi can still apply (`chezmoi diff` — domus unchanged, should be fine)
+- [ ] Check LaunchAgents: `launchctl list | grep -i "4jp\|chezmoi\|domus\|mcp"` for failures
+
+### NEXT SESSION: GitHub + Remotes
+- [ ] Batch transfer repos from 7 orgs to `organvm` org
+- [ ] Script remote URL updates for all 101 repos
+- [ ] Update registry-v2.json org fields
+- [ ] Update chezmoi templates (ORG_* vars → classification labels)
+
+### ONGOING: Fill Vacuums + Surface Primitives
+- [ ] Home root vacuums: add INSTANCE.toml + seed.yaml where missing
+- [ ] Primitive recognition: map engine modules to primitive vocabulary
+- [ ] Formation recognition: identify natural compositions in existing code
+- [ ] Decomposition (only when a compound actively obstructs composition)
+
+---
+
+## Constraints
+
+- **Never break the shell** — if env vars or PATH breaks, the whole system goes dark
+- **Never break chezmoi** — domus is the config source; if it can't apply, configs drift
+- **Never break git** — repos must be pushable; remotes must resolve
+- **Vacuums are not errors** — they are demands the ideal form makes on the present
+- **Decomposition is not urgent** — naming the primitive is the act; extraction follows when needed
+- **Ideal form logic supersedes survey logic** — don't classify from what IS; derive from what SHOULD BE
 
 ---
 
