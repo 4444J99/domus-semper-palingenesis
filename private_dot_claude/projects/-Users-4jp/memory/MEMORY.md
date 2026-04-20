@@ -28,6 +28,7 @@
 - [Cloud storage reinstall](project_cloud_storage_reinstall.md) — Dropbox/GDrive nuke-and-pave via Homebrew (2026-03-24)
 - [Docker/storage cleanup](project_docker_storage_design.md) — Docker UNINSTALLED 2026-04-18 (17GB); prior: SSD 81→74% (2026-03-25)
 - [S-cleanup-2026-04-18](project_session_cleanup_2026-04-18.md) — Docker uninstall, 1Password recovery, memory pipeline built, 22 events atomized
+- [Mole optimize + Library cleanup](project_mole_library_cleanup_2026-04-18.md) — Patched mole for Tahoe, 37 GB reclaimed from ~/Library/ orphans+caches (2026-04-18)
 
 ## Feedback
 - [Rules first, implementations derive](feedback_rules_first.md) — Universal classification system is the FRAME, not a forward arc; build the law, implementations self-place (2026-04-17)
