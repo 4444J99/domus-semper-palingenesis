@@ -7,3 +7,5 @@
 .npmrc
 .gitignore_global
 .viminfo
+Library/LaunchAgents/com.4jp.mcp.servers.plist
+Library/LaunchAgents/com.4jp.env.mcp.plist
