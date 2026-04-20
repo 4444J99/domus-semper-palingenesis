@@ -1,120 +1,148 @@
-# Session Plan: Constitutional Corpus Elevation
+# Constitutional Intelligence Layer
 
-**Date:** 2026-04-18
-**Session:** S-Elevation
-**Working directory:** `meta-organvm/post-flood/archive_original/`
-**Focus:** Elevate 5 partial compiled specifications to standalone quality
+**Date:** 2026-04-20
+**Session:** S-Intelligence
+**Scope:** Engine scanner expansion + MCP server integration + graph regeneration
+**IRF:** IRF-SYS-104 (Phases 2-3)
 
 ---
 
 ## Context
 
-The post-flood corpus is the constitutional source for ORGANVM — "when implementation and theory diverge, this corpus is the authority for intent." Layer 3 contains 10 compiled specifications distilled from raw conversation transcripts. Five are rated `clean` (standalone specification voice). Five are rated `partial` (still contain conversational QA artifacts — remnants of the dialogue that produced them).
+The corpus knowledge graph (118 nodes, 172 edges) exists as a CLI tool and saved artifact. It works — but only when explicitly invoked. Every future Claude session should have ambient access to the system's theoretical foundations without manual scanning.
 
-This session completes the Layer 3 elevation: remove all 12 QA artifacts from the 5 partial specs, making the entire compiled specification set read as standalone formal documents rather than conversation excerpts.
-
-The prior session (S-audit-close-2026-04-18) closed with full 12-repo parity. This session starts clean.
+This plan wires the graph into the MCP server (4 tools), expands the concept vocabulary from 12 to ~30+ by auto-discovering SPEC directories, and regenerates the artifact. The result: any Claude session in any organ can query `organvm_corpus_concepts`, `organvm_corpus_trace`, `organvm_corpus_gaps`, or `organvm_corpus_stats` to understand what the system IS, not just what it contains.
 
 ---
 
-## Pre-Work: Git Hygiene
+## Phase 1: Scanner Concept Expansion (organvm-engine)
 
-1. **Push unpushed corpus commit** — `organvm-corpvs-testamentvm` has `4795f9c` (session continuation prompts + atomization) not yet pushed
-2. **Sync superproject pointer** — 5 corpus commits not reflected in superproject submodule reference
+**File:** `organvm-engine/src/organvm_engine/corpus/scanner.py`
 
----
+Add `_scan_spec_directories(specs_dir: Path, graph: CorpusGraph)`:
 
-## Spec Elevation — 5 Files, 12 Artifacts
+1. Walk immediate subdirectories of `post-flood/specs/`
+2. Skip `library/` (reference materials, not a concept)
+3. Only process dirs containing `grounding.md`, `specification.md`, or `spec.md`
+4. Named SPECs (e.g., `SPEC-019-system-manifestation`) → extract concept ID from the suffix after the number
+5. Pure-named dirs (e.g., `era-model`) → convert hyphens to underscores
+6. Numbered-only SPECs (SPEC-000 through SPEC-017) → use a mapping dict:
+   - 000→system_manifesto, 001→ontology_charter, 002→entity_primitives,
+   - 003→invariant_register, 004→logical_specification, 005→architectural_specification,
+   - 006→traceability_matrix, 007→verification_plan, 008→evolution_law,
+   - 009→architectural_patterns, 010→pipeline_stages, 011→system_dynamics,
+   - 012→workspace_topology, 013→agent_swarm_topology, 014→resource_compute_constraints,
+   - 015→escalation_attention_policy, 016→epistemic_routing, 017→agent_authority_matrix
+7. Skip if `concept:{id}` already exists in graph (dedup with cross_trunk_concepts)
+8. Create concept node + DEFINES edge from grounding.md
 
-**All files in:** `post-flood/archive_original/extracted_modules_compiled/`
+Call in `scan_corpus()` after `_scan_zettelkasten()`, before `_scan_seed_implements()`.
 
-### 1. TRX-C.02: Adaptive-System-Variable-Structural-Evolution-Framework.md
-- **640 lines, 1 artifact**
-- **Line ~627-640:** Tail conversational offer ("If useful, the next step can be...") + bare `## Q` header
-- **Action:** Delete from the "If useful" paragraph through EOF. Document ends at the `* * *` separator after Section 35.
+**Tests:** Add `TestSpecDirectoryScan` class in `tests/test_corpus.py` (~4 tests):
+- Creates concepts from numbered + named SPEC dirs
+- Skips existing cross_trunk concepts (no duplication)
+- Skips `library/` (no grounding.md concept indicator)
+- Creates DEFINES edge from spec dir to concept
 
-### 2. TRX-C.10: Universal-Macro-Micro-Indexing-Object.md
-- **720 lines, 2 artifacts**
-- **Line ~8-9:** Opening conversational address ("What you want is not a static taxonomy...")
-- **Line ~714-720:** Tail conversational offer + `## Q:`/`## A:` remnants
-- **Action:** Rewrite opening to specification voice ("The design target is not a static taxonomy..."). Delete tail artifacts.
-
-### 3. TRX-C.07: Metric-and-Temporal-Statistics-Specification.md
-- **395 lines, 1 artifact (with 1 secondary)**
-- **Line ~6-8:** Opening with `## A:` header and conversational response ("Yes. It should support that natively. What you are describing is...")
-- **Line ~225:** "This is important for your earlier question."
-- **Action:** Remove `## A:` header. Rewrite opening to impersonal voice. Replace line 225 reference with "This distinction is architecturally significant."
-
-### 4. TRX-C.09: Structural-Interrogation.md
-- **785 lines, 4 artifacts — TWO-DOCUMENT SEAM**
-- **Line ~511:** Conversational offer ("If you want, I can turn this now into a formal artifact...")
-- **Lines ~513-514:** `## Q:` block with user's autobiographical reflection on timeline legibility
-- **Lines ~516-517:** `## A: Yes.`
-- **Lines ~778-785:** Tail offer + "Branched from" metadata + next Q/A pair
-- **Structural note:** This file contains two joined documents. Part 1 (1-510): Structural Interrogation framework. Part 2 (518-777): Lifecycle validity, phase architecture, Alpha-to-Omega lifecycle theory. Part 2 is substantive theory — preserve entirely.
-- **Action:** Delete conversational offer at 511. Delete Q block (513-514). Remove `## A: Yes.` Replace with section heading bridging Parts 1 and 2: `# Lifecycle Validity and Phase Architecture`. Delete tail (778-785).
-
-### 5. TRX-C.04: Architecture-Migration-Strategy.md
-- **643 lines, 4 artifacts — TWO-DOCUMENT SEAM (most complex)**
-- **Line ~286:** Conversational offer ("If you want, I can also show the exact migration plan...")
-- **Lines ~288-289:** `## Q:` block with user's entire ORGANVM charter text (massive, ~10 lines dense)
-- **Lines ~291-292:** `## A:` with "Your statement is already structurally close to a valid Stage-I metaphysical charter..."
-- **Lines ~631-643:** Tail: conversational offer + "Branched from" metadata + Q/A for Stage-II Formal Ontology (which is TRX-C.08, already its own document)
-- **Structural note:** Part 1 (1-284): Architecture Migration Strategy. Part 2 (296-627): Diagnostic examination of ORGANVM charter (identity, teleology, organ structure, invariants, certifiable properties). Part 2 is unique substantive content — the diagnostic analysis exists nowhere else.
-- **Action:** Delete conversational offer at 286. Delete entire Q block (288-289). Reframe Part 2 opening: replace `"Your statement is already structurally close to a valid Stage-I metaphysical charter..."` with annex heading: `# Annex: ORGANVM Charter Structural Audit` + `"The ORGANVM Stage-I metaphysical charter was subjected to structural interrogation against the requirements of the refinement pipeline..."`. Delete tail (631-643).
+**Commit:** `feat(corpus): auto-discover SPEC directory concepts in scanner`
 
 ---
 
-## Post-Editing
+## Phase 2: Graph Regeneration
 
-1. **Update `.zettel-index.yaml`** — For each of TRX-C.02, C.04, C.07, C.09, C.10:
-   - `compilation_quality: partial` → `compilation_quality: clean`
-   - `qa_artifacts: N` → `qa_artifacts: 0`
-   - Update `line_count` to actual post-edit counts
+Run scanner against production data, save to both locations:
 
-2. **Validate** — Run `python3 post-flood/archive_original/validate-zettelkasten.py` to confirm no structural regressions
+```bash
+organvm corpus scan --corpus-dir post-flood --workspace ~/Workspace -o post-flood/data/corpus-graph.json
+```
+
+Expected: ~135+ nodes (118 + ~17 new concepts), ~190+ edges.
+
+**Commit (superproject):** `feat: regenerate corpus graph with expanded concept vocabulary`
 
 ---
 
-## Git Workflow
+## Phase 3: MCP Server Integration (organvm-mcp-server)
 
-| # | Commit | Message |
-|---|--------|---------|
-| 0 | Push corpus + sync pointer | `chore: sync corpus pointer (session continuations + IRF audit)` |
-| 1 | Clean TRX-C.02 | `docs: elevate TRX-C.02 — remove tail QA artifact` |
-| 2 | Clean TRX-C.10 | `docs: elevate TRX-C.10 — remove opening address + tail offer` |
-| 3 | Clean TRX-C.07 | `docs: elevate TRX-C.07 — remove conversational opening + direct address` |
-| 4 | Clean TRX-C.09 | `docs: elevate TRX-C.09 — remove 4 QA seams, unify lifecycle section` |
-| 5 | Clean TRX-C.04 | `docs: elevate TRX-C.04 — remove QA seams, integrate charter audit annex` |
-| 6 | Update index | `chore: zettel-index — upgrade 5 specs partial→clean` |
-| 7 | Push | Verify parity |
+### 3a. Data Loader
+
+**File:** `organvm-mcp-server/src/organvm_mcp/data/loader.py`
+
+Add `_corpus_graph_cache` dict + `load_corpus_graph(config, live)`:
+- Default: load from `post-flood/data/corpus-graph.json` (fast, cached)
+- `live=True`: import `scan_corpus` from engine, scan filesystem
+- Add to `reload()` to clear cache
+
+### 3b. Tool Handlers
+
+**Create:** `organvm-mcp-server/src/organvm_mcp/tools/corpus.py`
+
+4 pure functions returning dicts:
+
+| Tool | Input | Output |
+|------|-------|--------|
+| `corpus_concepts(pattern?, live?)` | regex filter | all concepts + implementation counts |
+| `corpus_trace(concept, depth?, organ?, live?)` | concept name | transcripts → specs → repos chain |
+| `corpus_gaps(threshold?, live?)` | min impl count | fragile/unimplemented concepts |
+| `corpus_stats(live?)` | none | node/edge counts + coverage metrics |
+
+### 3c. Server Registration
+
+**File:** `organvm-mcp-server/src/organvm_mcp/server.py`
+
+- Import `corpus` from `tools/`
+- Add 4 `Tool()` entries to `TOOLS` list (annotation: `_READ`)
+- Add 4 lambda entries to `_DISPATCH` dict
+
+### 3d. Tests
+
+**Create:** `organvm-mcp-server/tests/test_corpus_tools.py` (~7 tests)
+- Test each handler with fixture graph (patch loader)
+- Verify pattern filtering, trace walking, gap detection, stats structure
+
+**Commit:** `feat: wire corpus knowledge graph into MCP server (4 tools)`
+
+---
+
+## Execution Order
+
+| # | Action | Repo | Commit |
+|---|--------|------|--------|
+| 1 | Add `_scan_spec_directories()` + tests | engine | `feat(corpus): auto-discover SPEC directory concepts` |
+| 2 | Run tests (17 existing + ~4 new) | engine | — |
+| 3 | Push engine | engine | — |
+| 4 | Regenerate graph artifact | superproject | `feat: regenerate corpus graph (expanded vocabulary)` |
+| 5 | Create `tools/corpus.py` (4 handlers) | mcp-server | — |
+| 6 | Add loader + server registration | mcp-server | — |
+| 7 | Add tests | mcp-server | — |
+| 8 | Run tests | mcp-server | `feat: wire corpus KG into MCP (4 tools)` |
+| 9 | Push mcp-server | mcp-server | — |
+| 10 | Sync superproject pointers | superproject | `chore: sync engine + mcp-server pointers` |
+| 11 | Push superproject | superproject | — |
 
 ---
 
 ## Verification
 
-1. Each cleaned spec reads as standalone specification prose — no "you", no "I can", no `## Q:`/`## A:` headers
-2. ALL substantive theory preserved — no content loss, only conversational framing removed
-3. Two-document seams (TRX-C.04, C.09) flow naturally with new section headings
-4. Zettel index validates clean (validate-zettelkasten.py passes)
-5. Git parity: local = remote across superproject + corpus submodule
+1. Engine tests: `pytest organvm-engine/tests/test_corpus.py -v` — all pass
+2. MCP tests: `pytest organvm-mcp-server/tests/ -v` — all pass
+3. CLI: `organvm corpus scan` produces expanded graph (~135+ nodes)
+4. CLI: `organvm corpus gaps -v` shows fragile concepts from expanded vocabulary
+5. MCP: Start server, invoke `organvm_corpus_concepts` — returns ~30 concepts
+6. MCP: Invoke `organvm_corpus_trace concept=AMMOI` — full chain
+7. MCP: Invoke `organvm_corpus_gaps threshold=2` — identifies fragile concepts
+8. Parity: all 3 repos at 0:0
 
 ---
 
-## Risks
+## Critical Files
 
-| Risk | Mitigation |
-|------|------------|
-| Theory loss in Q-block removal (C.04) | Charter text is duplicative — exists canonically in Foundational-Specification-Set. Only the diagnostic RESPONSE is unique. |
-| Seam awkwardness (C.04, C.09) | Bridge with section heading only — no invented transitional prose |
-| Zettel line_count drift | Recount actual lines after each edit |
-| Accidentally touch Layer 1 | Only edit files under `extracted_modules_compiled/` — never raw transcripts |
-
----
-
-## Not This Session
-
-- IRF P0 stats discrepancy (organvm-corpvs-testamentvm, separate repo)
-- IRF-DOM-033 (Docker MCP dependency, human-blocked)
-- Knowledge Graph Phases 2-4 (code work in organvm-engine)
-- Prompt-registry LFS migration
+| File | Action | Repo |
+|------|--------|------|
+| `organvm-engine/src/organvm_engine/corpus/scanner.py` | MODIFY | engine |
+| `organvm-engine/tests/test_corpus.py` | MODIFY | engine |
+| `organvm-mcp-server/src/organvm_mcp/tools/corpus.py` | CREATE | mcp-server |
+| `organvm-mcp-server/src/organvm_mcp/data/loader.py` | MODIFY | mcp-server |
+| `organvm-mcp-server/src/organvm_mcp/server.py` | MODIFY | mcp-server |
+| `organvm-mcp-server/tests/test_corpus_tools.py` | CREATE | mcp-server |
+| `post-flood/data/corpus-graph.json` | REGENERATE | superproject |
