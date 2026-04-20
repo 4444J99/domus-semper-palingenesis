@@ -2,8 +2,8 @@
 name: iCloud Desktop & Documents toggle broken — needs Apple Support
 description: iCloud Drive has runaway conflict loop creating 300+ duplicate folders, Desktop & Documents toggle greyed out for months, requires Apple server-side reset
 type: project
+originSessionId: ba85591b-6c24-4fb2-931b-1f23acf5fdc3
 ---
-
 iCloud Drive "Desktop & Documents Folders" toggle is broken and cannot be enabled. Has been this way for months.
 
 **Diagnosis (2026-03-25):**
@@ -33,5 +33,12 @@ iCloud Drive "Desktop & Documents Folders" toggle is broken and cannot be enable
 - "I need a server-side reset of my iCloud Drive CloudDocs zone"
 - Account: a.j.padavano@icloud.com
 - macOS 26.4 (Tahoe) build 25E246
+
+**Partial resolution (2026-04-18):** Three iCloud conflict snapshot copies in `~/Library/CloudStorage/` removed (8.1 GB total):
+- `iCloudDrive-iCloudDrive (2-22-26 10:15 AM)` — 7.1 GB
+- `iCloudDrive-iCloudDrive (2-19-26 6:46 PM)` — 967 MB
+- `iCloudDrive-iCloudDrive (2-20-26 7:00 AM)` — 64 KB
+
+These were frozen conflict snapshots, not the active replication loop. The underlying server-side corruption still requires Apple Support intervention.
 
 **How to apply:** This blocks iCloud Desktop & Documents sync, which blocks using iCloud as a storage offload strategy for the internal SSD.
