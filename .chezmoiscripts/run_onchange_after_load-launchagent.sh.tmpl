@@ -43,18 +43,6 @@ load_agent() {
 
 # ── Infrastructure agents (always load) ──────────────────────────────────────
 
-# Load MCP env setter
-load_agent \
-  "${HOME}/Library/LaunchAgents/com.4jp.env.mcp.plist" \
-  "com.4jp.env.mcp" \
-  "env-mcp (set MCP_TOOLS_FILE)"
-
-# Load MCP servers
-load_agent \
-  "${HOME}/Library/LaunchAgents/com.4jp.mcp.servers.plist" \
-  "com.4jp.mcp.servers" \
-  "mcp-servers (stdio server hub)"
-
 # Load gmail labeler
 load_agent \
   "${HOME}/Library/LaunchAgents/com.user.gmail_labeler.plist" \
