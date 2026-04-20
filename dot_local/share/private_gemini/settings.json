@@ -54,13 +54,9 @@
     "plan": true
   },
   "mcpServers": {
-    "MCP_DOCKER": {
-      "command": "docker",
-      "args": [
-        "mcp",
-        "gateway",
-        "run"
-      ]
+    "github": {
+      "command": "/opt/homebrew/bin/github-mcp-server",
+      "args": ["stdio"]
     },
     "serena": {
       "command": "uvx",
