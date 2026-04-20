@@ -160,3 +160,50 @@ chezmoi apply         # Deploy (auto-commits+pushes)
 - `autoCommit + autoPush` fires on `chezmoi apply` — all source edits must be complete before apply
 - Non-template files (opencode.json, settings.json, config.toml) can't use 1Password templates — token inherits from shell env via `secrets.zsh`
 - If `github-mcp-server` binary changes args in future versions, all 8 files need updating (consider extracting to a variable in modify script)
+
+---
+
+# Plan v2: Tier 1 Triple-Strike — Free Completions
+
+## Context
+
+Session work (DONE-390 + DONE-391) resolved Docker MCP conversion and LaunchAgent removal. Three immediate follow-up items are free completions that solidify the gains and close tracking debt.
+
+## Actions
+
+### 1. Add `github-mcp-server` to manifest.yaml
+
+**File:** `dot_config/domus/manifest.yaml` (line ~64, under `# AI tools`)
+
+Add after `kimi-cli`:
+```yaml
+      - github-mcp-server
+```
+
+This ensures `domus packages diff` detects if the formula is removed, and new-machine bootstrap installs it.
+
+### 2. Close GH#16 (δ.1) + GH#17 (δ.2)
+
+Both resolved by this session's work:
+- **#17 (δ.2)** "MCP Docker gateway — single orchestration layer" → MCP_DOCKER removed from all 8 configs
+- **#16 (δ.1)** "AI config parity across 5 tools" → All configs now use identical native `github-mcp-server stdio` pattern
+
+Close with comments referencing commits and DONE-390.
+
+### 3. Strike IRF-DOM-034 as informational/DONE
+
+IRF-DOM-034 reads: "Docker Desktop uninstalled — governance policy added." The policy already exists in `AGENTS.md.tmpl` + memory. No remaining actionable work. Strike as DONE (no new DONE-ID needed — this was a record, not a task).
+
+**File:** `INST-INDEX-RERUM-FACIENDARUM.md` (line 874)
+
+## Verification
+
+1. `domus packages diff` — `github-mcp-server` should NOT appear as drift
+2. `gh issue view 16 --repo 4444J99/domus-semper-palingenesis --json state` → CLOSED
+3. `gh issue view 17 --repo 4444J99/domus-semper-palingenesis --json state` → CLOSED
+4. IRF grep for `IRF-DOM-034` → struck through
+
+## Critical Files
+
+- `/Users/4jp/Workspace/4444J99/domus-semper-palingenesis/dot_config/domus/manifest.yaml`
+- `/Users/4jp/Workspace/meta-organvm/organvm-corpvs-testamentvm/INST-INDEX-RERUM-FACIENDARUM.md`
