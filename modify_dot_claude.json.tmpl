@@ -19,6 +19,9 @@ if "mcpServers" not in config:
 
 HOME = "{{ .chezmoi.homeDir }}"
 
+# --- Remove stale/deprecated entries ---
+config["mcpServers"].pop("MCP_DOCKER", None)
+
 # --- Managed MCP servers (injected by chezmoi, secrets from env) ---
 
 # Conductor MCP server (cognitive service dispatch, fleet routing, cross-verification)
