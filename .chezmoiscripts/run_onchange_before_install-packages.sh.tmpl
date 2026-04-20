@@ -19,87 +19,27 @@ if ! command -v brew &> /dev/null; then
   {{- end }}
 fi
 
-# Install essential packages
-# Bootstrap = minimum viable shell. Full manifest applied via `domus packages apply`.
-echo "📦 Installing essential Homebrew packages..."
-brew install \
-  git \
-  gh \
-  1password-cli \
-  zsh \
-  neovim \
-  tmux \
-  fzf \
-  ripgrep \
-  jq \
-  yq \
-  node \
-  python3 \
-  go \
-  git-delta \
-  lazygit \
-  bat \
-  eza \
-  fd \
-  zoxide \
-  starship \
-  atuin \
-  direnv \
-  mise \
-  shfmt \
-  just \
-  zsh-autosuggestions \
-  zsh-syntax-highlighting \
-  lolcat \
-  navi \
-  tlrc
-
-# pywal (Python package for image-based color themes)
-# Use pipx to avoid PEP 668 externally-managed-environment issues
-if ! command -v pipx &>/dev/null; then
-  brew install pipx
-  pipx ensurepath
-fi
-pipx install pywal 2>/dev/null || pipx upgrade pywal 2>/dev/null || true
+# Brewfile hash: {{ include "dot_config/homebrew/Brewfile" | sha256sum }}
+# All formulae and casks declared in dot_config/homebrew/Brewfile.
+# brew bundle installs missing packages; already-installed packages are skipped.
+echo "📦 Installing packages from Brewfile..."
+brew bundle --file="${HOME}/.config/homebrew/Brewfile" --no-lock --verbose
 
 # Rust toolchain (PATH managed in 10-path.zsh, XDG dirs in 15-env.zsh)
+# Not in Brewfile — rustup manages the toolchain independently.
 if ! command -v rustup &>/dev/null; then
   echo "📦 Installing Rust toolchain..."
   curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path
 fi
 
+# pywal (Python package, not a Homebrew formula)
+# pipx is installed via Brewfile; use it to isolate pywal.
+if command -v pipx &>/dev/null; then
+  pipx install pywal 2>/dev/null || pipx upgrade pywal 2>/dev/null || true
+fi
+
 # Initialize tlrc cache
 if command -v tldr &>/dev/null; then tldr --update || true; fi
-
-# Install optional but recommended (skip if already installed)
-echo "📦 Installing recommended packages..."
-
-# Function to check and install a cask
-install_cask() {
-  local cask="$1"
-  local app="$2"
-  if [[ -d "/Applications/$app" ]]; then
-    echo "  ✓ $app already installed"
-  elif brew list --cask "$cask" &>/dev/null; then
-    echo "  ✓ $cask already installed via Homebrew"
-  else
-    echo "  Installing $cask..."
-    brew install --cask "$cask" || echo "  ⚠️  Failed to install $cask"
-  fi
-}
-
-install_cask "1password" "1Password.app"
-install_cask "kitty" "kitty.app"
-install_cask "visual-studio-code" "Visual Studio Code.app"
-
-# Install terminal font
-echo "📦 Installing terminal fonts..."
-if brew list --cask font-jetbrains-mono-nerd-font &>/dev/null; then
-  echo "  ✓ JetBrains Mono Nerd Font already installed"
-else
-  echo "  Installing JetBrains Mono Nerd Font..."
-  brew install --cask font-jetbrains-mono-nerd-font || echo "  ⚠️  Failed to install font"
-fi
 
 {{- else if eq .chezmoi.os "linux" }}
 # Linux: Use apt/yum based on distro

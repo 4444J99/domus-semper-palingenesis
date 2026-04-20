@@ -17,6 +17,8 @@ export VISUAL=nvim
 # 1Password CLI — use desktop app biometric unlock (v2 native)
 export OP_BIOMETRIC_UNLOCK_ENABLED=true
 
+export HOMEBREW_BUNDLE_FILE="$XDG_CONFIG_HOME/homebrew/Brewfile"
+export HOMEBREW_BUNDLE_NO_LOCK=1
 export DOCKER_CONFIG="$XDG_CONFIG_HOME/docker"
 export MACHINE_STORAGE_PATH="$XDG_DATA_HOME/docker-machine"
 export CARGO_HOME="$XDG_DATA_HOME/cargo"

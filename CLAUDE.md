@@ -57,6 +57,8 @@ domus-semper-palingenesis/
 │   ├── tmux/tmux.conf          # Tmux config
 │   ├── starship.toml           # Starship prompt theme
 │   ├── gh/                     # GitHub CLI config
+│   ├── homebrew/               # ~/.config/homebrew/ — Homebrew bundle config
+│   │   └── Brewfile            # Declarative package manifest (brew bundle)
 │   ├── chezmoi-daemon/         # Chezmoi self-heal daemon config
 │   └── … (alacritty, bat, kitty, lazygit, wezterm, zed, …)
 ├── dot_local/
@@ -98,6 +100,7 @@ domus-semper-palingenesis/
 | `dot_config/zsh/15-env.zsh` | `~/.config/zsh/15-env.zsh` | XDG compliance for all tools, agent workspace vars (`DOMUS_ROOT`, `AGENTS_ROOT`) |
 | `dot_config/zsh/20-tools.zsh` | `~/.config/zsh/20-tools.zsh` | Sources 1Password secrets, inits starship/zoxide/fzf/atuin |
 | `dot_config/zsh/30-aliases.zsh` | `~/.config/zsh/30-aliases.zsh` | chezmoi (`cm*`), git (`g*`), domus (`dm*`), modern CLI replacements |
+| `dot_config/homebrew/Brewfile` | `~/.config/homebrew/Brewfile` | Declarative Homebrew formulae and casks for `brew bundle` |
 | `dot_config/git/config.tmpl` | `~/.config/git/config` | Git identity, SSH commit signing (1Password), delta pager, aliases |
 | `dot_config/private_op/secrets.zsh` | `~/.config/op/secrets.zsh` | API keys and secrets via 1Password CLI |
 | `modify_dot_claude.json.tmpl` | `~/.claude.json` | Claude Code config — uses modify mode to merge, not overwrite |
@@ -155,7 +158,7 @@ domus apply             # Run chezmoi apply
 domus maintain          # Full maintenance pass
 domus maintain quick    # Quick maintenance
 domus packages          # Package management
-domus packages diff     # Show package drift from Brewfile
+domus packages diff     # Show package drift from manifest.yaml
 domus perf shell        # Shell startup timing
 domus doctor            # Full system check
 ```
@@ -195,7 +198,7 @@ their repos exist.
 
 | Script | Trigger | Purpose |
 |--------|---------|---------|
-| `run_onchange_before_install-packages.sh.tmpl` | On Brewfile change | `brew bundle` |
+| `run_onchange_before_install-packages.sh.tmpl` | On Brewfile hash change | `brew bundle` from `~/.config/homebrew/Brewfile` |
 | `run_once_after_setup-directories.sh.tmpl` | Once | Create XDG dirs, Projects/, etc. |
 | `run_once_after_migrate-zsh-xdg.sh.tmpl` | Once | Migrate zsh config to XDG locations |
 | `run_once_macos-defaults.sh.tmpl` | Once | Apply macOS system defaults |
