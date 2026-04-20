@@ -5,9 +5,9 @@ sandbox_mode = "danger-full-access"
 service_tier = "fast"
 
 [mcp_servers]
-[mcp_servers.MCP_DOCKER]
-command = 'docker'
-args = ['mcp', 'gateway', 'run']
+[mcp_servers.github]
+command = '/opt/homebrew/bin/github-mcp-server'
+args = ['stdio']
 startup_timeout_sec = 30
 
 [mcp_servers.conductor]
