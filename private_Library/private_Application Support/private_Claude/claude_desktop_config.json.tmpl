@@ -1,23 +1,8 @@
 {
   "mcpServers": {
-    "MCP_DOCKER": {
-      "command": "docker",
-      "args": [
-        "mcp",
-        "gateway",
-        "run"
-      ]
-    },
     "github": {
-      "command": "docker",
-      "args": [
-        "run",
-        "-i",
-        "--rm",
-        "-e",
-        "GITHUB_PERSONAL_ACCESS_TOKEN",
-        "ghcr.io/github/github-mcp-server"
-      ],
+      "command": "/opt/homebrew/bin/github-mcp-server",
+      "args": ["stdio"],
       "env": {
         "GITHUB_PERSONAL_ACCESS_TOKEN": "{{ if and (and (hasKey . "is_ci") (not .is_ci)) (lookPath "op") }}{{ onepasswordRead "op://Personal/master-org-token-110525/token" }}{{ else }}CI_REDACTED{{ end }}"
       }
