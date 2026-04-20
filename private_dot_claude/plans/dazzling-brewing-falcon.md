@@ -121,10 +121,11 @@ They are NAMES for operations that already happen in the gaps between existing r
 ### Layer 4: The Presets Org (external-facing stable output)
 
 Two entities on GitHub:
-- `organvm` — the chaos machine (internal, composing, evolving)
-- `[TBD — possibly labores-profani-crux]` — stable presets (products, libraries, client deliverables)
+- `a-organvm` — THE system. The missing organs wrapping around the flawed organism. All repos live here. "A" = indefinite, humble, a tool. One instance of the ideal form.
+- `organvm` — reserved or retired. The platonic concept. The ideal form that `a-organvm` forever approaches.
+- `[TBD — possibly labores-profani-crux]` — stable presets/products (the system's external outputs)
 
-Decision deferred until Layer 1 is stable.
+**Naming resolved**: `a-organvm` is correct. The system knows it's prosthetic — organs the organism was born without. It fills the gaps. It doesn't replace the person.
 
 ---
 
