@@ -90,8 +90,14 @@ All of these registries need ONE entry point:
 ## Execution Status (2026-04-19)
 
 Stream A (atomizer improvements): DONE. Universe inheritance, governance UNIVERSAL, response linking. Committed 61dc86c.
-Stream B (email triage): DONE. 900+ line classifier, 190+ sender patterns, tested on 51 msgs. Tuning iteration after user feedback (9 false HUMAN → all reclassified as NOISE). Committed 049eb45, pending final tuning commit.
-Stream C (backlog injection): DONE. 34 items injected, organvm_atoms_status.py dashboard built. Committed e851e9b.
+Stream B (email triage): DONE + LIVE. Applied to inbox 2026-04-20. 51 messages classified, 40+ moved.
+Stream C (backlog injection): DONE. 34 items injected, 11 now DONE (including BACKLOG-012: all 5 sovereign-systems PRs already merged).
+
+## Phase 2: Propulsion (2026-04-20)
+
+Stream D (Stripe integration): Agent building checkout for public-record-data-scrapper. Reading codebase.
+Stream E (Sovereign Systems): ALREADY DONE — PRs #44-#48 merged 2026-04-19. BACKLOG-012 closed.
+Stream F (Codex 6-repo): Handoff envelope ready at .conductor/active-handoff.md. Awaiting dispatch.
 
 ## Execution order
 
