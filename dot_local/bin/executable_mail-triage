@@ -31,16 +31,25 @@ LOG_DIR = Path.home() / ".local" / "state" / "domus"
 LOG_FILE = LOG_DIR / "mail-triage.log"
 
 # Gmail labels exposed as IMAP mailboxes
-# Use existing Gmail labels (not Triage/* — those were created in error).
-# These labels predate this script and are the canonical routing targets.
-TRIAGE_MAILBOXES = [
-    "Spam",
-    "Noise",
-    "Human",
-    "Action",
-    "Today",
-    "This-Week",
-    "Someday",
+# Gmail label hierarchy (pre-existing, created by prior mail automation).
+# The script routes to these category labels, NOT to Triage/*.
+# Mailbox names use the full IMAP path for nested labels.
+TARGET_MAILBOXES = [
+    # Noise subcategory → existing label
+    "Marketing/Newsletter",     # newsletters
+    "Marketing",                # marketing/bulk
+    "Notification",             # generic service notifications
+    "Dev/GitHub",               # GitHub notifications
+    "Dev/Infrastructure",       # CI/CD notifications
+    "Social",                   # LinkedIn, Facebook, etc.
+    "Finance/Banking",          # banking/finance
+    "Shopping",                 # commerce/shipping
+    "Services",                 # service notifications (Dropbox, 1Password, etc.)
+    "Professional/Jobs",        # ATS/job board notifications
+    # Action urgency buckets
+    "Triage/Action/Today",
+    "Triage/Action/This-Week",
+    "Triage/Action/Someday",
 ]
 
 # ---------------------------------------------------------------------------
