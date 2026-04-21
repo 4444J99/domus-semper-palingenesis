@@ -19,11 +19,8 @@ __pycache__/
 # Tool-specific
 .serena/
 
-# Agent runtime state (ephemeral, not source)
-_agents/cache/
-_agents/state/
-_agents/log/
-_agents/lab/.venv/
+# Agent runtime state (ephemeral, not source — entire tree is runtime artifacts)
+_agents/
 _registry/
 projects/
 !private_dot_claude/projects/
