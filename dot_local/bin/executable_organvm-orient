@@ -237,7 +237,11 @@ def main():
     total = reg_counts.get("total", "?")
     active = reg_counts.get("active", "?")
     archived = reg_counts.get("archived", "?")
-    print(f"  ~/Workspace/                          {total} registry entries ({active} active, {archived} archived)")
+    print(
+        f"  ~/Workspace/                          "
+        f"{total} registry entries "
+        f"({active} active, {archived} archived)"
+    )
 
     sg_cats = sovereign_ground_status()
     if sg_cats:
