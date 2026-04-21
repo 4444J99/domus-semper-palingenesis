@@ -22,9 +22,15 @@ fi
 # Brewfile hash: {{ include "dot_config/homebrew/Brewfile" | sha256sum }}
 # All formulae and casks declared in dot_config/homebrew/Brewfile.
 # brew bundle installs missing packages; already-installed packages are skipped.
-echo "📦 Installing packages from Brewfile..."
-export HOMEBREW_BUNDLE_NO_LOCK=1
-brew bundle --file="${HOME}/.config/homebrew/Brewfile" --verbose
+# Install from Brewfile if available (deployed by chezmoi before scripts run)
+BREWFILE="${HOME}/.config/homebrew/Brewfile"
+if [[ -f "$BREWFILE" ]]; then
+  echo "📦 Installing packages from Brewfile..."
+  export HOMEBREW_BUNDLE_NO_LOCK=1
+  brew bundle --file="$BREWFILE" --verbose
+else
+  echo "⚠️  Brewfile not found at $BREWFILE — skipping brew bundle"
+fi
 
 # Rust toolchain (PATH managed in 10-path.zsh, XDG dirs in 15-env.zsh)
 # Not in Brewfile — rustup manages the toolchain independently.
