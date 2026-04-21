@@ -295,7 +295,10 @@ def main():
         contracts = count_contracts(organism)
         logs = git_log(organism, 1)
         last = f"{logs[0][0]} — {logs[0][2][:50]}" if logs else "unknown"
-        print(f"  {funcs} functions · {contracts} contracts · {sigs} signal types (in graph)")
+        print(
+            f"  {funcs} functions · {contracts} contracts"
+            f" · {sigs} signal types (in graph)"
+        )
         print(f"  Last commit: {last}")
 
         next_items = parse_relay_next(RELAY_PATH)
