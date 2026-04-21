@@ -819,19 +819,34 @@ end tell
 # Tier -> mailbox mapping
 # ---------------------------------------------------------------------------
 
+# Noise subcategory → existing Gmail label mapping
+NOISE_LABEL_MAP: dict[str, str] = {
+    "newsletter": "Marketing/Newsletter",
+    "bulk-email": "Marketing",
+    "github": "Dev/GitHub",
+    "ci": "Dev/Infrastructure",
+    "social": "Social",
+    "finance": "Finance/Banking",
+    "commerce": "Shopping",
+    "shipping": "Shopping",
+    "service": "Notification",
+    "ats": "Professional/Jobs",
+}
+
+
 def tier_to_mailbox(tier: str, sub_tier: str | None) -> str:
     """Map a classification tier to an existing Gmail label (IMAP mailbox)."""
     if tier == "SPAM":
-        return "Spam"
+        return "Marketing"  # no separate Spam user label; Marketing catches bulk
     if tier == "NOISE":
-        return "Noise"
+        return NOISE_LABEL_MAP.get(sub_tier or "", "Notification")
     if tier == "HUMAN":
-        return "Human"
+        return "INBOX"  # stays in inbox — no move needed
     if tier == "ACTION":
         if sub_tier in ("Today", "This-Week", "Someday"):
-            return sub_tier
-        return "Someday"
-    return "Human"
+            return f"Triage/Action/{sub_tier}"
+        return "Triage/Action/Someday"
+    return "INBOX"
 
 
 # ---------------------------------------------------------------------------
