@@ -62,7 +62,20 @@ If `/Volumes/4444-iivii` is connected:
 ~/.local/share/toolchains     # → External/.../toolchains
 ```
 
-## 🔧 Manual Setup Steps
+## Prerequisites
+
+Before the one-liner or manual steps:
+
+```bash
+# macOS: Xcode Command Line Tools (required for Homebrew and git)
+xcode-select --install
+# Click "Install" in the dialog, wait ~15 minutes
+
+# Verify
+xcode-select -p  # should print /Library/Developer/CommandLineTools
+```
+
+## Manual Setup Steps
 
 ### Step 1: Install Chezmoi
 
@@ -80,9 +93,8 @@ sh -c "$(curl -fsLS get.chezmoi.io)"
 chezmoi init https://github.com/4444J99/domus-semper-palingenesis.git
 ```
 
-You'll be prompted for:
-- Email address
-- Whether this is a work machine (yes/no)
+You'll be prompted for template variables (see "Chezmoi Data Variables" section below).
+At minimum you need `email` and `name` — the rest have sensible defaults or are optional.
 
 ### Step 3: Preview Changes
 
@@ -137,42 +149,91 @@ chezmoi apply
 exec zsh
 ```
 
-## 🧪 Verify Installation
+## Verify Installation
 
 ```bash
+# System health check (primary verification)
+domus doctor
+
 # Check chezmoi status
 cms  # alias for: chezmoi status
 
-# Verify Git is XDG-compliant
-git config --list --show-origin | grep config/git
+# Verify 1Password integration
+op whoami
 
-# Test 1Password integration
-git config --get github.token
+# Verify Git identity and signing
+git config user.email && git config gpg.format
 
-# Check external drive (macOS)
-file-org check-external
+# Verify DOMUS_ROOT resolves correctly
+echo "$DOMUS_ROOT"  # should match: chezmoi source-path
 
-# List XDG-organized apps
-ls -lah ~/ | grep "\.local/share" | wc -l
-# Should show: 28
+# Check LaunchAgent status
+launchctl list | grep -E 'chezmoi|domus|4jp'
+
+# Verify shell startup time
+domus perf shell  # should be under 200ms
 ```
 
-## 📦 Bootstrap Scripts
+## Apply-Time Scripts
 
-### Package Installation
-**File**: `.chezmoiscripts/run_onchange_before_install-packages.sh.tmpl`
-- Runs when first initialized or when packages change
-- Installs Homebrew (if needed)
-- Installs essential packages
-- OS-specific (macOS vs Linux)
+Scripts in `.chezmoiscripts/` run automatically during `chezmoi apply`. `run_once_` scripts execute once (hash-tracked). `run_onchange_` scripts re-run when their content changes. `before_` runs before file deployment; `after_` runs after.
 
-### Directory Setup
-**File**: `.chezmoiscripts/run_once_after_setup-directories.sh.tmpl`
-- Runs once after first apply
-- Creates XDG directories
-- Sets up project structure
-- Creates external drive symlinks
-- Verifies essential tools
+### First-apply scripts (run_once)
+
+| Script | Purpose |
+|--------|---------|
+| `run_once_after_setup-directories.sh.tmpl` | Creates XDG dirs, Projects/, external drive symlinks |
+| `run_once_after_create-agents-dirs.sh.tmpl` | Creates agent workspace hierarchy under `$DOMUS_ROOT/_agents/` |
+| `run_once_after_migrate-zsh-xdg.sh.tmpl` | Migrates zsh config from `~/.zshrc` to `~/.config/zsh/` |
+| `run_once_macos-defaults.sh.tmpl` | Applies macOS system preferences (Finder, Dock, keyboard, etc.) |
+| `run_once_after_seed-zoxide.sh.tmpl` | Seeds zoxide jump database with workspace paths |
+| `run_once_after_spotlight-exclusions.sh.tmpl` | Excludes dev directories from Spotlight indexing |
+| `run_once_after_cleanup-home-clutter.sh.tmpl` | Removes/migrates legacy dotfiles from `$HOME` |
+| `run_once_after_cleanup-stale-dotfiles.sh.tmpl` | Cleans orphaned XDG migration artifacts |
+| `run_once_after_cleanup-dead-xdg-symlinks.sh.tmpl` | Removes symlinks for uninstalled apps |
+| `run_once_after_docker-xdg-bridge.sh.tmpl` | Docker XDG compliance bridge |
+| `run_once_after_install-gh-extensions.sh.tmpl` | Installs GitHub CLI extensions |
+| `run_once_after_migrate-heavy-xdg-phase3.sh.tmpl` | Heavy XDG migration (large dirs) |
+| `run_once_after_migrate-home-xdg-phase2.sh.tmpl` | Phase 2 home XDG migration |
+
+### Recurring scripts (run_onchange)
+
+| Script | Trigger | Purpose |
+|--------|---------|---------|
+| `run_onchange_before_install-packages.sh.tmpl` | Brewfile hash change | `brew bundle` from Brewfile |
+| `run_onchange_after_ensure-xdg-symlinks.sh.tmpl` | Script content change | Creates `~/.<app> -> ~/.local/share/<app>` symlinks |
+| `run_onchange_after_load-launchagent.sh.tmpl` | Script content change | Loads/reloads macOS LaunchAgents |
+| `run_onchange_after_link-skills.sh.tmpl` | Script content change | Symlinks AI skills into `~/.claude/skills/` |
+| `run_onchange_after_sync-skills.sh.tmpl` | Script content change | Syncs AI skill definitions |
+| `run_onchange_after_check-claude-extensions.sh.tmpl` | Script content change | Reports missing Claude extensions |
+| `run_onchange_after_setup-vscode-mcp.sh.tmpl` | Script content change | Configures VSCode MCP servers |
+| `run_onchange_after_install-gemini-extensions.sh.tmpl` | Script content change | Installs Gemini CLI extensions |
+
+### LaunchAgents
+
+Deployed to `~/Library/LaunchAgents/` and loaded by `run_onchange_after_load-launchagent.sh.tmpl`.
+
+**Always active:**
+- `com.4jp.memory-sync` — Claude memory local-to-remote persistence (WatchPaths + 30min)
+- `com.4jp.cce-refresh` — Conversation Corpus Engine refresh (6h interval)
+- `com.4jp.cloudflared.organvm` — Cloudflare tunnel
+- `com.4jp.session-archive` — Claude session transcript archival
+- `com.4jp.organvm.soak-snapshot` — Daily system snapshot (06:00)
+- `com.4jp.mail-triage` — Inbox triage (30min interval)
+
+**Gated by `domus_auto_enabled = true`:**
+- `com.chezmoi.self-heal` — Periodic chezmoi apply
+- `com.domus.daemon` — Domus background daemon
+- `com.domus.sort` — File sort daemon
+- `com.4jp.desktop-router` — Desktop file routing
+- `com.4jp.downloads-tidy` — Downloads directory tidying
+- `com.4jp.naming-maintenance` — File naming enforcement
+- `com.4jp.home-root-guard` — Home directory clutter prevention
+- `com.4jp.context-sync` — ORGANVM context sync
+- `com.4jp.agents-policy-sync` — Agent policy sync
+
+To check status: `launchctl list | grep -E 'chezmoi|domus|4jp'`
+Logs: `~/.local/state/domus/`
 
 ## 🔄 Updating Dotfiles
 
@@ -254,22 +315,58 @@ Some things still need manual setup:
 - Installing GUI applications (beyond basic Homebrew casks)
 - Configuring IDE extensions
 
-## 🔑 Chezmoi Data Variables
+## Chezmoi Data Variables
 
-Chezmoi templates reference variables from `chezmoi.toml` (or the init prompts). Required:
+Templates reference variables from `~/.config/chezmoi/chezmoi.toml`. Set during `chezmoi init` or by editing the file directly.
 
-| Variable | Type | Description |
-|----------|------|-------------|
-| `email` | string | User email for git config and 1Password lookups |
-| `is_work` | bool | `true` on work machines (enables work-specific configs) |
-| `domus_auto_enabled` | bool | `true` to deploy file-automation LaunchAgents (sort, tidy, guard, naming) |
-| `has_aws_credentials` | bool | `true` to render AWS credential templates from 1Password |
+### Required (templates fail without these)
 
-These are set during `chezmoi init` prompts or by editing `~/.config/chezmoi/chezmoi.toml`:
+| Variable | Type | Used In | Description |
+|----------|------|---------|-------------|
+| `email` | string | git config, allowed_signers | Primary email |
+| `name` | string | git config | Full name for git commits |
+| `ssh_signing_key` | string | git config | 1Password SSH key fingerprint for commit signing |
+
+### Identity (ORGANVM system — set to empty string if not using)
+
+| Variable | Type | Used In | Description |
+|----------|------|---------|-------------|
+| `org_liminal` | string | dot_zshenv | GitHub org for personal/liminal repos |
+| `github_primary` | string | dot_zshenv | Primary GitHub username |
+| `domain_handle` | string | dot_zshenv | Primary domain (e.g., `4jp.dev`) |
+| `domain_name` | string | dot_zshenv | Name domain |
+| `domain_name_defensive` | string | dot_zshenv | Defensive registration for name domain |
+| `domain_system` | string | dot_zshenv | System domain (e.g., `organvm.dev`) |
+| `domain_system_org` | string | dot_zshenv | System org domain |
+| `domain_system_defensive` | string | dot_zshenv | Defensive registration for system domain |
+| `domain_email` | string | dot_zshenv | Email domain |
+| `domain_registrar` | string | dot_zshenv | Domain registrar name |
+
+### Flags (boolean toggles)
+
+| Variable | Type | Default | Description |
+|----------|------|---------|-------------|
+| `is_work` | bool | `false` | Enables work-specific configs |
+| `domus_auto_enabled` | bool | `false` | Deploys file-automation LaunchAgents (sort, tidy, guard, naming) |
+| `has_aws_credentials` | bool | `false` | Renders AWS credential templates from 1Password |
+
+### Example chezmoi.toml
 
 ```toml
 [data]
+  name = "Your Name"
   email = "you@example.com"
+  ssh_signing_key = "ssh-ed25519 AAAA..."
+  org_liminal = "your-github-user"
+  github_primary = "your-github-user"
+  domain_handle = ""
+  domain_name = ""
+  domain_name_defensive = ""
+  domain_system = ""
+  domain_system_org = ""
+  domain_system_defensive = ""
+  domain_email = ""
+  domain_registrar = ""
   is_work = false
   domus_auto_enabled = false
   has_aws_credentials = false
@@ -284,4 +381,4 @@ These are set during `chezmoi init` prompts or by editing `~/.config/chezmoi/che
 
 ---
 
-**Last Updated**: 2026-02-27
+**Last Updated**: 2026-04-21

@@ -19,21 +19,24 @@ set -euo pipefail
 
 REPO_DIR="${1:-$(git rev-parse --show-toplevel 2>/dev/null || echo "${DOMUS_ROOT:-$HOME/Workspace/4444J99/domus-semper-palingenesis}")}"
 
-# Consumer templates (short name → relative path from repo root)
-declare -A CONSUMERS=(
-  [Claude]="private_dot_claude/CLAUDE.md.tmpl"
-  [Gemini]="dot_local/share/private_gemini/GEMINI.md.tmpl"
-  [AGENTS]="AGENTS.md.tmpl"
-  [Copilot]="dot_config/ai-instructions/copilot-instructions.md.tmpl"
-  [Cursor]="dot_config/ai-instructions/cursor-rules/core.mdc.tmpl"
+# Consumer templates — parallel indexed arrays (Bash 3.2 compatible, no declare -A)
+CONSUMER_NAMES=(Claude Gemini AGENTS Copilot Cursor)
+CONSUMER_PATHS=(
+  "private_dot_claude/CLAUDE.md.tmpl"
+  "dot_local/share/private_gemini/GEMINI.md.tmpl"
+  "AGENTS.md.tmpl"
+  "dot_config/ai-instructions/copilot-instructions.md.tmpl"
+  "dot_config/ai-instructions/cursor-rules/core.mdc.tmpl"
 )
 
 # Fragments and which consumers should include them
-# Format: fragment-name → space-separated list of consumer short names
-declare -A FRAGMENT_MATRIX=()
-FRAGMENT_MATRIX["system-info"]="Claude Gemini AGENTS Copilot Cursor"
-FRAGMENT_MATRIX["code-style"]="Claude Gemini AGENTS Copilot Cursor"
-FRAGMENT_MATRIX["plan-discipline"]="Claude Gemini AGENTS Copilot Cursor"
+# Parallel indexed arrays: name → required consumers (space-separated)
+FRAGMENT_NAMES=(system-info code-style plan-discipline)
+FRAGMENT_REQUIRED=(
+  "Claude Gemini AGENTS Copilot Cursor"
+  "Claude Gemini AGENTS Copilot Cursor"
+  "Claude Gemini AGENTS Copilot Cursor"
+)
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Colors (skip if no tty)
@@ -55,25 +58,33 @@ fi
 
 failures=0
 
-# Ordered lists for consistent output
-CONSUMER_ORDER=(Claude Gemini AGENTS Copilot Cursor)
-FRAGMENT_ORDER=(system-info code-style plan-discipline)
+# Helper: look up consumer path by name (linear scan, 5 elements)
+consumer_path() {
+  local name="$1" i
+  for i in "${!CONSUMER_NAMES[@]}"; do
+    if [[ "${CONSUMER_NAMES[$i]}" == "$name" ]]; then
+      printf '%s' "${CONSUMER_PATHS[$i]}"
+      return
+    fi
+  done
+}
 
 # Print header
 printf '\n%b%sAI Config Fragment Parity%b\n\n' "$BOLD" "" "$RESET"
 printf '  %-16s' ""
-for consumer in "${CONSUMER_ORDER[@]}"; do
+for consumer in "${CONSUMER_NAMES[@]}"; do
   printf '%-10s' "$consumer"
 done
 printf '\n'
 printf '  %s\n' "$(printf '─%.0s' {1..66})"
 
-for fragment in "${FRAGMENT_ORDER[@]}"; do
+for fi_idx in "${!FRAGMENT_NAMES[@]}"; do
+  fragment="${FRAGMENT_NAMES[$fi_idx]}"
+  required_consumers="${FRAGMENT_REQUIRED[$fi_idx]}"
   printf '  %-16s' "$fragment"
-  required_consumers="${FRAGMENT_MATRIX[$fragment]}"
 
-  for consumer in "${CONSUMER_ORDER[@]}"; do
-    template_path="${REPO_DIR}/${CONSUMERS[$consumer]}"
+  for consumer in "${CONSUMER_NAMES[@]}"; do
+    template_path="${REPO_DIR}/$(consumer_path "$consumer")"
 
     # Check if this consumer should have this fragment
     if [[ " $required_consumers " == *" $consumer "* ]]; then

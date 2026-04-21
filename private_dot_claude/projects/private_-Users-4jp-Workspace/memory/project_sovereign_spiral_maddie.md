@@ -35,4 +35,23 @@ Deploy: Cloudflare Pages → `sovereign-systems-spiral.pages.dev`
 - Anthony is NOT going to cohabitate with Maddie despite her housing proposals. Business relationship only.
 - Revenue agreement: 10% of water sales until $10K (verbal, written formalization pending — GH#5).
 
+**3D Spiral technical state (2026-04-21):**
+- Per-phase procedural textures (cellular/nebulous/crystalline) + normal maps
+- Phase-differentiated materials (iridescence for ELEVATE/UNLOCK, sheen for ALIGN)
+- Multi-axis visible spinning (ELEVATE steady, ALIGN tumble, UNLOCK fast Y-spin)
+- Orbital motion: orbs trace circles perpendicular to helix tangent
+- Per-orb particle aura (12 particles/orb, THREE.Points, additive blending)
+- 150 ambient atmospheric particles (gaseous/underwater feel)
+- Infinite helix illusion (PATH_EXTEND=0.85, FOG_DENSITY=0.065, cubic vertex fade)
+- Mobile tap fix (TAP_THRESHOLD=30 for touch vs 8 for mouse)
+
+**Maddie feedback (2026-04-21):** "Over the moon." Only note: possibly star/asterisk-shaped nodes with chakra colors bottom-to-top. Deferred — confirm before implementing (visual identity change).
+
+**Deploy status (2026-04-21):**
+- Live at `sovereign-systems-spiral.pages.dev` via local `wrangler pages deploy`
+- `npm run deploy` script added as permanent local deploy path
+- CI auto-deploy BROKEN: `CLOUDFLARE_API_TOKEN` GitHub secret expired/revoked since April 19
+- CF Pages project is Direct Upload type — cannot convert to Git-connected via API
+- CF GitHub App NOT installed on organvm-iii-ergon org
+
 **How to apply:** Water funnel is the immediate revenue path. Gardening funnel is the second revenue stream (future). Don't scope nonprofit architecture until the water funnel generates revenue. Affiliate URLs are the single biggest revenue blocker — client-gated.

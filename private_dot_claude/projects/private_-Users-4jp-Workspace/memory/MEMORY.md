@@ -16,6 +16,7 @@
 
 ## Development workflow
 - [PR-driven workflow](feedback_pr_workflow.md) — feature branches + PRs, never direct to main
+- [Stagger GitHub comments](feedback_stagger_github_comments.md) — NEVER batch-post bump comments; stagger across hours/days, vary phrasing
 - [Global gitignore blocks .config/](feedback_global_gitignore_config.md) — `~/.config/git/ignore:330`, add `!/.config/` to override
 - [Finder moves are dangerous](feedback_finder_moves_dangerous.md) — breaks symlinks, leaves copy stubs, lost mcp-servers repo
 - [Cross-agent write safety](feedback_cross_agent_write_safety.md) — Gemini overwrote RELAY.md, corrupted IRF; always verify after handoff
