@@ -166,14 +166,26 @@ jobs:
       - name: Setup CI chezmoi config
         run: |
           mkdir -p "$HOME/.config/chezmoi"
-          echo "[data]" > "$HOME/.config/chezmoi/chezmoi.toml"
-          echo "has_aws_credentials = false" >> "$HOME/.config/chezmoi/chezmoi.toml"
-          echo "domus_auto_enabled = false" >> "$HOME/.config/chezmoi/chezmoi.toml"
-          echo "is_work = false" >> "$HOME/.config/chezmoi/chezmoi.toml"
-          echo "is_ci = true" >> "$HOME/.config/chezmoi/chezmoi.toml"
-          echo "name = \"CI Runner\"" >> "$HOME/.config/chezmoi/chezmoi.toml"
-          echo "email = \"ci@example.com\"" >> "$HOME/.config/chezmoi/chezmoi.toml"
-          echo "ssh_signing_key = \"ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAI...\"" >> "$HOME/.config/chezmoi/chezmoi.toml"
+          cat > "$HOME/.config/chezmoi/chezmoi.toml" <<'TOML'
+          [data]
+          has_aws_credentials = false
+          domus_auto_enabled = false
+          is_work = false
+          is_ci = true
+          name = "CI Runner"
+          email = "ci@example.com"
+          ssh_signing_key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAI..."
+          org_liminal = "ci-test"
+          github_primary = "ci-test"
+          domain_handle = "ci.test"
+          domain_name = "ci.test"
+          domain_name_defensive = "ci.test"
+          domain_system = "ci.test"
+          domain_system_org = "ci.test"
+          domain_system_defensive = "ci.test"
+          domain_email = "ci@test.com"
+          domain_registrar = "none"
+          TOML
       - name: Run chezmoi init + apply
         run: |
           # Path already includes /opt/homebrew/bin
