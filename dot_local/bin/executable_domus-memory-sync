@@ -10,7 +10,8 @@ set -euo pipefail
 # Principle: [(local):(remote)={1:1}]
 # An unsigned commit on remote beats a signed commit that only exists locally.
 
-readonly CHEZMOI_SOURCE="$(chezmoi source-path 2>/dev/null)"
+CHEZMOI_SOURCE="$(chezmoi source-path 2>/dev/null)"
+readonly CHEZMOI_SOURCE
 readonly STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/domus"
 readonly LOG_FILE="$STATE_DIR/memory-sync.log"
 readonly UNSIGNED_FLAG="$STATE_DIR/unsigned-commits-pending"
@@ -44,7 +45,7 @@ files_to_add=()
 if [[ "${1:-}" == "--all" ]]; then
   # Find all memory and plan files not yet tracked by chezmoi
   while IFS= read -r f; do
-    if ! chezmoi managed --include=files 2>/dev/null | grep -qF "${f#$HOME/}"; then
+    if ! chezmoi managed --include=files 2>/dev/null | grep -qF "${f#"$HOME"/}"; then
       files_to_add+=("$f")
     fi
   done < <(find "$HOME/.claude/projects" -path "*/memory/*.md" -newer "$LOCK_FILE" 2>/dev/null; \
