@@ -697,7 +697,7 @@ cmd_doctor() {
 
   # Detect repo root dynamically
   local repo_root
-  repo_root=$(chezmoi source-path 2>/dev/null) || repo_root="${DOMUS_ROOT:-${HOME}/domus-semper-palingenesis}"
+  repo_root=$(chezmoi source-path 2>/dev/null) || repo_root="${DOMUS_ROOT}"
 
   # Helper: record a check result
   # Usage: _doctor_check <name> <status> <message>
