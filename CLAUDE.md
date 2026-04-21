@@ -244,7 +244,7 @@ cmd                     # chezmoi diff
 cme                     # chezmoi edit
 cmu                     # chezmoi update
 cms                     # chezmoi status
-cmcd                    # cd ~/domus-semper-palingenesis
+cmcd                    # cd $DOMUS_ROOT
 cmh                     # chezmoi-health
 cmr                     # chezmoi-recover
 ```
