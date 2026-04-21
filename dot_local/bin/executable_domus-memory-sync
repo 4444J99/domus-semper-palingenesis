@@ -17,12 +17,12 @@ readonly LOG_FILE="$STATE_DIR/memory-sync.log"
 readonly UNSIGNED_FLAG="$STATE_DIR/unsigned-commits-pending"
 readonly LOCK_FILE="$STATE_DIR/memory-sync.lock"
 
-log() { printf '%s %s\n' "$(date +%Y-%m-%dT%H:%M:%S)" "$*" >> "$LOG_FILE"; }
+log() { printf '%s %s\n' "$(date +%Y-%m-%dT%H:%M:%S)" "$*" >>"$LOG_FILE"; }
 
 # Prevent concurrent runs
 if [[ -f "$LOCK_FILE" ]]; then
-  lock_age=$(( $(date +%s) - $(stat -f %m "$LOCK_FILE" 2>/dev/null || echo 0) ))
-  if (( lock_age < 60 )); then
+  lock_age=$(($(date +%s) - $(stat -f %m "$LOCK_FILE" 2>/dev/null || echo 0)))
+  if ((lock_age < 60)); then
     log "SKIP: lock held (age ${lock_age}s)"
     exit 0
   fi
@@ -48,14 +48,18 @@ if [[ "${1:-}" == "--all" ]]; then
     if ! chezmoi managed --include=files 2>/dev/null | grep -qF "${f#"$HOME"/}"; then
       files_to_add+=("$f")
     fi
-  done < <(find "$HOME/.claude/projects" -path "*/memory/*.md" -newer "$LOCK_FILE" 2>/dev/null; \
-           find "$HOME/.claude/plans" -name "*.md" -newer "$LOCK_FILE" 2>/dev/null)
+  done < <(
+    find "$HOME/.claude/projects" -path "*/memory/*.md" -newer "$LOCK_FILE" 2>/dev/null
+    find "$HOME/.claude/plans" -name "*.md" -newer "$LOCK_FILE" 2>/dev/null
+  )
 
   # Also re-add changed tracked files (chezmoi detects content changes)
   while IFS= read -r f; do
     files_to_add+=("$f")
-  done < <(find "$HOME/.claude/projects" -path "*/memory/*.md" 2>/dev/null; \
-           find "$HOME/.claude/plans" -name "*.md" 2>/dev/null)
+  done < <(
+    find "$HOME/.claude/projects" -path "*/memory/*.md" 2>/dev/null
+    find "$HOME/.claude/plans" -name "*.md" 2>/dev/null
+  )
 elif [[ -n "${1:-}" && -f "$1" ]]; then
   files_to_add+=("$1")
 else
@@ -103,7 +107,7 @@ else
   # Signing failed — fall back to unsigned
   if git commit --no-gpg-sign -m "memory: auto-persist (UNSIGNED) $timestamp" 2>>"$LOG_FILE"; then
     log "COMMIT: unsigned ($added files) — 1Password unavailable"
-    echo "$timestamp" >> "$UNSIGNED_FLAG"
+    echo "$timestamp" >>"$UNSIGNED_FLAG"
   else
     log "ERROR: commit failed entirely"
     exit 1
