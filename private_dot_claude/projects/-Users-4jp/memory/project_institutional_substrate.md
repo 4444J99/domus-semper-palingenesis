@@ -19,4 +19,4 @@ Initiated 2026-04-20. Major architectural extension to ORGANVM: the system lacke
 
 **Key principle:** The singularity property emerges at compositional coverage, not capability depth. 60% capability across all primitives with free composition > 95% in five primitives that don't compose.
 
-**Status:** Specification complete (DRAFT). Implementation not yet begun. Next: Phase 0 primitives.
+**Status:** Phase 0 IMPLEMENTED (2026-04-21). 6 primitives (assessor, guardian, ledger, counselor, archivist, mandator) + composition engine (4 operators) + AEGIS formation live in `organvm-engine/src/organvm_engine/primitives/`, `composition/`, `formations/`. CLI wired (`organvm primitive *`, `organvm formation *`). 56 tests passing, lint clean. Next: Phase 1 (LLM-powered logic, remaining 13 primitives, OIKONOMIA/PRAXIS/TESSERA formations).
