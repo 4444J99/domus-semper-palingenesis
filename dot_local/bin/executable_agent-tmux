@@ -19,7 +19,8 @@ set -euo pipefail
 SESSION="${1:-agents}"
 DRY_RUN=0
 
-AGENTS_LOG="${AGENTS_LOG:-$HOME/domus-semper-palingenesis/_agents/log}"
+AGENTS_LOG="${AGENTS_LOG:-${DOMUS_ROOT:+${DOMUS_ROOT}/_agents/log}}"
+AGENTS_LOG="${AGENTS_LOG:-$(chezmoi source-path 2>/dev/null)/_agents/log}"
 
 show_help() {
   cat <<'EOF'

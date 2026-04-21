@@ -17,7 +17,7 @@ source "$DOMUS_LIB" || {
 # ─────────────────────────────────────────────────────────────────────────────
 
 # Default paths (chezmoi source directory)
-CHEZMOI_SRC="${CHEZMOI_SRC:-$(chezmoi source-path 2>/dev/null || echo "$HOME/domus-semper-palingenesis")}"
+CHEZMOI_SRC="${CHEZMOI_SRC:-$(chezmoi source-path 2>/dev/null || echo "${DOMUS_ROOT:-$HOME/Workspace/4444J99/domus-semper-palingenesis}")}"
 ZSH_ALIASES="${CHEZMOI_SRC}/dot_config/zsh/30-aliases.zsh"
 ZSH_FUNCTIONS="${CHEZMOI_SRC}/dot_config/zsh/40-functions.zsh"
 FISH_ALIASES="${CHEZMOI_SRC}/dot_config/fish/conf.d/30-aliases.fish"
