@@ -38,6 +38,20 @@ From the alive repos + the seed ideas + the institutional primitive theory:
 Build up from elements → compounds → formations → institution.
 Each layer only gets built when the layer below it is solid.
 
+### Ongoing: Discovery
+The architecture is not finished — it's a living exploration. The 10 elements
+are what we've discovered SO FAR. Discovery runs parallel to everything:
+the ocean below (depths not yet sounded) and space above (stars not yet cataloged).
+
+The `discovery/` layer holds: open questions, ongoing scans, hypotheses under test,
+elements not yet confirmed, formations not yet crystallized. It is the frontier.
+
+The blueprint at `~/Workspace/a-organvm/` now has the full stack:
+- laws/ (physics → theory → constitution → declarations → amendments → statutes → precedent)
+- schemas/, enforcement/, naming/ (infrastructure)
+- elements/, compounds/, formations/, products/ (the system)
+- intake/ (entrance), discovery/ (frontier)
+
 ## Critical Files
 - `~/Workspace/organvm/organvm-corpvs-testamentvm/specs/SPEC-025.md` — hypothesis to test
 - `~/Workspace/organvm/organvm-corpvs-testamentvm/organ-topology.json` — current topology
