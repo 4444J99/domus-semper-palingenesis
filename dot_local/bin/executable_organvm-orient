@@ -18,15 +18,28 @@ LOCATIONS = {
     "sovereign--ground": HOME / "sovereign--ground",
     "engine": WORKSPACE / "meta-organvm" / "organvm-engine",
     "conductor": WORKSPACE / "organvm-iv-taxis" / "tool-interaction-design",
-    "dissolved repos": WORKSPACE / "meta-organvm" / "materia-collider" / "bench" / "organ-reset-2026-03-11",
+    "dissolved repos": (
+        WORKSPACE / "meta-organvm" / "materia-collider"
+        / "bench" / "organ-reset-2026-03-11"
+    ),
     "skills": WORKSPACE / "organvm-iv-taxis" / "a-i--skills",
-    "registry": WORKSPACE / "meta-organvm" / "organvm-corpvs-testamentvm" / "registry-v2.json",
+    "registry": (
+        WORKSPACE / "meta-organvm" / "organvm-corpvs-testamentvm"
+        / "registry-v2.json"
+    ),
 }
 
-RELAY_PATH = HOME / "sovereign--ground" / "holds--same" / "a-organvm" / "RELAY.md"
-SIGNAL_GRAPH = HOME / "sovereign--ground" / "holds--same" / "a-organvm" / "signal-graph.yaml"
-MANIFEST_PATH = WORKSPACE / "meta-organvm" / "materia-collider" / "bench" / "organ-reset-2026-03-11" / "manifest.json"
-REGISTRY_PATH = WORKSPACE / "meta-organvm" / "organvm-corpvs-testamentvm" / "registry-v2.json"
+_SOV = HOME / "sovereign--ground" / "holds--same" / "a-organvm"
+RELAY_PATH = _SOV / "RELAY.md"
+SIGNAL_GRAPH = _SOV / "signal-graph.yaml"
+MANIFEST_PATH = (
+    WORKSPACE / "meta-organvm" / "materia-collider"
+    / "bench" / "organ-reset-2026-03-11" / "manifest.json"
+)
+REGISTRY_PATH = (
+    WORKSPACE / "meta-organvm" / "organvm-corpvs-testamentvm"
+    / "registry-v2.json"
+)
 
 
 def git_log(repo_path, n=1):
