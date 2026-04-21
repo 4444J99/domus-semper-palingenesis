@@ -45,7 +45,7 @@ export PATH="${XDG_DATA_HOME:-$HOME/.local/share}/npm/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 
 # Agent harness scripts (resolved at template time — no runtime var dependency)
-export PATH="{{ .chezmoi.homeDir }}/domus-semper-palingenesis/_agents/bin:$PATH"
+export PATH="{{ .chezmoi.sourceDir }}/_agents/bin:$PATH"
 
 # Android platform-tools
 [[ -d "${ANDROID_HOME:-}/platform-tools" ]] && export PATH="$PATH:$ANDROID_HOME/platform-tools"
