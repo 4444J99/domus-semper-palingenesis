@@ -45,6 +45,7 @@
 - [Laziness as force](feedback_laziness_as_force.md) — flaws are forces, not moral failures; system channels inconsistency
 - [Plans are artifacts](feedback_plans_are_artifacts.md) — every plan committed to repo, never local-only
 - [Be part of the creation](feedback_part_of_creation.md) — COVENANT: derive from logic, don't present menus; Claude is participant, not consultant
+- [Sequential merge deploys](feedback_sequential_merge_deploys.md) — merge PRs one at a time, wait for deploy; batch merge burned CF token
 
 ## Client Projects
 - [Sovereign Spiral — Maddie](project_sovereign_spiral_maddie.md) — 13-node 3D helix, Three.js, water funnel, GHL, phases: ELEVATE/ALIGN/UNLOCK
