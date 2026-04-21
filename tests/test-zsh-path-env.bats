@@ -1,5 +1,5 @@
 #!/usr/bin/env bats
-# Tests for PATH template (10-path.zsh.tmpl) and env vars (15-env.zsh)
+# Tests for PATH template (10-path.zsh.tmpl) and env vars (15-env.zsh.tmpl)
 
 setup() {
   command -v zsh &>/dev/null || skip "zsh not installed"
@@ -12,11 +12,13 @@ setup() {
 
   # Paths to source files
   PATH_TMPL="$BATS_TEST_DIRNAME/../dot_config/zsh/10-path.zsh.tmpl"
-  ENV_FILE="$BATS_TEST_DIRNAME/../dot_config/zsh/15-env.zsh"
+  ENV_TMPL="$BATS_TEST_DIRNAME/../dot_config/zsh/15-env.zsh.tmpl"
 
-  # Render the PATH template (strips Go template directives)
+  # Render templates (strips Go template directives)
   RENDERED_PATH="$TEST_HOME/10-path.zsh"
   render_tmpl "$PATH_TMPL" "$RENDERED_PATH"
+  RENDERED_ENV="$TEST_HOME/15-env.zsh"
+  render_tmpl "$ENV_TMPL" "$RENDERED_ENV"
 }
 
 teardown() {
@@ -62,8 +64,18 @@ teardown() {
 }
 
 # ─────────────────────────────────────────────────────────────────────────────
-# ENV tests (15-env.zsh — plain zsh, no templates)
+# ENV tests (15-env.zsh.tmpl, rendered)
 # ─────────────────────────────────────────────────────────────────────────────
+
+@test "rendered env file is valid shell" {
+  run zsh --no-rcs -n "$RENDERED_ENV"
+  [ "$status" -eq 0 ]
+}
+
+@test "DOMUS_ROOT uses chezmoi.sourceDir template variable" {
+  run grep -q 'chezmoi.sourceDir' "$ENV_TMPL"
+  [ "$status" -eq 0 ]
+}
 
 @test "EDITOR is set to nvim" {
   run zsh --no-rcs -c '
@@ -71,7 +83,7 @@ teardown() {
     export XDG_DATA_HOME="$HOME/.local/share"
     export XDG_STATE_HOME="$HOME/.local/state"
     export XDG_CACHE_HOME="$HOME/.cache"
-    source "'"$ENV_FILE"'"
+    source "'"$RENDERED_ENV"'"
     echo "$EDITOR"
   '
   [ "$status" -eq 0 ]
@@ -84,7 +96,7 @@ teardown() {
     export XDG_DATA_HOME="$HOME/.local/share"
     export XDG_STATE_HOME="$HOME/.local/state"
     export XDG_CACHE_HOME="$HOME/.cache"
-    source "'"$ENV_FILE"'"
+    source "'"$RENDERED_ENV"'"
     echo "$VISUAL"
   '
   [ "$status" -eq 0 ]
@@ -97,7 +109,7 @@ teardown() {
     export XDG_DATA_HOME="$HOME/.local/share"
     export XDG_STATE_HOME="$HOME/.local/state"
     export XDG_CACHE_HOME="$HOME/.cache"
-    source "'"$ENV_FILE"'"
+    source "'"$RENDERED_ENV"'"
     [[ -n "$DOCKER_CONFIG" ]] && [[ -n "$CARGO_HOME" ]] && [[ -n "$RUSTUP_HOME" ]] && echo "all-set"
   '
   [ "$status" -eq 0 ]
@@ -110,7 +122,7 @@ teardown() {
     export XDG_DATA_HOME="$HOME/.local/share"
     export XDG_STATE_HOME="$HOME/.local/state"
     export XDG_CACHE_HOME="$HOME/.cache"
-    source "'"$ENV_FILE"'"
+    source "'"$RENDERED_ENV"'"
     echo "$GOPATH"
   '
   [ "$status" -eq 0 ]
