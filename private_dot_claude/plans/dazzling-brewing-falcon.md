@@ -29,16 +29,42 @@ These were ontological world-plane concepts at ~/ root, moved to intake wrongly.
 - Option C: consolidated into a single `worlds.yaml` or `INSTANCE.toml` at workspace level
 - **Decision needed from user**
 
-### 3. Triage the archive (12GB)
-`~/Workspace/.archive/superprojects-20260420-120747/` contains:
-- `organvm-i-theoria/conversation-corpus-site/` — **9.4GB data directory** (NOT a repo, important data)
-- `meta-organvm/post-flood/` — **constitutional grounding narratives** (referenced by specs)
-- `meta-organvm/data/`, `meta-organvm/docs/`, `meta-organvm/intake/` — corpus data
-- 6 per-organ `.github/` repos — org profiles (need merging into one for a-organvm)
-- Various loose CLAUDE.md, AGENTS.md, GEMINI.md files per superproject
-- Empty superproject .git metadata
+### 3. Rescue archive contents (12GB — WAY more than 2 items)
 
-**Action**: Walk the archive, identify important data, move it to proper locations. Archive the rest.
+The migration script only moved git repos. EVERYTHING ELSE got swept into the archive. This includes critical data, docs, tools, research, and material that lived alongside repos.
+
+**RESCUE LIST — move back to proper locations:**
+
+| Archive item | Size | Belongs in |
+|-------------|------|-----------|
+| `meta-organvm/post-flood/` | 36MB | `organvm/organvm-corpvs-testamentvm/post-flood/` (specs reference it) |
+| `meta-organvm/docs/` | 4.8MB | `organvm/organvm-corpvs-testamentvm/` or workspace docs |
+| `meta-organvm/tools/` | 252K | `organvm/organvm-engine/` or workspace tools |
+| `meta-organvm/scripts/` | 4K | `organvm/organvm-engine/scripts/` |
+| `meta-organvm/data/` | 128K | `organvm/organvm-corpvs-testamentvm/data/` |
+| `meta-organvm/topological-mythos/` | 640K | `organvm/` as its own entry |
+| `meta-organvm/VISION.md` | — | `organvm/organvm-corpvs-testamentvm/` |
+| `meta-organvm/TRIPTYCH.md` | — | `organvm/organvm-corpvs-testamentvm/` |
+| `meta-organvm/ORGAN-REPORT.md` | — | `organvm/organvm-corpvs-testamentvm/` |
+| `meta-organvm/intake/` | 1.9GB | `~/Workspace/intake/` (merge with existing) |
+| `organvm-i-theoria/conversation-corpus-site/` | 9.4GB | `organvm/conversation-corpus-engine/` or `organvm/` as data |
+| `organvm-iii-ergon/consult-consul--console/` | — | `~/Workspace/intake/` (never was a git repo — just docs) |
+| `organvm-iii-ergon/post-proto--mousike--nomos/` | — | `~/Workspace/intake/` (never was a git repo — research) |
+| `organvm-iv-taxis/research/` | — | `organvm/tool-interaction-design/` or intake |
+| `organvm-iv-taxis/tools/` | — | `organvm/` (orchestration tooling) |
+| `organvm-iv-taxis/FLEET.md`, `fleet.yaml` | — | `organvm/tool-interaction-design/` |
+| Per-organ `docs/`, `tools/`, `intake/` dirs | various | Triage individually |
+| Per-organ `.github/` repos (6) | — | Merge into `a-organvm/.github` profile |
+| Session exports, ChatGPT exports | — | `~/Workspace/intake/` |
+| Per-superproject AGENTS.md, CLAUDE.md, GEMINI.md | — | Obsolete (workspace-level versions exist) |
+
+**CRITICAL**: `post-flood/` MUST be restored — specs reference it for grounding narratives.
+
+### 4. Handle non-repo "repos"
+Two items from the registry were never actual git repos:
+- `consult-consul--console` — a docx/pdf document, not code
+- `post-proto--mousike--nomos` — research materials (Google searches, zip)
+These go to intake for alchemization. Registry entries should be updated.
 
 ### 4. Create proper breadcrumb system
 - TOPOLOGY.md at ~/Workspace/ — update to reflect CURRENT truth
