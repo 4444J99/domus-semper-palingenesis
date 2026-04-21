@@ -262,7 +262,8 @@ def main():
     if monad.exists():
         logs = git_log(monad, 1)
         if logs:
-            print(f"  ~/system-system--system--monad/       worktree (last: {logs[0][2][:40]})")
+            msg = logs[0][2][:40]
+            print(f"  ~/system-system--system--monad/       worktree (last: {msg})")
 
     print()
 
