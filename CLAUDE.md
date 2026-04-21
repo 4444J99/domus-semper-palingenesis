@@ -187,8 +187,7 @@ Deployed to `~/Library/LaunchAgents/` from `private_Library/LaunchAgents/`:
 | `com.4jp.agents-policy-sync.plist` | Agent policy sync | Gated (`domus_auto_enabled`) |
 | `com.4jp.context-sync.plist` | ORGANVM context sync (registry watcher + 30min timer) | Gated (`domus_auto_enabled`) |
 | `com.4jp.home-root-guard.plist` | Home directory clutter prevention | Gated (`domus_auto_enabled`) |
-| `com.user.gmail_labeler.plist` | Gmail label automation | Blocked (`.chezmoiignore` — repo not created) |
-| `com.user.mail_automation.plist` | Mail automation | Blocked (`.chezmoiignore` — repo not created) |
+| `com.4jp.mail-triage.plist` | Inbox triage (30min interval) | Active |
 
 Conditional deployment: file-automation agents are suppressed when `domus_auto_enabled = false`
 in chezmoi config. Mail automation agents are blocked unconditionally via `.chezmoiignore` until
