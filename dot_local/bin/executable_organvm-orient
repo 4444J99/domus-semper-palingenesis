@@ -246,7 +246,10 @@ def main():
     sg_cats = sovereign_ground_status()
     if sg_cats:
         populated = sum(1 for _, n in sg_cats if n > 0)
-        print(f"  ~/sovereign--ground/                  {len(sg_cats)} categories ({populated} populated)")
+        print(
+            f"  ~/sovereign--ground/                  "
+            f"{len(sg_cats)} categories ({populated} populated)"
+        )
 
     formal = HOME / "system-system--system"
     if formal.exists():
