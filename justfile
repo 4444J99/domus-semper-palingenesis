@@ -136,4 +136,4 @@ doc-lint:
 
 # Open dotfiles in editor
 edit:
-    $EDITOR ~/domus-semper-palingenesis
+    $EDITOR "$(chezmoi source-path 2>/dev/null || echo "${DOMUS_ROOT}")"
