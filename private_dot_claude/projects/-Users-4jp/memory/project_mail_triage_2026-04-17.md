@@ -1,30 +1,40 @@
 ---
-name: Email triage system — ACTIVE
-description: Four-tier inbox classifier (spam/noise/human/action) — LaunchAgent activated 2026-04-21, 30min cadence, pure osascript via Mail.app
+name: Email triage system — ACTIVE (taxonomy-merged)
+description: Four-tier inbox classifier ACTIVE since 2026-04-21 — routes to existing Gmail label hierarchy (Marketing/Newsletter, Dev/Infrastructure, Finance/Banking, etc.), LaunchAgent on 30min cadence
 type: project
 originSessionId: caa53287-9125-4617-ae4f-43e9056d902d
 ---
 **Status:** ACTIVE as of 2026-04-21. LaunchAgent `com.4jp.mail-triage` loaded and running.
 
-**Architecture:** 957-line Python script (`~/.local/bin/mail-triage`) reads Mail.app via osascript, classifies by inline sender/subject/body heuristics, moves messages to `Triage/*` IMAP mailboxes (synced as Gmail labels). Pure osascript — no IMAP, no app passwords.
+**Architecture:** Python script (`~/.local/bin/mail-triage`) reads Mail.app via osascript, classifies by inline sender/subject/body heuristics, moves messages to **existing Gmail labels** (not Triage/*). Pure osascript — no IMAP, no app passwords.
 
-**Four classification tiers:**
-1. SPAM → `Triage/Spam` (+ mark as junk)
-2. NOISE → `Triage/Noise` (subcategories: github, social, ci, service, commerce, finance, shipping, newsletter, ats, bulk-email)
-3. HUMAN → stays in inbox (default — anything unclassified)
-4. ACTION → `Triage/Action/{Today,This-Week,Someday}`
+**Routing (merged into existing taxonomy 2026-04-21):**
+- NOISE/newsletter → `Marketing/Newsletter`
+- NOISE/bulk-email → `Marketing`
+- NOISE/github → `Notification` (Dev/GitHub has IMAP resolution issues)
+- NOISE/ci → `Dev/Infrastructure`
+- NOISE/social → `Social`
+- NOISE/finance → `Finance/Banking`
+- NOISE/commerce/shipping → `Shopping`
+- NOISE/service → `Notification`
+- NOISE/ats → `Professional/Jobs`
+- ACTION/Today → `To Do`
+- ACTION/This-Week → `To Respond`
+- ACTION/Someday → `Daily Review`
+- SPAM → `Marketing`
+- HUMAN → stays in INBOX
 
-**First live run (2026-04-20):** 51 messages processed, 0 errors. 3 SPAM, 38 NOISE, 10 ACTION, 0 HUMAN.
+**Test results:** 138 messages processed on 30-day backlog, 0 errors, 0 false HUMAN. 18 sender patterns added during session to close classification gaps.
 
-**Location:** Lives in domus-semper-palingenesis (not a separate repo). Script at `dot_local/bin/executable_mail-triage`, plist at `private_Library/LaunchAgents/com.4jp.mail-triage.plist.tmpl`.
+**Location:** `domus-semper-palingenesis/dot_local/bin/executable_mail-triage` + `private_Library/LaunchAgents/com.4jp.mail-triage.plist.tmpl`
 
-**Prerequisite:** Mail.app must be running. Script exits 1 cleanly if Mail.app is not accessible.
+**Prerequisite:** Mail.app must be running. Script exits 1 cleanly if not accessible.
 
-**Known edge cases (from dry-run):**
-- MoneyLion `@iemail.moneylion.com` not caught by `@moneylion.com` pattern (subdomain mismatch)
-- Alamo Drafthouse receipts classify as HUMAN (no pattern for `@drafthouse.com`)
-- Santander surveys classify as ACTION/Someday (body keyword hits)
+**Known tuning items:**
+- OpenAI security updates misclassify as NOISE (sender pattern overrides subject "Action Required")
+- Disney+ login alerts misclassify as ACTION (body keyword hits)
+- Triage/* labels still exist in Gmail (empty, need manual deletion via Gmail web UI)
 
-**Why:** User wants inbox to show only real people. Noise auto-sorted, action items in escalating urgency buckets.
+**Why:** Inbox shows only real people. Noise auto-routed to category labels, action items to workflow labels.
 
-**How to apply:** Running. Tune classification rules in `executable_mail-triage` as edge cases surface. BACKLOG-001 (burned Gmail app password) is independent — not needed by this implementation.
+**How to apply:** Running. Tune sender patterns in `executable_mail-triage` as edge cases surface. BACKLOG-001 (burned Gmail app password) is independent — not needed by this implementation.
