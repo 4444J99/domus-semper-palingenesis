@@ -23,7 +23,8 @@ fi
 # All formulae and casks declared in dot_config/homebrew/Brewfile.
 # brew bundle installs missing packages; already-installed packages are skipped.
 echo "📦 Installing packages from Brewfile..."
-brew bundle --file="${HOME}/.config/homebrew/Brewfile" --no-lock --verbose
+export HOMEBREW_BUNDLE_NO_LOCK=1
+brew bundle --file="${HOME}/.config/homebrew/Brewfile" --verbose
 
 # Rust toolchain (PATH managed in 10-path.zsh, XDG dirs in 15-env.zsh)
 # Not in Brewfile — rustup manages the toolchain independently.
