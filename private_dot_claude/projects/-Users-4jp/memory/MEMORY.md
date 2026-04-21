@@ -8,6 +8,7 @@
 - [Becka McKay thread](project_becka_mckay_thread.md) — Outreach to former MFA thesis advisor (FAU); 5-email thread; awaiting reply after redirecting substance question to practical asks (2026-04-18)
 - [Email triage system](project_mail_triage_2026-04-17.md) — FAILED 2026-04-21: LaunchAgent disabled (froze machine), classifier not affecting inbox, needs Gmail-side redesign
 - [Dotfiles sprawl audit](project_dotfiles_audit_2026-04-17.md) — 40+ dotdirs, Phase 0 complete (compromised files deleted), orphaned LaunchAgents cleaned (2026-04-21)
+- [CUE declaration layer](project_cue_declaration_layer.md) — system.toml→system.cue via CUE constraints; landscape research done; repo unified at ~/Workspace/a-organvm/ (2026-04-21)
 - [Institutional substrate](project_institutional_substrate.md) — 19 institutional primitives, 4 operators, 4 formations (AEGIS/OIKONOMIA/PRAXIS/TESSERA); spec complete, implementation Phase 0 next (2026-04-20)
 - [Organ morphogenesis](project_organ_morphogenesis.md) — Shift from numbered organs to emergent formations; SECVRITY/PERSONA as first named clusters (2026-04-17)
 - [4444J99 organ identity](project_4444J99_organ_identity.md) — 4444J99 = persona/"digital masks" organ; SEC organ undefined; infra repos may move (2026-04-17)
