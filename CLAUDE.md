@@ -266,9 +266,10 @@ See `BOOTSTRAP.md` for the full guide including 1Password setup, external drive,
 - **`modify_dot_claude.json.tmpl` uses chezmoi modify mode** — it merges MCP server entries into
   `~/.claude.json` rather than overwriting the entire file. Do not convert it to a plain template.
 - **XDG compliance is intentional** — all tools are redirected away from `$HOME` dotfile clutter.
-  Before adding new tool configs, check if an XDG path is available and add the env var to `15-env.zsh`.
-- **`$DOMUS_ROOT`** = `~/domus-semper-palingenesis` — agents and tools reference this, not the
-  chezmoi source path (they're the same directory but `DOMUS_ROOT` is the stable identifier).
+  Before adding new tool configs, check if an XDG path is available and add the env var to `15-env.zsh.tmpl`.
+- **`$DOMUS_ROOT`** is set dynamically from `{{ .chezmoi.sourceDir }}` at apply time — it always
+  resolves to the actual chezmoi source directory. Agents and tools reference `$DOMUS_ROOT`, not a
+  hardcoded path.
 
 ## Testing
 
