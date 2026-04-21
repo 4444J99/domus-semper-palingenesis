@@ -131,23 +131,47 @@ Two entities on GitHub:
 
 ## Execution Sequence
 
-### NOW (this session): Stabilize
+### DONE (this session): Stabilize
 
-**CRITICAL**: `ORGANVM_CORPUS_DIR` = `~/Workspace/meta-organvm/organvm-corpvs-testamentvm` — path BROKEN.
-**FIX**: `ln -s ~/Workspace/organvm ~/Workspace/meta-organvm` (symlink restores all old paths)
+- [x] Disk consolidation: 104 repos → ~/Workspace/organvm/ (flat pool)
+- [x] Home root cleanup: repos moved in, empty dirs removed, concepts to intake
+- [x] Symlink: `~/Workspace/meta-organvm → ~/Workspace/organvm` (backward compat)
+- [x] Symlink: `~/Workspace/a-i--skills → ~/Workspace/organvm/a-i--skills`
+- [x] `organvm status` works via symlink
+- [x] TOPOLOGY.md written at ~/Workspace/
+- [x] Movement map committed at corpus docs/adr/
+- [x] SPEC-025 + INST-COMPOSITION + 4 formations committed and pushed
+- [x] `a-organvm` org created with profile repo
+- [x] Naming resolved: `a-organvm` = the prosthetic organ system
 
-- [ ] Create symlink: `~/Workspace/meta-organvm → ~/Workspace/organvm`
-- [ ] Also create: `~/Workspace/organvm-iv-taxis → ~/Workspace/organvm` (for any ORGAN-IV path refs)
-- [ ] Test: `organvm status` works
-- [ ] Test: new shell spawns without error
-- [ ] Verify chezmoi can still apply (`chezmoi diff` — domus unchanged, should be fine)
-- [ ] Check LaunchAgents: `launchctl list | grep -i "4jp\|chezmoi\|domus\|mcp"` for failures
+### NOW: GitHub Transfers + Remote Updates
 
-### NEXT SESSION: GitHub + Remotes
-- [ ] Batch transfer repos from 7 orgs to `organvm` org
-- [ ] Script remote URL updates for all 101 repos
-- [ ] Update registry-v2.json org fields
-- [ ] Update chezmoi templates (ORG_* vars → classification labels)
+**Target org**: `a-organvm` (github.com/a-organvm)
+**Disk stays**: `~/Workspace/organvm/` (local path, doesn't need to match org name)
+
+**Step 1: Transfer repos** (batch via gh api)
+For each of the 7 old organ orgs + meta-organvm, transfer all repos to `a-organvm`:
+```
+gh api repos/{old_org}/{repo}/transfer -X POST -f new_owner=a-organvm --silent
+```
+Order: smallest orgs first (vi, vii, v → ii, iii → i, iv → meta)
+
+**Step 2: Update git remotes** (script across all 104 repos)
+```
+cd ~/Workspace/organvm/<repo>
+git remote set-url origin git@github.com:a-organvm/<repo>.git
+```
+
+**Step 3: Update registry-v2.json**
+Change `org` field for every repo entry from organ-specific to `a-organvm`.
+
+**Step 4: Update organ-topology.json**
+Change all `org` values from `organvm` to `a-organvm`.
+
+**Step 5: Transfer a-organvm/a-organvm profile content → a-organvm/.github**
+The org profile README lives in the `.github` repo's `profile/README.md`.
+
+**Step 6: Retire `organvm` org** (or reserve as the platonic concept — empty, no repos)
 
 ### ONGOING: Fill Vacuums + Surface Primitives
 - [ ] Home root vacuums: add INSTANCE.toml + seed.yaml where missing
