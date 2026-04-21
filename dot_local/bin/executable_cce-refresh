@@ -1,3 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
-exec "$HOME/Workspace/organvm-i-theoria/conversation-corpus-engine/scripts/refresh_local_sessions.sh" "$@"
+
+CCE_SCRIPT="$HOME/Workspace/organvm-i-theoria/conversation-corpus-engine/scripts/refresh_local_sessions.sh"
+
+if [[ ! -x "$CCE_SCRIPT" ]]; then
+  echo "cce-refresh: CCE repo not found, skipping" >&2
+  exit 0
+fi
+
+exec "$CCE_SCRIPT" "$@"

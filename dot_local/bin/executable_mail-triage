@@ -31,26 +31,9 @@ LOG_DIR = Path.home() / ".local" / "state" / "domus"
 LOG_FILE = LOG_DIR / "mail-triage.log"
 
 # Gmail labels exposed as IMAP mailboxes
-# Gmail label hierarchy (pre-existing, created by prior mail automation).
-# The script routes to these category labels, NOT to Triage/*.
-# Mailbox names use the full IMAP path for nested labels.
-TARGET_MAILBOXES = [
-    # Noise subcategory → existing label
-    "Marketing/Newsletter",     # newsletters
-    "Marketing",                # marketing/bulk
-    "Notification",             # generic service notifications
-    "Dev/GitHub",               # GitHub notifications
-    "Dev/Infrastructure",       # CI/CD notifications
-    "Social",                   # LinkedIn, Facebook, etc.
-    "Finance/Banking",          # banking/finance
-    "Shopping",                 # commerce/shipping
-    "Services",                 # service notifications (Dropbox, 1Password, etc.)
-    "Professional/Jobs",        # ATS/job board notifications
-    # Action urgency buckets
-    "Triage/Action/Today",
-    "Triage/Action/This-Week",
-    "Triage/Action/Someday",
-]
+# No mailboxes are created by this script. All routing targets are
+# pre-existing Gmail labels from the prior mail automation taxonomy.
+# The engine classifies; the taxonomy receives.
 
 # ---------------------------------------------------------------------------
 # Sender pattern databases
@@ -520,36 +503,7 @@ end tell
     return ok and "ok" in output
 
 
-# ---------------------------------------------------------------------------
-# Mailbox management
-# ---------------------------------------------------------------------------
-
-def ensure_triage_mailboxes(apply: bool) -> None:
-    """Ensure the Triage/Action/* sub-labels exist for action urgency routing.
-
-    All other target labels (Marketing/Newsletter, Dev/GitHub, etc.) are
-    pre-existing and managed outside this script. Only the Action urgency
-    buckets are created here.
-    """
-    action_mailboxes = ["Triage/Action/Today", "Triage/Action/This-Week", "Triage/Action/Someday"]
-    for mbox in action_mailboxes:
-        script = f'''
-tell application "Mail"
-    try
-        mailbox "{mbox}" of account "{MAIL_ACCOUNT}"
-    on error
-        make new mailbox with properties {{name:"{mbox}"}} at account "{MAIL_ACCOUNT}"
-    end try
-end tell
-'''
-        if apply:
-            ok, err = run_osascript(script, timeout=20)
-            if not ok:
-                logging.warning("Failed to ensure mailbox %s: %s", mbox, err)
-            else:
-                logging.debug("Mailbox ensured: %s", mbox)
-        else:
-            logging.info("[dry-run] Would ensure mailbox: %s", mbox)
+# No mailbox creation needed — all targets are pre-existing labels.
 
 
 # ---------------------------------------------------------------------------
@@ -821,11 +775,12 @@ end tell
 # Tier -> mailbox mapping
 # ---------------------------------------------------------------------------
 
-# Noise subcategory → existing Gmail label mapping
+# Noise subcategory → existing Gmail label (IMAP mailbox path).
+# Every target here has been verified to resolve in Mail.app/osascript.
 NOISE_LABEL_MAP: dict[str, str] = {
     "newsletter": "Marketing/Newsletter",
     "bulk-email": "Marketing",
-    "github": "Notification",  # Dev/GitHub has IMAP resolution issues
+    "github": "Notification",       # Dev/GitHub has IMAP resolution issues
     "ci": "Dev/Infrastructure",
     "social": "Social",
     "finance": "Finance/Banking",
@@ -835,19 +790,28 @@ NOISE_LABEL_MAP: dict[str, str] = {
     "ats": "Professional/Jobs",
 }
 
+# Action urgency → existing workflow labels.
+ACTION_LABEL_MAP: dict[str, str] = {
+    "Today": "To Do",
+    "This-Week": "To Respond",
+    "Someday": "Daily Review",
+}
+
 
 def tier_to_mailbox(tier: str, sub_tier: str | None) -> str:
-    """Map a classification tier to an existing Gmail label (IMAP mailbox)."""
+    """Map a classification tier to an existing Gmail label (IMAP mailbox).
+
+    All routing targets are pre-existing labels from the prior mail
+    automation taxonomy. No Triage/* labels are used.
+    """
     if tier == "SPAM":
-        return "Marketing"  # no separate Spam user label; Marketing catches bulk
+        return "Marketing"
     if tier == "NOISE":
         return NOISE_LABEL_MAP.get(sub_tier or "", "Notification")
     if tier == "HUMAN":
-        return "INBOX"  # stays in inbox — no move needed
+        return "INBOX"
     if tier == "ACTION":
-        if sub_tier in ("Today", "This-Week", "Someday"):
-            return f"Triage/Action/{sub_tier}"
-        return "Triage/Action/Someday"
+        return ACTION_LABEL_MAP.get(sub_tier or "", "Daily Review")
     return "INBOX"
 
 
@@ -868,9 +832,6 @@ def triage(days: int, apply: bool, limit: int = 0) -> dict:
         "errors": 0,
         "total": 0,
     }
-
-    # Ensure mailbox hierarchy exists
-    ensure_triage_mailboxes(apply)
 
     # Fetch unread messages
     logging.info("Fetching unread INBOX messages (last %d days)...", days)
