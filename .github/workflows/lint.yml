@@ -201,6 +201,45 @@ jobs:
           test -f "$HOME/.local/bin/domus-version-check" && echo "✓ domus-version-check"
           echo "All key files present"
 
+  doctor:
+    name: Doctor Check
+    needs: [integration-macos]
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install chezmoi
+        run: brew install chezmoi
+      - name: Setup CI chezmoi config
+        run: |
+          mkdir -p "$HOME/.config/chezmoi"
+          cat > "$HOME/.config/chezmoi/chezmoi.toml" <<'TOML'
+          [data]
+          has_aws_credentials = false
+          domus_auto_enabled = false
+          is_work = false
+          is_ci = true
+          name = "CI Runner"
+          email = "ci@example.com"
+          ssh_signing_key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAI..."
+          org_liminal = "ci-test"
+          github_primary = "ci-test"
+          domain_handle = "ci.test"
+          domain_name = "ci.test"
+          domain_name_defensive = "ci.test"
+          domain_system = "ci.test"
+          domain_system_org = "ci.test"
+          domain_system_defensive = "ci.test"
+          domain_email = "ci@test.com"
+          domain_registrar = "none"
+          TOML
+      - name: Run chezmoi init + apply
+        run: chezmoi init --apply --source="$GITHUB_WORKSPACE"
+      - name: Run domus doctor
+        run: |
+          export PATH="$HOME/.local/bin:$PATH"
+          domus doctor --json
+          domus doctor
+
   gitleaks:
     name: Secret Scanning
     needs: [bats, pytest]
