@@ -7,7 +7,7 @@
 {{ if eq .chezmoi.os "darwin" -}}
 set -euo pipefail
 
-DOMUS_ROOT="{{ .chezmoi.homeDir }}/domus-semper-palingenesis"
+DOMUS_ROOT="{{ .chezmoi.sourceDir }}"
 
 mkdir -p \
   "$DOMUS_ROOT/_agents/bin" \
