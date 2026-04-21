@@ -1,89 +1,54 @@
-# ORGANVM Topology: Recovery + Stabilize + Forward
+# ORGANVM Alchemy: Dissolve, Discover, Surface
 
-**Date**: 2026-04-21 (recovery pass)
-**Type**: Fix the mess, stabilize, then move forward
-**Status**: RECOVERY — things were moved without adequate breadcrumbs
-
----
-
-## What Went Wrong
-
-1. Moved things to intake that didn't belong there (chaos--incarnate, i--me--mine — ontological concepts dumped as trash)
-2. Didn't leave clear enough breadcrumbs — movement map exists at `organvm-corpvs-testamentvm/docs/adr/2026-04-20-topology-consolidation-movement-map.md` but isn't easily discoverable
-3. Archive contains 12GB of mixed important data + empty shells — not triaged
-4. `organvm-iii-ergon/` ghost dir appeared at workspace root (tool metadata auto-created)
-5. No clear separation between: stable/complete repos vs. in-progress vs. old/intake material
-6. TOPOLOGY.md was created but doesn't serve as effective session-start orientation
+**Date**: 2026-04-21
+**Type**: Bottom-up element discovery — dissolve what exists, find what pairs, surface the periodic table
+**Status**: ACTIVE
 
 ---
 
-## IMMEDIATE: Recovery Actions
+## Context
 
-### 1. Remove ghost directory
-- `~/Workspace/organvm-iii-ergon/` — just `.claude/` and `.serena/` dotdirs auto-created by tools. Delete.
+The 113+ repos are mostly NOT working code. They're READMEs — descriptions of things that WANT to exist but DON'T. There are maybe a few actually complete repos. Everything else is aspiration documented as a repository.
 
-### 2. Restore chaos--incarnate and i--me--mine
-These were ontological world-plane concepts at ~/ root, moved to intake wrongly. They need to go SOMEWHERE intentional:
-- Option A: back to ~/ root (but user said "sprawling root is dumb")  
-- Option B: into `~/Workspace/organvm/` as repos (they had INSTANCE.toml files)
-- Option C: consolidated into a single `worlds.yaml` or `INSTANCE.toml` at workspace level
-- **Decision needed from user**
+Yesterday we reorganized 113 empty houses instead of building one real one. We moved furniture in rooms that have no floors.
 
-### 3. Rescue archive contents (12GB — WAY more than 2 items)
+**The goal**: scan everything, identify what's ACTUALLY real vs. what's just a README, separate the complete from the aspirational, and then PLANT A NEW SEED for fresh growth from fundamental elements. Not reorganize the old — start fresh.
 
-The migration script only moved git repos. EVERYTHING ELSE got swept into the archive. This includes critical data, docs, tools, research, and material that lived alongside repos.
+## Process: TRIAGE → SEED → GROW
 
-**RESCUE LIST — move back to proper locations:**
+### Step 1: Triage — What's Real?
+Scan all 113 repos in `~/Workspace/organvm/`. For each one, answer ONE question: **is there actual working code, or just a README?**
 
-| Archive item | Size | Belongs in |
-|-------------|------|-----------|
-| `meta-organvm/post-flood/` | 36MB | `organvm/organvm-corpvs-testamentvm/post-flood/` (specs reference it) |
-| `meta-organvm/docs/` | 4.8MB | `organvm/organvm-corpvs-testamentvm/` or workspace docs |
-| `meta-organvm/tools/` | 252K | `organvm/organvm-engine/` or workspace tools |
-| `meta-organvm/scripts/` | 4K | `organvm/organvm-engine/scripts/` |
-| `meta-organvm/data/` | 128K | `organvm/organvm-corpvs-testamentvm/data/` |
-| `meta-organvm/topological-mythos/` | 640K | `organvm/` as its own entry |
-| `meta-organvm/VISION.md` | — | `organvm/organvm-corpvs-testamentvm/` |
-| `meta-organvm/TRIPTYCH.md` | — | `organvm/organvm-corpvs-testamentvm/` |
-| `meta-organvm/ORGAN-REPORT.md` | — | `organvm/organvm-corpvs-testamentvm/` |
-| `meta-organvm/intake/` | 1.9GB | `~/Workspace/intake/` (merge with existing) |
-| `organvm-i-theoria/conversation-corpus-site/` | 9.4GB | `organvm/conversation-corpus-engine/` or `organvm/` as data |
-| `organvm-iii-ergon/consult-consul--console/` | — | `~/Workspace/intake/` (never was a git repo — just docs) |
-| `organvm-iii-ergon/post-proto--mousike--nomos/` | — | `~/Workspace/intake/` (never was a git repo — research) |
-| `organvm-iv-taxis/research/` | — | `organvm/tool-interaction-design/` or intake |
-| `organvm-iv-taxis/tools/` | — | `organvm/` (orchestration tooling) |
-| `organvm-iv-taxis/FLEET.md`, `fleet.yaml` | — | `organvm/tool-interaction-design/` |
-| Per-organ `docs/`, `tools/`, `intake/` dirs | various | Triage individually |
-| Per-organ `.github/` repos (6) | — | Merge into `a-organvm/.github` profile |
-| Session exports, ChatGPT exports | — | `~/Workspace/intake/` |
-| Per-superproject AGENTS.md, CLAUDE.md, GEMINI.md | — | Obsolete (workspace-level versions exist) |
+Classify into:
+- **ALIVE** — has working code, tests, actual functionality
+- **SEED** — has a README describing what it wants to be (aspiration)
+- **EMPTY** — nothing meaningful
 
-**CRITICAL**: `post-flood/` MUST be restored — specs reference it for grounding narratives.
+The ALIVE repos are what we keep and build on.
+The SEED repos are what we read for their IDEAS, then compost into the new growth.
+The EMPTY repos get archived.
 
-### 4. Handle non-repo "repos"
-Two items from the registry were never actual git repos:
-- `consult-consul--console` — a docx/pdf document, not code
-- `post-proto--mousike--nomos` — research materials (Google searches, zip)
-These go to intake for alchemization. Registry entries should be updated.
+### Step 2: Plant — The New Seed
+From the alive repos + the seed ideas + the institutional primitive theory:
+- What are the ACTUAL fundamental elements (discovered from what works, not prescribed from theory)?
+- Plant ONE new codebase / system that grows from those elements
+- Fresh code. Clean architecture. Built on the periodic table of elements.
 
-### 4. Create proper breadcrumb system
-- TOPOLOGY.md at ~/Workspace/ — update to reflect CURRENT truth
-- Every moved item should be traceable
-- Session-start orientation: what's where, what changed, what's broken
+### Step 3: Grow
+Build up from elements → compounds → formations → institution.
+Each layer only gets built when the layer below it is solid.
 
-### 5. Clarify the three-zone model
-Per discussion, the workspace should have clear zones:
+## Critical Files
+- `~/Workspace/organvm/organvm-corpvs-testamentvm/specs/SPEC-025.md` — hypothesis to test
+- `~/Workspace/organvm/organvm-corpvs-testamentvm/organ-topology.json` — current topology
+- `~/Workspace/.archive/superprojects-20260420-120747/` — trapped data to rescue
+- `~/Workspace/TOPOLOGY.md` — needs update after rescue
 
-```
-~/Workspace/
-├── organvm/          # THE SYSTEM — flat pool, all repos
-├── 4444J99/          # THE PERSON — personal identity repos  
-├── intake/           # PRIMA MATERIA — old/undifferentiated stuff awaiting alchemization
-├── [stable output?]  # PRODUCTS — stable, complete, externally-consumable (TBD)
-└── [metadata files]  # CLAUDE.md, TOPOLOGY.md, etc.
-```
-
-The user also discussed: everything OLD goes into intake first, then gets alchemized (surfaced/promoted) into the pool. Stable/complete repos get promoted to an output zone or the external org.
+## Verification
+- `organvm status` still works after rescue moves
+- No git repos corrupted
+- post-flood/ accessible at its restored location
+- Periodic table documented with evidence from actual codebase
 
 ---
 
