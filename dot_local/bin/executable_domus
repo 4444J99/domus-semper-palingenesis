@@ -709,11 +709,26 @@ cmd_doctor() {
     else
       local symbol color
       case "$check_status" in
-        ok)   symbol="✓"; color="$GREEN" ;;
-        info) symbol="·"; color="$BLUE" ;;
-        warn) symbol="!"; color="$YELLOW" ;;
-        fail) symbol="✗"; color="$RED" ;;
-        skip) symbol="○"; color="$DIM" ;;
+        ok)
+          symbol="✓"
+          color="$GREEN"
+          ;;
+        info)
+          symbol="·"
+          color="$BLUE"
+          ;;
+        warn)
+          symbol="!"
+          color="$YELLOW"
+          ;;
+        fail)
+          symbol="✗"
+          color="$RED"
+          ;;
+        skip)
+          symbol="○"
+          color="$DIM"
+          ;;
       esac
       # Pad check names to 13 chars for alignment
       printf '%s[%s]%s%*s %s%s%s %s\n' "$CYAN" "$name" "$RESET" $((13 - ${#name} - 2)) "" "$color" "$symbol" "$RESET" "$message"
