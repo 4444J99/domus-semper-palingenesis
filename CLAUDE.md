@@ -41,7 +41,7 @@ domus-semper-palingenesis/
 │   │   ├── _cache.zsh          # Cache helper — DRY primitive for tool init caching
 │   │   ├── 00-init.zsh         # Shell startup timing (native zsh/datetime), root guard
 │   │   ├── 10-path.zsh.tmpl    # PATH (OS/arch-aware via template, dedup at top)
-│   │   ├── 15-env.zsh          # XDG compliance env vars, agent workspace env
+│   │   ├── 15-env.zsh.tmpl     # XDG compliance env vars, agent workspace env (DOMUS_ROOT from chezmoi.sourceDir)
 │   │   ├── 20-tools.zsh        # Tool initializations (1Password, starship, zoxide, fzf, …)
 │   │   ├── 30-aliases.zsh      # Aliases (chezmoi, git, domus, modern CLI tools)
 │   │   ├── 40-functions.zsh    # Shell functions (op-refresh, kitty themes, cleaners)
@@ -97,7 +97,7 @@ domus-semper-palingenesis/
 |-------------|-------------|---------|
 | `dot_zshenv.tmpl` | `~/.zshenv` | XDG dirs, ORGANVM vars, identity from chezmoi.toml, `PAGER=cat`, `CLAUDE_INTERACTIVE=0` |
 | `dot_config/zsh/10-path.zsh.tmpl` | `~/.config/zsh/10-path.zsh` | PATH for Homebrew (ARM64/Intel), Ruby, Go, Rust, pipx, Python |
-| `dot_config/zsh/15-env.zsh` | `~/.config/zsh/15-env.zsh` | XDG compliance for all tools, agent workspace vars (`DOMUS_ROOT`, `AGENTS_ROOT`) |
+| `dot_config/zsh/15-env.zsh.tmpl` | `~/.config/zsh/15-env.zsh` | XDG compliance for all tools, agent workspace vars (`DOMUS_ROOT` from `chezmoi.sourceDir`, `AGENTS_ROOT`) |
 | `dot_config/zsh/20-tools.zsh` | `~/.config/zsh/20-tools.zsh` | Sources 1Password secrets, inits starship/zoxide/fzf/atuin |
 | `dot_config/zsh/30-aliases.zsh` | `~/.config/zsh/30-aliases.zsh` | chezmoi (`cm*`), git (`g*`), domus (`dm*`), modern CLI replacements |
 | `dot_config/homebrew/Brewfile` | `~/.config/homebrew/Brewfile` | Declarative Homebrew formulae and casks for `brew bundle` |
