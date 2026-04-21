@@ -705,7 +705,7 @@ cmd_doctor() {
   _doctor_check() {
     local name="$1" check_status="$2" message="$3"
     if $json_mode; then
-      json_checks+=("{\"name\":\"${name}\",\"status\":\"${check_status}\",\"message\":\"$(echo "$message" | sed 's/"/\\"/g')\"}")
+      json_checks+=("{\"name\":\"${name}\",\"status\":\"${check_status}\",\"message\":\"${message//\"/\\\"}\"}")
     else
       local symbol color
       case "$check_status" in
