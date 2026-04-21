@@ -525,12 +525,14 @@ end tell
 # ---------------------------------------------------------------------------
 
 def ensure_triage_mailboxes(apply: bool) -> None:
-    """Create the Triage/* mailbox hierarchy if it doesn't exist.
+    """Ensure the Triage/Action/* sub-labels exist for action urgency routing.
 
-    Gmail syncs IMAP folder creation as label creation. This is idempotent --
-    if the mailbox already exists, the 'on error' block silently catches it.
+    All other target labels (Marketing/Newsletter, Dev/GitHub, etc.) are
+    pre-existing and managed outside this script. Only the Action urgency
+    buckets are created here.
     """
-    for mbox in TRIAGE_MAILBOXES:
+    action_mailboxes = ["Triage/Action/Today", "Triage/Action/This-Week", "Triage/Action/Someday"]
+    for mbox in action_mailboxes:
         script = f'''
 tell application "Mail"
     try
