@@ -48,6 +48,7 @@
 - [Suggestions point to ideal forms](feedback_suggestions_are_ideal_forms.md) — User suggestions are pointers to ideal forms, not literal specs; always ask "what is the best version of this?" (2026-04-21)
 - [Rule of three — resilience](feedback_rule_of_three_resilience.md) — Every capability needs 3 paths; fail over silently; never surface tool failures as blockers (2026-04-21)
 - [Research depth + alive systems + no hierarchy](feedback_research_depth_and_alive_systems.md) — Deep research not 4 links; files must be versioned/validated/enforced; NEVER nest directories for structure, use flat declarations (2026-04-21)
+- [Never reduce scope — optimize operations](feedback_never_reduce_scope.md) — All work is intentional; backlog accumulation = operations gap, not overproduction (2026-04-21)
 
 ## References
 - [Conductor MCP server](reference_conductor_mcp.md) — Live as of 2026-04-14, FRAME→SHAPE→BUILD→PROVE lifecycle

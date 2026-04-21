@@ -75,12 +75,27 @@ PLUGINS.md
 DOTFILES_CLEANUP.md
 
 # Agent runtime state (managed by agent tools, not chezmoi)
-_agents/cache/
-_agents/state/
-_agents/log/
-_agents/lab/.venv/
+_agents/
 projects/
 _registry/
+
+# Tool-managed dotdirs — created by external tools, not chezmoi's responsibility.
+# These prevent `chezmoi unmanaged` noise and accidental `chezmoi add`.
+.anaconda
+.atuin
+.cloudflared
+.conda
+.fly
+.hive
+.kube
+.materia
+.minikube
+.openclaw
+.organvm
+.redhat
+.thumbnails
+.titan
+.vs-kubernetes
 
 # Claude session data — transcripts/UUIDs excluded; memory/ tracked (local:remote=1:1 invariant)
 .claude/projects/*/*.jsonl

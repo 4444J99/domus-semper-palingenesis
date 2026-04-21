@@ -1,109 +1,96 @@
-# Plan: Spiral Mobile Tap Fix + Organic Micro-Textures
+# Plan: Dramatic Spiral — Alive, Spinning, Atmospheric
 
-**File:** `src/components/spiral/spiral.ts` (sole modification target)
+**File:** `src/components/spiral/spiral.ts` (sole modification target)  
 **Repo:** `/Users/4jp/Workspace/organvm/sovereign-systems--elevate-align/`
 
 ## Context
 
-The 3D spiral on elevatealign.com has two problems:
-1. **Mobile taps don't register** — the click/drag threshold (8px Manhattan) is too tight for finger input, causing real taps to be rejected as drags
-2. **Nodes are visually uniform** — all 13 orbs share identical material properties (only color differs), with minimal sine-wave drift as the only animation
+Maddie is "over the moon" with the spiral structure and content. But the scene needs to feel **alive** — visible spinning, orbital motion, floating particles, atmospheric gas/water/air feel. The current implementation is too subtle (0.06-unit drift, 0.06 rad/s rotation = invisible). Also: the spiral endpoints are visible, breaking the infinite illusion.
 
-## Part 1: Fix Mobile Tap
+Maddie's optional note: nodes as "asterisks or stars" with chakra colors bottom-to-top. This is deferred as a follow-up — the animation/atmosphere pass is the priority.
 
-**Root cause:** `CLICK_THRESHOLD = 8` px Manhattan distance. Finger taps on mobile drift 15-25px easily. OrbitControls coexists fine (no event stealing), so the threshold is the only issue.
+## Changes
 
-**Changes:**
+### 1. Truly infinite helix
+- `PATH_EXTEND`: 0.3 → **0.85** (extends well beyond camera view)
+- `FOG_DENSITY`: 0.035 → **0.065** (dissolves endpoints into background)
+- Add **cubic vertex fade** on the helix line — RGB approaches black at extensions so the line itself fades before the fog boundary
 
-1. Add `TAP_THRESHOLD = 30` constant (touch-specific)
-2. Add `downPointerType` variable — stored in `onPointerDown`, read in `onPointerUp`
-3. In `onPointerUp`, select threshold based on pointer type:
-   ```ts
-   const threshold = downPointerType === 'touch' ? TAP_THRESHOLD : CLICK_THRESHOLD;
-   ```
+### 2. Visible orb spinning (multi-axis)
+Replace single-axis 0.06 rad/s with multi-axis rotation at 5-10x speed:
 
-No other touch plumbing changes needed. Raycaster intersection with group-nested meshes is already correct (uses world matrices).
+| Phase | X rad/s | Y rad/s | Z rad/s | Character |
+|-------|---------|---------|---------|-----------|
+| ELEVATE | 0.15 | 0.40 | 0.10 | Steady, Y-dominant (rev/15s) |
+| ALIGN | 0.35 | 0.25 | 0.45 | Tumbling, off-axis |
+| UNLOCK | 0.10 | 1.20 | 0.08 | Fast Y spin (rev/5s), crystalline |
 
-## Part 2: Per-Phase Procedural Textures
+Per-node variation: each rate ×(0.85–1.15) via seeded PRNG.
 
-Add two generator functions (called once at init, zero runtime cost):
+### 3. Orbital motion around helix path
+Each orb traces a small orbit (0.3–0.55 unit radius) in the plane perpendicular to the helix tangent at its position. Tangent/normal/binormal computed at init via cross products.
 
-### `generatePhaseTexture(phase, seed)` → CanvasTexture (256x256)
+- `DRIFT_AMP`: 0.06 → **0.18** (3x, visible at camera distance 22)
+- `DRIFT_AMP_Y`: 0.04 → **0.12**
+- Orbit speed: 0.25–0.55 rad/s per node
+- Combined with multi-frequency drift = never-repeating composite path
 
-- **ELEVATE:** Translucent layered circles, organic cell/water-caustic feel
-- **ALIGN:** Soft arc strokes, cloud-like wisps, flowing nebulous texture
-- **UNLOCK:** Angular lines, faceted subdivisions, crystalline geometry
+### 4. Per-orb particle aura (156 points, 1 draw call)
+- **12 particles per orb** using `THREE.Points` + `BufferGeometry`
+- Soft dot texture (32×32 radial gradient), additive blending
+- Particles orbit each orb in 3D (spherical coordinates), radius pulsing
+- Live orbs: 12 bright particles. Locked orbs: 6 dim particles (rest hidden at y=-1000)
+- Colors match node color with per-particle brightness pulsing
+- Buffer positions updated per frame via `needsUpdate = true`
 
-Each node gets a unique seed → no two orbs identical within a phase.
-Applied as `mat.map` — multiplies against base color for tonal variation.
+### 5. Ambient atmosphere (150 points, 1 draw call)  
+- **150 background particles** spread across scene volume (30×15×15 units)
+- Phase-colored (teal/cyan/gold) at 15-35% brightness
+- Slow independent drift per particle (0.02–0.06 Hz)
+- Creates underwater/nebula/gaseous feel between the orbs
+- Same soft dot texture (reused), additive blending, 25% opacity
 
-### `generatePhaseNormalMap(phase, seed)` → CanvasTexture (128x128)
+### 6. Performance
+- **2 extra draw calls** (29 total, from 27)
+- **306 total points** (trivial for any GPU)
+- **~5,000 flops/frame** additional math (negligible)
+- **3.6KB/frame** buffer uploads
+- No new meshes, no shadows, no post-processing
 
-- **ELEVATE:** Gentle circular bumps (cellular)
-- **ALIGN:** Wave-like ridges (breath/flow)
-- **UNLOCK:** Sharp faceted ridges (crystalline)
-
-Applied as `mat.normalMap` with `normalScale = (0.3, 0.3)`. Catches light dynamically as scene rotates.
-
-### Phase-specific material properties
-
-| Property | ELEVATE | ALIGN | UNLOCK |
-|----------|---------|-------|--------|
-| roughness | 0.2 | 0.1 | 0.05 |
-| metalness | 0.05 | 0.15 | 0.25 |
-| clearcoatRoughness | 0.15 | 0.05 | 0.02 |
-| iridescence | 0.15 | 0 | 0.4 |
-| sheen | 0 | 0.5 | 0 |
-
-## Part 3: Enriched Animation Loop
-
-Replace uniform sine drift with layered organic behaviors. All per-node params computed at init, stored in an `OrbAnimParams[]` array.
-
-### Micro-behaviors (all in the existing `loop()` function):
-
-1. **Layered positional drift** — two sine waves per axis at irrational frequency ratios (never repeats). Same amplitude as current (0.06/0.04) to preserve macro helix.
-
-2. **Breathing scale** — mesh oscillates 0.97-1.04, frequency varies by phase:
-   - ELEVATE ~0.3Hz (slow lung-like)
-   - ALIGN ~0.45Hz (heartbeat)
-   - UNLOCK ~0.6Hz (crystal resonance)
-
-3. **Emissive pulsing** — `emissiveIntensity` oscillates per-node:
-   - Live: 0.45–0.75 range
-   - Locked: 0.08–0.16 range
-
-4. **Local Y-axis rotation** — 0.05–0.15 rad/s per node. Combined with normal maps → shimmering light catch.
-
-5. **Emoji sprite bob** — subtle 0.02-unit vertical oscillation layered on existing camera-facing logic.
-
-### Performance guarantee
-- 13 nodes, all simple trig math, no allocations in loop
-- Textures generated once, never updated
-- No additional draw calls (same 27 as current)
-- No particle systems, no multi-pass rendering
-
-## Part 4: Cleanup
-
-Track generated CanvasTextures in a `texturesToDispose` array. Dispose in the existing cleanup function alongside materials/geometry. Prevents GPU memory leaks on Astro page transitions.
+## What stays unchanged
+- Mobile tap fix (TAP_THRESHOLD = 30)
+- Procedural textures + normal maps (per-phase)
+- Phase material properties (iridescence, sheen, etc.)
+- Tooltip, hover scale, raycaster intersection
+- OrbitControls (drag, auto-rotate)
+- Emoji sprites (camera-facing + bob)
 
 ## Implementation sequence
-
-1. Constants + types (top of file)
-2. Seeded PRNG helper + `generatePhaseTexture` + `generatePhaseNormalMap` (after `makeEmojiSprite`)
-3. Modify orb creation loop — textures, phase materials, animation params
-4. Fix `onPointerDown`/`onPointerUp` — pointer-type-aware threshold
-5. Rewrite animation loop body — all 5 micro-behaviors
-6. Update cleanup — dispose textures
+1. Update constants (PATH_EXTEND, FOG_DENSITY, DRIFT_AMP, new orbit/particle constants)
+2. Update types (OrbAnimParams: multi-axis rotation, orbit vectors)
+3. Update PHASE_ANIM (per-axis rotation rates)
+4. Add `createSoftDotTexture()` function
+5. Add helix tangent computation in orb creation loop
+6. Update animParams construction (orbit + rotation fields)
+7. Add vertex fade to helix line coloring
+8. Add aura particle system init (after orb creation)
+9. Add ambient particle system init
+10. Rewrite animation loop (orbit + spin + aura + ambient updates)
+11. Update cleanup (dispose new geometries/materials)
 
 ## Verification
-
 ```bash
-cd /Users/4jp/Workspace/organvm/sovereign-systems--elevate-align
-npm run build          # confirm no TS errors
-npm run dev            # visual test at localhost:4321
+npm run build && npm run deploy
 ```
+- Orbs visibly spin on multiple axes
+- Orbs trace orbital paths around their helix positions
+- Floating particles surround each orb
+- Background particles create atmospheric depth
+- Spiral endpoints invisible (fog + vertex fade)
+- Tap still navigates on mobile
+- Hover tooltips still work on desktop
 
-- Desktop: hover tooltips still work, click navigates to /nodes/N
-- Mobile (or Chrome DevTools device mode): tap on live orbs navigates
-- Visual: each phase has distinct surface character, orbs breathe/shimmer/pulse independently
-- Macro helix shape unchanged
+## Deferred (Maddie's optional note)
+- Star/asterisk node geometry (replace SphereGeometry with custom star shape)
+- Chakra color mapping (7 chakras → 13 nodes, requires interpolation scheme)
+- Both are visual identity changes — confirm with Maddie before implementing

@@ -8,6 +8,7 @@
 - [LaunchAgent ExecTimeout mandatory](feedback_launchagent_exec_timeout.md) — every pipeline plist needs ExecTimeout; missing one caused 8h runaway
 - [Spotlight excludes ~/Workspace](feedback_spotlight_workspace_exclusion.md) — VolumeConfiguration.plist exclusion; mds_stores was 87% CPU for 20h
 - [Custodia Securitatis](reference_custodia_securitatis.md) — SEC ops repo at meta-organvm/ (credentials, webhooks, billing, incidents)
+- [Deploy three pillars](feedback_deploy_three_pillars.md) — rule of three for deploys; CF rotating tokens, Direct Upload can't convert to Git
 
 ## GitHub auth (resolved 2026-03-20)
 - [PAT fix + gh fallback](feedback_github_pat_cleanup.md)

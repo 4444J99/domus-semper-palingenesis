@@ -17,7 +17,8 @@ Seven compromised/artifact files deleted from HOME: `fetch_recent_gmail.py`, `se
 - **25 already XDG-symlinked** (working correctly)
 - **3 XDG base dirs** (.cache, .config, .local — correct)
 - **2 chezmoi-tracked** (.claude, .ssh)
-- **2 need XDG-symlink** (.npm, .thumbnails) — NOT YET DONE
+- **1 need XDG-symlink** (.thumbnails — questionable on macOS, empty dirs) — NOT YET DONE
+- **.npm** added to XDG symlink array (2026-04-21)
 - **15 tool-managed** (add to .chezmoiignore) — NOT YET DONE
 - **1 deleted** (.gmail-mcp — done 2026-04-21)
 
@@ -25,4 +26,10 @@ Seven compromised/artifact files deleted from HOME: `fetch_recent_gmail.py`, `se
 
 Orphaned `com.user.gmail_labeler` and `com.user.mail_automation` templates deleted from chezmoi source. Replaced by `com.4jp.mail-triage` (active, 30-min cadence). `.chezmoiignore` suppressions removed. Loader script updated.
 
-**How to apply:** Phase 0 done. Phase 2 (.npm/.thumbnails XDG-symlink, 15 dotdirs to .chezmoiignore) is queued but not blocking.
+## XDG Symlink Cleanup — 2026-04-21
+
+6 dead apps removed from ensure-xdg-symlinks array (blender_ext, claude-server-commander, codex, dropbox_bi, mcp-auth, playwright-mcp). `npm` added. Dead symlinks cleaned via run_once script. 14GB `_agents/` cache deleted. Stale `~/domus-semper-palingenesis/` removed.
+
+Memory-sync daemon (`domus-memory-sync`) was blocking chezmoi for 5+ mins — rewritten with batch `chezmoi add`, `LAST_SYNC` timestamp, and pgrep guard.
+
+**How to apply:** Phase 0 done. Phase 2 (.thumbnails XDG-symlink, 15 dotdirs to .chezmoiignore) is queued but not blocking.
