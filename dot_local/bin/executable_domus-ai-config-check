@@ -17,7 +17,7 @@ set -euo pipefail
 # Configuration
 # ─────────────────────────────────────────────────────────────────────────────
 
-REPO_DIR="${1:-$(git rev-parse --show-toplevel 2>/dev/null || echo "$HOME/domus-semper-palingenesis")}"
+REPO_DIR="${1:-$(git rev-parse --show-toplevel 2>/dev/null || echo "${DOMUS_ROOT:-$HOME/Workspace/4444J99/domus-semper-palingenesis}")}"
 
 # Consumer templates (short name → relative path from repo root)
 declare -A CONSUMERS=(
