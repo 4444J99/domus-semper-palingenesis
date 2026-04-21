@@ -46,6 +46,10 @@
 - [Plans are artifacts](feedback_plans_are_artifacts.md) — every plan committed to repo, never local-only
 - [Be part of the creation](feedback_part_of_creation.md) — COVENANT: derive from logic, don't present menus; Claude is participant, not consultant
 
+## Client Projects
+- [Sovereign Spiral — Maddie](project_sovereign_spiral_maddie.md) — 13-node 3D helix, Three.js, water funnel, GHL, phases: ELEVATE/ALIGN/UNLOCK
+- [Client code = spec](feedback_client_code_is_spec.md) — client-provided prototypes ARE the spec; don't reinterpret with different tech
+
 ## Active Projects
 - [Contribution phase transition](project_contribution_phase_transition.md) — solid→liquid: CLA live, 6 issues, essay-8 published, backflow pipeline coded, 20 open external PRs, 1 merged (PrefectHQ/fastmcp)
 - [Zero income crisis](project_zero_income_crisis.md) — NO paying clients as of 2026-04-16, survival-level urgency
