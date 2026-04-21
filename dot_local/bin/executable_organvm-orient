@@ -119,7 +119,8 @@ def parse_relay_next(path):
             if line.startswith("## ") or line.startswith("**Do not"):
                 break
             stripped = line.strip()
-            if stripped.startswith(("1.", "2.", "3.", "4.", "5.", "6.", "7.", "8.", "9.")):
+            digits = tuple(f"{d}." for d in range(1, 10))
+            if stripped.startswith(digits):
                 # Clean markdown bold and truncate
                 clean = stripped.split(".", 1)[1].strip()
                 clean = clean.replace("**", "").replace("`", "")
