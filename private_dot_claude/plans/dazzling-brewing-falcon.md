@@ -1,24 +1,67 @@
-# ORGANVM Total Topology: Stabilize, Fill, Compose
+# ORGANVM Topology: Recovery + Stabilize + Forward
 
-**Date**: 2026-04-20
-**Type**: Operational architecture — stabilize what moved, fill the vacuums, build in the space between
-**Status**: Active — execution paused for stabilization
-
----
-
-## Governing Principle
-
-**The world is what exists. We build in the space between everything.**
-
-- Don't break the configs we exist within (chezmoi, LaunchAgents, engine paths, git remotes)
-- Don't delete vacuums — fill them (Rule #1: N/A is a vacuum, never a resting state)
-- The ideal form dictates the future; past/present are its attempts at realization
-- The home root (~/) is ontological topology — facets of existence, not filesystem clutter
-- Repos are compounds whose elements (primitives) need surfacing, not just relocation
+**Date**: 2026-04-21 (recovery pass)
+**Type**: Fix the mess, stabilize, then move forward
+**Status**: RECOVERY — things were moved without adequate breadcrumbs
 
 ---
 
-## What Exists (the world — don't break)
+## What Went Wrong
+
+1. Moved things to intake that didn't belong there (chaos--incarnate, i--me--mine — ontological concepts dumped as trash)
+2. Didn't leave clear enough breadcrumbs — movement map exists at `organvm-corpvs-testamentvm/docs/adr/2026-04-20-topology-consolidation-movement-map.md` but isn't easily discoverable
+3. Archive contains 12GB of mixed important data + empty shells — not triaged
+4. `organvm-iii-ergon/` ghost dir appeared at workspace root (tool metadata auto-created)
+5. No clear separation between: stable/complete repos vs. in-progress vs. old/intake material
+6. TOPOLOGY.md was created but doesn't serve as effective session-start orientation
+
+---
+
+## IMMEDIATE: Recovery Actions
+
+### 1. Remove ghost directory
+- `~/Workspace/organvm-iii-ergon/` — just `.claude/` and `.serena/` dotdirs auto-created by tools. Delete.
+
+### 2. Restore chaos--incarnate and i--me--mine
+These were ontological world-plane concepts at ~/ root, moved to intake wrongly. They need to go SOMEWHERE intentional:
+- Option A: back to ~/ root (but user said "sprawling root is dumb")  
+- Option B: into `~/Workspace/organvm/` as repos (they had INSTANCE.toml files)
+- Option C: consolidated into a single `worlds.yaml` or `INSTANCE.toml` at workspace level
+- **Decision needed from user**
+
+### 3. Triage the archive (12GB)
+`~/Workspace/.archive/superprojects-20260420-120747/` contains:
+- `organvm-i-theoria/conversation-corpus-site/` — **9.4GB data directory** (NOT a repo, important data)
+- `meta-organvm/post-flood/` — **constitutional grounding narratives** (referenced by specs)
+- `meta-organvm/data/`, `meta-organvm/docs/`, `meta-organvm/intake/` — corpus data
+- 6 per-organ `.github/` repos — org profiles (need merging into one for a-organvm)
+- Various loose CLAUDE.md, AGENTS.md, GEMINI.md files per superproject
+- Empty superproject .git metadata
+
+**Action**: Walk the archive, identify important data, move it to proper locations. Archive the rest.
+
+### 4. Create proper breadcrumb system
+- TOPOLOGY.md at ~/Workspace/ — update to reflect CURRENT truth
+- Every moved item should be traceable
+- Session-start orientation: what's where, what changed, what's broken
+
+### 5. Clarify the three-zone model
+Per discussion, the workspace should have clear zones:
+
+```
+~/Workspace/
+├── organvm/          # THE SYSTEM — flat pool, all repos
+├── 4444J99/          # THE PERSON — personal identity repos  
+├── intake/           # PRIMA MATERIA — old/undifferentiated stuff awaiting alchemization
+├── [stable output?]  # PRODUCTS — stable, complete, externally-consumable (TBD)
+└── [metadata files]  # CLAUDE.md, TOPOLOGY.md, etc.
+```
+
+The user also discussed: everything OLD goes into intake first, then gets alchemized (surfaced/promoted) into the pool. Stable/complete repos get promoted to an output zone or the external org.
+
+---
+
+## What Exists Now (current truth — 2026-04-21)
 
 ### Disk State (post-consolidation this session)
 - `~/Workspace/organvm/` — 101 system repos, flat (MOVED from 8 organ dirs)
