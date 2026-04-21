@@ -303,7 +303,7 @@ def main():
 
         next_items = parse_relay_next(RELAY_PATH)
         if next_items:
-            print(f"  Next:")
+            print("  Next:")
             for item in next_items[:4]:
                 print(f"    - {item[:80]}")
         print()
