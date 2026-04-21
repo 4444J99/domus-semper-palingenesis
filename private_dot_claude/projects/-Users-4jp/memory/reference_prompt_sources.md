@@ -19,5 +19,5 @@ originSessionId: c2d0301b-443e-40b1-b70c-8af43c205a1b
 
 **Also captured:**
 - Specstory (Cursor IDE) — 78 prompts (EXTRACTED)
-- Corpus site markdowns — 504 prompts (EXTRACTED)  
+- Corpus site markdowns — 504 prompts (EXTRACTED)
 - Shell history — 36 prompts (EXTRACTED)

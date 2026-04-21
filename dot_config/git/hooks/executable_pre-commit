@@ -115,3 +115,8 @@ print("Add 'allow-secret' to a line to bypass a specific false positive.", file=
 
 sys.exit(1)
 PY
+
+# Chain pre-commit framework hooks if available and configured
+if command -v pre-commit &>/dev/null && [[ -f .pre-commit-config.yaml ]]; then
+  exec pre-commit run --hook-stage pre-commit "${@}"
+fi

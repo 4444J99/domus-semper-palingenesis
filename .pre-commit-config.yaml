@@ -3,35 +3,40 @@ repos:
     rev: v6.0.0
     hooks:
       - id: trailing-whitespace
-        exclude: '\.tmpl$'
+        exclude: '\.tmpl$|/plans/|\.txt$|private_dot_claude/'
       - id: end-of-file-fixer
-        exclude: '\.tmpl$'
+        exclude: '\.tmpl$|/plans/|\.txt$|private_dot_claude/'
       - id: check-yaml
         args: ['--allow-multiple-documents']
+        exclude: 'private_hosts\.yml$'
       - id: check-json
-        exclude: '\.tmpl$'
+        exclude: '\.tmpl$|zed/|Code/User/'
       - id: check-merge-conflict
 
-  - repo: https://github.com/koalaman/shellcheck-precommit
-    rev: v0.11.0
+  - repo: local
     hooks:
       - id: shellcheck
-        args: ['-x']
+        name: ShellCheck
+        entry: shellcheck -e SC2317,SC1128,SC2015 -x
+        language: system
         types: [shell]
-        exclude: '\.tmpl$'
+        exclude: '\.tmpl$|dot_config/zsh/|private_dot_claude/hooks/'
+        files: 'dot_local/bin/executable_'
 
   - repo: https://github.com/scop/pre-commit-shfmt
     rev: v3.12.0-2
     hooks:
       - id: shfmt
         args: ['-i', '2', '-ci']
-        exclude: '\.tmpl$'
+        exclude: '\.tmpl$|dot_config/zsh/'
+        files: 'dot_local/bin/executable_'
 
   - repo: https://github.com/adrienverge/yamllint
     rev: v1.38.0
     hooks:
       - id: yamllint
         args: ['-c', '.yamllint.yml']
+        exclude: 'private_hosts\.yml$'
 
   - repo: https://github.com/gitleaks/gitleaks
     rev: v8.30.0
