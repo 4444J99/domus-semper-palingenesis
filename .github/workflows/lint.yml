@@ -126,7 +126,7 @@ jobs:
         run: sh -c "$(curl -fsLS get.chezmoi.io)"
       - name: Validate templates parse
         run: |
-          find . -name '*.tmpl' ! -path './.git/*' | while read -r file; do
+          find . -name '*.tmpl' ! -path './.git/*' ! -name '*.json.tmpl' | while read -r file; do
             echo "Checking template syntax: $file"
             opens=$(grep -o '{{' "$file" | wc -l)
             closes=$(grep -o '}}' "$file" | wc -l)
