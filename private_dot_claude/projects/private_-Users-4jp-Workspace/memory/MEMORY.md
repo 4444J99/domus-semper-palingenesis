@@ -70,6 +70,7 @@
 
 ## Development feedback
 - [Ceremony vs specification](feedback_ceremony_vs_specification.md) — non-code files unique to a repo = specs, not waste
+- [Contribution as diagnostic](feedback_contribution_as_diagnostic.md) — PRs test system vs ecosystem; benchmark best AND worst external implementations
 
 ## Resolved/Historical
 - [Creative Capital — DEFERRED](project_creative_capital_rewrite.md) — funder-fit gate failed 2026-03-30, P0→P3
