@@ -13,49 +13,48 @@ try:
 except json.JSONDecodeError:
     config = {}
 
-# Ensure mcpServers exists
-if "mcpServers" not in config:
-    config["mcpServers"] = {}
+# In test mode, skip MCP server injection (tests verify JSON handling only)
+if not os.environ.get("CHEZMOI_MODIFY_TEST"):
+    if "mcpServers" not in config:
+        config["mcpServers"] = {}
 
-HOME = "{{ .chezmoi.homeDir }}"
+    HOME = "{{ .chezmoi.homeDir }}"
 
-# --- Remove stale/deprecated entries ---
-config["mcpServers"].pop("MCP_DOCKER", None)
+    # Remove stale/deprecated entries
+    config["mcpServers"].pop("MCP_DOCKER", None)
 
-# --- Managed MCP servers (injected by chezmoi, secrets from env) ---
-
-# Conductor MCP server (cognitive service dispatch, fleet routing, cross-verification)
-CONDUCTOR_BASE = f"{HOME}/Workspace/organvm-iv-taxis/tool-interaction-design"
-config["mcpServers"]["conductor"] = {
-    "command": f"{CONDUCTOR_BASE}/.venv/bin/python3",
-    "args": [f"{CONDUCTOR_BASE}/mcp_server.py"],
-    "cwd": CONDUCTOR_BASE,
-}
-
-# Voice Scorer MCP server (voice governance, scoring, drift detection)
-VOX_BASE = f"{HOME}/Workspace/organvm-iv-taxis/vox--architectura-gubernatio"
-config["mcpServers"]["voice-scorer"] = {
-    "command": f"{VOX_BASE}/.venv/bin/python3",
-    "args": [f"{VOX_BASE}/src/vox/mcp_server.py"],
-    "cwd": VOX_BASE,
-}
-
-# GitHub MCP server — token from GITHUB_PERSONAL_ACCESS_TOKEN env var (set by secrets.zsh)
-gh_token = os.environ.get("GITHUB_PERSONAL_ACCESS_TOKEN", "")
-if gh_token:
-    config["mcpServers"]["github"] = {
-        "command": "/opt/homebrew/bin/github-mcp-server",
-        "args": ["stdio"],
-        "env": {"GITHUB_PERSONAL_ACCESS_TOKEN": gh_token},
+    # Conductor MCP server
+    CONDUCTOR_BASE = f"{HOME}/Workspace/organvm-iv-taxis/tool-interaction-design"
+    config["mcpServers"]["conductor"] = {
+        "command": f"{CONDUCTOR_BASE}/.venv/bin/python3",
+        "args": [f"{CONDUCTOR_BASE}/mcp_server.py"],
+        "cwd": CONDUCTOR_BASE,
     }
 
-# Neon MCP server — token from NEON_API_KEY env var (set by secrets.zsh)
-neon_key = os.environ.get("NEON_API_KEY", "")
-if neon_key:
-    config["mcpServers"]["Neon"] = {
-        "type": "http",
-        "url": "https://mcp.neon.tech/mcp",
-        "headers": {"Authorization": f"Bearer {neon_key}"},
+    # Voice Scorer MCP server
+    VOX_BASE = f"{HOME}/Workspace/organvm-iv-taxis/vox--architectura-gubernatio"
+    config["mcpServers"]["voice-scorer"] = {
+        "command": f"{VOX_BASE}/.venv/bin/python3",
+        "args": [f"{VOX_BASE}/src/vox/mcp_server.py"],
+        "cwd": VOX_BASE,
     }
+
+    # GitHub MCP server — token from env (set by secrets.zsh)
+    gh_token = os.environ.get("GITHUB_PERSONAL_ACCESS_TOKEN", "")
+    if gh_token:
+        config["mcpServers"]["github"] = {
+            "command": "/opt/homebrew/bin/github-mcp-server",
+            "args": ["stdio"],
+            "env": {"GITHUB_PERSONAL_ACCESS_TOKEN": gh_token},
+        }
+
+    # Neon MCP server — token from env (set by secrets.zsh)
+    neon_key = os.environ.get("NEON_API_KEY", "")
+    if neon_key:
+        config["mcpServers"]["Neon"] = {
+            "type": "http",
+            "url": "https://mcp.neon.tech/mcp",
+            "headers": {"Authorization": f"Bearer {neon_key}"},
+        }
 
 print(json.dumps(config, indent=2, ensure_ascii=False), end="")

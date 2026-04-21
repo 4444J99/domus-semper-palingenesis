@@ -8,6 +8,7 @@ it falls back to an empty object `{}`.
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -18,11 +19,13 @@ SCRIPT = REPO_ROOT / "modify_dot_claude.json.tmpl"
 
 def _run_script(stdin_data: str) -> subprocess.CompletedProcess:
     """Invoke the modify script via subprocess, piping stdin_data."""
+    env = {**os.environ, "CHEZMOI_MODIFY_TEST": "1"}
     return subprocess.run(
         [sys.executable, str(SCRIPT)],
         input=stdin_data,
         capture_output=True,
         text=True,
+        env=env,
     )
 
 
