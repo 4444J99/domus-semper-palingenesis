@@ -91,7 +91,7 @@ export TF_DATA_DIR="$XDG_DATA_HOME/terraform"
 # Anchored to dotfiles repo; agents write only inside WORKSPACE_ROOT + AGENTS_ROOT
 # ─────────────────────────────────────────────────────────────────────────────
 
-export DOMUS_ROOT="$HOME/domus-semper-palingenesis"
+export DOMUS_ROOT="{{ .chezmoi.sourceDir }}"
 export AGENTS_ROOT="$DOMUS_ROOT/_agents"
 export AGENTS_BIN="$AGENTS_ROOT/bin"
 export AGENTS_CACHE="$AGENTS_ROOT/cache"
