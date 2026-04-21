@@ -2,7 +2,7 @@
 
 ## User
 - [Personal situation](user_personal_situation.md) — Housing/employment/family crisis; Staten Island; survival-level instability alongside technical work
-- [Core identity](user_core_identity.md) — Not a coder; humanities creator building ideal forms; every system has failed him; ORGANVM must not fail
+- [Core identity](user_core_identity.md) — Humanities creator chasing the zeitgeist; every system has failed him; ORGANVM is the carrier wave
 
 ## Active Projects
 - [Becka McKay thread](project_becka_mckay_thread.md) — Outreach to former MFA thesis advisor (FAU); 5-email thread; awaiting reply after redirecting substance question to practical asks (2026-04-18)
@@ -14,6 +14,7 @@
 - [CCE CPU throttling + Gemini spike](project_cce_cpu_throttle_gemini.md) — taskpolicy+trigram deployed; Gemini cache decrypted, web API next (2026-04-16)
 - [Plugin marketplace fix](project_plugin_fix_2026-04-16.md) — SSH clone, hooks `if` regression fixed; private_dot_claude confirmed in chezmoi (2026-04-16)
 - [Domain architecture](project_domain_architecture.md) — 6 domains, 3 circles, Cloudflare, env vars in chezmoi (2026-04-16)
+- [Zeitgeist carrier wave thesis](project_zeitgeist_thesis.md) — Music→film→TV→internet→systems; needs research, essays, thesis, dissertation; dispatch to agent fleet (2026-04-21)
 - [ORGANVM system state](project_organvm_pactvm.md) — 10 organs, 145 repos, omega 9/20, ~896 IRF items
 - [iCloud folder sync broken](project_icloud_folder_sync_broken.md) — Runaway conflict loop, needs Apple server-side reset
 - [Time Machine SSD conversion](project_timemachine_ssd_conversion.md) — exFAT→APFS reformat deferred, needs staging drive
