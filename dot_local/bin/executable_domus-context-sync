@@ -10,7 +10,7 @@ REGISTRY="${HOME}/Workspace/meta-organvm/organvm-corpvs-testamentvm/registry-v2.
 
 mkdir -p "${LOGDIR}"
 
-log() { echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*" >> "${LOGFILE}"; }
+log() { echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*" >>"${LOGFILE}"; }
 
 # Prevent concurrent runs
 if [[ -f "${LOCKFILE}" ]]; then
@@ -21,7 +21,7 @@ if [[ -f "${LOCKFILE}" ]]; then
   fi
   rm -f "${LOCKFILE}"
 fi
-echo $$ > "${LOCKFILE}"
+echo $$ >"${LOCKFILE}"
 trap 'rm -f "${LOCKFILE}"' EXIT
 
 # Guard: registry must exist
@@ -39,7 +39,7 @@ fi
 log "START: context sync triggered"
 
 # Run context sync with --write (not dry-run)
-if organvm context sync --write >> "${LOGFILE}" 2>&1; then
+if organvm context sync --write >>"${LOGFILE}" 2>&1; then
   log "DONE: context sync completed successfully"
 else
   exit_code=$?
