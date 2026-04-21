@@ -404,13 +404,16 @@ Linked skills: cicd-resilience-and-recovery, continuous-learning-agent, evaluati
 
 ## Task Queue (from pipeline)
 
-**71** pending tasks | Last pipeline: unknown
+**66** pending tasks | Last pipeline: unknown | Last update: 2026-04-21
 
-- `67e5eb6df8e5` domus.../.chezmoiscripts/run_after_ensure-xdg-symlinks.sh.tmpl — Remove 16 entries from `apps=() [aws, bash, chezmoi]
-- `29334fd078f9` domus.../dot_config/zsh/15-env.zsh — Add 6 env vars: `ANDROID_USER_HOME`, `GRADLE_USER_HOME`, `MPLCONFIGDIR`, `TMUX_PLUG [aws, bash, chezmoi]
-- `913fa1071b92` domus.../dot_config/tmux/tmux.conf — Fix 3 `~/.tmux/plugins/tpm` → `~/.local/share/tmux/plugins/tpm [aws, bash, chezmoi]
-- `65c062d51089` domus.../dot_config/npm/npmrc — Add `prefix=${XDG_DATA_HOME}/npm [aws, bash, chezmoi]
-- `370417c69874` domus.../_agents/ — Delete from chezmoi source [aws, bash, chezmoi]
+### Completed (this cycle)
+- ~~`67e5eb6df8e5`~~ XDG symlink array — 6 dead apps removed, npm added (2026-04-21)
+- ~~`29334fd078f9`~~ 6 env vars in 15-env.zsh.tmpl — DONE (pre-existing)
+- ~~`913fa1071b92`~~ tmux plugin paths — DONE (pre-existing)
+- ~~`65c062d51089`~~ npm prefix in npmrc — DONE (pre-existing)
+- ~~`370417c69874`~~ _agents/ deleted from source tree + 14GB reclaimed (2026-04-21)
+
+### Open
 - `c0870ae16879` DELETE — Remove empty/unused symlinks [bash, docker, kubernetes]
 - `6d06adde52af` NATIVE_XDG — Keep (native XDG support) [bash, docker, kubernetes]
 - `5549abfa3f5d` SYMLINK_KEEP — Keep (hardcoded paths, no env var workaround) [bash, docker, kubernetes]

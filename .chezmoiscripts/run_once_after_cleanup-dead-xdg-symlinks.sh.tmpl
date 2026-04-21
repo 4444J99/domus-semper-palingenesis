@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# Remove XDG symlinks for apps no longer in the ensure-xdg-symlinks array.
+# run_once: executes once per content hash — safe to re-run after editing.
+set -euo pipefail
+
+dead_apps=(blender_ext claude-server-commander dropbox_bi mcp-auth playwright-mcp)
+removed=0
+
+for app in "${dead_apps[@]}"; do
+  link="$HOME/.$app"
+  if [[ -L "$link" ]]; then
+    rm -f "$link"
+    echo "Removed ~/.$app symlink"
+    ((removed++)) || true
+  fi
+done
+
+if ((removed > 0)); then
+  echo "🧹 Removed $removed dead XDG symlinks"
+fi
