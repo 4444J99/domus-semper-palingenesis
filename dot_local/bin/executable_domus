@@ -688,13 +688,45 @@ EOF
 
 cmd_doctor() {
   local exit_code=0
+  local json_mode=false
+  local -a json_checks=()
 
-  echo ""
-  printf '%sDomus Doctor%s %s%s%s\n' "$BOLD" "$RESET" "$DIM" "$(date '+%Y-%m-%d %H:%M')" "$RESET"
-  echo ""
+  if [[ "${1:-}" == "--json" ]]; then
+    json_mode=true
+  fi
+
+  # Detect repo root dynamically
+  local repo_root
+  repo_root=$(chezmoi source-path 2>/dev/null) || repo_root="${DOMUS_ROOT:-${HOME}/domus-semper-palingenesis}"
+
+  # Helper: record a check result
+  # Usage: _doctor_check <name> <status> <message>
+  # status: ok | info | warn | fail | skip
+  _doctor_check() {
+    local name="$1" check_status="$2" message="$3"
+    if $json_mode; then
+      json_checks+=("{\"name\":\"${name}\",\"status\":\"${check_status}\",\"message\":\"$(echo "$message" | sed 's/"/\\"/g')\"}")
+    else
+      local symbol color
+      case "$check_status" in
+        ok)   symbol="✓"; color="$GREEN" ;;
+        info) symbol="·"; color="$BLUE" ;;
+        warn) symbol="!"; color="$YELLOW" ;;
+        fail) symbol="✗"; color="$RED" ;;
+        skip) symbol="○"; color="$DIM" ;;
+      esac
+      # Pad check names to 13 chars for alignment
+      printf '%s[%s]%s%*s %s%s%s %s\n' "$CYAN" "$name" "$RESET" $((13 - ${#name} - 2)) "" "$color" "$symbol" "$RESET" "$message"
+    fi
+  }
+
+  if ! $json_mode; then
+    echo ""
+    printf '%sDomus Doctor%s %s%s%s\n' "$BOLD" "$RESET" "$DIM" "$(date '+%Y-%m-%d %H:%M')" "$RESET"
+    echo ""
+  fi
 
   # 1. Shell startup time trend
-  printf '%s[startup]%s  ' "$CYAN" "$RESET"
   local telemetry="${STATE_DIR}/telemetry/shell-startup.jsonl"
   if [[ -f "$telemetry" ]]; then
     local avg_ms
@@ -706,35 +738,33 @@ cmd_doctor() {
       warning_ms=$(yq -r '.performance.shell_startup.warning_ms // 700' "${MANIFEST}")
     fi
     if [[ $avg_ms -le $target_ms ]]; then
-      printf '%s✓%s avg %sms (last 10)\n' "$GREEN" "$RESET" "$avg_ms"
+      _doctor_check startup ok "avg ${avg_ms}ms (last 10)"
     elif [[ $avg_ms -le $warning_ms ]]; then
-      printf '%s!%s avg %sms (last 10) - above %sms target\n' "$YELLOW" "$RESET" "$avg_ms" "$target_ms"
+      _doctor_check startup warn "avg ${avg_ms}ms (last 10) - above ${target_ms}ms target"
     else
-      printf '%s✗%s avg %sms (last 10) - above %sms warning\n' "$RED" "$RESET" "$avg_ms" "$warning_ms"
+      _doctor_check startup fail "avg ${avg_ms}ms (last 10) - above ${warning_ms}ms warning"
       exit_code=1
     fi
   else
-    printf '%s○%s no telemetry data\n' "$DIM" "$RESET"
+    _doctor_check startup skip "no telemetry data"
   fi
 
   # 2. Package drift
-  printf '%s[packages]%s ' "$CYAN" "$RESET"
   if [[ -x "${BIN_DIR}/domus-packages" ]]; then
     local pkg_status
     pkg_status=$("${BIN_DIR}/domus-packages" status --quiet 2>/dev/null) || true
     case "$pkg_status" in
-      synced) printf '%s✓%s in sync with manifest\n' "$GREEN" "$RESET" ;;
+      synced) _doctor_check packages ok "in sync with manifest" ;;
       drift)
-        printf '%s·%s drift detected (normal between syncs)\n' "$BLUE" "$RESET"
+        _doctor_check packages info "drift detected (normal between syncs)"
         ;;
-      *) printf '%s○%s unable to check\n' "$DIM" "$RESET" ;;
+      *) _doctor_check packages skip "unable to check" ;;
     esac
   else
-    printf '%s○%s domus-packages not available\n' "$DIM" "$RESET"
+    _doctor_check packages skip "domus-packages not available"
   fi
 
   # 3. LaunchAgent status
-  printf '%s[daemons]%s  ' "$CYAN" "$RESET"
   if [[ "$(uname)" == "Darwin" ]]; then
     local agents_ok=0
     local agents_missing=0
@@ -746,72 +776,67 @@ cmd_doctor() {
       fi
     done
     if [[ $agents_missing -eq 0 ]]; then
-      printf '%s✓%s %s/3 agents loaded\n' "$GREEN" "$RESET" "$agents_ok"
+      _doctor_check daemons ok "${agents_ok}/3 agents loaded"
     else
-      # Check if automation is intentionally disabled
       local auto_enabled="false"
       if command -v chezmoi &>/dev/null; then
         auto_enabled=$(chezmoi data --format json 2>/dev/null | grep -o '"domus_auto_enabled":[^,}]*' | grep -o 'true\|false' | head -1) || auto_enabled="false"
       fi
       if [[ "$auto_enabled" == "false" ]]; then
-        printf '%s·%s %s/3 agents loaded — automation disabled by config\n' "$BLUE" "$RESET" "$agents_ok"
+        _doctor_check daemons info "${agents_ok}/3 agents loaded — automation disabled by config"
       else
-        printf '%s!%s %s/3 agents loaded (%s missing)\n' "$YELLOW" "$RESET" "$agents_ok" "$agents_missing"
+        _doctor_check daemons warn "${agents_ok}/3 agents loaded (${agents_missing} missing)"
         exit_code=1
       fi
     fi
   else
-    printf '%s○%s not macOS\n' "$DIM" "$RESET"
+    _doctor_check daemons skip "not macOS"
   fi
 
   # 4. Disk space
-  printf '%s[disk]%s     ' "$CYAN" "$RESET"
   local disk_pct
   disk_pct=$(df -h / | awk 'NR==2 {gsub(/%/,"",$5); print $5}')
   if [[ $disk_pct -lt 80 ]]; then
-    printf '%s✓%s %s%% used\n' "$GREEN" "$RESET" "$disk_pct"
+    _doctor_check disk ok "${disk_pct}% used"
   elif [[ $disk_pct -lt 90 ]]; then
-    printf '%s!%s %s%% used\n' "$YELLOW" "$RESET" "$disk_pct"
+    _doctor_check disk warn "${disk_pct}% used"
   else
-    printf '%s✗%s %s%% used - disk nearly full\n' "$RED" "$RESET" "$disk_pct"
+    _doctor_check disk fail "${disk_pct}% used - disk nearly full"
     exit_code=1
   fi
 
   # 5. 1Password CLI
-  printf '%s[1password]%s' "$CYAN" "$RESET"
   if command -v op &>/dev/null; then
     if op whoami &>/dev/null 2>&1; then
-      printf ' %s✓%s authenticated\n' "$GREEN" "$RESET"
+      _doctor_check 1password ok "authenticated"
     elif [[ ! -t 0 ]]; then
-      printf ' %s·%s not signed in (no TTY session)\n' "$BLUE" "$RESET"
+      _doctor_check 1password info "not signed in (no TTY session)"
     else
-      printf ' %s!%s installed but not signed in\n' "$YELLOW" "$RESET"
+      _doctor_check 1password warn "installed but not signed in"
     fi
   else
-    printf ' %s○%s not installed\n' "$DIM" "$RESET"
+    _doctor_check 1password skip "not installed"
   fi
 
   # 6. Chezmoi health (quick check)
-  printf '%s[chezmoi]%s  ' "$CYAN" "$RESET"
   if command -v chezmoi &>/dev/null; then
     local all_drift real_drift
     all_drift=$(timeout 10 chezmoi diff 2>/dev/null | grep '^diff' || true)
     real_drift=$(echo "$all_drift" | grep -v '\.chezmoiscripts/' | head -1) || real_drift=""
     if [[ -z "$all_drift" ]]; then
-      printf '%s✓%s no drift\n' "$GREEN" "$RESET"
+      _doctor_check chezmoi ok "no drift"
     elif [[ -z "$real_drift" ]]; then
-      printf '%s·%s run scripts only (transient)\n' "$BLUE" "$RESET"
+      _doctor_check chezmoi info "run scripts only (transient)"
     else
-      printf '%s!%s drift detected\n' "$YELLOW" "$RESET"
+      _doctor_check chezmoi warn "drift detected"
       exit_code=1
     fi
   else
-    printf '%s✗%s chezmoi not found\n' "$RED" "$RESET"
+    _doctor_check chezmoi fail "chezmoi not found"
     exit_code=1
   fi
 
   # 7. Telemetry integrity
-  printf '%s[telemetry]%s' "$CYAN" "$RESET"
   local telem_dir="${STATE_DIR}/telemetry"
   if [[ -d "$telem_dir" ]]; then
     local telem_files

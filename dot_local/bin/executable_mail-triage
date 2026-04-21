@@ -31,14 +31,16 @@ LOG_DIR = Path.home() / ".local" / "state" / "domus"
 LOG_FILE = LOG_DIR / "mail-triage.log"
 
 # Gmail labels exposed as IMAP mailboxes
+# Use existing Gmail labels (not Triage/* — those were created in error).
+# These labels predate this script and are the canonical routing targets.
 TRIAGE_MAILBOXES = [
-    "Triage/Spam",
-    "Triage/Noise",
-    "Triage/Human",
-    "Triage/Action",
-    "Triage/Action/Today",
-    "Triage/Action/This-Week",
-    "Triage/Action/Someday",
+    "Spam",
+    "Noise",
+    "Human",
+    "Action",
+    "Today",
+    "This-Week",
+    "Someday",
 ]
 
 # ---------------------------------------------------------------------------
@@ -809,18 +811,18 @@ end tell
 # ---------------------------------------------------------------------------
 
 def tier_to_mailbox(tier: str, sub_tier: str | None) -> str:
-    """Map a classification tier to the target IMAP mailbox path."""
+    """Map a classification tier to an existing Gmail label (IMAP mailbox)."""
     if tier == "SPAM":
-        return "Triage/Spam"
+        return "Spam"
     if tier == "NOISE":
-        return "Triage/Noise"
+        return "Noise"
     if tier == "HUMAN":
-        return "Triage/Human"
+        return "Human"
     if tier == "ACTION":
         if sub_tier in ("Today", "This-Week", "Someday"):
-            return f"Triage/Action/{sub_tier}"
-        return "Triage/Action/Someday"
-    return "Triage/Human"
+            return sub_tier
+        return "Someday"
+    return "Human"
 
 
 # ---------------------------------------------------------------------------
