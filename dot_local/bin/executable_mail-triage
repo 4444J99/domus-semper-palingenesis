@@ -301,6 +301,32 @@ NOISE_SENDER_PATTERNS: list[tuple[str, str]] = [
     ("noreply@fedex.com", "shipping"),
     ("noreply@usps.com", "shipping"),
     ("tracking-noreply@google.com", "shipping"),
+    # Receipts / dining
+    ("@drafthouse.com", "commerce"),
+    # Dev tools / product newsletters
+    ("@news.fly.io", "newsletter"),
+    ("@gitbook.com", "newsletter"),
+    ("@coderabbit.ai", "newsletter"),
+    ("@trunk.io", "newsletter"),
+    ("@news.termius.com", "newsletter"),
+    ("@gitguardian.com", "newsletter"),
+    ("@sudowrite.com", "newsletter"),
+    ("@email.openai.com", "newsletter"),
+    ("@ibo.org", "newsletter"),
+    # Retail / membership
+    ("@t.timberland.com", "newsletter"),
+    ("@my.joinhoney.com", "service"),
+    ("@students.udemy.com", "newsletter"),
+    # ISP / telecom
+    ("@customer.verizon.com", "service"),
+    ("@exchange.spectrum.com", "service"),
+    # Cloud / promo
+    ("nextsupport@google.com", "newsletter"),
+    # Finance / connections
+    ("noreply@robinhood.com", "finance"),
+    ("noreply@plaid.com", "service"),
+    # Spam-adjacent (marketing disguised as personal)
+    ("@iemail.moneylion.com", "newsletter"),
 ]
 
 # ACTION: known senders whose messages always require action (bills, invoices)
