@@ -255,7 +255,8 @@ def main():
     if formal.exists():
         wts = git_worktree_info(formal)
         branches = [w.get("branch", "?") for w in wts]
-        print(f"  ~/system-system--system/              formal layer [{', '.join(branches)}]")
+        bstr = ", ".join(branches)
+        print(f"  ~/system-system--system/              formal layer [{bstr}]")
 
     monad = HOME / "system-system--system--monad"
     if monad.exists():
