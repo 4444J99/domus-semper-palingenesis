@@ -1,0 +1,484 @@
+#!/usr/bin/env bash
+# ─────────────────────────────────────────────────────────────────────────────
+# agent-dispatch - Route prompts to AI CLI agents
+# ─────────────────────────────────────────────────────────────────────────────
+#
+# Unified dispatch layer for orchestrating prompts across installed AI agent
+# CLIs. Validates agent availability, constructs the correct invocation,
+# logs every dispatch, and returns the agent's stdout.
+#
+# Usage:
+#   agent-dispatch <agent> <prompt> [--dir <path>] [--json] [--system <prompt>]
+#   echo "prompt" | agent-dispatch <agent>
+#   agent-dispatch --list
+#   agent-dispatch --help
+#
+# Exit codes:
+#   0 - Agent completed successfully
+#   1 - Agent exited with error
+#   2 - Usage/configuration error (missing agent, bad args)
+
+set -euo pipefail
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Shared library
+# ─────────────────────────────────────────────────────────────────────────────
+
+DOMUS_LIB="$(dirname "$0")/domus-lib.sh"
+# shellcheck source=domus-lib.sh
+if [[ -f "$DOMUS_LIB" ]]; then
+  source "$DOMUS_LIB"
+else
+  # Minimal fallback when domus-lib.sh is unavailable (e.g. standalone use)
+  RED='' GREEN='' YELLOW='' BLUE='' CYAN='' DIM='' BOLD='' RESET=''
+  if [[ -t 2 ]]; then
+    RED=$'\033[0;31m' GREEN=$'\033[0;32m' YELLOW=$'\033[0;33m'
+    BLUE=$'\033[0;34m' CYAN=$'\033[0;36m' DIM=$'\033[0;90m'
+    BOLD=$'\033[1m' RESET=$'\033[0m'
+  fi
+  die() { printf '%serror:%s %s\n' "$RED" "$RESET" "$1" >&2; exit 2; }
+  info() { printf '%s::%s %s\n' "$BLUE" "$RESET" "$1" >&2; }
+  warn() { printf '%s!%s %s\n' "$YELLOW" "$RESET" "$1" >&2; }
+fi
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Configuration
+# ─────────────────────────────────────────────────────────────────────────────
+
+LOG_DIR="${HOME}/.local/state/agent-dispatch"
+LOG_FILE="${LOG_DIR}/dispatch.log"
+LOG_MAX_BYTES=1048576  # 1MB — rotate when exceeded
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Agent registry
+# ─────────────────────────────────────────────────────────────────────────────
+
+# Each agent: binary name, version flag, dispatch function
+# Order matches the conductor dispatch protocol work-type table.
+AGENTS=(claude codex opencode gemini copilot goose)
+
+agent_binary() {
+  case "$1" in
+    claude)   echo "claude" ;;
+    codex)    echo "codex" ;;
+    opencode) echo "opencode" ;;
+    gemini)   echo "gemini" ;;
+    copilot)  echo "copilot" ;;
+    goose)    echo "goose" ;;
+    *)        return 1 ;;
+  esac
+}
+
+agent_version_flag() {
+  case "$1" in
+    claude|codex|opencode|gemini|copilot) echo "--version" ;;
+    goose) echo "--version" ;;
+  esac
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Dispatch table (work-type → agent mapping)
+# ─────────────────────────────────────────────────────────────────────────────
+
+dispatch_table() {
+  cat <<'TABLE'
+  Cognitive Class   Work Type                  Primary     Alternates
+  ───────────────   ─────────────────────────  ──────────  ──────────────
+  strategic         architecture               claude      —
+  strategic         debugging                  claude      —
+  strategic         audit                      claude      —
+  strategic         research                   claude      gemini
+  tactical          testing                    codex       gemini
+  tactical          content generation         gemini      codex
+  mechanical        boilerplate generation     codex       gemini
+  mechanical        mechanical refactoring     codex       opencode
+TABLE
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Logging
+# ─────────────────────────────────────────────────────────────────────────────
+
+log_rotate() {
+  if [[ -f "$LOG_FILE" ]]; then
+    local size
+    size=$(stat -f%z "$LOG_FILE" 2>/dev/null || stat -c%s "$LOG_FILE" 2>/dev/null || echo 0)
+    if [[ "$size" -gt "$LOG_MAX_BYTES" ]]; then
+      tail -500 "$LOG_FILE" >"${LOG_FILE}.new" && mv "${LOG_FILE}.new" "$LOG_FILE"
+    fi
+  fi
+}
+
+log_dispatch() {
+  local agent="$1"
+  local prompt_preview="$2"
+  local exit_code="$3"
+  local dir="${4:-}"
+
+  mkdir -p "$LOG_DIR"
+  log_rotate
+
+  # Truncate prompt preview to 80 chars, collapse whitespace
+  prompt_preview="$(printf '%s' "$prompt_preview" | tr '\n' ' ' | sed 's/  */ /g')"
+  if [[ ${#prompt_preview} -gt 80 ]]; then
+    prompt_preview="${prompt_preview:0:77}..."
+  fi
+
+  local timestamp
+  timestamp="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+
+  printf '[%s] agent=%s exit=%d dir=%s prompt="%s"\n' \
+    "$timestamp" "$agent" "$exit_code" "${dir:-.}" "$prompt_preview" \
+    >>"$LOG_FILE"
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Agent dispatch functions
+# ─────────────────────────────────────────────────────────────────────────────
+
+dispatch_claude() {
+  local prompt="$1"
+  local dir="$2"
+  local json_flag="$3"
+  local system_prompt="$4"
+
+  local cmd=(claude -p "$prompt")
+
+  if [[ -n "$system_prompt" ]]; then
+    cmd+=(--system-prompt "$system_prompt")
+  fi
+  if [[ "$json_flag" == "1" ]]; then
+    cmd+=(--output-format json)
+  fi
+  if [[ -n "$dir" ]]; then
+    # Claude Code uses the cwd as project context
+    cd "$dir"
+  fi
+  cmd+=(--max-turns 3)
+
+  "${cmd[@]}"
+}
+
+dispatch_codex() {
+  local prompt="$1"
+  local dir="$2"
+  local json_flag="$3"
+  local system_prompt="$4"
+
+  local cmd=(codex exec "$prompt")
+
+  cmd+=(--full-auto)
+  if [[ "$json_flag" == "1" ]]; then
+    cmd+=(--json)
+  fi
+  # Codex does not support --system-prompt; prepend to prompt if provided
+  if [[ -n "$system_prompt" ]]; then
+    cmd=(codex exec "[System: ${system_prompt}] ${prompt}")
+    cmd+=(--full-auto)
+    if [[ "$json_flag" == "1" ]]; then
+      cmd+=(--json)
+    fi
+  fi
+
+  if [[ -n "$dir" ]]; then
+    cd "$dir"
+  fi
+
+  "${cmd[@]}"
+}
+
+dispatch_opencode() {
+  local prompt="$1"
+  local dir="$2"
+  local json_flag="$3"
+  local system_prompt="$4"
+
+  local cmd=(opencode run "$prompt")
+
+  cmd+=(--skip-permissions)
+  if [[ "$json_flag" == "1" ]]; then
+    cmd+=(--json)
+  fi
+  if [[ -n "$dir" ]]; then
+    cmd+=(--dir "$dir")
+  fi
+  # OpenCode does not support --system-prompt; prepend to prompt if provided
+  if [[ -n "$system_prompt" ]]; then
+    cmd=(opencode run "[System: ${system_prompt}] ${prompt}")
+    cmd+=(--skip-permissions)
+    if [[ "$json_flag" == "1" ]]; then
+      cmd+=(--json)
+    fi
+    if [[ -n "$dir" ]]; then
+      cmd+=(--dir "$dir")
+    fi
+  fi
+
+  "${cmd[@]}"
+}
+
+dispatch_gemini() {
+  local prompt="$1"
+  local dir="$2"
+  local json_flag="$3"
+  local system_prompt="$4"
+
+  # --allowed-mcp-server-names __none__ skips slow MCP startup
+  local cmd=(gemini -p "$prompt" --allowed-mcp-server-names __none__)
+
+  if [[ "$json_flag" == "1" ]]; then
+    cmd+=(--output-format json)
+  fi
+  if [[ -n "$dir" ]]; then
+    cmd+=(--sandbox "$dir")
+  fi
+  # Gemini does not support --system-prompt; prepend to prompt if provided
+  if [[ -n "$system_prompt" ]]; then
+    cmd=(gemini -p "[System: ${system_prompt}] ${prompt}" --allowed-mcp-server-names __none__)
+    if [[ "$json_flag" == "1" ]]; then
+      cmd+=(--output-format json)
+    fi
+    if [[ -n "$dir" ]]; then
+      cmd+=(--sandbox "$dir")
+    fi
+  fi
+
+  "${cmd[@]}"
+}
+
+dispatch_copilot() {
+  local prompt="$1"
+  local dir="$2"
+  local json_flag="$3"
+  local system_prompt="$4"
+
+  local cmd=(copilot -p "$prompt")
+
+  # Copilot does not support --json or --system-prompt natively
+  if [[ -n "$system_prompt" ]]; then
+    cmd=(copilot -p "[System: ${system_prompt}] ${prompt}")
+  fi
+
+  if [[ -n "$dir" ]]; then
+    cd "$dir"
+  fi
+
+  "${cmd[@]}"
+}
+
+dispatch_goose() {
+  local prompt="$1"
+  local dir="$2"
+  local json_flag="$3"
+  local system_prompt="$4"
+
+  warn "goose is degraded (sqlite panic) — dispatch may fail"
+
+  local cmd=(goose run -t "$prompt")
+
+  # Goose does not support --json, --system-prompt, or --dir natively
+  if [[ -n "$system_prompt" ]]; then
+    cmd=(goose run -t "[System: ${system_prompt}] ${prompt}")
+  fi
+
+  if [[ -n "$dir" ]]; then
+    cd "$dir"
+  fi
+
+  "${cmd[@]}"
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Help
+# ─────────────────────────────────────────────────────────────────────────────
+
+show_help() {
+  cat <<EOF
+${BOLD}agent-dispatch${RESET} - Route prompts to AI CLI agents
+
+${BOLD}USAGE${RESET}
+  agent-dispatch <agent> <prompt> [OPTIONS]
+  agent-dispatch <agent> [OPTIONS]              # prompt from stdin
+  echo "prompt" | agent-dispatch <agent>        # pipe prompt
+  agent-dispatch --list                         # show available agents
+  agent-dispatch --help                         # this help
+
+${BOLD}AGENTS${RESET}
+  claude    Claude Code (v2.1.x)   — strategic: architecture, debugging, audit
+  codex     Codex CLI (v0.122.x)   — tactical/mechanical: testing, boilerplate, refactoring
+  opencode  OpenCode (v1.4.x)      — mechanical: refactoring, infrastructure
+  gemini    Gemini CLI (v0.38.x)   — tactical: content generation, research velocity
+  copilot   Copilot CLI (v0.0.x)   — general: multi-provider model selection
+  goose     Goose (v1.31.x)        — degraded (sqlite panic), use sparingly
+
+${BOLD}OPTIONS${RESET}
+  --dir <path>         Working directory for the agent
+  --json               Request structured JSON output (where supported)
+  --system <prompt>    System prompt (where supported; prepended otherwise)
+
+${BOLD}DISPATCH TABLE${RESET} (conductor protocol work-type mapping)
+$(dispatch_table)
+
+${BOLD}LOGGING${RESET}
+  All dispatches logged to: ${LOG_DIR}/dispatch.log
+  Format: [timestamp] agent=<name> exit=<code> dir=<path> prompt="<first 80 chars>"
+
+${BOLD}EXAMPLES${RESET}
+  agent-dispatch claude "Audit this codebase for security issues"
+  agent-dispatch codex "Write unit tests for src/auth.ts" --dir ~/project --json
+  agent-dispatch gemini "Summarize this README" --system "Be concise"
+  echo "Refactor the database layer" | agent-dispatch opencode --dir ~/project
+  cat task.md | agent-dispatch claude --json
+
+${BOLD}EXIT CODES${RESET}
+  0  Agent completed successfully
+  1  Agent exited with error
+  2  Usage/configuration error
+EOF
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# List agents with availability check
+# ─────────────────────────────────────────────────────────────────────────────
+
+list_agents() {
+  printf '%s%-10s  %-12s  %-10s  %s%s\n' \
+    "$BOLD" "AGENT" "BINARY" "STATUS" "VERSION" "$RESET"
+  printf '%-10s  %-12s  %-10s  %s\n' \
+    "──────────" "────────────" "──────────" "───────────────"
+
+  local agent binary version_flag version_str
+  for agent in "${AGENTS[@]}"; do
+    binary="$(agent_binary "$agent")"
+    version_flag="$(agent_version_flag "$agent")"
+
+    if command -v "$binary" &>/dev/null; then
+      version_str="$("$binary" "$version_flag" 2>&1 | head -1 | sed 's/^[^0-9]*//' || echo "unknown")"
+      printf '%-10s  %-12s  %s%-10s%s  %s\n' \
+        "$agent" "$binary" "$GREEN" "installed" "$RESET" "$version_str"
+    else
+      printf '%-10s  %-12s  %s%-10s%s  %s\n' \
+        "$agent" "$binary" "$RED" "missing" "$RESET" "—"
+    fi
+  done
+
+  echo ""
+  echo "Dispatch table:"
+  dispatch_table
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Parse arguments
+# ─────────────────────────────────────────────────────────────────────────────
+
+AGENT=""
+PROMPT=""
+WORK_DIR=""
+JSON_FLAG=0
+SYSTEM_PROMPT=""
+
+# No args → help
+if [[ $# -eq 0 ]] && [[ -t 0 ]]; then
+  show_help
+  exit 0
+fi
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -h|--help)
+      show_help
+      exit 0
+      ;;
+    --list|-l)
+      list_agents
+      exit 0
+      ;;
+    --dir)
+      [[ $# -lt 2 ]] && die "--dir requires a path argument"
+      WORK_DIR="$2"
+      shift 2
+      ;;
+    --json)
+      JSON_FLAG=1
+      shift
+      ;;
+    --system)
+      [[ $# -lt 2 ]] && die "--system requires a prompt argument"
+      SYSTEM_PROMPT="$2"
+      shift 2
+      ;;
+    -*)
+      die "unknown option: $1 (see --help)"
+      ;;
+    *)
+      # First positional → agent name, second → prompt
+      if [[ -z "$AGENT" ]]; then
+        AGENT="$1"
+      elif [[ -z "$PROMPT" ]]; then
+        PROMPT="$1"
+      else
+        # Concatenate additional positional args into prompt
+        PROMPT="$PROMPT $1"
+      fi
+      shift
+      ;;
+  esac
+done
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Read prompt from stdin if not provided as argument
+# ─────────────────────────────────────────────────────────────────────────────
+
+if [[ -z "$PROMPT" ]]; then
+  if [[ ! -t 0 ]]; then
+    PROMPT="$(cat)"
+  fi
+fi
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Validation
+# ─────────────────────────────────────────────────────────────────────────────
+
+[[ -z "$AGENT" ]] && die "no agent specified (see --help)"
+[[ -z "$PROMPT" ]] && die "no prompt provided (pass as argument or pipe via stdin)"
+
+# Validate agent name
+BINARY="$(agent_binary "$AGENT" 2>/dev/null)" || die "unknown agent: $AGENT (available: ${AGENTS[*]})"
+
+# Validate agent is installed
+if ! command -v "$BINARY" &>/dev/null; then
+  die "$AGENT ($BINARY) is not installed on this machine"
+fi
+
+# Validate --dir if provided
+if [[ -n "$WORK_DIR" ]]; then
+  [[ -d "$WORK_DIR" ]] || die "directory does not exist: $WORK_DIR"
+  WORK_DIR="$(cd "$WORK_DIR" && pwd)"  # Resolve to absolute path
+fi
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Dispatch
+# ─────────────────────────────────────────────────────────────────────────────
+
+# Save original dir for agents that cd
+_ORIG_DIR="$(pwd)"
+
+info "dispatching to $AGENT: ${PROMPT:0:60}$([ ${#PROMPT} -gt 60 ] && echo '...')"
+
+agent_exit=0
+dispatch_"${AGENT}" "$PROMPT" "$WORK_DIR" "$JSON_FLAG" "$SYSTEM_PROMPT" || agent_exit=$?
+
+# Return to original dir (in case agent dispatch cd'd)
+cd "$_ORIG_DIR"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Log and exit
+# ─────────────────────────────────────────────────────────────────────────────
+
+log_dispatch "$AGENT" "$PROMPT" "$agent_exit" "$WORK_DIR"
+
+if [[ $agent_exit -ne 0 ]]; then
+  warn "$AGENT exited with code $agent_exit"
+fi
+
+exit "$agent_exit"
