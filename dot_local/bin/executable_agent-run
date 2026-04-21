@@ -11,7 +11,7 @@
 #   agent-run --help
 #
 # Environment:
-#   AGENTS_LOG   - Parent directory for run dirs (default: ~/domus-semper-palingenesis/_agents/log)
+#   AGENTS_LOG   - Parent directory for run dirs (default: $DOMUS_ROOT/_agents/log)
 #   AIDER_MODEL  - Model for aider (optional)
 #
 # Exit codes:
