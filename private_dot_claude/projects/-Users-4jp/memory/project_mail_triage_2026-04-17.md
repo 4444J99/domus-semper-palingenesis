@@ -1,23 +1,30 @@
 ---
-name: Email triage system design
-description: Four-tier inbox classifier (spam/noise/human/action) planned 2026-04-17 — Mail.app reads, Gmail MCP writes, new mail-triage repo, LaunchAgent on 30min cadence
+name: Email triage system — ACTIVE
+description: Four-tier inbox classifier (spam/noise/human/action) — LaunchAgent activated 2026-04-21, 30min cadence, pure osascript via Mail.app
 type: project
+originSessionId: caa53287-9125-4617-ae4f-43e9056d902d
 ---
+**Status:** ACTIVE as of 2026-04-21. LaunchAgent `com.4jp.mail-triage` loaded and running.
 
-Designed 2026-04-17. Plan file at `~/.claude/plans/eager-baking-steele.md`.
-
-**Architecture:** Read inbox via Mail.app/osascript (proven pattern from check_email.py), classify with rule-based heuristics, write Gmail labels via Gmail MCP tools.
+**Architecture:** 957-line Python script (`~/.local/bin/mail-triage`) reads Mail.app via osascript, classifies by inline sender/subject/body heuristics, moves messages to `Triage/*` IMAP mailboxes (synced as Gmail labels). Pure osascript — no IMAP, no app passwords.
 
 **Four classification tiers:**
-1. SPAM → report + archive
-2. NOISE → label `@noise/{newsletter,notification,transactional,social,ats}` + archive
-3. HUMAN → stays in inbox (default — anything unclassified is assumed human)
-4. ACTION → label `@action/{today,this-week,this-month,someday}` + keep in inbox
+1. SPAM → `Triage/Spam` (+ mark as junk)
+2. NOISE → `Triage/Noise` (subcategories: github, social, ci, service, commerce, finance, shipping, newsletter, ats, bulk-email)
+3. HUMAN → stays in inbox (default — anything unclassified)
+4. ACTION → `Triage/Action/{Today,This-Week,Someday}`
 
-**Repo:** `~/Workspace/4444J99/mail-triage/` — but user questioned whether 4444J99 is the right organ (see `project_4444J99_organ_identity.md`). May move to SEC or TAXIS. Repo not yet created.
+**First live run (2026-04-20):** 51 messages processed, 0 errors. 3 SPAM, 38 NOISE, 10 ACTION, 0 HUMAN.
 
-**LaunchAgent:** Rename `com.user.gmail_labeler` → `com.4jp.mail-triage`, 30min cadence, gated by `mail_triage_enabled` in chezmoi.toml.
+**Location:** Lives in domus-semper-palingenesis (not a separate repo). Script at `dot_local/bin/executable_mail-triage`, plist at `private_Library/LaunchAgents/com.4jp.mail-triage.plist.tmpl`.
+
+**Prerequisite:** Mail.app must be running. Script exits 1 cleanly if Mail.app is not accessible.
+
+**Known edge cases (from dry-run):**
+- MoneyLion `@iemail.moneylion.com` not caught by `@moneylion.com` pattern (subdomain mismatch)
+- Alamo Drafthouse receipts classify as HUMAN (no pattern for `@drafthouse.com`)
+- Santander surveys classify as ACTION/Someday (body keyword hits)
 
 **Why:** User wants inbox to show only real people. Noise auto-sorted, action items in escalating urgency buckets.
 
-**How to apply:** Plan is approved but implementation not started. Phase 0 (security remediation of hardcoded password) must happen first. Organ placement question still open.
+**How to apply:** Running. Tune classification rules in `executable_mail-triage` as edge cases surface. BACKLOG-001 (burned Gmail app password) is independent — not needed by this implementation.
