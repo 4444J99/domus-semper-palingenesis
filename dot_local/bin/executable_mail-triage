@@ -825,7 +825,7 @@ end tell
 NOISE_LABEL_MAP: dict[str, str] = {
     "newsletter": "Marketing/Newsletter",
     "bulk-email": "Marketing",
-    "github": "Dev/GitHub",
+    "github": "Notification",  # Dev/GitHub has IMAP resolution issues
     "ci": "Dev/Infrastructure",
     "social": "Social",
     "finance": "Finance/Banking",
