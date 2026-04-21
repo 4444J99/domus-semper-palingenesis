@@ -52,7 +52,7 @@
 - [Client code = spec](feedback_client_code_is_spec.md) — client-provided prototypes ARE the spec; don't reinterpret with different tech
 
 ## Active Projects
-- [Contribution phase transition](project_contribution_phase_transition.md) — solid→liquid: CLA live, 6 issues, essay-8 published, backflow pipeline coded, 20 open external PRs, 1 merged (PrefectHQ/fastmcp)
+- [Contribution phase transition](project_contribution_phase_transition.md) — solid→liquid COMPLETE: 24 tracked, 2 merged, 19 open, backflow 50 signals/5 organs, all vacuums resolved
 - [Zero income crisis](project_zero_income_crisis.md) — NO paying clients as of 2026-04-16, survival-level urgency
 - [Signal Closure Cascade](project_signal_closure_cascade.md) — Phase 1 DONE, NLnet submitted, CC deferred, Sovereign Tech PASSED
 - [Portal avalanche architecture](project_portal_avalanche_architecture.md) — 5-file genome, RECEIPT.md relay, scaffold-portal.py
