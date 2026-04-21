@@ -327,6 +327,8 @@ NOISE_SENDER_PATTERNS: list[tuple[str, str]] = [
     ("noreply@plaid.com", "service"),
     # Spam-adjacent (marketing disguised as personal)
     ("@iemail.moneylion.com", "newsletter"),
+    # Entertainment / artists
+    ("@louisck.com", "newsletter"),
 ]
 
 # ACTION: known senders whose messages always require action (bills, invoices)
