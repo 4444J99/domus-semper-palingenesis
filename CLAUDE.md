@@ -137,11 +137,11 @@ CLAUDE_CODE_MAX_OUTPUT_TOKENS=128000
 PAGER=cat
 ```
 
-Key vars set in `dot_config/zsh/15-env.zsh`:
+Key vars set in `dot_config/zsh/15-env.zsh.tmpl` (rendered at apply time):
 
 ```zsh
 EDITOR=nvim, VISUAL=nvim
-DOMUS_ROOT="$HOME/domus-semper-palingenesis"
+DOMUS_ROOT="{{ .chezmoi.sourceDir }}"  # Dynamic — resolves to actual chezmoi repo location
 AGENTS_ROOT, AGENTS_BIN, AGENTS_CACHE, AGENTS_STATE, AGENTS_LOG
 WORKSPACE_ROOT="$DOMUS_ROOT/projects"
 GOPATH, CARGO_HOME, RUSTUP_HOME, NVM_DIR, BUN_INSTALL   # Toolchain XDG compliance
