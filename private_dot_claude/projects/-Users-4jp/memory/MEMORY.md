@@ -6,7 +6,7 @@
 
 ## Active Projects
 - [Becka McKay thread](project_becka_mckay_thread.md) — Outreach to former MFA thesis advisor (FAU); 5-email thread; awaiting reply after redirecting substance question to practical asks (2026-04-18)
-- [Email triage system](project_mail_triage_2026-04-17.md) — ACTIVE 2026-04-21: merged into existing Gmail taxonomy, LaunchAgent deployed, 138 msgs triaged 0 errors
+- [Email triage system](project_mail_triage_2026-04-17.md) — FAILED 2026-04-21: LaunchAgent disabled (froze machine), classifier not affecting inbox, needs Gmail-side redesign
 - [Dotfiles sprawl audit](project_dotfiles_audit_2026-04-17.md) — 40+ dotdirs, Phase 0 complete (compromised files deleted), orphaned LaunchAgents cleaned (2026-04-21)
 - [Institutional substrate](project_institutional_substrate.md) — 19 institutional primitives, 4 operators, 4 formations (AEGIS/OIKONOMIA/PRAXIS/TESSERA); spec complete, implementation Phase 0 next (2026-04-20)
 - [Organ morphogenesis](project_organ_morphogenesis.md) — Shift from numbered organs to emergent formations; SECVRITY/PERSONA as first named clusters (2026-04-17)
@@ -45,6 +45,9 @@
 - [Never overwrite plan files](feedback_never_overwrite_plans.md) — Additive only; universal rule #3 supersedes plan mode system instructions (2026-04-18)
 - [Audit before building](feedback_audit_before_building.md) — Always check existing state (labels, agents, dirs) before creating new structure (2026-04-21)
 - [Merge into ideal form](feedback_merge_into_ideal_form.md) — New systems merge with existing, not replace; "both are the ideal form merged" (2026-04-21)
+- [Suggestions point to ideal forms](feedback_suggestions_are_ideal_forms.md) — User suggestions are pointers to ideal forms, not literal specs; always ask "what is the best version of this?" (2026-04-21)
+- [Rule of three — resilience](feedback_rule_of_three_resilience.md) — Every capability needs 3 paths; fail over silently; never surface tool failures as blockers (2026-04-21)
+- [Research depth + alive systems + no hierarchy](feedback_research_depth_and_alive_systems.md) — Deep research not 4 links; files must be versioned/validated/enforced; NEVER nest directories for structure, use flat declarations (2026-04-21)
 
 ## References
 - [Conductor MCP server](reference_conductor_mcp.md) — Live as of 2026-04-14, FRAME→SHAPE→BUILD→PROVE lifecycle
