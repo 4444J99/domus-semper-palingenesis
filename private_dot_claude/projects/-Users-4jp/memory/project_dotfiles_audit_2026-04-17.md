@@ -1,32 +1,28 @@
 ---
-name: Dotfiles sprawl audit + HOME root security finding
-description: 2026-04-17 audit — 40+ unmanaged dotdirs, 7 loose files (one with HARDCODED GMAIL PASSWORD), 2 orphaned LaunchAgents, cleanup plan approved
+name: Dotfiles sprawl audit — Phase 0 complete, Phase 2 partial
+description: 2026-04-17 audit — 40+ dotdirs catalogued; Phase 0 (security files deleted) DONE; orphaned LaunchAgents cleaned 2026-04-21; password rotation still OPEN (BACKLOG-001)
 type: project
+originSessionId: caa53287-9125-4617-ae4f-43e9056d902d
 ---
-
 Full HOME root audit performed 2026-04-17. Plan at `~/.claude/plans/eager-baking-steele.md`.
 
-## SECURITY — IMMEDIATE
+## SECURITY — Phase 0 COMPLETE (files deleted)
 
-`~/fetch_recent_gmail.py` contains a **hardcoded Gmail app password** in plaintext (`dxmz yydz pbmo shjk`). Must be rotated and files deleted. Other compromised files: `search_gmail_extended.py`, `extract_work_tasks.py`, plus output artifacts (`recent_emails.json`, `work_emails_range.json`, `job_search_extended_results.txt`, `gmail-ops.zip`).
+Seven compromised/artifact files deleted from HOME: `fetch_recent_gmail.py`, `search_gmail_extended.py`, `extract_work_tasks.py`, `recent_emails.json`, `work_emails_range.json`, `job_search_extended_results.txt`, `gmail-ops.zip`. Empty `.gmail-mcp/` directory also deleted.
 
-**Why:** These scripts predate the 1Password secrets infrastructure. They should never have been in HOME root.
+**STILL OPEN (BACKLOG-001):** Gmail app password `dxmz yydz pbmo shjk` needs revocation in Google Account Security. Not blocking mail-triage (uses osascript, not IMAP), but the credential is burned.
 
 ## Dotdir Disposition (40+ dirs)
 
 - **25 already XDG-symlinked** (working correctly)
 - **3 XDG base dirs** (.cache, .config, .local — correct)
 - **2 chezmoi-tracked** (.claude, .ssh)
-- **2 need XDG-symlink** (.npm, .thumbnails)
-- **15 tool-managed** (add to .chezmoiignore: .anaconda, .atuin, .cloudflared, .conda, .dropbox, .fly, .hive, .kube, .materia, .minikube, .openclaw, .organvm, .redhat, .titan, .vs-kubernetes)
-- **1 delete** (.gmail-mcp — empty)
+- **2 need XDG-symlink** (.npm, .thumbnails) — NOT YET DONE
+- **15 tool-managed** (add to .chezmoiignore) — NOT YET DONE
+- **1 deleted** (.gmail-mcp — done 2026-04-21)
 
-## LaunchAgent Status
+## LaunchAgent Status — CLEANED (2026-04-21)
 
-Two orphaned agents loaded (exit 78): `com.user.gmail_labeler` and `com.user.mail_automation`. Both point to nonexistent repos. Templates exist in chezmoi source but are suppressed by `.chezmoiignore` lines 24-25. Plan: unload, rename to `com.4jp.mail-triage`, remove suppression.
+Orphaned `com.user.gmail_labeler` and `com.user.mail_automation` templates deleted from chezmoi source. Replaced by `com.4jp.mail-triage` (active, 30-min cadence). `.chezmoiignore` suppressions removed. Loader script updated.
 
-## Chezmoi Source Confirmed
-
-`chezmoi source-path` = `/Users/4jp/Workspace/4444J99/domus-semper-palingenesis/`. The `~/domus-semper-palingenesis/` directory is a deployment artifact, NOT the source repo.
-
-**How to apply:** Phase 0 (delete files, rotate password) is urgent. Remaining cleanup is Phase 2 of the mail-triage plan.
+**How to apply:** Phase 0 done. Phase 2 (.npm/.thumbnails XDG-symlink, 15 dotdirs to .chezmoiignore) is queued but not blocking.
