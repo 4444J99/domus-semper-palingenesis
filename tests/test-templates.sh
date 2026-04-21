@@ -22,15 +22,18 @@ check_template() {
     return 0
   fi
 
-  # Check balanced template delimiters
-  local opens closes
-  opens=$(grep -o '{{' "$file" 2>/dev/null | wc -l | tr -d ' ')
-  closes=$(grep -o '}}' "$file" 2>/dev/null | wc -l | tr -d ' ')
+  # Check balanced template delimiters (skip JSON templates — JSON braces
+  # cause false positives since }} appears in both JSON and Go templates)
+  if [[ "$file" != *.json.tmpl ]]; then
+    local opens closes
+    opens=$(grep -o '{{' "$file" 2>/dev/null | wc -l | tr -d ' ')
+    closes=$(grep -o '}}' "$file" 2>/dev/null | wc -l | tr -d ' ')
 
-  if [[ "$opens" -ne "$closes" ]]; then
-    echo "  FAIL $relative (unbalanced delimiters: {{ = $opens, }} = $closes)"
-    ((FAIL++))
-    return 1
+    if [[ "$opens" -ne "$closes" ]]; then
+      echo "  FAIL $relative (unbalanced delimiters: {{ = $opens, }} = $closes)"
+      ((FAIL++))
+      return 1
+    fi
   fi
 
   echo "  PASS $relative"
