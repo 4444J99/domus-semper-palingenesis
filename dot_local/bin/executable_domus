@@ -841,26 +841,24 @@ cmd_doctor() {
   if [[ -d "$telem_dir" ]]; then
     local telem_files
     telem_files=$(find "$telem_dir" -maxdepth 1 -name '*.jsonl' 2>/dev/null | wc -l | tr -d ' ')
-    printf ' %s✓%s %s data file(s)\n' "$GREEN" "$RESET" "$telem_files"
+    _doctor_check telemetry ok "${telem_files} data file(s)"
   else
-    printf ' %s○%s no telemetry directory\n' "$DIM" "$RESET"
+    _doctor_check telemetry skip "no telemetry directory"
   fi
 
   # 8. AI config fragment parity
-  printf '%s[ai-config]%s' "$CYAN" "$RESET"
   if command -v domus-ai-config-check &>/dev/null; then
     if domus-ai-config-check &>/dev/null; then
-      printf ' %s✓%s all consumers at parity\n' "$GREEN" "$RESET"
+      _doctor_check ai-config ok "all consumers at parity"
     else
-      printf ' %s!%s fragment mismatch detected\n' "$YELLOW" "$RESET"
+      _doctor_check ai-config warn "fragment mismatch detected"
       exit_code=1
     fi
   else
-    printf ' %s○%s domus-ai-config-check not found\n' "$DIM" "$RESET"
+    _doctor_check ai-config skip "domus-ai-config-check not found"
   fi
 
   # 9. All LaunchAgents (comprehensive)
-  printf '%s[daemons-all]%s' "$CYAN" "$RESET"
   if [[ "$(uname)" == "Darwin" ]]; then
     local all_ok=0
     local all_missing=0
@@ -878,18 +876,17 @@ cmd_doctor() {
       done < <(find "$HOME/Library/LaunchAgents" -name "${prefix}.*" -maxdepth 1 2>/dev/null)
     done
     if [[ $all_total -eq 0 ]]; then
-      printf ' %s○%s no agents found\n' "$DIM" "$RESET"
+      _doctor_check daemons-all skip "no agents found"
     elif [[ $all_missing -eq 0 ]]; then
-      printf ' %s✓%s %s/%s agents loaded\n' "$GREEN" "$RESET" "$all_ok" "$all_total"
+      _doctor_check daemons-all ok "${all_ok}/${all_total} agents loaded"
     else
-      printf ' %s!%s %s/%s loaded (%s not loaded)\n' "$YELLOW" "$RESET" "$all_ok" "$all_total" "$all_missing"
+      _doctor_check daemons-all info "${all_ok}/${all_total} loaded (${all_missing} not loaded)"
     fi
   else
-    printf ' %s○%s not macOS\n' "$DIM" "$RESET"
+    _doctor_check daemons-all skip "not macOS"
   fi
 
   # 10. Shell cache freshness
-  printf '%s[shell-cache]%s' "$CYAN" "$RESET"
   local cache_dir="${XDG_CACHE_HOME:-$HOME/.cache}"
   local stale_caches=0
   local checked_caches=0
@@ -910,49 +907,56 @@ cmd_doctor() {
     fi
   done
   if [[ $checked_caches -eq 0 ]]; then
-    printf ' %s○%s no cached init files\n' "$DIM" "$RESET"
+    _doctor_check shell-cache skip "no cached init files"
   elif [[ $stale_caches -eq 0 ]]; then
-    printf ' %s✓%s %s caches fresh (<%sd)\n' "$GREEN" "$RESET" "$checked_caches" "$max_age_days"
+    _doctor_check shell-cache ok "${checked_caches} caches fresh (<${max_age_days}d)"
   else
-    printf ' %s!%s %s/%s stale (>%sd) — run just cache-clear\n' "$YELLOW" "$RESET" "$stale_caches" "$checked_caches" "$max_age_days"
+    _doctor_check shell-cache warn "${stale_caches}/${checked_caches} stale (>${max_age_days}d) — run just cache-clear"
   fi
 
   # 11. Version consistency
-  printf '%s[version]%s   ' "$CYAN" "$RESET"
-  local changelog="${HOME}/domus-semper-palingenesis/CHANGELOG.md"
+  local changelog="${repo_root}/CHANGELOG.md"
   if [[ -f "$changelog" ]]; then
     local changelog_ver
     changelog_ver=$(grep -m1 '^## \[' "$changelog" | sed 's/^## \[\(.*\)\].*/\1/')
     if [[ "$changelog_ver" == "$DOMUS_VERSION" ]]; then
-      printf '%s✓%s v%s (script == changelog)\n' "$GREEN" "$RESET" "$DOMUS_VERSION"
+      _doctor_check version ok "v${DOMUS_VERSION} (script == changelog)"
     else
-      printf '%s!%s script=%s changelog=%s\n' "$YELLOW" "$RESET" "$DOMUS_VERSION" "$changelog_ver"
+      _doctor_check version warn "script=${DOMUS_VERSION} changelog=${changelog_ver}"
       exit_code=1
     fi
   else
-    printf '%s○%s CHANGELOG.md not found\n' "$DIM" "$RESET"
+    _doctor_check version skip "CHANGELOG.md not found"
   fi
 
   # 12. Pre-commit hook
-  printf '%s[pre-commit]%s' "$CYAN" "$RESET"
-  local hook_path="${HOME}/domus-semper-palingenesis/.git/hooks/pre-commit"
+  local hook_path="${repo_root}/.git/hooks/pre-commit"
   if [[ -x "$hook_path" ]]; then
-    printf ' %s✓%s hook installed\n' "$GREEN" "$RESET"
+    _doctor_check pre-commit ok "hook installed"
   elif [[ -f "$hook_path" ]]; then
-    printf ' %s!%s hook exists but not executable\n' "$YELLOW" "$RESET"
-  elif git -C "$HOME/domus-semper-palingenesis" config --get core.hooksPath &>/dev/null || git config --global --get core.hooksPath &>/dev/null; then
-    printf ' %s·%s using global hooksPath\n' "$BLUE" "$RESET"
+    _doctor_check pre-commit warn "hook exists but not executable"
+  elif git -C "$repo_root" config --get core.hooksPath &>/dev/null || git config --global --get core.hooksPath &>/dev/null; then
+    _doctor_check pre-commit info "using global hooksPath"
   else
-    printf ' %s!%s not installed — run pre-commit install\n' "$YELLOW" "$RESET"
+    _doctor_check pre-commit warn "not installed — run pre-commit install"
   fi
 
-  echo ""
-  if [[ $exit_code -eq 0 ]]; then
-    printf '%s%sAll systems healthy%s\n' "$GREEN" "$BOLD" "$RESET"
+  # Output
+  if $json_mode; then
+    local checks_json
+    checks_json=$(printf '%s,' "${json_checks[@]}")
+    checks_json="[${checks_json%,}]"
+    printf '{"timestamp":"%s","version":"%s","checks":%s,"exit_code":%d}\n' \
+      "$(date -u '+%Y-%m-%dT%H:%M:%SZ')" "$DOMUS_VERSION" "$checks_json" "$exit_code"
   else
-    printf '%s%sIssues detected%s - review items above\n' "$YELLOW" "$BOLD" "$RESET"
+    echo ""
+    if [[ $exit_code -eq 0 ]]; then
+      printf '%s%sAll systems healthy%s\n' "$GREEN" "$BOLD" "$RESET"
+    else
+      printf '%s%sIssues detected%s - review items above\n' "$YELLOW" "$BOLD" "$RESET"
+    fi
+    echo ""
   fi
-  echo ""
 
   return $exit_code
 }
