@@ -32,4 +32,8 @@ Orphaned `com.user.gmail_labeler` and `com.user.mail_automation` templates delet
 
 Memory-sync daemon (`domus-memory-sync`) was blocking chezmoi for 5+ mins — rewritten with batch `chezmoi add`, `LAST_SYNC` timestamp, and pgrep guard.
 
-**How to apply:** Phase 0 done. Phase 2 (.thumbnails XDG-symlink, 15 dotdirs to .chezmoiignore) is queued but not blocking.
+## MCP Docker→Native Conversion — 2026-04-20
+
+Docker-based MCP servers converted to native Homebrew installs. `github-mcp-server` installed via `brew install`. 8 MCP config files updated across Claude Code, Claude Desktop, Cursor, Continue, OpenCode, Gemini, Codex. Two LaunchAgents removed from chezmoi source: `com.4jp.mcp.servers.plist.tmpl`, `com.4jp.env.mcp.plist.tmpl`. Docker UNINSTALLED entirely (17GB freed, 2026-04-18).
+
+**How to apply:** Phase 0 done. MCP native conversion done. Phase 2 (.thumbnails XDG-symlink, 15 dotdirs to .chezmoiignore) is queued but not blocking.
