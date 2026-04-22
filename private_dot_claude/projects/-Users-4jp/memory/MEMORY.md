@@ -55,6 +55,7 @@
 - [Research depth + alive systems + no hierarchy](feedback_research_depth_and_alive_systems.md) — Deep research not 4 links; files must be versioned/validated/enforced; NEVER nest directories for structure, use flat declarations (2026-04-21)
 - [Never reduce scope — optimize operations](feedback_never_reduce_scope.md) — All work is intentional; backlog accumulation = operations gap, not overproduction (2026-04-21)
 - [Stagger PR comments](feedback_stagger_pr_comments.md) — Max 2-3 per session, varied phrasing; 11 in 3min = permanent damage (2026-04-21)
+- [No LaunchAgents — event-driven only](feedback_no_launchagents.md) — NEVER deploy timer-based agents; every incident froze/broke the system; on-demand CLI only (2026-04-22)
 
 ## References
 - [Conductor MCP server](reference_conductor_mcp.md) — Live as of 2026-04-14, FRAME→SHAPE→BUILD→PROVE lifecycle
