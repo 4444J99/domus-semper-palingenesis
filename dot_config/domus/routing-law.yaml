@@ -1,0 +1,97 @@
+schema: routing-law/v1
+
+sorter:
+  roots:
+    - ~/Downloads
+    - ~/Desktop
+  defaults:
+    depth: 1
+    ignore_hidden: true
+    ignore_partial_downloads:
+      - .crdownload
+      - .part
+      - .download
+    collision: numeric_suffix
+    template_time_basis: run_date
+  watch:
+    events: [Created, MovedTo]
+    debounce_seconds: 5
+    settle_seconds: 1
+
+routes:
+  - id: screenshots
+    priority: 10
+    when:
+      source:
+        path: ~/Desktop
+      filename:
+        glob: "Screenshot*.png"
+      file:
+        extension: [png]
+    class:
+      kind: image
+      subtype: screenshot
+      source_role: desktop
+    route:
+      destination: "~/Pictures/Screenshots/{year}/{month}/"
+
+  - id: pdfs
+    priority: 20
+    when:
+      file:
+        extension: [pdf]
+    class:
+      kind: document
+      format: pdf
+    route:
+      destination: "~/Documents/PDFs/{year}/"
+      rename: "{smart_name}"
+
+  - id: installers
+    priority: 30
+    when:
+      file:
+        extension: [dmg, pkg]
+    class:
+      kind: installer
+    route:
+      destination: "~/Downloads/_Installers/"
+
+  - id: archives
+    priority: 40
+    when:
+      file:
+        extension: [zip, tar, gz, 7z, rar]
+    class:
+      kind: archive
+    route:
+      destination: "~/Downloads/_Archives/{year}/"
+
+  - id: images
+    priority: 50
+    when:
+      source:
+        path: ~/Downloads
+      file:
+        extension: [jpg, jpeg, png, gif, webp, heic]
+    class:
+      kind: image
+      source_role: downloads
+    route:
+      destination: "~/Pictures/Downloads/{year}/{month}/"
+
+  - id: old-downloads
+    priority: 90
+    when:
+      source:
+        path: ~/Downloads
+      file:
+        age:
+          min_days: 30
+      filename:
+        exclude_regex: "^_"
+    class:
+      kind: unknown
+      lifecycle: stale
+    route:
+      destination: "~/Downloads/_Archive/{year}/"

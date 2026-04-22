@@ -1,0 +1,517 @@
+#!/usr/bin/env python3
+"""Compile routing-law.yaml into the manifest.yaml sorting block."""
+
+from __future__ import annotations
+
+import argparse
+import ast
+import os
+import re
+import sys
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Any
+
+SUPPORTED_SCHEMA = "routing-law/v1"
+MATCH_OUTPUT_ORDER = (
+    "location",
+    "pattern",
+    "extension",
+    "age_days_min",
+    "exclude_pattern",
+)
+
+
+class RoutingLawError(ValueError):
+    """Raised when routing-law.yaml cannot compile safely."""
+
+
+@dataclass(frozen=True)
+class SourceLine:
+    number: int
+    indent: int
+    text: str
+
+
+def default_law_path() -> Path:
+    """Return the deployed routing-law.yaml path."""
+    config_home = Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config"))
+    return config_home / "domus" / "routing-law.yaml"
+
+
+def load_routing_law(path: Path) -> dict[str, Any]:
+    """Load the constrained routing-law YAML subset used by Domus."""
+    lines = _source_lines(path)
+    if not lines:
+        raise RoutingLawError(f"{path} is empty")
+
+    data, index = _parse_block(lines, 0, lines[0].indent)
+    if index != len(lines):
+        line = lines[index]
+        raise RoutingLawError(f"unexpected trailing content on line {line.number}")
+    if not isinstance(data, dict):
+        raise RoutingLawError("routing law must be a mapping")
+    return data
+
+
+def compile_sorting_block(law: dict[str, Any]) -> dict[str, Any]:
+    """Compile a routing law into the manifest sorting block."""
+    schema = law.get("schema")
+    if schema != SUPPORTED_SCHEMA:
+        raise RoutingLawError(f"unsupported schema {schema!r}")
+
+    sorter = _require_mapping(law, "sorter", "routing law")
+    roots = _require_list(sorter, "roots", "sorter")
+    for root in roots:
+        if not isinstance(root, str):
+            raise RoutingLawError("sorter.roots entries must be strings")
+
+    routes = _require_list(law, "routes", "routing law")
+    indexed_routes = list(enumerate(routes))
+    indexed_routes.sort(key=lambda item: (_route_priority(item[1]), item[0]))
+
+    rules = []
+    for _, route in indexed_routes:
+        rules.append(_compile_route(route))
+
+    return {"sorting": {"directories": roots, "rules": rules}}
+
+
+def render_sorting_block(block: dict[str, Any]) -> str:
+    """Render the compiled sorting block as manifest.yaml YAML."""
+    sorting = _require_mapping(block, "sorting", "compiled block")
+    directories = _require_list(sorting, "directories", "sorting")
+    rules = _require_list(sorting, "rules", "sorting")
+
+    lines = ["sorting:", "  directories:"]
+    for directory in directories:
+        lines.append(f"    - {_plain_scalar(directory)}")
+
+    lines.extend(["", "  rules:"])
+    for rule in rules:
+        rule_map = _as_mapping(rule, "sorting.rules entry")
+        match = _as_mapping(rule_map.get("match"), f"{rule_map.get('name')}.match")
+        action = _as_mapping(rule_map.get("action"), f"{rule_map.get('name')}.action")
+
+        lines.append(f"    - name: {_plain_scalar(rule_map['name'])}")
+        if match:
+            lines.append("      match:")
+            for key in MATCH_OUTPUT_ORDER:
+                if key not in match:
+                    continue
+                value = match[key]
+                if key == "extension":
+                    rendered = _inline_list(value)
+                elif key in {"pattern", "exclude_pattern"}:
+                    rendered = _quoted_scalar(value)
+                else:
+                    rendered = _plain_scalar(value)
+                lines.append(f"        {key}: {rendered}")
+        else:
+            lines.append("      match: {}")
+
+        lines.append("      action:")
+        lines.append(f"        move_to: {_quoted_scalar(action['move_to'])}")
+        if "rename" in action:
+            lines.append(f"        rename: {_quoted_scalar(action['rename'])}")
+
+    return "\n".join(lines) + "\n"
+
+
+def _compile_route(route: Any) -> dict[str, Any]:
+    route_map = _as_mapping(route, "routes entry")
+    name = route_map.get("id")
+    if not isinstance(name, str) or not name:
+        raise RoutingLawError("routes entries require non-empty string id")
+
+    _route_priority(route_map)
+    when = _require_mapping(route_map, "when", f"route {name}")
+    route_spec = _require_mapping(route_map, "route", f"route {name}")
+
+    _reject_unknown(
+        when,
+        {"source", "filename", "file"},
+        f"route {name}.when",
+    )
+    _reject_unknown(
+        route_spec,
+        {"destination", "rename"},
+        f"route {name}.route",
+    )
+
+    match: dict[str, Any] = {}
+    if "source" in when:
+        source = _as_mapping(when["source"], f"route {name}.when.source")
+        _reject_unknown(source, {"path"}, f"route {name}.when.source")
+        if "path" in source:
+            match["location"] = _require_string(source, "path", f"route {name}.when.source")
+
+    if "filename" in when:
+        filename = _as_mapping(when["filename"], f"route {name}.when.filename")
+        _reject_unknown(
+            filename,
+            {"glob", "exclude_regex"},
+            f"route {name}.when.filename",
+        )
+        if "glob" in filename:
+            match["pattern"] = _require_string(
+                filename,
+                "glob",
+                f"route {name}.when.filename",
+            )
+        if "exclude_regex" in filename:
+            match["exclude_pattern"] = _require_string(
+                filename,
+                "exclude_regex",
+                f"route {name}.when.filename",
+            )
+
+    if "file" in when:
+        file_match = _as_mapping(when["file"], f"route {name}.when.file")
+        _reject_unknown(file_match, {"extension", "age"}, f"route {name}.when.file")
+        if "extension" in file_match:
+            extensions = _as_list(file_match["extension"], f"route {name}.when.file.extension")
+            if not extensions or not all(isinstance(ext, str) for ext in extensions):
+                raise RoutingLawError(
+                    f"route {name}.when.file.extension must be a non-empty string list",
+                )
+            match["extension"] = extensions
+        if "age" in file_match:
+            age = _as_mapping(file_match["age"], f"route {name}.when.file.age")
+            _reject_unknown(age, {"min_days"}, f"route {name}.when.file.age")
+            if "min_days" in age:
+                min_days = age["min_days"]
+                if not isinstance(min_days, int):
+                    raise RoutingLawError(
+                        f"route {name}.when.file.age.min_days must be an integer",
+                    )
+                match["age_days_min"] = min_days
+
+    destination = _require_string(route_spec, "destination", f"route {name}.route")
+    action = {"move_to": destination}
+    if "rename" in route_spec:
+        action["rename"] = _require_string(route_spec, "rename", f"route {name}.route")
+
+    return {"name": name, "match": match, "action": action}
+
+
+def _source_lines(path: Path) -> list[SourceLine]:
+    try:
+        text = path.read_text(encoding="utf-8")
+    except OSError as exc:
+        raise RoutingLawError(f"cannot read {path}: {exc}") from exc
+
+    lines = []
+    for number, raw_line in enumerate(text.splitlines(), 1):
+        expanded = raw_line.expandtabs(2)
+        stripped = expanded.strip()
+        if not stripped or stripped.startswith("#"):
+            continue
+        indent = len(expanded) - len(expanded.lstrip(" "))
+        lines.append(SourceLine(number, indent, expanded[indent:]))
+    return lines
+
+
+def _parse_block(
+    lines: list[SourceLine],
+    index: int,
+    indent: int,
+) -> tuple[Any, int]:
+    if index >= len(lines):
+        return None, index
+    line = lines[index]
+    if line.indent != indent:
+        raise RoutingLawError(
+            f"line {line.number}: expected indent {indent}, got {line.indent}",
+        )
+    if line.text.startswith("- "):
+        return _parse_sequence(lines, index, indent)
+    return _parse_mapping(lines, index, indent)
+
+
+def _parse_mapping(
+    lines: list[SourceLine],
+    index: int,
+    indent: int,
+) -> tuple[dict[str, Any], int]:
+    mapping: dict[str, Any] = {}
+
+    while index < len(lines):
+        line = lines[index]
+        if line.indent < indent:
+            break
+        if line.indent > indent:
+            raise RoutingLawError(f"line {line.number}: unexpected nested content")
+        if line.text.startswith("- "):
+            break
+
+        entry = _split_mapping_entry(line.text)
+        if entry is None:
+            raise RoutingLawError(f"line {line.number}: expected key-value entry")
+        key, value_text = entry
+        index += 1
+        if value_text:
+            mapping[key] = _parse_scalar(value_text)
+        elif index < len(lines) and lines[index].indent > indent:
+            mapping[key], index = _parse_block(lines, index, lines[index].indent)
+        else:
+            mapping[key] = None
+
+    return mapping, index
+
+
+def _parse_sequence(
+    lines: list[SourceLine],
+    index: int,
+    indent: int,
+) -> tuple[list[Any], int]:
+    sequence = []
+
+    while index < len(lines):
+        line = lines[index]
+        if line.indent < indent:
+            break
+        if line.indent > indent:
+            raise RoutingLawError(f"line {line.number}: unexpected nested content")
+        if not line.text.startswith("- "):
+            break
+
+        item_text = line.text[2:].strip()
+        index += 1
+        if not item_text:
+            if index < len(lines) and lines[index].indent > indent:
+                item, index = _parse_block(lines, index, lines[index].indent)
+            else:
+                item = None
+        else:
+            entry = _split_mapping_entry(item_text)
+            if entry is None:
+                item = _parse_scalar(item_text)
+                if index < len(lines) and lines[index].indent > indent:
+                    raise RoutingLawError(
+                        f"line {lines[index].number}: scalar list item has children",
+                    )
+            else:
+                key, value_text = entry
+                item = {}
+                if value_text:
+                    item[key] = _parse_scalar(value_text)
+                elif index < len(lines) and lines[index].indent > indent:
+                    item[key], index = _parse_block(lines, index, lines[index].indent)
+                else:
+                    item[key] = None
+
+                if index < len(lines) and lines[index].indent > indent:
+                    extras, index = _parse_mapping(lines, index, lines[index].indent)
+                    item.update(extras)
+        sequence.append(item)
+
+    return sequence, index
+
+
+def _split_mapping_entry(text: str) -> tuple[str, str] | None:
+    quote = ""
+    escaped = False
+    for index, char in enumerate(text):
+        if escaped:
+            escaped = False
+            continue
+        if quote:
+            if char == "\\" and quote == '"':
+                escaped = True
+            elif char == quote:
+                quote = ""
+            continue
+        if char in {"'", '"'}:
+            quote = char
+            continue
+        if char == ":" and (index == len(text) - 1 or text[index + 1].isspace()):
+            key = text[:index].strip()
+            if not key:
+                return None
+            return key, text[index + 1:].strip()
+    return None
+
+
+def _parse_scalar(text: str) -> Any:
+    if text.startswith("[") and text.endswith("]"):
+        return [_parse_scalar(item) for item in _split_inline_list(text[1:-1])]
+    if len(text) >= 2 and text[0] == text[-1] and text[0] in {"'", '"'}:
+        try:
+            return ast.literal_eval(text)
+        except (SyntaxError, ValueError):
+            return text[1:-1]
+
+    lowered = text.lower()
+    if lowered == "true":
+        return True
+    if lowered == "false":
+        return False
+    if lowered in {"null", "~"}:
+        return None
+    if re.fullmatch(r"[+-]?\d+", text):
+        return int(text)
+    return text
+
+
+def _split_inline_list(text: str) -> list[str]:
+    if not text.strip():
+        return []
+
+    parts = []
+    buffer: list[str] = []
+    quote = ""
+    escaped = False
+    for char in text:
+        if escaped:
+            buffer.append(char)
+            escaped = False
+            continue
+        if quote:
+            buffer.append(char)
+            if char == "\\" and quote == '"':
+                escaped = True
+            elif char == quote:
+                quote = ""
+            continue
+        if char in {"'", '"'}:
+            quote = char
+            buffer.append(char)
+            continue
+        if char == ",":
+            parts.append("".join(buffer).strip())
+            buffer.clear()
+            continue
+        buffer.append(char)
+
+    if quote:
+        raise RoutingLawError("unterminated quote in inline list")
+    parts.append("".join(buffer).strip())
+    return parts
+
+
+def _route_priority(route: Any) -> int:
+    route_map = _as_mapping(route, "routes entry")
+    priority = route_map.get("priority")
+    if not isinstance(priority, int):
+        name = route_map.get("id", "<unknown>")
+        raise RoutingLawError(f"route {name} priority must be an integer")
+    return priority
+
+
+def _require_mapping(
+    mapping: dict[str, Any],
+    key: str,
+    context: str,
+) -> dict[str, Any]:
+    if key not in mapping:
+        raise RoutingLawError(f"{context} missing required key {key}")
+    return _as_mapping(mapping[key], f"{context}.{key}")
+
+
+def _require_list(
+    mapping: dict[str, Any],
+    key: str,
+    context: str,
+) -> list[Any]:
+    if key not in mapping:
+        raise RoutingLawError(f"{context} missing required key {key}")
+    return _as_list(mapping[key], f"{context}.{key}")
+
+
+def _require_string(mapping: dict[str, Any], key: str, context: str) -> str:
+    if key not in mapping or not isinstance(mapping[key], str):
+        raise RoutingLawError(f"{context}.{key} must be a string")
+    return mapping[key]
+
+
+def _as_mapping(value: Any, context: str) -> dict[str, Any]:
+    if not isinstance(value, dict):
+        raise RoutingLawError(f"{context} must be a mapping")
+    return value
+
+
+def _as_list(value: Any, context: str) -> list[Any]:
+    if not isinstance(value, list):
+        raise RoutingLawError(f"{context} must be a list")
+    return value
+
+
+def _reject_unknown(
+    mapping: dict[str, Any],
+    supported: set[str],
+    context: str,
+) -> None:
+    unknown = sorted(set(mapping) - supported)
+    if unknown:
+        names = ", ".join(unknown)
+        raise RoutingLawError(f"{context} has unsupported key(s): {names}")
+
+
+def _inline_list(value: Any) -> str:
+    items = _as_list(value, "inline list")
+    return "[" + ", ".join(_plain_scalar(item) for item in items) + "]"
+
+
+def _plain_scalar(value: Any) -> str:
+    if isinstance(value, bool):
+        return "true" if value else "false"
+    if isinstance(value, int):
+        return str(value)
+    if not isinstance(value, str):
+        raise RoutingLawError(f"cannot render scalar {value!r}")
+    if _needs_quotes(value):
+        return _quoted_scalar(value)
+    return value
+
+
+def _quoted_scalar(value: Any) -> str:
+    if not isinstance(value, str):
+        raise RoutingLawError(f"cannot quote non-string scalar {value!r}")
+    escaped = value.replace("\\", "\\\\").replace('"', '\\"')
+    return f'"{escaped}"'
+
+
+def _needs_quotes(value: str) -> bool:
+    if value == "":
+        return True
+    if value.lower() in {"true", "false", "null", "~"}:
+        return True
+    if re.fullmatch(r"[+-]?\d+", value):
+        return True
+    return bool(re.search(r"[\[\]{},#&*!|>'\"%@`]", value))
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "routing_law",
+        nargs="?",
+        type=Path,
+        default=default_law_path(),
+        help="routing-law.yaml to compile",
+    )
+    parser.add_argument(
+        "-o",
+        "--output",
+        type=Path,
+        help="write the generated sorting block to a file instead of stdout",
+    )
+    args = parser.parse_args(argv)
+
+    try:
+        law = load_routing_law(args.routing_law)
+        rendered = render_sorting_block(compile_sorting_block(law))
+    except RoutingLawError as exc:
+        print(f"compile-routing-law: {exc}", file=sys.stderr)
+        return 2
+
+    if args.output:
+        args.output.write_text(rendered, encoding="utf-8")
+    else:
+        sys.stdout.write(rendered)
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
