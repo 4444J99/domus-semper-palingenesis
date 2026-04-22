@@ -6,8 +6,8 @@
 
 ## Active Projects
 - [Becka McKay thread](project_becka_mckay_thread.md) — Outreach to former MFA thesis advisor (FAU); 5-email thread; awaiting reply after redirecting substance question to practical asks (2026-04-18)
-- [Email triage system](project_mail_triage_2026-04-17.md) — FAILED 2026-04-21: LaunchAgent disabled (froze machine), classifier not affecting inbox, needs Gmail-side redesign
-- [Dotfiles sprawl audit](project_dotfiles_audit_2026-04-17.md) — 40+ dotdirs, Phase 0 complete (compromised files deleted), orphaned LaunchAgents cleaned (2026-04-21)
+- [Email triage system](project_mail_triage_2026-04-17.md) — FAILED 2026-04-21: LaunchAgent froze machine, disabled; needs Gmail Apps Script redesign
+- [Dotfiles sprawl audit](project_dotfiles_audit_2026-04-17.md) — Phase 0 done, MCP Docker→native done, orphaned LaunchAgents cleaned (2026-04-21)
 - [CUE declaration layer](project_cue_declaration_layer.md) — system.toml→system.cue via CUE constraints; landscape research done; repo unified at ~/Workspace/a-organvm/ (2026-04-21)
 - [Institutional substrate](project_institutional_substrate.md) — 19 institutional primitives, 4 operators, 4 formations (AEGIS/OIKONOMIA/PRAXIS/TESSERA); spec complete, implementation Phase 0 next (2026-04-20)
 - [Organ morphogenesis](project_organ_morphogenesis.md) — Shift from numbered organs to emergent formations; SECVRITY/PERSONA as first named clusters (2026-04-17)
@@ -16,7 +16,9 @@
 - [Plugin marketplace fix](project_plugin_fix_2026-04-16.md) — SSH clone, hooks `if` regression fixed; private_dot_claude confirmed in chezmoi (2026-04-16)
 - [Domain architecture](project_domain_architecture.md) — 6 domains, 3 circles, Cloudflare, env vars in chezmoi (2026-04-16)
 - [Zeitgeist carrier wave thesis](project_zeitgeist_thesis.md) — Music→film→TV→internet→systems; needs research, essays, thesis, dissertation; dispatch to agent fleet (2026-04-21)
-- [ORGANVM system state](project_organvm_pactvm.md) — 10 organs, 145 repos, omega 9/20, ~896 IRF items
+- [ORGANVM system state](project_organvm_pactvm.md) — 10 organs, 145 repos, omega 9/20, DONE counter ~405, 4th collision incident
+- [system-system--system atoms](project_system_system_atoms.md) — 238 atoms, 56.7% FORMAL, GH-#8 closable, 55-atom gap to 80% target (2026-04-20)
+- [OSS contribution sweep](project_oss_contribution_sweep.md) — 21 PRs, 11 bumped (stagger violation), 3 LinkedIn drafts unpublished (2026-04-21)
 - [iCloud folder sync broken](project_icloud_folder_sync_broken.md) — Runaway conflict loop, needs Apple server-side reset
 - [Time Machine SSD conversion](project_timemachine_ssd_conversion.md) — exFAT→APFS reformat deferred, needs staging drive
 
@@ -51,9 +53,11 @@
 - [Rule of three — resilience](feedback_rule_of_three_resilience.md) — Every capability needs 3 paths; fail over silently; never surface tool failures as blockers (2026-04-21)
 - [Research depth + alive systems + no hierarchy](feedback_research_depth_and_alive_systems.md) — Deep research not 4 links; files must be versioned/validated/enforced; NEVER nest directories for structure, use flat declarations (2026-04-21)
 - [Never reduce scope — optimize operations](feedback_never_reduce_scope.md) — All work is intentional; backlog accumulation = operations gap, not overproduction (2026-04-21)
+- [Stagger PR comments](feedback_stagger_pr_comments.md) — Max 2-3 per session, varied phrasing; 11 in 3min = permanent damage (2026-04-21)
 
 ## References
 - [Conductor MCP server](reference_conductor_mcp.md) — Live as of 2026-04-14, FRAME→SHAPE→BUILD→PROVE lifecycle
 - [Mail.app for Gmail access](reference_mail_app_gmail_access.md) — osascript + Mail.app beats MCP proxy for bulk email reads
 - [Application pipeline](reference_application_pipeline.md) — Career pipeline at ~/Workspace/4444J99/application-pipeline/
 - [Docker decision framework](reference_docker_decision.md) — When to use Docker vs native; single-question heuristic
+- [Wrangler OAuth rotating tokens](reference_wrangler_oauth.md) — Never test with curl; recovery via `wrangler login` (2026-04-21)
