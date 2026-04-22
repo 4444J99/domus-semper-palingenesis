@@ -1,9 +1,61 @@
-# Plan: Autonomous Multi-Hour Execution — All Session Continuations
+# Plan: Fix Git SSH/HTTPS Architecture — Remove Global insteadOf
 
-**Date:** 2026-04-21
-**Context:** 27 sessions across 72 hours produced 11 formal continuation prompts (S1–S11) plus extensive accumulated work. Verification revealed 7 items already DONE. This plan chains all remaining implementable work into a single autonomous execution sequence requiring zero user input. User directive: "work for hours without needing anything from me."
+**Date:** 2026-04-22
+**Context:** Global git config has `[url "git@github.com:"] insteadOf = https://github.com/` which forces ALL GitHub traffic through SSH → 1Password SSH agent. When 1Password is locked or has two instances, the entire system breaks: brew update, git clone, git push — everything. This has caused repeated incidents. The rule needs to be removed, not worked around.
 
-**Execution model:** Sequential phases, parallel agents within each phase. No user prompts needed. Commit and push after each phase. Detailed plan at `~/.claude/plans/2026-04-21-session-continuation-implementation.md`.
+## The Problem
+
+`~/.config/git/config` (chezmoi source: `dot_config/git/config.tmpl`) line 172-173:
+```
+[url "git@github.com:"]
+    insteadOf = https://github.com/
+```
+
+This rewrites every HTTPS GitHub URL to SSH. It was added so all repos use SSH transport (which 1Password manages). But it creates a single point of failure: if 1Password's SSH agent is down, **nothing works**.
+
+## The Fix
+
+**Remove the `insteadOf` rule entirely.** It's not needed because:
+
+1. **Commit signing** (`gpg.format = ssh`, `gpg.ssh.program = op-ssh-sign`) works regardless of transport protocol. You can clone via HTTPS and still sign commits via 1Password SSH. Signing ≠ transport.
+
+2. **HTTPS auth for private repos** is already handled by `gh auth git-credential` (line 170). This uses the GitHub CLI's OAuth token, not SSH keys.
+
+3. **Existing repos using SSH remotes** will keep working — they already have `git@github.com:` as their stored remote URL. Removing `insteadOf` only affects repos that have `https://` stored URLs (like Homebrew taps).
+
+## Files to Change
+
+1. **`dot_config/git/config.tmpl`** (chezmoi source)
+   - DELETE lines 172-173: the `[url "git@github.com:"]` + `insteadOf` block
+   
+2. **`dot_config/zsh/30-aliases.zsh`** (chezmoi source)
+   - REVERT the `brewup` alias back to the simple version (remove the `GIT_CONFIG_COUNT` workaround)
+
+3. **`chezmoi apply`** to deploy
+
+4. **Clean up** the local git config overrides I added to Homebrew repos (they're now unnecessary)
+
+## What Stays the Same
+
+- Commit signing via 1Password SSH — unchanged (different mechanism)
+- Repos that already use `git@github.com:` SSH remotes — unchanged (they don't need `insteadOf`)
+- `gh auth git-credential` for HTTPS private repo access — unchanged
+
+## What Changes
+
+- `brew update` works without 1Password
+- `git clone https://github.com/...` works without 1Password
+- New clones default to HTTPS transport (still signed via SSH for commits)
+- System is resilient to 1Password being locked/crashed/dual-instanced
+
+## Verification
+
+```bash
+# After applying:
+brew update                    # Should work without 1Password
+git clone https://github.com/octocat/hello-world /tmp/test-clone  # Should work
+cd any-repo && git commit --allow-empty -m "test"  # Should still sign via 1Password (when unlocked)
+```
 
 ---
 

@@ -87,7 +87,7 @@ alias pip3='python3 -m pip'
 # System Maintenance
 # ─────────────────────────────────────────────────────────────────────────────
 
-alias brewup='brew update && brew upgrade && brew upgrade --greedy && brew cleanup && brew doctor'
+alias brewup='GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0="url.https://github.com/.insteadOf" GIT_CONFIG_VALUE_0="https://github.com/" brew update && brew upgrade && brew upgrade --greedy && brew cleanup && brew doctor'
 alias dmm='domus maintain'
 alias dmmq='domus maintain quick'
 alias docker-cleanup='docker system prune -a --volumes'
