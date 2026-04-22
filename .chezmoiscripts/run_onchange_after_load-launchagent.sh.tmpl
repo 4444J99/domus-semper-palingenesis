@@ -46,11 +46,13 @@ load_agent() {
 # Ensure state directory exists
 mkdir -p "${HOME}/.local/state/domus"
 
-# Load mail triage agent
-load_agent \
-  "${HOME}/Library/LaunchAgents/com.4jp.mail-triage.plist" \
-  "com.4jp.mail-triage" \
-  "mail-triage (30min inbox triage)"
+# Mail triage agent — DISABLED 2026-04-21
+# Root cause: froze machine every 30min (Mail.app osascript blocking).
+# Needs redesign as Gmail-side Apps Script. See IRF-SYS-NEW.
+# load_agent \
+#   "${HOME}/Library/LaunchAgents/com.4jp.mail-triage.plist" \
+#   "com.4jp.mail-triage" \
+#   "mail-triage (30min inbox triage)"
 
 # ── File-automation agents (only when enabled) ──────────────────────────────
 
