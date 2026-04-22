@@ -21,6 +21,7 @@
 - [OSS contribution sweep](project_oss_contribution_sweep.md) — 21 PRs, 11 bumped (stagger violation), 3 LinkedIn drafts unpublished (2026-04-21)
 - [iCloud folder sync broken](project_icloud_folder_sync_broken.md) — Runaway conflict loop, needs Apple server-side reset
 - [Time Machine SSD conversion](project_timemachine_ssd_conversion.md) — exFAT→APFS reformat deferred, needs staging drive
+- [Sticky note atoms 2026-04-22](project_sticky_note_atoms_2026-04-22.md) — 29 atoms across 8 domains: social, domains, legal, architecture, research, skills, governance, client
 
 ## Completed Projects
 - [Session archival system](project_session_archive_system.md) — Per-project conversation preservation, LaunchAgent automation (2026-04-15)
