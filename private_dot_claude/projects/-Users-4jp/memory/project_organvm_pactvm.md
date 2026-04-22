@@ -2,8 +2,8 @@
 name: ORGANVM system state
 description: Current state of the eight-organ creative-institutional system — 10 organs, 145 repos, omega 9/20, ~896 IRF items, launched 2026-02-11
 type: project
+originSessionId: 80581eb0-933d-4de3-a31f-f0c420955109
 ---
-
 Eight-organ creative-institutional system with PERSONAL + META umbrella. Planning corpus at `~/Workspace/meta-organvm/organvm-corpvs-testamentvm/`.
 
 **Why:** Central portfolio architecture. Single-operator system running at institutional scale.
@@ -12,13 +12,14 @@ Eight-organ creative-institutional system with PERSONAL + META umbrella. Plannin
 
 ---
 
-## Current State (as of 2026-04-15)
+## Current State (as of 2026-04-21)
 
 - **Omega:** 9/20 MET, 0 IN PROGRESS, 11 NOT MET
 - **Registry:** 145 repos across 10 organ sections (ORGAN-I through VII, ORGAN-PSG, PERSONAL, META-ORGANVM)
 - **Testament chain:** 5953+ events, verified from genesis to seq 5952
 - **Memory parity:** 460/460 files chezmoi-tracked
-- **IRF:** ~896 items (~522 open, ~374 completed, ~42% completion rate) — grew from 779 on 4/14 via networking signal items (APP-081–086) and inbox review
+- **IRF:** ~900+ items. New: IRF-SEC-005 through IRF-SEC-009, IRF-ATN-010, IRF-OSS-054 through IRF-OSS-057, IRF-INST-029, IRF-DOM-045, IRF-SYS-125. DONE counter at ~405 (4th collision incident corrected, DONE-392..395 voided).
+- **DONE-ID:** Counter needs pre-commit hook enforcement — 4 collision incidents to date
 - **Conductor MCP:** live (mcp 1.27.0)
 - **Voice-scorer MCP:** connected
 
