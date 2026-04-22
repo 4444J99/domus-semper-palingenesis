@@ -1,4 +1,4 @@
-# Plan: Fix Git SSH/HTTPS Architecture — Remove Global insteadOf
+# Plan: System Clinical Cleanup — Kill All Auto-Processes, Restore Clean State
 
 **Date:** 2026-04-22
 **Context:** Global git config has `[url "git@github.com:"] insteadOf = https://github.com/` which forces ALL GitHub traffic through SSH → 1Password SSH agent. When 1Password is locked or has two instances, the entire system breaks: brew update, git clone, git push — everything. This has caused repeated incidents. The rule needs to be removed, not worked around.
