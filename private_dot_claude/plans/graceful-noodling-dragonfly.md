@@ -1,9 +1,100 @@
 # Plan: System Clinical Cleanup — Kill All Auto-Processes, Restore Clean State
 
 **Date:** 2026-04-22
-**Context:** Global git config has `[url "git@github.com:"] insteadOf = https://github.com/` which forces ALL GitHub traffic through SSH → 1Password SSH agent. When 1Password is locked or has two instances, the entire system breaks: brew update, git clone, git push — everything. This has caused repeated incidents. The rule needs to be removed, not worked around.
+**Context:** User directive: "I don't want anything to run automatically." Every LaunchAgent deployment has caused system instability (mail-triage froze machine, memory-sync blocked chezmoi, 1Password 7 ghost caused SSH failure). The system needs a clinical cleanup: kill all auto-processes, remove LaunchAgent plists, disable unnecessary background items, get back to a clean Mac state.
 
-## The Problem
+## Phase 1: Kill and Unload All Custom LaunchAgents
+
+Unload from launchctl, then delete plists from `~/Library/LaunchAgents/`:
+
+```bash
+# Our 6 agents
+launchctl bootout gui/$(id -u) ~/Library/LaunchAgents/com.4jp.cce-refresh.plist
+launchctl bootout gui/$(id -u) ~/Library/LaunchAgents/com.4jp.cloudflared.organvm.plist
+launchctl bootout gui/$(id -u) ~/Library/LaunchAgents/com.4jp.mail-triage.plist
+launchctl bootout gui/$(id -u) ~/Library/LaunchAgents/com.4jp.memory-sync.plist
+launchctl bootout gui/$(id -u) ~/Library/LaunchAgents/com.4jp.organvm.soak-snapshot.plist
+launchctl bootout gui/$(id -u) ~/Library/LaunchAgents/com.4jp.session-archive.plist
+# Then delete plists
+rm ~/Library/LaunchAgents/com.4jp.*.plist
+```
+
+Also disable third-party auto-processes:
+```bash
+# Ollama (eats RAM, run manually)
+brew services stop ollama
+launchctl bootout gui/$(id -u) ~/Library/LaunchAgents/homebrew.mxcl.ollama.plist
+rm ~/Library/LaunchAgents/homebrew.mxcl.ollama.plist
+
+# OpenClaw gateway (crashing anyway)
+launchctl bootout gui/$(id -u) ~/Library/LaunchAgents/ai.openclaw.gateway.plist
+rm ~/Library/LaunchAgents/ai.openclaw.gateway.plist
+```
+
+## Phase 2: Remove LaunchAgent Templates from Chezmoi Source
+
+Delete the plist templates so they never redeploy on `chezmoi apply`:
+- `private_Library/LaunchAgents/com.4jp.cce-refresh.plist.tmpl`
+- `private_Library/LaunchAgents/com.4jp.cloudflared.organvm.plist.tmpl`
+- `private_Library/LaunchAgents/com.4jp.mail-triage.plist.tmpl`
+- `private_Library/LaunchAgents/com.4jp.memory-sync.plist.tmpl`
+- `private_Library/LaunchAgents/com.4jp.organvm.soak-snapshot.plist.tmpl`
+- `private_Library/LaunchAgents/com.4jp.session-archive.plist.tmpl`
+
+Also: update `run_onchange_after_load-launchagent.sh.tmpl` to remove ALL load_agent calls for these agents.
+Add these plists to `.chezmoiremove` so they're cleaned up on target machines.
+Update CLAUDE.md LaunchAgent table (mark all as REMOVED).
+
+## Phase 3: Disable macOS Background Items
+
+In System Settings > General > Login Items > App Background Activity:
+- Toggle OFF: atom, Stocks.app, Weather.app
+- Toggle OFF: ollama (after brew services stop)
+- node: investigate what registered it, then disable
+
+(These require user action in System Settings — Claude can't toggle them.)
+
+## Phase 4: System Health Checkup
+
+```bash
+# Disk usage audit
+du -sh ~/Library/Caches/ ~/Library/Logs/ ~/Library/Application\ Support/
+# Check for large orphan directories
+find ~/Library -maxdepth 2 -type d -name "*.app" -o -name "*Cache*" | head -20
+# Shell startup timing
+time zsh -i -c exit
+# domus doctor
+domus doctor
+```
+
+## Phase 5: Convert LaunchAgents to On-Demand CLI Commands
+
+Each former LaunchAgent becomes a domus subcommand or standalone script:
+- `domus refresh cce` → runs CCE refresh once
+- `domus refresh memory` → runs memory sync once
+- `domus refresh soak` → runs soak snapshot once
+- `domus refresh archive` → runs session archive once
+- `domus tunnel start` → starts cloudflared tunnel
+- `domus triage mail` → runs mail triage once (when redesigned)
+
+These exist as CLI commands. They don't run on a timer. The user invokes them, or a future calendar/trigger system asks permission before running.
+
+## Files to Modify
+
+1. `private_Library/LaunchAgents/*.plist.tmpl` — DELETE all 6
+2. `.chezmoiscripts/run_onchange_after_load-launchagent.sh.tmpl` — remove all load_agent calls for these
+3. `.chezmoiremove` — add the 6 plist paths
+4. `CLAUDE.md` — update LaunchAgent table (all REMOVED)
+5. `dot_local/bin/executable_domus` — add `refresh` subcommand for on-demand execution
+
+## Verification
+
+```bash
+launchctl list | grep "4jp\|organvm\|ollama\|openclaw"  # Should be empty
+ls ~/Library/LaunchAgents/com.4jp.*.plist  # Should not exist
+chezmoi apply --dry-run  # Should not recreate any plists
+domus refresh cce  # Should work on-demand
+```
 
 `~/.config/git/config` (chezmoi source: `dot_config/git/config.tmpl`) line 172-173:
 ```
