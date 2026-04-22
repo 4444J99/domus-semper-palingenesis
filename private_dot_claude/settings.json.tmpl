@@ -38,6 +38,11 @@
             "type": "command",
             "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"additionalContext\":\"OUTBOUND ACTION PREFLIGHT \u2014 Mandatory before posting PR comment:\\n1. AUDIT: Did you read the full PR thread (comments, reviews, CI status, bot instructions) BEFORE composing this comment?\\n2. PROTOCOLS: Did you check organvm-iv-taxis/orchestration-start-here/contrib_engine/outreach_protocol.md?\\n3. SEQUENCE: If multi-step, are all steps planned and is this the correct order?\\n4. EDIT-NOT-ERRATA: Should you edit an existing comment instead of appending?\\n5. THREAD-STATE: Does this comment address what the thread actually needs?\\n6. CADENCE: Is this part of a cross-repo burst (<90s between repos)? Stagger if so \u2014 rapid multi-repo posting signals bot behavior.\\n7. UPSTREAM RULES: If external/upstream repo, did you read its CONTRIBUTING.md? We are guests.\"}}'",
             "statusMessage": "Outbound action preflight..."
+          },
+          {
+            "type": "command",
+            "command": "{{ .chezmoi.homeDir }}/.claude/hooks/comment-cadence-tracker.sh 2>/dev/null; true",
+            "timeout": 5
           }
         ]
       },
@@ -49,6 +54,11 @@
             "type": "command",
             "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"additionalContext\":\"OUTBOUND ACTION PREFLIGHT \u2014 Mandatory before posting issue comment:\\n1. AUDIT: Did you read the full issue thread (comments, assignees, labels) BEFORE composing this comment?\\n2. PROTOCOLS: Did you check organvm-iv-taxis/orchestration-start-here/contrib_engine/outreach_protocol.md?\\n3. SEQUENCE: If multi-step, are all steps planned and is this the correct order?\\n4. EDIT-NOT-ERRATA: Should you edit an existing comment instead of appending?\\n5. THREAD-STATE: Does this comment address what the issue actually needs?\\n6. CADENCE: Is this part of a cross-repo burst (<90s between repos)? Stagger if so.\\n7. UPSTREAM RULES: If external/upstream repo, did you read its CONTRIBUTING.md? We are guests.\"}}'",
             "statusMessage": "Outbound action preflight..."
+          },
+          {
+            "type": "command",
+            "command": "{{ .chezmoi.homeDir }}/.claude/hooks/comment-cadence-tracker.sh 2>/dev/null; true",
+            "timeout": 5
           }
         ]
       },
@@ -186,6 +196,17 @@
             "timeout": 5
           }
         ]
+      },
+      {
+        "matcher": "Write",
+        "if": "Write(**/plans/**)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "{{ .chezmoi.homeDir }}/.claude/hooks/plan-persistence-check.sh 2>/dev/null; true",
+            "timeout": 5
+          }
+        ]
       }
     ],
     "Stop": [
@@ -211,6 +232,16 @@
       }
     ],
     "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "{{ .chezmoi.homeDir }}/.claude/hooks/session-parity-check.sh 2>/dev/null; true",
+            "timeout": 15,
+            "statusMessage": "Checking repo parity..."
+          }
+        ]
+      },
       {
         "hooks": [
           {
