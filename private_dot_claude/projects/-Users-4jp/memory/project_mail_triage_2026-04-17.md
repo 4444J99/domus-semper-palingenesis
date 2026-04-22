@@ -1,10 +1,10 @@
 ---
-name: Email triage system — ACTIVE (taxonomy-merged)
-description: Four-tier inbox classifier ACTIVE since 2026-04-21 — routes to existing Gmail label hierarchy (Marketing/Newsletter, Dev/Infrastructure, Finance/Banking, etc.), LaunchAgent on 30min cadence
+name: Email triage system — FAILED (LaunchAgent disabled)
+description: FAILED 2026-04-21 — LaunchAgent froze machine every 30min, disabled at runtime. Classifier not affecting inbox. Gmail-side filter specs exist at /tmp/gmail-filters.gs. Needs Gmail Apps Script redesign.
 type: project
 originSessionId: caa53287-9125-4617-ae4f-43e9056d902d
 ---
-**Status:** ACTIVE as of 2026-04-21. LaunchAgent `com.4jp.mail-triage` loaded and running.
+**Status:** FAILED as of 2026-04-21. LaunchAgent `com.4jp.mail-triage` disabled via `launchctl bootout` (was freezing machine every 30min). Plist source unchanged in chezmoi.
 
 **Architecture:** Python script (`~/.local/bin/mail-triage`) reads Mail.app via osascript, classifies by inline sender/subject/body heuristics, moves messages to **existing Gmail labels** (not Triage/*). Pure osascript — no IMAP, no app passwords.
 
