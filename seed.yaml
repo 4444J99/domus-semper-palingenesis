@@ -26,7 +26,7 @@ produces:
     description: "Shell environment, PATH, XDG dirs, tool initialization (50ms startup, S32 rewrite)"
     consumers: [ALL]
   - type: agent-infrastructure
-    description: "Claude/Gemini/Codex agent configuration, MCP servers, LaunchAgents"
+    description: "Claude/Gemini/Codex agent configuration, MCP servers, LaunchAgents, agent-dispatch CLI (6 agents, --skip-git-repo-check for Codex)"
     consumers: [ORGAN-IV, META-ORGANVM]
   - type: secrets-management
     description: "1Password CLI integration, API key provisioning via op-refresh"
