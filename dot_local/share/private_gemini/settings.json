@@ -8,7 +8,10 @@
       "maxAge": "120d"
     },
     "enablePromptCompletion": true,
-    "defaultApprovalMode": "default"
+    "defaultApprovalMode": "default",
+    "plan": {
+      "enabled": true
+    }
   },
   "security": {
     "auth": {
@@ -44,19 +47,18 @@
       "showColor": true,
       "enableInteractiveShell": false
     },
-    "autoAccept": true,
-    "approvalMode": "default"
+    "autoAccept": true
   },
   "ide": {
     "enabled": true
   },
-  "experimental": {
-    "plan": true
-  },
+  "experimental": {},
   "mcpServers": {
     "github": {
       "command": "/opt/homebrew/bin/github-mcp-server",
-      "args": ["stdio"]
+      "args": [
+        "stdio"
+      ]
     },
     "serena": {
       "command": "uvx",
@@ -73,5 +75,8 @@
       "command": "jupyter-mcp-server",
       "args": []
     }
+  },
+  "agents": {
+    "overrides": {}
   }
 }
