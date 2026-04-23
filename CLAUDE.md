@@ -167,31 +167,27 @@ Aliases: `dm`, `dms`, `dma`, `dmp`, `dmpd`, `dmm`, `dmmq`
 
 ## LaunchAgents (macOS)
 
-Deployed to `~/Library/LaunchAgents/` from `private_Library/LaunchAgents/`:
+**Note:** All plist templates have been removed from `private_Library/LaunchAgents/` in the chezmoi
+source tree (2026-04-22). LaunchAgents caused repeated system freezes and resource contention.
+The operational model has shifted to on-demand CLI invocation only. The scripts that backed these
+agents remain in `dot_local/bin/` and can be run manually.
 
-| Agent | Purpose | Status |
-|-------|---------|--------|
-| ~~`com.4jp.mcp.servers.plist`~~ | ~~MCP server infrastructure auto-start~~ | Removed (DONE-391, 2026-04-20 — redundant, servers client-managed) |
-| `com.4jp.cce-refresh.plist` | Conversation Corpus Engine session refresh (6h interval) | Active |
-| `com.4jp.cloudflared.organvm.plist` | Cloudflare tunnel for ORGANVM | Active |
-| ~~`com.4jp.env.mcp.plist`~~ | ~~Set MCP environment variables via launchctl~~ | Removed (DONE-391, 2026-04-20 — only consumer was mcp.servers) |
-| `com.4jp.memory-sync.plist` | Claude memory local→remote sync | Active |
-| `com.4jp.organvm.soak-snapshot.plist` | Daily soak test snapshot (06:00) | Active |
-| `com.4jp.session-archive.plist` | Claude session transcript archival | Active |
-| `com.chezmoi.self-heal.plist` | Periodic chezmoi apply (self-heal) | Gated (`domus_auto_enabled`) |
-| `com.domus.daemon.plist` | Domus background daemon | Gated (`domus_auto_enabled`) |
-| `com.domus.sort.plist` | File sort daemon | Gated (`domus_auto_enabled`) |
-| `com.4jp.desktop-router.plist` | Desktop file routing | Gated (`domus_auto_enabled`) |
-| `com.4jp.downloads-tidy.plist` | Downloads directory tidying | Gated (`domus_auto_enabled`) |
-| `com.4jp.naming-maintenance.plist` | File naming conventions enforcement | Gated (`domus_auto_enabled`) |
-| `com.4jp.agents-policy-sync.plist` | Agent policy sync | Gated (`domus_auto_enabled`) |
-| `com.4jp.context-sync.plist` | ORGANVM context sync (registry watcher + 30min timer) | Gated (`domus_auto_enabled`) |
-| `com.4jp.home-root-guard.plist` | Home directory clutter prevention | Gated (`domus_auto_enabled`) |
-| `com.4jp.mail-triage.plist` | Inbox triage (30min interval) | Active |
+Previously deployed agents (now removed from source):
 
-Conditional deployment: file-automation agents are suppressed when `domus_auto_enabled = false`
-in chezmoi config. Mail automation agents are blocked unconditionally via `.chezmoiignore` until
-their repos exist.
+| Agent | Purpose | Former Status |
+|-------|---------|---------------|
+| `com.4jp.cce-refresh` | CCE session refresh (6h) | Was Active |
+| `com.4jp.cloudflared.organvm` | Cloudflare tunnel | Was Active |
+| `com.4jp.memory-sync` | Claude memory sync | Was Active |
+| `com.4jp.organvm.soak-snapshot` | Soak test snapshot | Was Active |
+| `com.4jp.session-archive` | Session archival | Was Active |
+| `com.4jp.mail-triage` | Inbox triage | Was Active |
+| `com.chezmoi.self-heal` | Periodic chezmoi apply | Was Gated |
+| `com.domus.daemon` | Background daemon | Was Gated |
+| `com.domus.sort` | File sort | Was Gated |
+| Various file-automation agents | Desktop routing, downloads, naming, etc. | Was Gated |
+
+See feedback memory `feedback_no_launchagents.md` for full rationale.
 
 ## Apply-Time Scripts (`.chezmoiscripts/`)
 
@@ -404,7 +400,7 @@ Linked skills: cicd-resilience-and-recovery, continuous-learning-agent, evaluati
 
 ## Task Queue (from pipeline)
 
-**66** pending tasks | Last pipeline: unknown | Last update: 2026-04-21
+**63** pending tasks | Last pipeline: unknown | Last update: 2026-04-23
 
 ### Completed (this cycle)
 - ~~`67e5eb6df8e5`~~ XDG symlink array — 6 dead apps removed, npm added (2026-04-21)
@@ -412,12 +408,12 @@ Linked skills: cicd-resilience-and-recovery, continuous-learning-agent, evaluati
 - ~~`913fa1071b92`~~ tmux plugin paths — DONE (pre-existing)
 - ~~`65c062d51089`~~ npm prefix in npmrc — DONE (pre-existing)
 - ~~`370417c69874`~~ _agents/ deleted from source tree + 14GB reclaimed (2026-04-21)
+- ~~`c0870ae16879`~~ DELETE — symlink_dot_codex + symlink_dot_docker removed (2026-04-23)
+- ~~`6d06adde52af`~~ NATIVE_XDG — Docker env vars removed, KUBECONFIG kept for k9s (2026-04-23)
+- ~~`5549abfa3f5d`~~ SYMLINK_KEEP — Resolved: no bash/kubernetes symlinks existed (2026-04-23)
 
 ### Open
-- `c0870ae16879` DELETE — Remove empty/unused symlinks [bash, docker, kubernetes]
-- `6d06adde52af` NATIVE_XDG — Keep (native XDG support) [bash, docker, kubernetes]
-- `5549abfa3f5d` SYMLINK_KEEP — Keep (hardcoded paths, no env var workaround) [bash, docker, kubernetes]
-- ... and 63 more
+- ... 63 remaining tasks
 
 Cross-organ links: 600 | Top tags: `python`, `pytest`, `bash`, `node`, `mcp`
 
