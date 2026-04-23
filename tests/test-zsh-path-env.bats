@@ -110,7 +110,7 @@ teardown() {
     export XDG_STATE_HOME="$HOME/.local/state"
     export XDG_CACHE_HOME="$HOME/.cache"
     source "'"$RENDERED_ENV"'"
-    [[ -n "$DOCKER_CONFIG" ]] && [[ -n "$CARGO_HOME" ]] && [[ -n "$RUSTUP_HOME" ]] && echo "all-set"
+    [[ -n "$CARGO_HOME" ]] && [[ -n "$RUSTUP_HOME" ]] && echo "all-set"
   '
   [ "$status" -eq 0 ]
   [ "$output" = "all-set" ]

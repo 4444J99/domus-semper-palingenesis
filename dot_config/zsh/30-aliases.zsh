@@ -90,8 +90,6 @@ alias pip3='python3 -m pip'
 alias brewup='brew update && brew upgrade && brew upgrade --greedy && brew cleanup && brew doctor'
 alias dmm='domus maintain'
 alias dmmq='domus maintain quick'
-alias docker-cleanup='docker system prune -a --volumes'
-
 # Browser & app caches
 alias chrome-clean='rm -rf ~/Library/Caches/Google/Chrome/Default/Cache ~/Library/Caches/Google/Chrome/Default/"Code Cache"'
 alias puppeteer-clean='rm -rf ~/.cache/puppeteer'
