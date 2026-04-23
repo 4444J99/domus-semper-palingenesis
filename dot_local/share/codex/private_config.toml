@@ -103,6 +103,120 @@ trust_level = "trusted"
 [projects."/Users/4jp/Workspace/organvm-iii-ergon/public-record-data-scrapper"]
 trust_level = "trusted"
 
+[projects."/Users/4jp/Workspace/4444J99/domus-semper-palingenesis"]
+trust_level = "trusted"
+
+[projects."/Users/4jp/Workspace/organvm/system-system--system"]
+trust_level = "trusted"
+
+[projects."/Users/4jp/Workspace/4444J99/padavano"]
+trust_level = "trusted"
+
+[projects."/Users/4jp/Workspace/4444J99/application-pipeline"]
+trust_level = "trusted"
+
+[projects."/Users/4jp/Workspace/organvm/my-knowledge-base"]
+trust_level = "trusted"
+
+[projects."/Users/4jp/Workspace/organvm/organvm-engine"]
+trust_level = "trusted"
+
+[projects."/Users/4jp/Workspace/organvm/conversation-corpus-engine"]
+trust_level = "trusted"
+
+[projects."/Users/4jp/Workspace/organvm/organvm-corpvs-testamentvm"]
+trust_level = "trusted"
+
+[projects."/Users/4jp/Workspace/.archive/superprojects-20260420-120747/meta-organvm"]
+trust_level = "trusted"
+
+[projects."/Users/4jp/Workspace/organvm/schema-definitions"]
+trust_level = "trusted"
+
+[projects."/Users/4jp/Workspace/organvm/contrib--adenhq-hive"]
+trust_level = "trusted"
+
+[projects."/Users/4jp/Workspace/organvm/sovereign-systems--elevate-align"]
+trust_level = "trusted"
+
+[projects."/Users/4jp/Workspace/4444J99/4444J99"]
+trust_level = "trusted"
+
+[projects."/Users/4jp/Workspace/organvm/a-i--skills"]
+trust_level = "trusted"
+
+[projects."/Users/4jp/Workspace/organvm/a-mavs-olevm"]
+trust_level = "trusted"
+
+[projects."/Users/4jp/Workspace/organvm/alchemia-ingestvm"]
+trust_level = "trusted"
+
+[projects."/Users/4jp/Workspace/organvm/alchemical-synthesizer"]
+trust_level = "trusted"
+
+[projects."/Users/4jp/Workspace/organvm/atomic-substrata"]
+trust_level = "trusted"
+
+[projects."/Users/4jp/Workspace/organvm/content-engine--asset-amplifier"]
+trust_level = "trusted"
+
+[projects."/Users/4jp/Workspace/organvm/community-hub"]
+trust_level = "trusted"
+
+[projects."/Users/4jp/Workspace/organvm/contrib--grafana-k6"]
+trust_level = "trusted"
+
+[projects."/Users/4jp/Workspace/organvm/essay-pipeline"]
+trust_level = "trusted"
+
+[projects."/Users/4jp/Workspace/organvm/kerygma-profiles"]
+trust_level = "trusted"
+
+[projects."/Users/4jp/Workspace/organvm/life-my--midst--in"]
+trust_level = "trusted"
+
+[projects."/Users/4jp/Workspace/organvm/organvm-ontologia"]
+trust_level = "trusted"
+
+[projects."/Users/4jp/Workspace/organvm/peer-audited--behavioral-blockchain"]
+trust_level = "trusted"
+
+[projects."/Users/4jp/Workspace/organvm/organvm-mcp-server"]
+trust_level = "trusted"
+
+[projects."/Users/4jp/Workspace/organvm/public-record-data-scrapper"]
+trust_level = "trusted"
+
+[projects."/Users/4jp/Workspace/organvm/public-process"]
+trust_level = "trusted"
+
+[projects."/Users/4jp/Workspace/organvm/stakeholder-portal"]
+trust_level = "trusted"
+
+[projects."/Users/4jp/Workspace/organvm/studium-generale"]
+trust_level = "trusted"
+
+[projects."/Users/4jp/Workspace/organvm/styx-behavioral-economics-theory"]
+trust_level = "trusted"
+
+[projects."/Users/4jp/Workspace/organvm/system-dashboard"]
+trust_level = "trusted"
+
+[projects."/Users/4jp/Workspace/organvm/vox--architectura-gubernatio"]
+trust_level = "trusted"
+
+[projects."/Users/4jp/Workspace/organvm/agentic-titan"]
+trust_level = "trusted"
+
+[projects."/Users/4jp/Workspace/organvm/collective-persona-operations"]
+trust_level = "trusted"
+
+[projects."/Users/4jp/Workspace/4444J99/portfolio"]
+trust_level = "trusted"
+
+[projects."/private/tmp"]
+trust_level = "trusted"
+
 [features]
 unified_exec = true
 shell_snapshot = true
