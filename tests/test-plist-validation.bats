@@ -29,17 +29,12 @@ render_plist() {
 
 @test "all plist templates exist" {
   count=$(ls "$PLISTS_DIR"/*.plist.tmpl 2>/dev/null | wc -l | tr -d ' ')
-  [ "$count" -gt 0 ] || {
-    echo "No plist templates found in $PLISTS_DIR"
-    return 1
-  }
+  [ "$count" -gt 0 ] || skip "No plist templates in source tree (LaunchAgents removed)"
 }
 
 @test "all plist templates are valid XML after rendering" {
-  skip_if_no_plutil() {
-    command -v plutil &>/dev/null || skip "plutil not available"
-  }
-  skip_if_no_plutil
+  ls "$PLISTS_DIR"/*.plist.tmpl &>/dev/null || skip "No plist templates to validate"
+  command -v plutil &>/dev/null || skip "plutil not available"
 
   local failures=0
   for tmpl in "$PLISTS_DIR"/*.plist.tmpl; do
@@ -58,6 +53,7 @@ render_plist() {
 }
 
 @test "all plist templates have required keys" {
+  ls "$PLISTS_DIR"/*.plist.tmpl &>/dev/null || skip "No plist templates to validate"
   for tmpl in "$PLISTS_DIR"/*.plist.tmpl; do
     local name
     name=$(basename "$tmpl")
