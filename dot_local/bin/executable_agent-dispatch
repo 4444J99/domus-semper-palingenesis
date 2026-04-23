@@ -30,16 +30,13 @@ if [[ -f "$DOMUS_LIB" ]]; then
   source "$DOMUS_LIB"
 else
   # Minimal fallback when domus-lib.sh is unavailable (e.g. standalone use)
-  RED='' GREEN='' YELLOW='' BLUE='' BOLD='' RESET=''
+  RED='' GREEN='' YELLOW='' BLUE='' CYAN='' DIM='' BOLD='' RESET=''
   if [[ -t 2 ]]; then
     RED=$'\033[0;31m' GREEN=$'\033[0;32m' YELLOW=$'\033[0;33m'
-    BLUE=$'\033[0;34m'
+    BLUE=$'\033[0;34m' CYAN=$'\033[0;36m' DIM=$'\033[0;90m'
     BOLD=$'\033[1m' RESET=$'\033[0m'
   fi
-  die() {
-    printf '%serror:%s %s\n' "$RED" "$RESET" "$1" >&2
-    exit 2
-  }
+  die() { printf '%serror:%s %s\n' "$RED" "$RESET" "$1" >&2; exit 2; }
   info() { printf '%s::%s %s\n' "$BLUE" "$RESET" "$1" >&2; }
   warn() { printf '%s!%s %s\n' "$YELLOW" "$RESET" "$1" >&2; }
 fi
@@ -50,7 +47,7 @@ fi
 
 LOG_DIR="${HOME}/.local/state/agent-dispatch"
 LOG_FILE="${LOG_DIR}/dispatch.log"
-LOG_MAX_BYTES=1048576 # 1MB — rotate when exceeded
+LOG_MAX_BYTES=1048576  # 1MB — rotate when exceeded
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Agent registry
@@ -62,19 +59,19 @@ AGENTS=(claude codex opencode gemini copilot goose)
 
 agent_binary() {
   case "$1" in
-    claude) echo "claude" ;;
-    codex) echo "codex" ;;
+    claude)   echo "claude" ;;
+    codex)    echo "codex" ;;
     opencode) echo "opencode" ;;
-    gemini) echo "gemini" ;;
-    copilot) echo "copilot" ;;
-    goose) echo "goose" ;;
-    *) return 1 ;;
+    gemini)   echo "gemini" ;;
+    copilot)  echo "copilot" ;;
+    goose)    echo "goose" ;;
+    *)        return 1 ;;
   esac
 }
 
 agent_version_flag() {
   case "$1" in
-    claude | codex | opencode | gemini | copilot) echo "--version" ;;
+    claude|codex|opencode|gemini|copilot) echo "--version" ;;
     goose) echo "--version" ;;
   esac
 }
@@ -137,10 +134,8 @@ log_dispatch() {
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Agent dispatch functions
-# Invoked dynamically via: dispatch_"${AGENT}" (line ~481)
 # ─────────────────────────────────────────────────────────────────────────────
 
-# shellcheck disable=SC2329
 dispatch_claude() {
   local prompt="$1"
   local dir="$2"
@@ -164,7 +159,6 @@ dispatch_claude() {
   "${cmd[@]}"
 }
 
-# shellcheck disable=SC2329
 dispatch_codex() {
   local prompt="$1"
   local dir="$2"
@@ -199,15 +193,25 @@ dispatch_codex() {
   "${cmd[@]}"
 }
 
-# shellcheck disable=SC2329
 dispatch_opencode() {
   local prompt="$1"
   local dir="$2"
   local json_flag="$3"
   local system_prompt="$4"
 
-  local cmd=(opencode run "$prompt")
+  # Write prompt to temp file to avoid ARG_MAX and special-char issues
+  # when prompts arrive via piped stdin (the positional-arg path breaks
+  # on long or multi-line content).
+  local tmpfile
+  tmpfile=$(mktemp "${TMPDIR:-/tmp}/opencode-prompt.XXXXXX")
 
+  if [[ -n "$system_prompt" ]]; then
+    printf '[System: %s]\n\n%s' "$system_prompt" "$prompt" > "$tmpfile"
+  else
+    printf '%s' "$prompt" > "$tmpfile"
+  fi
+
+  local cmd=(opencode run --file "$tmpfile" "Execute the instructions in the attached file.")
   cmd+=(--skip-permissions)
   if [[ "$json_flag" == "1" ]]; then
     cmd+=(--json)
@@ -215,22 +219,13 @@ dispatch_opencode() {
   if [[ -n "$dir" ]]; then
     cmd+=(--dir "$dir")
   fi
-  # OpenCode does not support --system-prompt; prepend to prompt if provided
-  if [[ -n "$system_prompt" ]]; then
-    cmd=(opencode run "[System: ${system_prompt}] ${prompt}")
-    cmd+=(--skip-permissions)
-    if [[ "$json_flag" == "1" ]]; then
-      cmd+=(--json)
-    fi
-    if [[ -n "$dir" ]]; then
-      cmd+=(--dir "$dir")
-    fi
-  fi
 
   "${cmd[@]}"
+  local rc=$?
+  rm -f "$tmpfile"
+  return $rc
 }
 
-# shellcheck disable=SC2329
 dispatch_gemini() {
   local prompt="$1"
   local dir="$2"
@@ -260,7 +255,6 @@ dispatch_gemini() {
   "${cmd[@]}"
 }
 
-# shellcheck disable=SC2329
 dispatch_copilot() {
   local prompt="$1"
   local dir="$2"
@@ -281,7 +275,6 @@ dispatch_copilot() {
   "${cmd[@]}"
 }
 
-# shellcheck disable=SC2329
 dispatch_goose() {
   local prompt="$1"
   local dir="$2"
@@ -403,11 +396,11 @@ fi
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    -h | --help)
+    -h|--help)
       show_help
       exit 0
       ;;
-    --list | -l)
+    --list|-l)
       list_agents
       exit 0
       ;;
@@ -475,7 +468,7 @@ fi
 # Validate --dir if provided
 if [[ -n "$WORK_DIR" ]]; then
   [[ -d "$WORK_DIR" ]] || die "directory does not exist: $WORK_DIR"
-  WORK_DIR="$(cd "$WORK_DIR" && pwd)" # Resolve to absolute path
+  WORK_DIR="$(cd "$WORK_DIR" && pwd)"  # Resolve to absolute path
 fi
 
 # ─────────────────────────────────────────────────────────────────────────────
