@@ -171,12 +171,18 @@ dispatch_codex() {
   if [[ "$json_flag" == "1" ]]; then
     cmd+=(--json)
   fi
+  if [[ "$SKIP_GIT_CHECK" == "1" ]]; then
+    cmd+=(--skip-git-repo-check)
+  fi
   # Codex does not support --system-prompt; prepend to prompt if provided
   if [[ -n "$system_prompt" ]]; then
     cmd=(codex exec "[System: ${system_prompt}] ${prompt}")
     cmd+=(--full-auto)
     if [[ "$json_flag" == "1" ]]; then
       cmd+=(--json)
+    fi
+    if [[ "$SKIP_GIT_CHECK" == "1" ]]; then
+      cmd+=(--skip-git-repo-check)
     fi
   fi
 
@@ -315,6 +321,7 @@ ${BOLD}OPTIONS${RESET}
   --dir <path>         Working directory for the agent
   --json               Request structured JSON output (where supported)
   --system <prompt>    System prompt (where supported; prepended otherwise)
+  --skip-git-repo-check  Allow Codex to run outside a git repository
 
 ${BOLD}DISPATCH TABLE${RESET} (conductor protocol work-type mapping)
 $(dispatch_table)
@@ -376,6 +383,7 @@ PROMPT=""
 WORK_DIR=""
 JSON_FLAG=0
 SYSTEM_PROMPT=""
+SKIP_GIT_CHECK=0
 
 # No args → help
 if [[ $# -eq 0 ]] && [[ -t 0 ]]; then
@@ -406,6 +414,10 @@ while [[ $# -gt 0 ]]; do
       [[ $# -lt 2 ]] && die "--system requires a prompt argument"
       SYSTEM_PROMPT="$2"
       shift 2
+      ;;
+    --skip-git-repo-check)
+      SKIP_GIT_CHECK=1
+      shift
       ;;
     -*)
       die "unknown option: $1 (see --help)"
