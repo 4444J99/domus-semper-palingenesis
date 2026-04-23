@@ -11,7 +11,7 @@ SCRIPT_DIR = Path(__file__).resolve().parent.parent / "dot_local" / "bin"
 if str(SCRIPT_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPT_DIR))
 
-from domus_lib import MULTI_EXT, split_name, unique_dest
+from domus_lib import MULTI_EXT, split_name, unique_dest  # noqa: E402
 
 
 # ─── split_name tests ───

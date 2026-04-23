@@ -43,8 +43,8 @@ class TestInsertNotice:
             assert mod.NOTICE_LINE in text
             # Notice should come after first heading
             lines = text.splitlines()
-            heading_idx = next(i for i, l in enumerate(lines) if l.startswith("# "))
-            notice_idx = next(i for i, l in enumerate(lines) if mod.NOTICE_LINE in l)
+            heading_idx = next(i for i, line in enumerate(lines) if line.startswith("# "))
+            notice_idx = next(i for i, line in enumerate(lines) if mod.NOTICE_LINE in line)
             assert notice_idx > heading_idx
 
     def test_idempotent(self):
@@ -78,9 +78,9 @@ class TestInsertNotice:
             assert mod.NOTICE_LINE in text
             # Notice should come after front matter closing ---
             lines = text.splitlines()
-            dashes = [i for i, l in enumerate(lines) if l.strip() == "---"]
+            dashes = [i for i, line in enumerate(lines) if line.strip() == "---"]
             assert len(dashes) >= 2
-            notice_idx = next(i for i, l in enumerate(lines) if mod.NOTICE_LINE in l)
+            notice_idx = next(i for i, line in enumerate(lines) if mod.NOTICE_LINE in line)
             assert notice_idx > dashes[1]
 
 

@@ -5,7 +5,6 @@ import subprocess
 import sys
 import tempfile
 from pathlib import Path
-from unittest import mock
 
 SCRIPT_DIR = Path(__file__).resolve().parent.parent / "dot_local" / "bin"
 _plain = SCRIPT_DIR / "executable_domus-home-guard"

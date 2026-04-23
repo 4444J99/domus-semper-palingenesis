@@ -32,7 +32,7 @@ _mod = _import_module()
 category_for = _mod.category_for
 
 # split_name and unique_dest now live in the shared library
-from domus_lib import split_name, unique_dest
+from domus_lib import split_name, unique_dest  # noqa: E402
 
 
 # ─── split_name tests ───
