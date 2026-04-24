@@ -1,0 +1,48 @@
+# People Index — Universal Registry of Collaborators
+# Deployed to ~/.config/ai-context/people.yaml via chezmoi
+# Referenced by session-context hook for contextual briefings
+# Additive only — never remove entries, mark inactive instead
+
+- name: Maddie
+  relationship: client
+  project: sovereign-systems--elevate-align
+  org: organvm-iii-ergon
+  domain: health/wellness brand (Elevate Align)
+  site: elevatealign.com
+  deploy: Cloudflare Pages (sovereign-systems-spiral.pages.dev)
+  revenue_terms: "10% of all sales until $10K"
+  open_threads:
+    - spiral brightness visual approval (lightened 2026-04-23)
+    - GHL quiz URL (waiting on her)
+    - affiliate account URLs (IonFaucet, Multipure — waiting on her)
+    - documentary video (waiting on her to film)
+    - Stripe vs GHL decision for subscriptions
+    - content review session (104 flagged pieces)
+    - pillar order confirmation
+    - custom domain connection (elevatealign.com — one CF dashboard action)
+    - deploy pipeline fix (CF API token expired Apr 19)
+    - star/asterisk node geometry with chakra colors (optional, awaiting confirmation)
+  key_files:
+    - src/components/spiral/spiral.ts
+    - src/data/hub.config.ts
+    - docs/maddie-system-report-2026-04-22.md
+    - docs/client-decisions/2026-04-17-atomized-wants.md
+  last_interaction: 2026-04-23
+  status: active
+
+- name: Becka McKay
+  relationship: former MFA thesis advisor
+  institution: Florida Atlantic University (FAU)
+  context: outreach thread — 5-email exchange
+  open_threads:
+    - awaiting reply after redirecting substance question to practical asks
+  last_interaction: 2026-04-18
+  status: active
+
+- name: Harvey
+  relationship: professional contact
+  context: follow-up outreach (LangChain connection)
+  open_threads:
+    - personalized follow-up message drafted, not sent
+  last_interaction: 2026-04-23
+  status: active

@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC2329
 # ─────────────────────────────────────────────────────────────────────────────
 # agent-dispatch - Route prompts to AI CLI agents
 # ─────────────────────────────────────────────────────────────────────────────
@@ -30,11 +31,14 @@ if [[ -f "$DOMUS_LIB" ]]; then
   source "$DOMUS_LIB"
 else
   # Minimal fallback when domus-lib.sh is unavailable (e.g. standalone use)
-  RED='' GREEN='' YELLOW='' BLUE='' CYAN='' DIM='' BOLD='' RESET=''
+  RED='' GREEN='' YELLOW='' BLUE='' BOLD='' RESET=''
+  # shellcheck disable=SC2034  # CYAN/DIM used in show_help/list_agents format strings
+  CYAN='' DIM=''
   if [[ -t 2 ]]; then
     RED=$'\033[0;31m' GREEN=$'\033[0;32m' YELLOW=$'\033[0;33m'
-    BLUE=$'\033[0;34m' CYAN=$'\033[0;36m' DIM=$'\033[0;90m'
-    BOLD=$'\033[1m' RESET=$'\033[0m'
+    BLUE=$'\033[0;34m' BOLD=$'\033[1m' RESET=$'\033[0m'
+    # shellcheck disable=SC2034
+    CYAN=$'\033[0;36m' DIM=$'\033[0;90m'
   fi
   die() { printf '%serror:%s %s\n' "$RED" "$RESET" "$1" >&2; exit 2; }
   info() { printf '%s::%s %s\n' "$BLUE" "$RESET" "$1" >&2; }
@@ -223,7 +227,7 @@ dispatch_opencode() {
   "${cmd[@]}"
   local rc=$?
   rm -f "$tmpfile"
-  return $rc
+  return "$rc"
 }
 
 dispatch_gemini() {

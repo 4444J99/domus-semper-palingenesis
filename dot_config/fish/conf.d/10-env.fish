@@ -14,8 +14,6 @@ if status is-interactive
     set -gx XDG_CACHE_HOME $HOME/.cache
 
     # Application-specific XDG compliance
-    set -gx DOCKER_CONFIG $XDG_CONFIG_HOME/docker
-    set -gx MACHINE_STORAGE_PATH $XDG_DATA_HOME/docker-machine
     set -gx CARGO_HOME $XDG_DATA_HOME/cargo
     set -gx RUSTUP_HOME $XDG_DATA_HOME/rustup
     set -gx NODE_REPL_HISTORY $XDG_STATE_HOME/node_repl_history

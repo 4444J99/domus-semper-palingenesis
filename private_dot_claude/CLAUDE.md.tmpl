@@ -21,6 +21,9 @@
 {{- $skillIndex := include "dot_config/ai-skills/skill-index.md.tmpl" }}
 {{ $skillIndex }}
 {{ $voicePolicy }}
+{{- $universalRules := include "dot_config/ai-context/universal-rules.md.tmpl" }}
+{{ $universalRules }}
+
 ## Working State Capture (Session Close-Out)
 
 Before the 10-index close-out, capture working state so the next session starts warm:

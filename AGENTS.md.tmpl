@@ -14,18 +14,21 @@ Applies to all AI coding agents (Codex, etc.) operating in this home directory.
 {{ $planDiscipline }}
 {{ $codeStyle }}
 
+{{- $universalRules := include "dot_config/ai-context/universal-rules.md.tmpl" }}
+{{ $universalRules }}
+
 ### Docker Governance
 
 Docker is **not default infrastructure**. Keep Docker Desktop quit; launch only when needed.
 
 **Decision rule:** "How many separate processes need to talk to each other?"
-- **One process** → run natively (LaunchAgent if persistent)
+- **One process** → run natively (CLI tool in `~/.local/bin/`, run on-demand)
 - **Two+ coordinated processes** (API + DB, app + cache + worker) → Docker Compose
 - **Deploying to cloud container runtime** → Docker
 
 **Push back** when asked to use Docker for: single CLI tools, MCP servers, static sites,
-or anything that's just one process. Use `npx`, a binary in `~/.local/bin/`, or a
-LaunchAgent instead.
+or anything that's just one process. Use `npx` or a binary in `~/.local/bin/` instead.
+**Never use LaunchAgents** — every incident caused system freezes. On-demand CLI only.
 
 **Accept Docker** when: the project needs a database + API minimum, or already has a
 `docker-compose.yml`, or targets ECS/Cloud Run/Kubernetes.

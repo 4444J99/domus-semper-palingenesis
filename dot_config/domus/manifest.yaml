@@ -32,7 +32,6 @@ packages:
       - yq
       - just
       - lazygit
-      - lazydocker
       - git-delta
       - git-absorb
       - git-filter-repo

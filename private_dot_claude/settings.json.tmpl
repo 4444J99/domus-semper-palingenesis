@@ -27,6 +27,16 @@
             "statusMessage": "Loading atom status..."
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "{{ .chezmoi.homeDir }}/.local/bin/session-context \"$(pwd)\" 2>/dev/null | python3 -c \"import sys,json; ctx=sys.stdin.read().strip(); print(json.dumps({'hookSpecificOutput':{'hookEventName':'SessionStart','additionalContext':ctx}}))\" 2>/dev/null; true",
+            "timeout": 10,
+            "statusMessage": "Loading contextual briefing..."
+          }
+        ]
       }
     ],
     "PreToolUse": [
@@ -170,6 +180,26 @@
           {
             "type": "command",
             "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"additionalContext\":\"1PASSWORD DISCIPLINE:\\n\u2022 Cache this result immediately. ONE op item get per secret per session \u2014 no repeat calls.\"}}'"
+          }
+        ]
+      },
+      {
+        "matcher": "Write",
+        "if": "Write(*.plist*)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"additionalContext\":\"HARD BLOCK \u2014 LaunchAgent Creation:\\n\u2022 NEVER create or deploy LaunchAgents. Every single LaunchAgent has caused machine freezes, CPU thrash, or system instability.\\n\u2022 The operational model is ON-DEMAND CLI ONLY. Scripts in ~/.local/bin/ can be run manually.\\n\u2022 If you need scheduled execution: use cron (not launchd), or better yet, make it event-driven.\\n\u2022 This is a UNIVERSAL RULE from feedback_no_launchagents.md. Do not proceed.\"}}'"
+          }
+        ]
+      },
+      {
+        "matcher": "Write",
+        "if": "Write(*LaunchAgent*)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"additionalContext\":\"HARD BLOCK \u2014 LaunchAgent creation is forbidden. Every incident froze the machine. On-demand CLI only.\"}}'"
           }
         ]
       }

@@ -2,13 +2,6 @@
 # Shell Completions
 # ─────────────────────────────────────────────────────────────────────────────
 
-# Docker CLI completions (XDG with legacy fallback)
-if [[ -d "${XDG_DATA_HOME:-$HOME/.local/share}/docker/completions" ]]; then
-  fpath=("${XDG_DATA_HOME:-$HOME/.local/share}/docker/completions" $fpath)
-elif [[ -d "$HOME/.docker/completions" ]]; then
-  fpath=("$HOME/.docker/completions" $fpath)
-fi
-
 # Custom completions directory
 fpath=("${ZDOTDIR:-$HOME/.config/zsh}/completions" $fpath)
 

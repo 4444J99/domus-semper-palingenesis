@@ -1,0 +1,136 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# session-context — Contextual briefing for Claude Code sessions
+#
+# Reads people.yaml and artifacts.yaml from ~/.config/ai-context/,
+# cross-references with the current repo's seed.yaml (if present),
+# and outputs a contextual briefing for the SessionStart hook.
+#
+# Usage: session-context [working-directory]
+# Output: Markdown briefing to stdout (consumed by SessionStart hook)
+
+CONTEXT_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/ai-context"
+PEOPLE_FILE="$CONTEXT_DIR/people.yaml"
+ARTIFACTS_FILE="$CONTEXT_DIR/artifacts.yaml"
+CWD="${1:-$(pwd)}"
+
+# Determine current repo from working directory
+repo_name=""
+org_name=""
+
+if [[ -f "$CWD/seed.yaml" ]]; then
+  repo_name=$(basename "$CWD")
+  org_name=$(basename "$(dirname "$CWD")")
+elif [[ -f "$CWD/../seed.yaml" ]]; then
+  repo_name=$(basename "$(dirname "$CWD")")
+  org_name=$(basename "$(dirname "$(dirname "$CWD")")")
+fi
+
+# Header
+echo "SESSION CONTEXT BRIEFING"
+echo "========================"
+echo "Working directory: $CWD"
+[[ -n "$repo_name" ]] && echo "Repo: $org_name/$repo_name"
+echo ""
+
+# People relevant to this repo
+if [[ -f "$PEOPLE_FILE" && -n "$repo_name" ]]; then
+  # Simple grep-based matching — find people associated with this repo
+  if grep -q "$repo_name" "$PEOPLE_FILE" 2>/dev/null; then
+    echo "## People (this repo)"
+    # Extract name and open_threads for matching entries
+    python3 -c "
+import yaml, sys
+with open('$PEOPLE_FILE') as f:
+    people = yaml.safe_load(f)
+if not people:
+    sys.exit(0)
+for p in people:
+    proj = p.get('project', '')
+    if '$repo_name' in str(proj) or '$repo_name' in str(p.get('key_files', '')):
+        print(f\"- **{p['name']}** ({p.get('relationship', 'unknown')}) — last: {p.get('last_interaction', 'unknown')}\")
+        for t in p.get('open_threads', []):
+            print(f\"  - {t}\")
+" 2>/dev/null || true
+    echo ""
+  fi
+fi
+
+# Artifacts relevant to this repo
+if [[ -f "$ARTIFACTS_FILE" && -n "$repo_name" ]]; then
+  if grep -q "$repo_name" "$ARTIFACTS_FILE" 2>/dev/null; then
+    echo "## Active Artifacts (this repo)"
+    python3 -c "
+import yaml, sys
+with open('$ARTIFACTS_FILE') as f:
+    artifacts = yaml.safe_load(f)
+if not artifacts:
+    sys.exit(0)
+for a in artifacts:
+    repo = a.get('repo', '')
+    if '$repo_name' in str(repo):
+        state = a.get('state', 'unknown')
+        fb = a.get('pending_feedback', '')
+        print(f\"- **{a['name']}** — \`{a.get('path', '?')}\` — {state}\")
+        if fb:
+            print(f\"  Feedback: {fb}\")
+" 2>/dev/null || true
+    echo ""
+  fi
+fi
+
+# Cross-scope memory: scan ALL project memories for mentions of this repo
+if [[ -n "$repo_name" ]]; then
+  CLAUDE_PROJECTS="$HOME/.claude/projects"
+  if [[ -d "$CLAUDE_PROJECTS" ]]; then
+    cross_hits=$(grep -rl "$repo_name" "$CLAUDE_PROJECTS"/*/memory/*.md 2>/dev/null | head -10)
+    if [[ -n "$cross_hits" ]]; then
+      echo "## Cross-Scope Context (mentions of $repo_name in other project memories)"
+      while IFS= read -r file; do
+        # Extract project scope from path
+        scope=$(echo "$file" | sed "s|$CLAUDE_PROJECTS/||" | cut -d/ -f1)
+        filename=$(basename "$file" .md)
+        # Get first non-frontmatter, non-empty line as summary
+        summary=$(sed -n '/^---$/,/^---$/d; /^$/d; p' "$file" 2>/dev/null | head -1 | cut -c1-120)
+        echo "- [$filename] (scope: $scope) — $summary"
+      done <<< "$cross_hits"
+      echo ""
+    fi
+  fi
+fi
+
+# Relevant prompt atoms: check work queue for this repo's universe
+WORK_QUEUE="$HOME/Workspace/organvm/organvm-corpvs-testamentvm/data/prompt-registry/open-work-queue.jsonl"
+if [[ -f "$WORK_QUEUE" && -n "$repo_name" ]]; then
+  atom_hits=$(grep -i "$repo_name" "$WORK_QUEUE" 2>/dev/null | head -5)
+  if [[ -n "$atom_hits" ]]; then
+    echo "## Pending Atoms (this repo)"
+    python3 -c "
+import json, sys
+for line in sys.stdin:
+    try:
+        atom = json.loads(line.strip())
+        aid = atom.get('id', '?')
+        text = atom.get('text', atom.get('content', ''))[:100]
+        priority = atom.get('priority', '?')
+        print(f'- [{aid}] P{priority}: {text}')
+    except: pass
+" <<< "$atom_hits" 2>/dev/null || true
+    echo ""
+  fi
+fi
+
+# If no repo match, show summary counts
+if [[ -z "$repo_name" ]]; then
+  echo "## System Summary"
+  if [[ -f "$PEOPLE_FILE" ]]; then
+    count=$(python3 -c "import yaml; print(len(yaml.safe_load(open('$PEOPLE_FILE')) or []))" 2>/dev/null || echo "?")
+    echo "- People tracked: $count"
+  fi
+  if [[ -f "$ARTIFACTS_FILE" ]]; then
+    count=$(python3 -c "import yaml; print(len(yaml.safe_load(open('$ARTIFACTS_FILE')) or []))" 2>/dev/null || echo "?")
+    echo "- Active artifacts: $count"
+  fi
+  echo ""
+fi

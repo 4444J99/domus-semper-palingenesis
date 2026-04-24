@@ -1,0 +1,73 @@
+# Artifacts Index — Active Deliverables Registry
+# Deployed to ~/.config/ai-context/artifacts.yaml via chezmoi
+# Referenced by session-context hook for contextual briefings
+# Additive only — move completed artifacts to 'shipped' status, never delete
+
+- name: Sovereign Systems Spiral (3D helix)
+  path: src/components/spiral/spiral.ts
+  repo: sovereign-systems--elevate-align
+  org: organvm-iii-ergon
+  collaborator: Maddie
+  state: feedback-pending
+  description: "Three.js 3D interactive helix — 13 orbs, four phases, drag-to-rotate, tap-to-navigate"
+  pending_feedback: "Lightened 2026-04-23 (bg, lights, exposure, emissive, particles). Needs Maddie visual approval."
+  last_modified: 2026-04-23
+
+- name: Node pages (1-13)
+  path: src/content/nodes/{1-4,6-13}.md
+  repo: sovereign-systems--elevate-align
+  org: organvm-iii-ergon
+  collaborator: Maddie
+  state: shipped
+  description: "All 13 spiral nodes with deep-dive content, practice tables, reflection prompts"
+  last_modified: 2026-04-23
+
+- name: Cycle-synced branch content
+  path: src/content/branches/{gut-hormones,fertility,athletic,autoimmune,cancer-support}.md
+  repo: sovereign-systems--elevate-align
+  org: organvm-iii-ergon
+  collaborator: Maddie
+  state: shipped
+  description: "Cycle-phase protocols in 5 of 6 branches + CycleAwareness.astro component"
+  last_modified: 2026-04-23
+
+- name: Keystatic CMS (production OAuth)
+  path: keystatic.config.ts + docs/keystatic-production-setup.md
+  repo: sovereign-systems--elevate-align
+  org: organvm-iii-ergon
+  collaborator: Maddie
+  state: draft
+  description: "Dual-mode storage (local/github). Setup docs created. Needs GitHub OAuth app + CF env vars."
+  last_modified: 2026-04-23
+
+- name: NLnet grant draft
+  path: docs/
+  repo: aerarium--res-publica
+  org: meta-organvm
+  state: in-progress
+  description: "NLnet June 1 deadline. 9 stale stats updated, budget.md populated."
+  last_modified: 2026-04-23
+
+- name: Working State Capture protocol
+  path: private_dot_claude/CLAUDE.md.tmpl
+  repo: domus-semper-palingenesis
+  org: 4444J99
+  state: shipped
+  description: "Session close-out artifact/people capture. Deployed to chezmoi template + live CLAUDE.md."
+  last_modified: 2026-04-23
+
+- name: Portfolio site
+  path: "~/Workspace/4444J99/portfolio/"
+  repo: portfolio
+  org: 4444J99
+  state: in-progress
+  description: "Astro 5, p5.js, D3.js. CI fixed 2026-04-23 (biome schema). 526 tests pass."
+  last_modified: 2026-04-23
+
+- name: Essay pipeline
+  path: "~/Workspace/organvm-v-logos/public-process/"
+  repo: public-process
+  org: organvm-v-logos
+  state: in-progress
+  description: "64 essays published. ignition.sh created with 3 P0 atoms."
+  last_modified: 2026-04-23

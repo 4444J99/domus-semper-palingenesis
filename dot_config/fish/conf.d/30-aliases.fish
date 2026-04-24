@@ -92,9 +92,6 @@ if status is-interactive
     # ── Homebrew ──
     alias brewup 'brew update && brew upgrade && brew upgrade --greedy && brew cleanup && brew doctor'
 
-    # ── System maintenance ──
-    alias docker-cleanup 'docker system prune -a --volumes'
-
     # ── Just ──
     if command -q just
         alias j just
