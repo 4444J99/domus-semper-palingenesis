@@ -2,8 +2,8 @@
 name: Session close-out discipline
 description: User enforces strict session hygiene — commit-all-push, 10-index propagation, N/A=vacuum, memory parity
 type: feedback
+originSessionId: ae0b2fe6-dfcb-4069-897c-cc02d3e4668b
 ---
-
 The user has strong expectations for session close-out and governance rigor:
 
 **1. commit[all] push[origin]** — Every modified file must be committed and pushed before session close. No dirty state, no unpushed commits. Check all repos touched in the session.
@@ -18,4 +18,6 @@ The user has strong expectations for session close-out and governance rigor:
 
 **Why:** User operates a single-operator system where data loss is catastrophic and governance drift compounds silently. The discipline prevents "it worked but nobody updated the records" syndrome.
 
-**How to apply:** At session end, run the 10-index check. If any surface is dirty, fix it. If any surface has N/As, log the vacuum. Commit and push everything. Save session memory.
+**6. Working state capture comes FIRST** — Before the 10-index check, capture artifacts (file paths, collaborators, state, pending feedback) and people. This is what makes the next session start warm instead of cold. Volume stats ("19 commits") are secondary to "what we built, where it is, who it's for, and what's pending." See `feedback_artifact_level_memory.md`.
+
+**How to apply:** At session end: (1) capture working state — artifacts with paths and people with context, (2) run the 10-index check, (3) if any surface is dirty fix it, (4) if any surface has N/As log the vacuum, (5) commit and push everything, (6) save session memory with artifacts section first.
