@@ -94,7 +94,7 @@ if [[ -n "$repo_name" ]]; then
         # Get first non-frontmatter, non-empty line as summary
         summary=$(sed -n '/^---$/,/^---$/d; /^$/d; p' "$file" 2>/dev/null | head -1 | cut -c1-120)
         echo "- [$filename] (scope: $scope) — $summary"
-      done <<< "$cross_hits"
+      done <<<"$cross_hits"
       echo ""
     fi
   fi
@@ -116,7 +116,7 @@ for line in sys.stdin:
         priority = atom.get('priority', '?')
         print(f'- [{aid}] P{priority}: {text}')
     except: pass
-" <<< "$atom_hits" 2>/dev/null || true
+" <<<"$atom_hits" 2>/dev/null || true
     echo ""
   fi
 fi

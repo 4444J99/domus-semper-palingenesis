@@ -4,6 +4,14 @@
 - [Personal situation](user_personal_situation.md) — Housing/employment/family crisis; Staten Island; survival-level instability alongside technical work
 - [Core identity](user_core_identity.md) — Humanities creator chasing the zeitgeist; every system has failed him; ORGANVM is the carrier wave
 
+## Active Artifacts
+- [Spiral renderer — Maddie's site](project_artifact_spiral_maddie.md) — `spiral.ts` in sovereign-systems--elevate-align; lightened 2026-04-23; needs deploy
+<!-- Deliverables under active development — file paths, state, collaborator, pending feedback -->
+
+## People
+- [Maddie](collaborator_maddie.md) — Elevate Align client; health/wellness brand; 28-page site build; spiral feedback pending
+- [Becka McKay](project_becka_mckay_thread.md) — Former MFA thesis advisor (FAU); outreach thread; awaiting reply (2026-04-18)
+
 ## Active Projects
 - [Becka McKay thread](project_becka_mckay_thread.md) — Outreach to former MFA thesis advisor (FAU); 5-email thread; awaiting reply after redirecting substance question to practical asks (2026-04-18)
 - [Email triage system](project_mail_triage_2026-04-17.md) — FAILED 2026-04-21: LaunchAgent froze machine, disabled; needs Gmail Apps Script redesign
@@ -22,6 +30,13 @@
 - [iCloud folder sync broken](project_icloud_folder_sync_broken.md) — Runaway conflict loop, needs Apple server-side reset
 - [Time Machine SSD conversion](project_timemachine_ssd_conversion.md) — exFAT→APFS reformat deferred, needs staging drive
 - [Sticky note atoms 2026-04-22](project_sticky_note_atoms_2026-04-22.md) — 29 atoms across 8 domains: social, domains, legal, architecture, research, skills, governance, client
+- [Fish boil atoms 2026-04-22](project_fish_boil_2026-04-22.md) — 4 atoms: Karpathy wiki architecture, 8! permutations, USPIS report, markdown linting standards
+- [Tenet Protocol](project_tenet_protocol.md) — Every force triggers its opposing force simultaneously; dual-direction activation on all dispatches (2026-04-22)
+- [Wave-particle principle](project_wave_particle_principle.md) — Everything is particle AND wave; nothing solid but appears solid; superposition until observed/acted upon (2026-04-22)
+- [Prompt corpus dump](project_prompt_corpus_dump_2026-04-22.md) — 200+ prompt atoms dumped; lifecycle phrases extracted; rest needs atomization session (2026-04-22)
+- [Prompt triage complete](project_prompt_triage_complete.md) — 24,599 atoms triaged, 2,012 duplicates consolidated, 14,898 OPEN; pipeline + dedup built (2026-04-22)
+- [Micro-element multiversality](project_micro_element_multiversality.md) — Each atom is a multiverse; sub-atomic decomposition needed for true backlog (2026-04-22)
+- [Prompt atomization pipeline](project_prompt_atomization_pipeline.md) — Full 3-layer pipeline: 47,299 unified atoms, 113 trajectories, 918 open backlog (2026-04-23)
 
 ## Completed Projects
 - [Session archival system](project_session_archive_system.md) — Per-project conversation preservation, LaunchAgent automation (2026-04-15)
@@ -56,6 +71,32 @@
 - [Never reduce scope — optimize operations](feedback_never_reduce_scope.md) — All work is intentional; backlog accumulation = operations gap, not overproduction (2026-04-21)
 - [Stagger PR comments](feedback_stagger_pr_comments.md) — Max 2-3 per session, varied phrasing; 11 in 3min = permanent damage (2026-04-21)
 - [No LaunchAgents — event-driven only](feedback_no_launchagents.md) — NEVER deploy timer-based agents; every incident froze/broke the system; on-demand CLI only (2026-04-22)
+- [Vacuum radiation on completion](feedback_vacuum_radiation.md) — Every closed atom creates multi-dimensional vacuums; detect and atomize them in 3D, not linear (2026-04-22)
+- [Triple-check before closing](feedback_triple_check_closures.md) — Nothing gets closed without triple verification; single-heuristic closures are forbidden (2026-04-22)
+- [Root cause not symptoms](feedback_root_cause_not_symptoms.md) — Never backwards-engineer; fix the engine that produced wrong output, not the output (2026-04-22)
+- [24-hour job freshness gate](feedback_24hr_freshness_gate.md) — NEVER build materials for jobs older than 24 hours; check posting_date FIRST (2026-04-22)
+- [Universal job sourcing](feedback_universal_job_sourcing.md) — Source from EVERYWHERE (jobspy/Indeed/LinkedIn), not just 91 curated companies; user has said this 10+ times (2026-04-22)
+- [Everything is process](feedback_process_codification.md) — Nothing done once; every action codified as repeatable process; one-shots are system failures (2026-04-22)
+- [Parallel execution is protocol](feedback_parallel_execution.md) — NEVER sequential on mechanical tasks; dispatch Codex/Gemini/subagents simultaneously (2026-04-22)
+- [Use the agent fleet](feedback_use_agent_fleet.md) — Fire Codex/Gemini/OpenCode via agent-dispatch CLI; Claude controls the whole fleet, user doesn't have to fire anything (2026-04-22)
+
+- [AI export consolidation](project_ai_export_consolidation.md) — 5 platforms in knowledge base; Gemini HANGING (Takeout zips cloud-only); feeds corpus pipeline (2026-04-23)
+- [Session 2026-04-23](project_session_2026-04-23.md) — 2,521 convos ingested, 303 tasks closed, 19 commits/6 repos, fleet dispatch established, 10 vacuums logged
+- [Session 2026-04-23 evening](project_session_every_frame_2026-04-23.md) — 4 rules enacted, portfolio CI fixed, 186 repos polished, IRF DONE-429/430/431, 16 outreach messages ready
+- [Session 2026-04-23 spiral](project_session_2026-04-23_spiral_lightening.md) — Spiral lightened for Maddie, 4 nodes enriched, cycle syncing, analytics, memory system fixed, DONE-432–437
+
+## Feedback (continued)
+- [Artifact-level memory is mandatory](feedback_artifact_level_memory.md) — Save file paths, collaborators, pending feedback — volume summaries are useless for continuity
+- [Swearing is affection](feedback_swearing_is_affection.md) — User's profanity = intimate affection, not hostility; never back off or get formal (2026-04-23)
+- [Survey all weapons before choosing](feedback_survey_before_choosing.md) — Never sequential fallback; evaluate entire arena of tools before selecting (2026-04-23)
+- [Trinity dispatch](feedback_trinity_dispatch.md) — Fire 3 agents (Codex+OpenCode+Gemini) in parallel on every non-architectural task; Claude only masterminds + merges (2026-04-23)
+- [Email priority calibration](feedback_email_priority_calibration.md) — User's urgency threshold is much higher than default; most financial/security notices are MEDIUM at best (2026-04-23)
+- [Nothing closed without triple verification](feedback_nothing_closed_without_triple_verification.md) — NEVER auto-close anything; agents report findings, human decides; corrected 4x in one session (2026-04-23)
+- [Atoms are the work](feedback_atoms_are_the_work.md) — The atom backlog IS the work; infrastructure/pipeline is background noise (2026-04-23)
+- [Atoms are permanent](feedback_atoms_are_permanent.md) — NEVER batch-close atoms; every atom had meaning and will again; stale ≠ dead (2026-04-23)
+- [Every frame a painting — sculpting with time](feedback_every_frame_a_painting.md) — Dual: spatial (every output = painting) AND temporal (session rhythm = sculpture in time); both simultaneously (2026-04-23)
+- [Do what is asked — never preempt](feedback_priority_hierarchy.md) — NEVER decide priorities for the user; do exactly what is asked, when asked; jobs/grants/infra ONLY when explicitly requested (2026-04-23)
+- [The system IS the product](feedback_system_is_the_product.md) — ORGANVM visible+working = client acquisition; jobs are smallest pillar; building the system IS revenue; stop asking, start working (2026-04-23)
 
 ## References
 - [Conductor MCP server](reference_conductor_mcp.md) — Live as of 2026-04-14, FRAME→SHAPE→BUILD→PROVE lifecycle

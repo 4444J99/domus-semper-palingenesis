@@ -40,7 +40,10 @@ else
     # shellcheck disable=SC2034
     CYAN=$'\033[0;36m' DIM=$'\033[0;90m'
   fi
-  die() { printf '%serror:%s %s\n' "$RED" "$RESET" "$1" >&2; exit 2; }
+  die() {
+    printf '%serror:%s %s\n' "$RED" "$RESET" "$1" >&2
+    exit 2
+  }
   info() { printf '%s::%s %s\n' "$BLUE" "$RESET" "$1" >&2; }
   warn() { printf '%s!%s %s\n' "$YELLOW" "$RESET" "$1" >&2; }
 fi
@@ -51,7 +54,7 @@ fi
 
 LOG_DIR="${HOME}/.local/state/agent-dispatch"
 LOG_FILE="${LOG_DIR}/dispatch.log"
-LOG_MAX_BYTES=1048576  # 1MB — rotate when exceeded
+LOG_MAX_BYTES=1048576 # 1MB — rotate when exceeded
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Agent registry
@@ -63,19 +66,19 @@ AGENTS=(claude codex opencode gemini copilot goose)
 
 agent_binary() {
   case "$1" in
-    claude)   echo "claude" ;;
-    codex)    echo "codex" ;;
+    claude) echo "claude" ;;
+    codex) echo "codex" ;;
     opencode) echo "opencode" ;;
-    gemini)   echo "gemini" ;;
-    copilot)  echo "copilot" ;;
-    goose)    echo "goose" ;;
-    *)        return 1 ;;
+    gemini) echo "gemini" ;;
+    copilot) echo "copilot" ;;
+    goose) echo "goose" ;;
+    *) return 1 ;;
   esac
 }
 
 agent_version_flag() {
   case "$1" in
-    claude|codex|opencode|gemini|copilot) echo "--version" ;;
+    claude | codex | opencode | gemini | copilot) echo "--version" ;;
     goose) echo "--version" ;;
   esac
 }
@@ -210,9 +213,9 @@ dispatch_opencode() {
   tmpfile=$(mktemp "${TMPDIR:-/tmp}/opencode-prompt.XXXXXX")
 
   if [[ -n "$system_prompt" ]]; then
-    printf '[System: %s]\n\n%s' "$system_prompt" "$prompt" > "$tmpfile"
+    printf '[System: %s]\n\n%s' "$system_prompt" "$prompt" >"$tmpfile"
   else
-    printf '%s' "$prompt" > "$tmpfile"
+    printf '%s' "$prompt" >"$tmpfile"
   fi
 
   local cmd=(opencode run --file "$tmpfile" "Execute the instructions in the attached file.")
@@ -400,11 +403,11 @@ fi
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    -h|--help)
+    -h | --help)
       show_help
       exit 0
       ;;
-    --list|-l)
+    --list | -l)
       list_agents
       exit 0
       ;;
@@ -472,7 +475,7 @@ fi
 # Validate --dir if provided
 if [[ -n "$WORK_DIR" ]]; then
   [[ -d "$WORK_DIR" ]] || die "directory does not exist: $WORK_DIR"
-  WORK_DIR="$(cd "$WORK_DIR" && pwd)"  # Resolve to absolute path
+  WORK_DIR="$(cd "$WORK_DIR" && pwd)" # Resolve to absolute path
 fi
 
 # ─────────────────────────────────────────────────────────────────────────────
