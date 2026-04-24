@@ -1,6 +1,6 @@
 ---
-name: Dotfiles sprawl audit — Phase 0 complete, Phase 2 partial
-description: 2026-04-17 audit — 40+ dotdirs catalogued; Phase 0 (security files deleted) DONE; orphaned LaunchAgents cleaned 2026-04-21; password rotation still OPEN (BACKLOG-001)
+name: Dotfiles sprawl audit — Phase 0 + Docker/Codex cleanup DONE
+description: 2026-04-17 audit — 40+ dotdirs catalogued; Phase 0 DONE; Docker/Codex cruft cleaned 2026-04-23; just check-all fully green; password rotation still OPEN (BACKLOG-001)
 type: project
 originSessionId: caa53287-9125-4617-ae4f-43e9056d902d
 ---
@@ -36,4 +36,8 @@ Memory-sync daemon (`domus-memory-sync`) was blocking chezmoi for 5+ mins — re
 
 Docker-based MCP servers converted to native Homebrew installs. `github-mcp-server` installed via `brew install`. 8 MCP config files updated across Claude Code, Claude Desktop, Cursor, Continue, OpenCode, Gemini, Codex. Two LaunchAgents removed from chezmoi source: `com.4jp.mcp.servers.plist.tmpl`, `com.4jp.env.mcp.plist.tmpl`. Docker UNINSTALLED entirely (17GB freed, 2026-04-18).
 
-**How to apply:** Phase 0 done. MCP native conversion done. Phase 2 (.thumbnails XDG-symlink, 15 dotdirs to .chezmoiignore) is queued but not blocking.
+## Docker/Codex Dead Symlink Cleanup — 2026-04-23
+
+`symlink_dot_codex` and `symlink_dot_docker` deleted from source tree. `DOCKER_CONFIG` and `MACHINE_STORAGE_PATH` env vars removed from 15-env.zsh.tmpl. `docker-cleanup` alias removed from 30-aliases.zsh. Test assertion updated. Plist validation tests now skip when no templates exist. ShellCheck warnings in agent-dispatch resolved. 9 scripts fixed for missing +x. justfile permission check excludes `__pycache__/`. CLAUDE.md task queue and LaunchAgents table updated. `just check-all` fully green (251 BATS + 128 pytest). DONE-422. 8 commits pushed.
+
+**How to apply:** Phase 0 done. MCP native conversion done. Docker/Codex cleanup done. Phase 2 (.thumbnails XDG-symlink, 15 dotdirs to .chezmoiignore) is queued but not blocking.
