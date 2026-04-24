@@ -17,12 +17,12 @@ LOCATIONS = {
     "formal monad": HOME / "system-system--system--monad",
     "sovereign--ground": HOME / "sovereign--ground",
     "engine": WORKSPACE / "meta-organvm" / "organvm-engine",
-    "conductor": WORKSPACE / "organvm-iv-taxis" / "tool-interaction-design",
+    "conductor": WORKSPACE / "{{ .organvm_dir }}" / "tool-interaction-design",
     "dissolved repos": (
         WORKSPACE / "meta-organvm" / "materia-collider"
         / "bench" / "organ-reset-2026-03-11"
     ),
-    "skills": WORKSPACE / "organvm-iv-taxis" / "a-i--skills",
+    "skills": WORKSPACE / "{{ .organvm_dir }}" / "{{ .skills_dir }}",
     "registry": (
         WORKSPACE / "meta-organvm" / "organvm-corpvs-testamentvm"
         / "registry-v2.json"

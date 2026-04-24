@@ -47,8 +47,8 @@ done
 
 # Local extensions (from ORGANVM skills build)
 local_extensions=(
-  "document-skills|{{ .chezmoi.homeDir }}/Workspace/organvm-iv-taxis/a-i--skills/distributions/extensions/gemini/document-skills"
-  "example-skills|{{ .chezmoi.homeDir }}/Workspace/organvm-iv-taxis/a-i--skills/distributions/extensions/gemini/example-skills"
+  "document-skills|{{ .chezmoi.homeDir }}/Workspace/{{ .organvm_dir }}/{{ .skills_dir }}/distributions/extensions/gemini/document-skills"
+  "example-skills|{{ .chezmoi.homeDir }}/Workspace/{{ .organvm_dir }}/{{ .skills_dir }}/distributions/extensions/gemini/example-skills"
 )
 
 for entry in "${local_extensions[@]}"; do

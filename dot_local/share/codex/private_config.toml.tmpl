@@ -11,8 +11,8 @@ args = ['stdio']
 startup_timeout_sec = 30
 
 [mcp_servers.conductor]
-command = '/Users/4jp/Workspace/organvm-iv-taxis/tool-interaction-design/.venv/bin/python3'
-args = ['/Users/4jp/Workspace/organvm-iv-taxis/tool-interaction-design/mcp_server.py']
+command = '{{ .chezmoi.homeDir }}/Workspace/{{ .organvm_dir }}/tool-interaction-design/.venv/bin/python3'
+args = ['{{ .chezmoi.homeDir }}/Workspace/{{ .organvm_dir }}/tool-interaction-design/mcp_server.py']
 startup_timeout_sec = 30
 
 [notice]

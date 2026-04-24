@@ -1,0 +1,163 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# organvm-resolve-bootstrap — Zero-dependency capability resolver.
+# Finds repos by identity, not by path. Scans the entire workspace,
+# resolves symlinks, deduplicates. Doesn't assume any directory structure.
+#
+# Usage:
+#   organvm-resolve-bootstrap <query> [--fallback <val>]
+#   organvm-resolve-bootstrap --all
+#
+# Delegates to `organvm resolve` when available. Falls back to filesystem scan.
+
+WORKSPACE="${ORGANVM_WORKSPACE_DIR:-${HOME}/Workspace}"
+
+# ── Aliases: human-friendly names → repo directory names ──
+declare -A ALIASES=(
+  [conductor]=tool-interaction-design
+  [skills]=a-i--skills
+  [corpus]=organvm-corpvs-testamentvm
+  [engine]=organvm-engine
+  [vox]=vox--architectura-gubernatio
+  [dashboard]=system-dashboard
+  [registry]=organvm-corpvs-testamentvm
+  [portfolio]=portfolio
+)
+
+# ── Parse args ──
+QUERY=""
+FALLBACK=""
+HAS_FALLBACK=false
+ALL=false
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --fallback) FALLBACK="$2"; HAS_FALLBACK=true; shift 2 ;;
+    --all)      ALL=true; shift ;;
+    --quiet)    shift ;;
+    -*)         echo "organvm-resolve-bootstrap: unknown flag: $1" >&2; exit 2 ;;
+    *)          QUERY="$1"; shift ;;
+  esac
+done
+
+if [[ "$ALL" == false && -z "$QUERY" ]]; then
+  echo "Usage: organvm-resolve-bootstrap <query> [--fallback <val>]" >&2
+  exit 2
+fi
+
+# ── Delegate to full resolver if available ──
+if command -v organvm &>/dev/null; then
+  if [[ "$ALL" == true ]]; then
+    organvm resolve --all 2>/dev/null && exit 0
+  else
+    args=("$QUERY")
+    $HAS_FALLBACK && args+=(--fallback "$FALLBACK")
+    organvm resolve "${args[@]}" 2>/dev/null && exit 0
+  fi
+fi
+
+# ── Resolve alias ──
+if [[ -n "$QUERY" && -n "${ALIASES[$QUERY]+x}" ]]; then
+  QUERY="${ALIASES[$QUERY]}"
+fi
+
+# ── Canonical path (resolve symlinks) ──
+_canonical() {
+  # Use realpath if available, fall back to Python, fall back to readlink chain
+  if command -v realpath &>/dev/null; then
+    realpath "$1" 2>/dev/null
+  elif command -v python3 &>/dev/null; then
+    python3 -c "import os; print(os.path.realpath('$1'))" 2>/dev/null
+  else
+    local p="$1"
+    while [[ -L "$p" ]]; do
+      p="$(readlink "$p")"
+    done
+    echo "$p"
+  fi
+}
+
+# ── Filesystem scan: find ALL repos, deduplicated by canonical path ──
+# No assumptions about structure. Scans 2 levels deep, skips symlink dirs
+# to avoid double-counting, resolves any hits to canonical paths.
+_scan_repos() {
+  declare -A seen
+  local dir
+
+  # Level 1: workspace/<name> (flat repos)
+  for dir in "$WORKSPACE"/*/; do
+    [[ -d "$dir" ]] || continue
+    # Skip symlinks at top level — they point to real dirs we'll find anyway
+    [[ -L "${dir%/}" ]] && continue
+    local base="${dir%/}"
+    if [[ -f "$base/seed.yaml" ]] || [[ -d "$base/.git" ]]; then
+      local canon
+      canon="$(_canonical "$base")"
+      if [[ -z "${seen[$canon]+x}" ]]; then
+        seen[$canon]=1
+        echo "$canon"
+      fi
+    fi
+  done
+
+  # Level 2: workspace/<pool>/<name> (nested repos)
+  for dir in "$WORKSPACE"/*/; do
+    [[ -d "$dir" ]] || continue
+    [[ -L "${dir%/}" ]] && continue
+    local sub
+    for sub in "$dir"*/; do
+      [[ -d "$sub" ]] || continue
+      local base="${sub%/}"
+      if [[ -f "$base/seed.yaml" ]] || [[ -d "$base/.git" ]]; then
+        local canon
+        canon="$(_canonical "$base")"
+        if [[ -z "${seen[$canon]+x}" ]]; then
+          seen[$canon]=1
+          echo "$canon"
+        fi
+      fi
+    done
+  done
+}
+
+# ── Find a specific repo by name ──
+_find_repo() {
+  local name="$1"
+  local match=""
+
+  # Scan all repos, match by basename
+  while IFS= read -r repo_path; do
+    local basename="${repo_path##*/}"
+    if [[ "$basename" == "$name" ]]; then
+      match="$repo_path"
+      break
+    fi
+  done < <(_scan_repos)
+
+  if [[ -n "$match" ]]; then
+    echo "$match"
+    return 0
+  fi
+  return 1
+}
+
+# ── Execute ──
+if [[ "$ALL" == true ]]; then
+  _scan_repos | sort
+  exit 0
+fi
+
+if result=$(_find_repo "$QUERY"); then
+  echo "$result"
+  exit 0
+fi
+
+# ── Not found ──
+if $HAS_FALLBACK; then
+  echo "$FALLBACK"
+  exit 0
+fi
+
+echo "organvm-resolve-bootstrap: $QUERY not found in $WORKSPACE" >&2
+exit 1
