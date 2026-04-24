@@ -312,6 +312,46 @@ originating agent. You MUST honor all constraints listed there.
 If the handoff says "CROSS-VERIFICATION REQUIRED", your self-assessment will
 NOT be trusted. A different agent will verify your output against these constraints.
 
+## Working State Capture (Session Close-Out)
+
+Before the 10-index close-out, capture working state so the next session starts warm:
+
+### Artifacts
+For every deliverable built or modified during the session, save a project-type memory
+(`project_artifact_*.md`) with:
+- **What**: one-line description
+- **Where**: file path(s) — absolute or repo-relative
+- **Project**: which repo it lives in
+- **For whom**: collaborator name if applicable
+- **State**: draft / in-review / feedback-pending / shipped
+- **Pending feedback**: verbatim quotes from collaborators
+- **Next action**: what needs to happen next
+
+File paths for active deliverables MUST be saved. The "don't save file paths" heuristic
+does not apply to artifacts under active development — you cannot "derive" that a spiral
+was built for Maddie by searching the filesystem. Save the path.
+
+### People
+For every person mentioned in a session who is not already in memory, save a user-type
+memory (`collaborator_*.md`) with:
+- **Who**: name and relationship
+- **Context**: what we're working on together
+- **Last interaction**: date and what happened
+- **Open threads**: what's pending
+
+### Session Memory Format
+Session memories MUST include an Artifacts section BEFORE summary stats:
+
+```
+**Artifacts (working state):**
+- [name] — `path/to/file` — [state] — [pending feedback]
+
+**Completed:**
+- [summary stats]
+```
+
+Working state is what matters for continuity. Volume metrics are secondary.
+
 ## Session Review Protocol
 
 At the end of each session that produces or modifies files:
