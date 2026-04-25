@@ -63,3 +63,43 @@ originSessionId: 1c644505-be6a-4821-89ab-c1f1cafa38e8
 - 70-person constellation enrichment — Rob's homework
 
 **Cross-session lane discipline observed:** worked exclusively in hokage-chess + corpvs-testamentvm + memory; spiral repo (sovereign-systems--elevate-align) untouched; no Discord/Kit/external-API actions taken.
+
+---
+
+## Close-out audit (hall-monitor pass)
+
+**Universal Rule 2 violation detected and recovered:**
+- All 6 new memory artifact files + MEMORY.md edits + 2 plan files were **local-only** at session-end (chezmoi target had drifted from source).
+- `chezmoi add` rescue → commit `9c5a13d` in `domus-semper-palingenesis` → pushed to `origin/master`. **Memory now local:remote = 1:1.**
+
+**Surfaced vacuums (from N/A audit per universal rule):**
+- **PRT-046** — 75-Person Constellation master file (ID-005). Shared research surface for both BODI (L0) + Hokage (L1). Single file, two consumers. Blocked on Rob's 70-more-profiles homework. Committed `e1b2f98` in corpvs.
+- **PRT-047** — CRM unification decision (Kit vs Teamzy vs Beehiiv). Blocks PRT-044 L2 deploy + PRT-043 schema additions + PRT-041 webhook chain. Committed `e1b2f98` in corpvs.
+
+**Final commit ledger (all pushed):**
+| Repo | Commits this session | Last commit |
+|---|---|---|
+| `4444J99/hokage-chess` | 4 (`605269b`, `c404b5a`, `050dcc8`, `2ea0827`) | `2ea0827` |
+| `meta-organvm/organvm-corpvs-testamentvm` | 2 (`bc0ac23`, `e1b2f98`) | `e1b2f98` |
+| `4444J99/domus-semper-palingenesis` (memory + plans) | 1 (`9c5a13d`) | `9c5a13d` |
+
+**Index propagation status (10-index check):**
+- ✅ IRF — 5 new entries (PRT-040/041 DONE; PRT-043/044/045/046/047 OPEN)
+- ✅ MEMORY.md — 6 new artifact lines + 1 session line
+- ✅ Memory artifact files — 6 (5 artifacts + 1 session)
+- ✅ Plan files — system slug + dated copy both in chezmoi source + remote
+- ✅ Hokage repo — docs + cross-references + IRF refs all consistent
+- N/A — registry-v2.json (no new repos)
+- N/A — seed.yaml (no inter-repo edge changes; cross-pollination is conceptual)
+- N/A — CLAUDE.md (no architecture changes)
+- N/A — concordance.md (PRT namespace already indexed at line 87; per-ID entries not the convention)
+- N/A — omega scorecard (session shipped product-domain work, not omega-criteria items)
+- N/A — inquiry-log.yaml (not SGO/application-pipeline work)
+- N/A — GH issues (hokage-chess private/no issues; corpvs no Hokage/PRT/funnel issues open)
+
+**Pre-existing items NOT from this session, flagged for owner:**
+- `corpvs-testamentvm`: `data/fossil/fossil-record.jsonl` has 4 unstaged auto-generated lines from earlier dotfiles-session activity (commits by 4444jPPP author chain). Not my work; left untouched.
+- `corpvs-testamentvm`: untracked `2026-04-25-170910-local-command-caveatcaveat-the-messages-below.txt` — Claude Code session-log dump from a different session. Not my work; left untracked.
+- `hokage-chess`: untracked `research/raw-html-2026-04-25/` — pre-existing from prior session; outside this session's scope.
+
+**Safe-to-close verdict:** YES. All session deliverables triple-referenced (repo + IRF + memory) and persisted to remote across all three affected git repos. Memory rescue confirmed. No work at risk of loss.
