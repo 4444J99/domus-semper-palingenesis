@@ -5,7 +5,9 @@
 - [Core identity](user_core_identity.md) — Humanities creator chasing the zeitgeist; every system has failed him; ORGANVM is the carrier wave
 
 ## Active Artifacts
-- [Spiral renderer — Maddie's site](project_artifact_spiral_maddie.md) — `spiral.ts` in sovereign-systems--elevate-align; chakra stars + round 2 lightening shipped 2026-04-25 (commit 02c90a2); awaiting Maddie reaction
+- [Spiral renderer — Maddie's site](project_artifact_spiral_maddie.md) — `spiral.ts`; V3.1 mobile camera-Z viewport polish shipped 2026-04-25 (commit 39128e3); V4 node-shape design pending Maddie reply
+- [Product Domain Engine skill](project_artifact_pde_skill.md) — Conductor skill at `~/Workspace/a-i--skills/skills/project-management/product-domain-engine/`; 4 modes + 5-phase protocol + audit script; shipped 2026-04-25 (cf92479)
+- [HANDOFF — sovereign-systems--elevate-align](project_artifact_handoff_elevate_align.md) — Repo-root 5-group relay file (V4 shapes, mobile, CI, domain, filter affiliates); shipped 2026-04-25 (commit 454a047)
 <!-- Deliverables under active development — file paths, state, collaborator, pending feedback -->
 
 ## People
@@ -38,9 +40,10 @@
 - [Prompt triage complete](project_prompt_triage_complete.md) — 24,599 atoms triaged, 2,012 duplicates consolidated, 14,898 OPEN; pipeline + dedup built (2026-04-22)
 - [Micro-element multiversality](project_micro_element_multiversality.md) — Each atom is a multiverse; sub-atomic decomposition needed for true backlog (2026-04-22)
 - [Prompt atomization pipeline](project_prompt_atomization_pipeline.md) — Full 3-layer pipeline: 47,299 unified atoms, 113 trajectories, 918 open backlog (2026-04-23)
-- [Hokage Chess client](project_hokage_chess_client.md) — Rob Bonavoglia; market gap + business model + landing page; 7 gaps, 3-phase Naruto-named model, trademark research (2026-04-24)
+- [Hokage Chess client](project_hokage_chess_client.md) — Rob Bonavoglia; landing page + business + ROB-FIRST-30-DAYS + seed.yaml + registry registered + OG metadata; deploy/domain/Kit pending (2026-04-25)
 
 - [Session 2026-04-25 hokage+PDE](project_session_2026-04-25_hokage_chess_pde.md) — Full hokage-chess build + Product Domain Engine formalization; 49 files, 10 vacuums, 3 repos
+- [Session 2026-04-25 handoff-relay](project_session_2026-04-25_handoff_relay.md) — Worked both 5-group HANDOFFs; DONE-442..446 (spiral mobile, chezmoi sync, registry, hokage seed+ROB doc, PDE skill) + OG metadata; hokagechess.com confirmed available
 
 ## Process
 - [Product-domain engine](feedback_product_domain_engine.md) — Repeatable system for ANY product tied to a domain: scholarly study (ethos) + social/media (pathos) + logos skeleton; Hokage Chess is first full instance

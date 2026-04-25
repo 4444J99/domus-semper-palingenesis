@@ -20,6 +20,25 @@ originSessionId: 515211cd-bf17-4a87-b889-ade84fa80b91
 - Market gap analysis (7 gaps) — DONE (in plan)
 - Business model (3-phase) — DONE (in plan)
 - Landing page architecture — DONE (in plan)
-- Landing page build — IN PROGRESS
+- Landing page build — DONE (commit `e65bc72`, 9 sections, Next.js 16 + Tailwind v3)
+- ORGANVM registration — DONE 2026-04-25 (registry entry under PERSONAL organ; commit `e68933d` in corpvs)
+- seed.yaml — DONE 2026-04-25 (commit `b544076`)
+- Rob's first-30-days one-pager — DONE 2026-04-25 at `docs/ROB-FIRST-30-DAYS.md` (1126 words; title audit / Kit / Discord / Shorts / trademark sidebar)
+- OG/Twitter metadata — DONE 2026-04-25 (commit `d0de9b2`); references `/og.png` placeholder
 
-**State**: Active as of 2026-04-24
+**Repo:** `~/Workspace/4444J99/hokage-chess/` (private; org `4444j99`)
+**Live:** NOT YET DEPLOYED (Vercel deploy is open vacuum P0)
+**Domain:** `hokagechess.com` AVAILABLE as of 2026-04-25 (Verisign whois); also `thedojo.gg` available
+
+**Open vacuums (P0/P1):**
+- Vercel deploy (P0)
+- hokagechess.com registration (P0)
+- /og.png 1200×630 image creation (P1)
+- Kit (ConvertKit) API integration for email capture (P1)
+- Trademark clearance budget $500-1500 before any merch/physical (Rob action)
+
+**Plan(s):**
+- `~/.claude/plans/2026-04-24-hokage-chess-market-gap-business-model.md` — original strategy
+- `~/.claude/plans/2026-04-25-hokage-chess-unified-strategy-v3.md` — full unified strategy (landing page + business + course catalog + trademark)
+
+**State:** Active client engagement; landing page built and ready to deploy as of 2026-04-25
