@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+# validate-no-hardcoded-paths: reject chezmoi apply if templates contain
+# hardcoded workspace paths that should route through the resolver.
+#
+# This is a LAW, not a guideline. If this fails, the ONLY fix is
+# to route the path through resolve-bootstrap. Do not patch the path.
+# chezmoi:template:hash
+# {{ "path-gate-v1" }}
+set -euo pipefail
+
+SOURCE="{{ .chezmoi.sourceDir }}"
+COUNT=0
+
+# Patterns that must not appear in templates (outside of allowlisted files)
+check_pattern() {
+  local pat="$1"
+  local hits
+  hits=$(grep -rlE "$pat" "$SOURCE" \
+    --include='*.tmpl' \
+    --include='*.sh' \
+    --exclude-dir='.git' \
+    --exclude-dir='plans' \
+    --exclude-dir='memory' \
+    --exclude-dir='projects' \
+    2>/dev/null \
+    | grep -v 'resolve-audit' \
+    | grep -v 'resolve-bootstrap' \
+    | grep -v 'CLAUDE.md' \
+    | grep -v 'validate-no-hardcoded' \
+    | grep -v 'dot_zshenv' \
+    || true)
+
+  if [[ -n "$hits" ]]; then
+    while IFS= read -r f; do
+      COUNT=$((COUNT + 1))
+      echo "VIOLATION: $pat in ${f#"$SOURCE/"}" >&2
+    done <<< "$hits"
+  fi
+}
+
+# Dead organ names — these should NEVER appear in active templates
+check_pattern 'organvm-iv-taxis'
+
+# If violations found, block apply
+if [[ $COUNT -gt 0 ]]; then
+  echo "" >&2
+  echo "chezmoi apply BLOCKED: $COUNT template(s) contain hardcoded paths." >&2
+  echo "Fix by routing through resolve-bootstrap, not by patching paths." >&2
+  echo "Run: resolve-audit" >&2
+  exit 1
+fi

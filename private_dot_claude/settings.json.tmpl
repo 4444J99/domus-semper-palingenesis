@@ -39,6 +39,17 @@
         ]
       }
     ],
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "{{ .chezmoi.homeDir }}/.local/bin/resolve-audit --hook 2>/dev/null; true",
+            "timeout": 10,
+            "statusMessage": "Resolver audit..."
+          }
+        ]
+      }
+    ],
     "PreToolUse": [
       {
         "matcher": "Bash",

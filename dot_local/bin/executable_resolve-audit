@@ -1,0 +1,76 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# resolve-audit — Find configs that bypass the resolver.
+# Single-pass grep with combined pattern. Fast (<2s).
+#
+# Usage:
+#   resolve-audit              # full report
+#   resolve-audit --count      # just the count
+#   resolve-audit --hook       # JSON for session-start hook
+
+MODE="full"
+[[ "${1:-}" == "--count" ]] && MODE="count"
+[[ "${1:-}" == "--hook" ]] && MODE="hook"
+
+DOMUS="${DOMUS_ROOT:-${HOME}/Workspace/4444J99/domus-semper-palingenesis}"
+
+# Combined pattern — single grep call, not a loop
+PATTERN='(/Users/[^/]*/Workspace/[a-z]|organvm-iv-taxis|organvm-i-theoria|organvm-ii-poiesis|organvm-iii-ergon|organvm-v-logos|organvm-vi-koinonia|organvm-vii-kerygma)'
+
+# Files to exclude from scanning (these legitimately contain paths)
+EXCLUDE='(resolve-audit|resolve-bootstrap|CLAUDE\.md|MEMORY\.md|plans/|memory/|projects/|\.git/|tests/|history\.jsonl|backups/|file-history/|subagents/|tool-results/|chezmoi\.toml)'
+
+# ── Scan deployed configs only (fast — no source tree traversal) ──
+DEPLOYED_HITS=""
+for cfg in "${HOME}/.claude.json" "${HOME}/.claude/settings.json" "${HOME}/.local/share/codex/config.toml"; do
+  [[ -f "$cfg" ]] || continue
+  hits=$(grep -nE "$PATTERN" "$cfg" 2>/dev/null | head -10) || true
+  if [[ -n "$hits" ]]; then
+    while IFS= read -r line; do
+      DEPLOYED_HITS="${DEPLOYED_HITS}${cfg#"$HOME/"}:${line}"$'\n'
+    done <<< "$hits"
+  fi
+done
+
+# ── Count ──
+ALL_HITS="${DEPLOYED_HITS}"
+if [[ -z "$ALL_HITS" ]]; then
+  COUNT=0
+else
+  COUNT=$(echo "$ALL_HITS" | grep -c '.' || true)
+fi
+
+# ── Output ──
+if [[ "$MODE" == "count" ]]; then
+  echo "$COUNT"
+  exit $(( COUNT > 0 ? 1 : 0 ))
+fi
+
+if [[ "$MODE" == "hook" ]]; then
+  if [[ $COUNT -eq 0 ]]; then
+    echo '{"hookSpecificOutput":{"hookEventName":"SessionStart","additionalContext":"RESOLVER AUDIT: 0 violations. All configs route through the resolver."}}'
+  else
+    echo "{\"hookSpecificOutput\":{\"hookEventName\":\"SessionStart\",\"additionalContext\":\"RESOLVER AUDIT: ${COUNT} hardcoded path violations. Do NOT fix paths — connect to resolve-bootstrap instead. Run: resolve-audit\"}}"
+  fi
+  exit 0
+fi
+
+# Full report
+if [[ $COUNT -eq 0 ]]; then
+  echo "No hardcoded path violations found."
+  exit 0
+fi
+
+echo "RESOLVER AUDIT: ${COUNT} hardcoded path violations"
+echo "=================================================="
+echo ""
+echo "Do NOT fix paths. Connect them to resolve-bootstrap instead."
+echo ""
+
+if [[ -n "$DEPLOYED_HITS" ]]; then
+  echo "[DEPLOYED CONFIGS]"
+  echo "$DEPLOYED_HITS"
+fi
+
+exit 1
