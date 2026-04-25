@@ -150,3 +150,74 @@ Per rule 36 (seed not specification): substrate outputs minimal generative struc
 - Every flag-pierce runs **Phase 0 portfolio-audit BEFORE 8-layer instantiation** (new in v2.1)
 - AND fires three Portfolio Operator cross-flows on completion (v2)
 - Selfish-altruistic loop and magnetic membrane unchanged from v1
+
+---
+
+## v2.2 Addition — Reflexive Operator + Layer 8 strengthening + Phase 0.5 + engine taxonomy (2026-04-25 follow-up #3)
+
+User refinement covers six structural additions. Each lands in the schema:
+
+### 1. Reflexive Operator (4th operator)
+
+User: *"It's a paradox for every structure we build: a meta-system appears around it to study it as well. A society, a politic, a social critique, those who study it."*
+
+Operator-class. Per Tenet Protocol, every build-action triggers its opposing reflection-action simultaneously. The substrate skill needs a meta-skill that studies how substrate skills behave. Each domain instantiation produces a parallel critical-study artifact. Hokage Chess gets built AND a critical analysis of Hokage as a cultural phenomenon gets built. BODI funnel gets transplanted AND a political/social critique of the mechanism gets written.
+
+The Reflexive Operator is the **4th operator** alongside selfish-altruistic loop, magnetic membrane, and Portfolio Operator. Where the others govern *flow*, this one governs *recursion* — the thing and the thing-studied co-arise.
+
+Implementation: every domain instantiation produces a `domain-meta-study.md` alongside the 8 layer artifacts. It's a sibling-file, not a layer.
+
+### 2. Layer 8 strengthening — Research-as-default
+
+User: *"Each project should also be working on research, primary and secondary sources, and all applicable columns to that domain. But it should be working on a dissertation. It should be working on publishing, academia, science, math, socials."*
+
+Layer 8 (External Contribution) is no longer optional or stylistic — it's mandatory. Outputs:
+
+- Dissertation-grade artifact (published scholarly form)
+- Primary-source assembly (interviews, ethnographic capture, original data)
+- Secondary-source critical synthesis
+- Publishing across academia / science / math / social-research outlets
+- Upstream contribution to peer/competitor repos (the *return on the heist*)
+
+Per rule 42 (knowledge creation imperative): academic output isn't garnish, it's substrate. Every flag-pierce produces publishable scholarship.
+
+### 3. Heist + Contribute loop (Layer 4 ↔ Layer 8)
+
+User: *"What should I steal from them? How do I improve it? But also, how do I contribute to their repos?"*
+
+Layer 4 (Gap-map) lists heist targets. Layer 8 (Contribution) closes the loop by pushing improvements back upstream to the same competitors. The heist becomes a relationship; the relationship becomes co-development. Every steal matched with a give. *"All the while we're spying to figure out how to do it better"* — intelligence-gathering as ongoing-protocol, not one-shot.
+
+### 4. Phase 0.5 — Engine overlap board
+
+Between Phase 0 audit (v2.1) and layer-1 instantiation, visualize candidate-reuse engines + overlaps + gaps. Output: `engine-overlap-board.md` (or visual diagram). Refines Phase 0 from "list reusables" to "see reusables in spatial relation, identify white-space."
+
+### 5. Engine taxonomy (three tiers)
+
+User: *"Stuff like my knowledge base or an application pipeline or stuff that isn't the client's project but it's something that, as a consultant, I'd want to give them. It's also something that maybe gets built into their projects."*
+
+Engines have three portability tiers:
+
+| Tier | Scope | Examples |
+|---|---|---|
+| Domain engines | re-skin within similar domain | BODI funnel mechanism, spiral renderer |
+| Meta-engines | cross-domain pattern, any pair | Cross-pollination diagnosis (PRT-045), 75-person Constellation (PRT-046), PDE skill |
+| Consultant engines | every engagement regardless of domain | Knowledge base, application pipeline, plan-mode discipline, IRF/MEMORY/chezmoi rescue protocols, conversation-corpus pipeline |
+
+Consultant engines are *what the consultant brings TO the engagement* beyond the engagement itself. They get installed into client projects (rule 5: fix bases not outputs — install the engine, don't patch the output). Often they become embedded in the client's project as part of the deliverable.
+
+### 6. Capital-flow nuance (selfish-altruistic refinement)
+
+User: *"Helping friends who maybe won't pay you right up front or don't have the capital, but by helping them, I help myself. I make my work better."*
+
+Pay/no-pay does not determine value-flow. Work-quality improvement IS compensation. Audience cross-flow IS compensation. Tool-extraction IS compensation. The selfish-altruistic loop already encoded this; the nuance makes it explicit: **monetary compensation is one of N flow channels, not the gating channel**. Per rule 51 (the system IS the product): client fee is the smallest pillar.
+
+### Schema v2.2 invariants
+
+- Phase 0 audit (v2.1)
+- Phase 0.5 engine overlap board (v2.2 new)
+- 8 layers instantiate (v1)
+- Layer 8 outputs dissertation-grade, mandatory (v2.2 strengthened)
+- Layer 4↔8 closes heist+contribute loop (v2.2 new)
+- 4 operators fire: selfish-altruistic loop, magnetic membrane, Portfolio Operator (bi-dir), Reflexive Operator (v2.2 adds 4th)
+- Engine taxonomy: domain / meta / consultant (v2.2 new)
+- Capital-flow: monetary is one channel of N (v2.2 explicit)
