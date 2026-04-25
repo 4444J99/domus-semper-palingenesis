@@ -33,11 +33,24 @@ ALL=false
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    --fallback) FALLBACK="$2"; HAS_FALLBACK=true; shift 2 ;;
-    --all)      ALL=true; shift ;;
-    --quiet)    shift ;;
-    -*)         echo "organvm-resolve-bootstrap: unknown flag: $1" >&2; exit 2 ;;
-    *)          QUERY="$1"; shift ;;
+    --fallback)
+      FALLBACK="$2"
+      HAS_FALLBACK=true
+      shift 2
+      ;;
+    --all)
+      ALL=true
+      shift
+      ;;
+    --quiet) shift ;;
+    -*)
+      echo "organvm-resolve-bootstrap: unknown flag: $1" >&2
+      exit 2
+      ;;
+    *)
+      QUERY="$1"
+      shift
+      ;;
   esac
 done
 

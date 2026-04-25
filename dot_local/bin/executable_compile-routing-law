@@ -144,7 +144,9 @@ def _compile_route(route: Any) -> dict[str, Any]:
         source = _as_mapping(when["source"], f"route {name}.when.source")
         _reject_unknown(source, {"path"}, f"route {name}.when.source")
         if "path" in source:
-            match["location"] = _require_string(source, "path", f"route {name}.when.source")
+            match["location"] = _require_string(
+                source, "path", f"route {name}.when.source"
+            )
 
     if "filename" in when:
         filename = _as_mapping(when["filename"], f"route {name}.when.filename")
@@ -170,7 +172,9 @@ def _compile_route(route: Any) -> dict[str, Any]:
         file_match = _as_mapping(when["file"], f"route {name}.when.file")
         _reject_unknown(file_match, {"extension", "age"}, f"route {name}.when.file")
         if "extension" in file_match:
-            extensions = _as_list(file_match["extension"], f"route {name}.when.file.extension")
+            extensions = _as_list(
+                file_match["extension"], f"route {name}.when.file.extension"
+            )
             if not extensions or not all(isinstance(ext, str) for ext in extensions):
                 raise RoutingLawError(
                     f"route {name}.when.file.extension must be a non-empty string list",

@@ -13,13 +13,8 @@ MODE="full"
 [[ "${1:-}" == "--count" ]] && MODE="count"
 [[ "${1:-}" == "--hook" ]] && MODE="hook"
 
-DOMUS="${DOMUS_ROOT:-${HOME}/Workspace/4444J99/domus-semper-palingenesis}"
-
 # Combined pattern — single grep call, not a loop
 PATTERN='(/Users/[^/]*/Workspace/[a-z]|organvm-iv-taxis|organvm-i-theoria|organvm-ii-poiesis|organvm-iii-ergon|organvm-v-logos|organvm-vi-koinonia|organvm-vii-kerygma)'
-
-# Files to exclude from scanning (these legitimately contain paths)
-EXCLUDE='(resolve-audit|resolve-bootstrap|CLAUDE\.md|MEMORY\.md|plans/|memory/|projects/|\.git/|tests/|history\.jsonl|backups/|file-history/|subagents/|tool-results/|chezmoi\.toml)'
 
 # ── Scan deployed configs only (fast — no source tree traversal) ──
 DEPLOYED_HITS=""
