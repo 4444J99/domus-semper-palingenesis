@@ -1,0 +1,14 @@
+# Chezmoi data defaults — single source of truth for template variables
+# that are workspace-structure (not user-identity).
+#
+# User-specific values (email, name, domain_*, ssh_signing_key, github_primary,
+# org_liminal, is_work, has_aws_credentials, domus_auto_enabled) MUST be set
+# in ~/.config/chezmoi/chezmoi.toml [data] — they are not defaulted here.
+#
+# These values can be overridden in ~/.config/chezmoi/chezmoi.toml [data].
+# CI runners use these defaults (no user chezmoi.toml).
+
+# Workspace path segments — used by all templates that reference
+# {{ .organvm_dir }} or {{ .skills_dir }}. Change here, all templates follow.
+organvm_dir = "organvm"
+skills_dir = "a-i--skills"
