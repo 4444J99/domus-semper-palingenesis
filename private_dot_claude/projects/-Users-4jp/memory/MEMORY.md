@@ -19,6 +19,7 @@
 - [Cross-pollination master diagnosis synthesis](project_artifact_cross_pollination_master_diagnosis.md) — PRT-045; canonical 1-page diagnosis ref; `docs/business/2026-04-25-cross-pollination-master-diagnosis.md` (commit c404b5a 2026-04-25); awaiting Rob acknowledgment
 - [Hokage Bridge Content pillar — Jutsu of Week + Boss Battle](project_artifact_bridge_content_pillar.md) — PRT-040 DONE; `docs/content/2026-04-25-bridge-content-pillar.md` (commit 050dcc8 2026-04-25); 12-week Jutsu starter slate + Boss roster; ready to script Episode 1
 - [Hokage Discord rituals — Welcome Wed / Loot Drop Fri / Quest Log Sun](project_artifact_discord_rituals.md) — PRT-041 DONE; `docs/content/2026-04-25-discord-rituals.md` (commit 050dcc8 2026-04-25); ~80min/wk Rob commitment; awaits Discord server provisioning
+- [8-Strata Domain Ideal-Whole Schema](project_artifact_domain_ideal_whole_schema.md) — PRT-048; cross-domain substrate beneath PDE; designed 2026-04-25 in volatile session, persisted post-hoc; plan `~/.claude/plans/2026-04-25-domain-ideal-whole-substrate-design.md`; skill at `a-i--skills/skills/project-management/domain-ideal-whole-substrate/` NOT YET BUILT
 <!-- Deliverables under active development — file paths, state, collaborator, pending feedback -->
 
 ## People
