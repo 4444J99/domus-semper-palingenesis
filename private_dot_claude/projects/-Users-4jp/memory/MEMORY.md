@@ -14,6 +14,11 @@
 - [Full hanging-items plan (2026-04-25)](project_artifact_full_hanging_plan.md) — 39 items, 5 domains, 9 user-decision points; commit c0f54a8 in dotfiles 2026-04-25; sequenced critical path + parallel dispatch
 - [resolve-bootstrap script + dead-path cleanup](project_artifact_resolve_bootstrap.md) — Built missing companion to resolve-audit; pruned 103 dead entries from .claude.json (106→22) + codex config.toml; commit 85ad1bc dotfiles 2026-04-25
 - [chatgpt_exporter_to_bundle converter](project_artifact_chatgpt_exporter_converter.md) — Bridges chatgptexporter.com per-conv JSON to standard ChatGPT bundle; brainstorm-export-20260423 ingest verified (14 threads, 75 pairs); commit 7e3da5d in conversation-corpus-engine 2026-04-25
+- [BODI funnel-with-premium-content architecture](project_artifact_bodi_funnel_premium_content.md) — PRT-043; `docs/business/2026-04-25-bodi-funnel-with-premium-content-architecture.md` in `4444J99/hokage-chess` (commit c404b5a 2026-04-25); awaiting Rob premium-content link delivery
+- [Hokage 4-level funnel architecture](project_artifact_hokage_4level_funnel.md) — PRT-044; `docs/business/2026-04-25-hokage-4-level-funnel-architecture.md` (commit c404b5a 2026-04-25); BLOCKED on Kit API key (PRT-030) for L2 deploy
+- [Cross-pollination master diagnosis synthesis](project_artifact_cross_pollination_master_diagnosis.md) — PRT-045; canonical 1-page diagnosis ref; `docs/business/2026-04-25-cross-pollination-master-diagnosis.md` (commit c404b5a 2026-04-25); awaiting Rob acknowledgment
+- [Hokage Bridge Content pillar — Jutsu of Week + Boss Battle](project_artifact_bridge_content_pillar.md) — PRT-040 DONE; `docs/content/2026-04-25-bridge-content-pillar.md` (commit 050dcc8 2026-04-25); 12-week Jutsu starter slate + Boss roster; ready to script Episode 1
+- [Hokage Discord rituals — Welcome Wed / Loot Drop Fri / Quest Log Sun](project_artifact_discord_rituals.md) — PRT-041 DONE; `docs/content/2026-04-25-discord-rituals.md` (commit 050dcc8 2026-04-25); ~80min/wk Rob commitment; awaits Discord server provisioning
 <!-- Deliverables under active development — file paths, state, collaborator, pending feedback -->
 
 ## People
@@ -47,9 +52,11 @@
 - [Micro-element multiversality](project_micro_element_multiversality.md) — Each atom is a multiverse; sub-atomic decomposition needed for true backlog (2026-04-22)
 - [Prompt atomization pipeline](project_prompt_atomization_pipeline.md) — Full 3-layer pipeline: 47,299 unified atoms, 113 trajectories, 918 open backlog (2026-04-23)
 - [Hokage Chess client](project_hokage_chess_client.md) — Rob Bonavoglia; landing page + business + ROB-FIRST-30-DAYS + seed.yaml + registry registered + OG metadata; deploy/domain/Kit pending (2026-04-25)
+- [Rob/BODI funnel call 2026-04-25](project_rob_bodi_funnel_call_20260425.md) — strategic diagnosis: Hokage has premium content/no funnel, BODI has funnel/no premium content; Rob homework = links + 75-person constellation; source transcript in `~/Downloads/Sales-Funnel-Strategy-Content-Audit.md`
 
 - [Session 2026-04-25 hokage+PDE](project_session_2026-04-25_hokage_chess_pde.md) — Full hokage-chess build + Product Domain Engine formalization; 49 files, 10 vacuums, 3 repos
 - [Session 2026-04-25 handoff-relay](project_session_2026-04-25_handoff_relay.md) — Worked both 5-group HANDOFFs; DONE-442..446 (spiral mobile, chezmoi sync, registry, hokage seed+ROB doc, PDE skill) + OG metadata; hokagechess.com confirmed available
+- [Session 2026-04-25 evening — Rob cross-pollination](project_session_2026-04-25_evening_cross_pollination.md) — 6 docs in hokage-chess across 5 commits; PRT-040/041 → DONE, PRT-043/044/045 → OPEN; transcript mirrored, BODI+Hokage funnel architectures + synthesis shipped; SYS-156 surfaced as blocked-on-3-user-auths
 
 ## Process
 - [Product-domain engine](feedback_product_domain_engine.md) — Repeatable system for ANY product tied to a domain: scholarly study (ethos) + social/media (pathos) + logos skeleton; Hokage Chess is first full instance
@@ -112,7 +119,8 @@
 - [Atoms are permanent](feedback_atoms_are_permanent.md) — NEVER batch-close atoms; every atom had meaning and will again; stale ≠ dead (2026-04-23)
 - [Every frame a painting — sculpting with time](feedback_every_frame_a_painting.md) — Dual: spatial (every output = painting) AND temporal (session rhythm = sculpture in time); both simultaneously (2026-04-23)
 - [Do what is asked — never preempt](feedback_priority_hierarchy.md) — NEVER decide priorities for the user; do exactly what is asked, when asked; jobs/grants/infra ONLY when explicitly requested (2026-04-23)
-- [The system IS the product](feedback_system_is_the_product.md) — ORGANVM visible+working = client acquisition; jobs are smallest pillar; building the system IS revenue; stop asking, start working (2026-04-23)
+- [The system IS the product](feedback_system_is_the_product.md) — ORGANVM visible+working = client acquisition; jobs are smallest pillar; building the system IS revenue; stop asking, start working
+- [Cross-session lane parsing](feedback_cross_session_lane_parsing.md) — "X active" at session open = active *elsewhere*, not "work on X here"; pick a non-colliding lane from the relay (2026-04-25) (2026-04-23)
 
 ## References
 - [Conductor MCP server](reference_conductor_mcp.md) — Live as of 2026-04-14, FRAME→SHAPE→BUILD→PROVE lifecycle
