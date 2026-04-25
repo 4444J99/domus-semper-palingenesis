@@ -8,7 +8,7 @@
 - [Spiral renderer — Maddie's site](project_artifact_spiral_maddie.md) — `spiral.ts`; V3.1 mobile camera-Z viewport polish shipped 2026-04-25 (commit 39128e3); V4 node-shape design pending Maddie reply
 - [Product Domain Engine skill](project_artifact_pde_skill.md) — Conductor skill at `~/Workspace/a-i--skills/skills/project-management/product-domain-engine/`; 4 modes + 5-phase protocol + audit script; shipped 2026-04-25 (cf92479)
 - [HANDOFF — sovereign-systems--elevate-align](project_artifact_handoff_elevate_align.md) — Repo-root 5-group relay file (V4 shapes, mobile, CI, domain, filter affiliates); shipped 2026-04-25 (commit 454a047)
-- [Landing-engine plan (Persona × Narrative × Section)](project_artifact_landing_engine_plan.md) — Spiral+Hokage shared primitive plan; commit 11533e7 in spiral repo 2026-04-25; slice 1 blocked on spiral glow agent
+- [Landing-engine slices 1+3 SHIPPED](project_artifact_landing_engine_plan.md) — Spiral+Hokage shared primitive; spiral 3d8cabd (3 personas live), hokage a2ef26f (3 personas SSG); slice 2 (Keystatic) deferred
 - [Multi-part conversations.json patch (ChatGPT + Claude)](project_artifact_chatgpt_multipart_patch.md) — `discover_bundle_roots` + dedup; ChatGPT 1785fa2, Claude cb2bc9e in conversation-corpus-engine 2026-04-25; 298 tests pass
 - [Hokage Chess v6 refresh](project_artifact_hokage_v6_refresh.md) — Strategy v6 + pitch deck v3 + business plan v2; lineage-integrated; 2,212 lines; commit 14650a4 in `4444J99/hokage-chess` 2026-04-25; pending Rob review
 - [Full hanging-items plan (2026-04-25)](project_artifact_full_hanging_plan.md) — 39 items, 5 domains, 9 user-decision points; commit c0f54a8 in dotfiles 2026-04-25; sequenced critical path + parallel dispatch

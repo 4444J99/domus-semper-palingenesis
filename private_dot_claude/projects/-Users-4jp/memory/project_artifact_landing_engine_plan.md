@@ -1,30 +1,46 @@
 ---
-name: Landing-engine plan (Persona × Narrative × Section)
-description: Plan file for the unified landing-engine primitive shared between spiral (Maddie) and hokage (Rob); slice 1 blocked on spiral glow agent
+name: Landing-engine (Persona × Narrative × Section) — slices 1+3 SHIPPED
+description: Unified landing-engine primitive shared between spiral (Maddie) and hokage (Rob); slice 1 + slice 3 shipped 2026-04-25; slice 2 (Keystatic) deferred
 type: project
 originSessionId: 5a485c0a-8c2d-4af3-a88c-63d09aca2467
 ---
-**What:** Plan for `src/lib/landing-engine/` — a Persona × Narrative × Section composition primitive that generates audience-targeted landing pages from declarative data. Bridges the gap audit revealed: spiral has data-driven content but no narrative layer; hokage has narrative but no data-driven content. Both should consume the same primitive.
+**What:** A `src/lib/landing-engine/` primitive — Persona × Narrative × Section composition that generates audience-targeted landing pages from declarative data. Same schema, two framework adapters (Astro for spiral, React/Next for hokage). Adding a persona to either repo's `personas.ts` spawns a new `/for/<id>` page automatically.
 
-**Where:** `~/Workspace/organvm/sovereign-systems--elevate-align/.claude/plans/2026-04-25-landing-engine-persona-narrative-section-v1.md`
+**Plan source:** `~/Workspace/organvm/sovereign-systems--elevate-align/.claude/plans/2026-04-25-landing-engine-persona-narrative-section-v1.md` (commit 11533e7)
 
-**Project:** spiral repo (slice 1–2) + hokage-chess (slice 3)
+**Project:** spiral repo (slices 1–2) + hokage-chess (slice 3)
 
-**For whom:** Maddie (spiral), Rob (hokage); architecturally instantiates the Product Domain Engine skill (DONE-446)
+**For whom:** Maddie (spiral), Rob (hokage); architectural instantiation of the Product Domain Engine skill (DONE-446).
 
-**State:** plan-shipped — committed 11533e7 to organvm-iii-ergon/sovereign-systems--elevate-align#main 2026-04-25
+**State:**
+- Slice 1 (spiral, hardcoded) — **SHIPPED** commit `3d8cabd` (organvm-iii-ergon/sovereign-systems--elevate-align#main 2026-04-25)
+- Slice 2 (spiral, Keystatic-driven) — deferred
+- Slice 3 (hokage port) — **SHIPPED** commit `a2ef26f` (4444J99/hokage-chess#main 2026-04-25)
 
-**Slice plan:**
-- Slice 1 (spiral, hardcoded): personas.ts (3) + sections.ts (4 types) + narratives.ts (1: ki-sho-ten-ketsu) + compose.ts + 4 .astro components + dynamic for/[persona].astro route. Est 2–3h.
-- Slice 2 (spiral, Keystatic-driven): move personas to content collection. Est 1–2h.
-- Slice 3 (hokage port): React renderers, shared schema, sitemap + OG per persona. Est 3–4h.
+**Spiral live pages** (build-verified, 3 prerendered):
+- `/for/toxic-environment-seeker` — water pillar
+- `/for/burnt-out-high-achiever` — inner pillar
+- `/for/cycle-syncing-practitioner` — identity pillar
 
-**Spiral seed personas (7):** Toxic-Environment Seeker, Burnt-Out High Achiever, Identity-Shift Seeker, Cycle-Syncing Practitioner, Athlete-Performance, Cancer-Support Journey, Income-System Builder.
+**Hokage live pages** (Next.js SSG via generateStaticParams, 3 prerendered with per-persona OG metadata):
+- `/for/stuck-beginner` — 1000-1400 ELO, tactics
+- `/for/climbing-intermediate` — 1400-1800 ELO, strategy
+- `/for/returning-adult-improver` — variable ELO, tilt-resistance
 
-**Hokage seed personas (3):** Stuck Beginner (1000–1400), Climbing Intermediate (1400–1800), Returning Adult Improver.
+**Schema layers (identical in both repos):**
+- `personas.ts` — typed Persona records with id/label/pain/desire/heroHook/ctaCommit + domain-specific PillarId
+- `sections.ts` — 4 typed section props + builders that derive props from a Persona
+- `narratives.ts` — ordered SectionBuilderKey sequences (ki-sho-ten-ketsu only for slice 1)
+- `compose.ts` — pure `(personaId) → ComposedLanding` function
 
-**Pending feedback:** none — written autonomously after audit; needs user/Maddie validation of persona cuts before slice 1 ships.
+**Renderers (framework-specific):**
+- Spiral: `src/components/landing/{Hero,Problem,ThreePaths,Cta}Section.astro` + dynamic route `src/pages/for/[persona].astro`
+- Hokage: `src/components/landing/{Hero,Problem,ThreePaths,Cta}Section.tsx` (RSC) + Next App Router `src/app/for/[persona]/page.tsx` with `generateStaticParams` + per-persona `generateMetadata`
 
-**Next action:** wait for spiral glow/twinkle agent to finish (working on `src/components/spiral/spiral.ts` — bloom + sprite-vs-extrude pivot), then start slice 1. If spiral is occupied long, can lead with slice 3 in hokage instead (schema design proves out either way; framework adapter is the only cost difference).
+**Open follow-ups:**
+- Slice 2 (spiral Keystatic CMS port for personas) — when Maddie wants non-developer persona authoring
+- Hokage adjacency map for ThreePaths is currently 2-deep adjacency from primary pillar; could be tuned per-persona
+- Multi-variant showcase pattern (per `feedback_multi_variant_showcase.md`) — add `/showcase` page in each repo that grids all 3+ personas side-by-side for client review
+- Add more narratives (problem-agitate-solve, before-after-bridge, hero-journey) once a second template is genuinely needed
 
-**Why:** Both products were going to need landing variants (hokage needs persona variants for ad funnels; spiral needs persona variants for the multi-pillar surface). Building the primitive once vs. twice saves 4–6h and keeps both products on the same composition law. Also activates the Product Domain Engine skill that's been shipped but underused.
+**Why:** Both products needed persona variants for ad funnels / multi-pillar surface. Building the primitive once vs. twice saved ~4-6h AND keeps both products on the same composition law. The shared schema means design decisions (adding a section type, refining a narrative template) propagate by replay, not by reimplementation. Framework adapter cost was the only fork.
