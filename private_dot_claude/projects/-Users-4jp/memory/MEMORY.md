@@ -5,12 +5,13 @@
 - [Core identity](user_core_identity.md) — Humanities creator chasing the zeitgeist; every system has failed him; ORGANVM is the carrier wave
 
 ## Active Artifacts
-- [Spiral renderer — Maddie's site](project_artifact_spiral_maddie.md) — `spiral.ts` in sovereign-systems--elevate-align; lightened 2026-04-23; needs deploy
+- [Spiral renderer — Maddie's site](project_artifact_spiral_maddie.md) — `spiral.ts` in sovereign-systems--elevate-align; chakra stars + round 2 lightening shipped 2026-04-25 (commit 02c90a2); awaiting Maddie reaction
 <!-- Deliverables under active development — file paths, state, collaborator, pending feedback -->
 
 ## People
 - [Maddie](collaborator_maddie.md) — Elevate Align client; health/wellness brand; 28-page site build; spiral feedback pending
 - [Becka McKay](project_becka_mckay_thread.md) — Former MFA thesis advisor (FAU); outreach thread; awaiting reply (2026-04-18)
+- [Rob Bonavoglia](collaborator_rob_bonavoglia.md) — Hokage Chess client; NYC chess creator; @HokageChess YouTube; ~1350 ELO; landing page + business model
 
 ## Active Projects
 - [Becka McKay thread](project_becka_mckay_thread.md) — Outreach to former MFA thesis advisor (FAU); 5-email thread; awaiting reply after redirecting substance question to practical asks (2026-04-18)
@@ -37,6 +38,10 @@
 - [Prompt triage complete](project_prompt_triage_complete.md) — 24,599 atoms triaged, 2,012 duplicates consolidated, 14,898 OPEN; pipeline + dedup built (2026-04-22)
 - [Micro-element multiversality](project_micro_element_multiversality.md) — Each atom is a multiverse; sub-atomic decomposition needed for true backlog (2026-04-22)
 - [Prompt atomization pipeline](project_prompt_atomization_pipeline.md) — Full 3-layer pipeline: 47,299 unified atoms, 113 trajectories, 918 open backlog (2026-04-23)
+- [Hokage Chess client](project_hokage_chess_client.md) — Rob Bonavoglia; market gap + business model + landing page; 7 gaps, 3-phase Naruto-named model, trademark research (2026-04-24)
+
+## Process
+- [Product-domain engine](feedback_product_domain_engine.md) — Repeatable system for ANY product tied to a domain: scholarly study (ethos) + social/media (pathos) + logos skeleton; Hokage Chess is first full instance
 
 ## Completed Projects
 - [Session archival system](project_session_archive_system.md) — Per-project conversation preservation, LaunchAgent automation (2026-04-15)
