@@ -1,0 +1,173 @@
+#!/usr/bin/env python3
+"""resolve-bootstrap — Prune stale workspace path entries from deployed configs.
+
+Scans `.claude.json` (top-level `projects` map) and codex `config.toml`
+(`[projects."..."]` sections) for entries whose paths don't exist on disk.
+
+In dry-run mode (default): reports what would be pruned.
+In apply mode: prunes them, writing a timestamped backup first.
+
+Live entries are kept untouched — this never edits content fields, only
+removes whole project records whose target dirs are gone.
+
+Usage:
+    resolve-bootstrap                Dry-run report (exit 1 if dead entries)
+    resolve-bootstrap --apply        Prune + create timestamped backups
+    resolve-bootstrap --json         Machine-readable output (combine with --apply)
+
+Companion to: resolve-audit (which only reports; this fixes via pruning).
+"""
+from __future__ import annotations
+
+import argparse
+import json
+import re
+import shutil
+import sys
+from datetime import datetime, timezone
+from pathlib import Path
+
+HOME = Path.home()
+CLAUDE_JSON = HOME / ".claude.json"
+CODEX_TOML = HOME / ".local" / "share" / "codex" / "config.toml"
+
+
+def _backup(path: Path) -> Path:
+    ts = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    bak = path.with_name(path.name + f".bak.{ts}")
+    shutil.copy2(path, bak)
+    return bak
+
+
+def prune_claude_json(apply: bool) -> dict:
+    if not CLAUDE_JSON.exists():
+        return {"file": str(CLAUDE_JSON), "exists": False}
+    with CLAUDE_JSON.open() as f:
+        data = json.load(f)
+    projects = data.get("projects", {})
+    dead = [p for p in projects if p.startswith("/") and not Path(p).is_dir()]
+    result = {
+        "file": str(CLAUDE_JSON),
+        "exists": True,
+        "total_entries": len(projects),
+        "dead_entries": dead,
+        "dead_count": len(dead),
+        "applied": False,
+    }
+    if apply and dead:
+        result["backup"] = str(_backup(CLAUDE_JSON))
+        for p in dead:
+            del projects[p]
+        with CLAUDE_JSON.open("w") as f:
+            json.dump(data, f, indent=2)
+        result["applied"] = True
+    return result
+
+
+# Match a [projects."<path>"] section header AND its body (everything until
+# the next [section] header or EOF). Body is non-empty for trust_level etc.
+_PROJECTS_SECTION_RE = re.compile(
+    r'(\[projects\."([^"]+)"\][^\[]*)',
+    re.MULTILINE,
+)
+
+
+def prune_codex_toml(apply: bool) -> dict:
+    if not CODEX_TOML.exists():
+        return {"file": str(CODEX_TOML), "exists": False}
+    text = CODEX_TOML.read_text()
+    matches = list(_PROJECTS_SECTION_RE.finditer(text))
+    dead_pieces: list[tuple[str, str]] = []  # (path, full match block)
+    for m in matches:
+        block, proj_path = m.group(1), m.group(2)
+        if proj_path.startswith("/") and not Path(proj_path).is_dir():
+            dead_pieces.append((proj_path, block))
+    result = {
+        "file": str(CODEX_TOML),
+        "exists": True,
+        "total_entries": len(matches),
+        "dead_entries": [p for p, _ in dead_pieces],
+        "dead_count": len(dead_pieces),
+        "applied": False,
+    }
+    if apply and dead_pieces:
+        result["backup"] = str(_backup(CODEX_TOML))
+        new_text = text
+        for _, block in dead_pieces:
+            new_text = new_text.replace(block, "", 1)
+        # Collapse runs of >=3 blank lines back to single blank
+        new_text = re.sub(r"\n{3,}", "\n\n", new_text)
+        CODEX_TOML.write_text(new_text)
+        result["applied"] = True
+    return result
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    parser.add_argument(
+        "--apply",
+        action="store_true",
+        help="Actually prune (default is dry-run report)",
+    )
+    parser.add_argument(
+        "--json",
+        action="store_true",
+        help="Machine-readable JSON output",
+    )
+    args = parser.parse_args()
+
+    results = {
+        "mode": "apply" if args.apply else "dry-run",
+        "claude_json": prune_claude_json(args.apply),
+        "codex_toml": prune_codex_toml(args.apply),
+    }
+
+    total_dead = (
+        results["claude_json"].get("dead_count", 0)
+        + results["codex_toml"].get("dead_count", 0)
+    )
+    results["total_dead"] = total_dead
+
+    if args.json:
+        print(json.dumps(results, indent=2))
+    else:
+        for key, label in [
+            ("claude_json", ".claude.json"),
+            ("codex_toml", "codex config.toml"),
+        ]:
+            r = results[key]
+            print(f"=== {label} ===")
+            if not r.get("exists"):
+                print("  not found, skipped")
+                print()
+                continue
+            dead = r.get("dead_entries", [])
+            total = r.get("total_entries", 0)
+            if not dead:
+                print(f"  no dead entries among {total} project entries")
+            else:
+                print(f"  {len(dead)} dead entries of {total} total project entries:")
+                for p in dead:
+                    print(f"    - {p}")
+                if r.get("applied"):
+                    print(f"  pruned; backup: {r['backup']}")
+                else:
+                    print("  (dry-run; pass --apply to prune)")
+            print()
+        if total_dead == 0:
+            print("All project entries point to live directories.")
+        elif args.apply:
+            print(f"Pruned {total_dead} dead entries. Re-run resolve-audit to confirm.")
+        else:
+            print(f"Total dead entries: {total_dead}. Run with --apply to prune.")
+
+    if total_dead == 0:
+        return 0
+    return 0 if args.apply else 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())
