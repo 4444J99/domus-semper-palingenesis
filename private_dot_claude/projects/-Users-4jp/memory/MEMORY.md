@@ -40,6 +40,8 @@
 - [Prompt atomization pipeline](project_prompt_atomization_pipeline.md) — Full 3-layer pipeline: 47,299 unified atoms, 113 trajectories, 918 open backlog (2026-04-23)
 - [Hokage Chess client](project_hokage_chess_client.md) — Rob Bonavoglia; market gap + business model + landing page; 7 gaps, 3-phase Naruto-named model, trademark research (2026-04-24)
 
+- [Session 2026-04-25 hokage+PDE](project_session_2026-04-25_hokage_chess_pde.md) — Full hokage-chess build + Product Domain Engine formalization; 49 files, 10 vacuums, 3 repos
+
 ## Process
 - [Product-domain engine](feedback_product_domain_engine.md) — Repeatable system for ANY product tied to a domain: scholarly study (ethos) + social/media (pathos) + logos skeleton; Hokage Chess is first full instance
 
