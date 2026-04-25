@@ -12,6 +12,8 @@
 - [Multi-part conversations.json patch (ChatGPT + Claude)](project_artifact_chatgpt_multipart_patch.md) — `discover_bundle_roots` + dedup; ChatGPT 1785fa2, Claude cb2bc9e in conversation-corpus-engine 2026-04-25; 298 tests pass
 - [Hokage Chess v6 refresh](project_artifact_hokage_v6_refresh.md) — Strategy v6 + pitch deck v3 + business plan v2; lineage-integrated; 2,212 lines; commit 14650a4 in `4444J99/hokage-chess` 2026-04-25; pending Rob review
 - [Full hanging-items plan (2026-04-25)](project_artifact_full_hanging_plan.md) — 39 items, 5 domains, 9 user-decision points; commit c0f54a8 in dotfiles 2026-04-25; sequenced critical path + parallel dispatch
+- [resolve-bootstrap script + dead-path cleanup](project_artifact_resolve_bootstrap.md) — Built missing companion to resolve-audit; pruned 103 dead entries from .claude.json (106→22) + codex config.toml; commit 85ad1bc dotfiles 2026-04-25
+- [chatgpt_exporter_to_bundle converter](project_artifact_chatgpt_exporter_converter.md) — Bridges chatgptexporter.com per-conv JSON to standard ChatGPT bundle; brainstorm-export-20260423 ingest verified (14 threads, 75 pairs); commit 7e3da5d in conversation-corpus-engine 2026-04-25
 <!-- Deliverables under active development — file paths, state, collaborator, pending feedback -->
 
 ## People
