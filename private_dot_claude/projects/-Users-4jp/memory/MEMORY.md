@@ -8,6 +8,8 @@
 - [Spiral renderer — Maddie's site](project_artifact_spiral_maddie.md) — `spiral.ts`; V3.1 mobile camera-Z viewport polish shipped 2026-04-25 (commit 39128e3); V4 node-shape design pending Maddie reply
 - [Product Domain Engine skill](project_artifact_pde_skill.md) — Conductor skill at `~/Workspace/a-i--skills/skills/project-management/product-domain-engine/`; 4 modes + 5-phase protocol + audit script; shipped 2026-04-25 (cf92479)
 - [HANDOFF — sovereign-systems--elevate-align](project_artifact_handoff_elevate_align.md) — Repo-root 5-group relay file (V4 shapes, mobile, CI, domain, filter affiliates); shipped 2026-04-25 (commit 454a047)
+- [Landing-engine plan (Persona × Narrative × Section)](project_artifact_landing_engine_plan.md) — Spiral+Hokage shared primitive plan; commit 11533e7 in spiral repo 2026-04-25; slice 1 blocked on spiral glow agent
+- [ChatGPT multi-part conversations.json patch](project_artifact_chatgpt_multipart_patch.md) — `discover_bundle_roots` + dedup-by-id; commit 1785fa2 in conversation-corpus-engine 2026-04-25; 290 tests pass; mirror to Claude adapter pending
 <!-- Deliverables under active development — file paths, state, collaborator, pending feedback -->
 
 ## People
