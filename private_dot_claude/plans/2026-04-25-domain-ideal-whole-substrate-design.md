@@ -219,3 +219,67 @@ Without v2, the substrate could ship 8 great vertical files per friend and still
 - Plan file appended (this commit)
 - IRF-PRT-048 already tracks the substrate skill build; no new IRF entry needed (Portfolio Operator is part of the substrate, not a separate work-item)
 - chezmoi-add → push → working trees clean
+
+---
+
+## v2.1 Addition — Portfolio-Pull / Phase 0 audit
+
+**User refinement:** every new project must look internal first for reusable features/functions/modules before scratch-build. *"All these projects I'll be building for my friends, they're all going to almost be replicas of each other with just different clothes on."*
+
+This is the **pull half** of the Portfolio Operator, symmetric with v2's push. Per Tenet Protocol, both directions fire simultaneously. The Portfolio Operator is now complete (bidirectional):
+
+- **Portfolio-pull (v2.1):** scan existing portfolio for reusable engines/components/skills BEFORE scaffolding new code
+- **Portfolio-push (v2):** engagement outputs flow back into portfolio graph
+
+### Phase 0: portfolio-audit (precedes the 8 layers)
+
+Before any layer-1 ontology work begins, the substrate skill must:
+
+1. Scan `~/Workspace/` for existing engines/skills/primitives matching candidate domain shape
+2. Produce `portfolio-reuse-map.md`: which engine gets skinned, what's domain-specific skin, what is genuinely new
+3. Only enter layers 1-8 after reuse-map is filled
+
+### Existing engines (starter inventory — partial)
+
+| Engine | Origin | Re-skinnable for |
+|---|---|---|
+| Spiral renderer (`spiral.ts`) | Maddie | visual-flow brands |
+| Landing-engine (Astro+SSG persona templates) | Spiral + Hokage shared | persona-arch landing pages |
+| BODI 4-level funnel mechanism | Rob | structured L1-L4 ladders (already transplanted PRT-044) |
+| Bridge Content (Jutsu/Boss Battle) | PRT-040 | creator weekly+monthly cadence |
+| Discord rituals (3 weekly + tier-gated) | PRT-041 | tier-gated communities |
+| Conversation-corpus pipeline | corpus engine | text/audio capture |
+| chatgpt_exporter_to_bundle | corpus engine | per-conv JSON ingest |
+| 75-person Constellation | PRT-046 | peer-research foundation |
+| Cross-pollination diagnosis | PRT-045 | 2+ domain mechanism asymmetry |
+| Product Domain Engine skill | a-i--skills | product-tied-to-domain instantiation |
+
+Next 5 friend-engagements should consume 60–80% engine + 20–40% skin, not 100% from-scratch.
+
+### Engine + skin pattern (clothes-on)
+
+- **Engine** = portfolio-pull primitive (re-skinnable)
+- **Skin** = domain-specific 8-layer instantiation
+- **New code** = only what neither engine nor skin can express
+
+Per rule 36 (seed not specification) and rule 41 (audit before building): Phase 0 enforces minimal-generative-structure by routing reuses to existing engines. Phase 0 *is* the audit.
+
+### Implementation impact on substrate skill (Phase 0 spec)
+
+When step 4 (skill build) executes, v2.1 changes scaffolding:
+
+- `audit-portfolio.sh` — globs `~/Workspace/` for skills, repos with `seed.yaml`, shared primitives; produces candidate-reuse list
+- `portfolio-reuse-map.md` template — must be filled before layer-1 work
+- Mode `portfolio-pull` — pairs with `portfolio-resonance` (v2 push); together = bidirectional Portfolio Operator
+- Audit script gains a check: every domain instantiation must declare reuse decisions (or explicit `# nothing-reusable` justification)
+
+### Schema v2.1 invariants
+
+- Phase 0 portfolio-audit runs BEFORE 8-layer instantiation (v2.1 new)
+- 8 layers instantiate (v1)
+- Three Portfolio Operator cross-flows fire on completion (v2)
+- Selfish-altruistic loop and magnetic membrane unchanged from v1
+
+### Why v2.1 lands now (not after first POC)
+
+If POC ships before Phase 0 is named, the chess constellation file might be scratch-built instead of recognized as an instance of an existing pattern (75-person framework). Phase 0 must be in spec *before* the first instantiation, or the first instantiation defeats the purpose.

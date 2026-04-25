@@ -94,3 +94,59 @@ User refined the schema: every flag-pierce isn't just a self-contained vertical 
 **Money-flow restatement (user's framing):** "we make money by making other people money." The Portfolio Operator is the mechanism by which one engagement returns multi-fold value: tool extraction + cross-domain artifact + audience cross-flow + meta-skill capital. Single-engagement compensation (client fee) is the smallest pillar; portfolio-level returns dominate over time.
 
 **Schema v2 invariants:** every flag-pierce instantiates the 8 layers (unchanged) AND fires three Portfolio Operator cross-flows (new). Selfish-altruistic loop and magnetic membrane unchanged.
+
+---
+
+## v2.1 Addition — Portfolio-Pull / Phase 0 audit (2026-04-25 follow-up #2)
+
+User refinement: every new project must look internal first for reusable features/functions/modules before scratch-build. *"All these projects I'll be building for my friends, they're all going to almost be replicas of each other with just different clothes on."*
+
+This is the **pull half** of the Portfolio Operator, symmetric with v2's push half. Per Tenet Protocol, both directions fire simultaneously. The Portfolio Operator is now complete:
+
+- **Portfolio-pull (v2.1):** scan existing portfolio for reusable engines/components/skills BEFORE scaffolding new code
+- **Portfolio-push (v2):** engagement outputs flow back into the portfolio graph (meta-skill / domain-overlap / tool-audience)
+
+### Phase 0: portfolio-audit (precedes the 8 layers)
+
+Before layer-1 ontology work begins, the substrate skill runs:
+
+1. Scan `~/Workspace/` for existing engines/skills/primitives matching the candidate domain shape
+2. Produce `portfolio-reuse-map.md`: which engine gets skinned, what's domain-specific skin, what is genuinely new
+3. Only enter layers 1-8 after reuse-map is filled
+
+### Existing engines (starter inventory — partial portfolio audit)
+
+| Engine | Origin | Re-skinnable for |
+|---|---|---|
+| Spiral renderer (`spiral.ts`) | Maddie's site | any visual-flow brand (V4 dual-variants + V5 materia-particle live) |
+| Landing-engine (Astro+SSG, persona templates) | Spiral + Hokage shared primitive | any client landing page with persona arch |
+| BODI 4-level funnel mechanism | Rob's existing system | any product needing L1-L4 ladder (already transplanted as PRT-044) |
+| Bridge Content templates (Jutsu/Boss Battle) | PRT-040 | any creator-domain weekly+monthly content cadence |
+| Discord rituals codification (3 weekly + tier-gated) | PRT-041 | any tier-gated community |
+| Conversation-corpus pipeline | corpus engine | any text/audio capture pipeline |
+| chatgpt_exporter_to_bundle converter | corpus engine | any per-conversation JSON ingest |
+| 75-person Constellation framework (PRT-046) | Rob market-research | any domain's peer-research foundation |
+| Cross-pollination diagnosis pattern (PRT-045) | Rob/BODI/Hokage | any 2+ domain portfolio with mechanism asymmetry |
+| Product Domain Engine skill | a-i--skills | any product-tied-to-domain instantiation |
+
+The next 5 friend-engagements should each consume 60–80% engine + 20–40% skin, not 100% from-scratch.
+
+### Engine + skin pattern (clothes-on)
+
+- **Engine** = portfolio-pull primitive (re-skinnable)
+- **Skin** = domain-specific 8-layer instantiation
+- **New code** = only what neither engine nor skin can express
+
+Per rule 36 (seed not specification): substrate outputs minimal generative structure, not full re-implementation. Phase 0 enforces this by routing reuses to existing engines. Per rule 41 (audit before building): Phase 0 *is* the audit.
+
+### Implementation impact on substrate skill (still unbuilt)
+
+- `audit-portfolio.sh` — globs `~/Workspace/` for skills, repos with `seed.yaml`, shared primitives; produces candidate-reuse list
+- `portfolio-reuse-map.md` template — must be filled before layer-1 work
+- Mode `portfolio-pull` — pairs with `portfolio-resonance` (v2 push); together they make the Portfolio Operator bidirectional
+
+### Schema v2.1 invariants
+
+- Every flag-pierce runs **Phase 0 portfolio-audit BEFORE 8-layer instantiation** (new in v2.1)
+- AND fires three Portfolio Operator cross-flows on completion (v2)
+- Selfish-altruistic loop and magnetic membrane unchanged from v1
