@@ -28,6 +28,7 @@
 - [Rob Bonavoglia](collaborator_rob_bonavoglia.md) — Hokage Chess client; NYC chess creator; @HokageChess YouTube; ~1350 ELO; landing page + business model
 
 ## Active Projects
+- [Achilles session workload](project_achilles_session_workload.md) — Next-Claude-session compile (2026-04-25); excludes Spiral/Hokage/Maddie/Rob; Tier 1 PRT-048 skill + SYS-156 + CI cascade + IRF hygiene
 - [Becka McKay thread](project_becka_mckay_thread.md) — Outreach to former MFA thesis advisor (FAU); 5-email thread; awaiting reply after redirecting substance question to practical asks (2026-04-18)
 - [Email triage system](project_mail_triage_2026-04-17.md) — FAILED 2026-04-21: LaunchAgent froze machine, disabled; needs Gmail Apps Script redesign
 - [Dotfiles sprawl audit](project_dotfiles_audit_2026-04-17.md) — Phase 0 done, MCP Docker→native done, orphaned LaunchAgents cleaned (2026-04-21)
