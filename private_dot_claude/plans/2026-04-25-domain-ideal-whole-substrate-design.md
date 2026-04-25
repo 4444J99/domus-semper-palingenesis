@@ -148,3 +148,74 @@ All three should return non-empty results, with HEAD = origin in both repos.
 - Does **not** build the skill at `~/Workspace/a-i--skills/skills/project-management/domain-ideal-whole-substrate/` (that is step 4, user-authorized)
 - Does **not** populate the chess constellation file beyond what PRT-046 already names (5/75 conceptual)
 - Does **not** delete the volatile `.txt` exports — those remain as immutable receipts of the original conversation, even after the design is persisted in this plan
+
+---
+
+## v2 Addition — Portfolio Operator (2026-04-25 follow-up)
+
+**User refinement:** every flag-pierce isn't a self-contained vertical — it's a *node in the portfolio graph*. v1 captured the per-domain substrate (8 layers + 2 operators). v2 names the third operator that governs cross-portfolio flow.
+
+### The Portfolio Operator
+
+Three cross-flows fire whenever any domain instantiates:
+
+1. **Meta-skill flow** — transferable practices (marketing, community-building, writing/voice, audience cultivation) become first-class objects extractable from any domain. User can have low direct interest in a friend's primary domain (e.g., Jessica's sad-girl-relationships content) but high interest in the meta-skill substrate (writing craft, audience cultivation). Meta-skills amortize across every future flag-pierce.
+
+2. **Domain-pair overlap** — every flag-pierce creates N-1 publishable conversation surfaces:
+   - friend-domain × user-domain
+   - friend-domain × every-other-friend-domain
+   - PRT-045 (Rob/Hokage/BODI cross-pollination diagnosis) was the Portfolio Operator firing in retrospect
+   - Jessica×relationships creates Jessica×Sticks (audience cross-flow)
+   - Each overlap = essay, video, or joint-product opportunity
+
+3. **Tool/audience cross-flow** — every engagement spawns reusable tools AND audiences. Tools amortize across portfolio nodes (the spiral renderer built for Maddie can be re-skinned for Rob's funnel-visualizer; the conversation-corpus pipeline built for ChatGPT ingest serves every future audio/text capture). Audiences cross-pollinate (Sticks borrows Jessica's relationship audience; Hokage borrows BODI's fitness audience).
+
+### Operator-class vs layer-class
+
+Layers describe what a domain *has* (ontology, lineage, constellation, gap-map, agents, production, magnet, contribution).
+
+Operators describe how *flow* happens. There are now three:
+- **Selfish-altruistic loop** — single-engagement self-cycle (locks practitioner-mode)
+- **Magnetic membrane** — single-domain pull/push (refinery-in, gift-out)
+- **Portfolio Operator** — cross-portfolio resonance (meta-skill + overlap + tool/audience)
+
+The Portfolio Operator is parallel-class with the other two; it acts on the *whole portfolio simultaneously*, not inside a single domain.
+
+### Stress-test on existing instances
+
+- **Rob (Hokage chess + BODI fitness):** PRT-045 was already the Portfolio Operator firing in retrospect — BODI funnel transplanted into Hokage, Hokage premium-content transplanted into BODI. v1 captured it as one-off synthesis; v2 names the operator that *generates such syntheses systematically*.
+- **Jessica (relationships + Sticks app):** primary-domain interest low; meta-skill (writing/voice) high; tool/audience cross-flow with Sticks. Per engagement, three Portfolio Operator outputs: writing-craft tool extraction + Jessica×Sticks publication + audience-cross-flow plan.
+- **Future flag-pierce (Matty + N):** same three outputs auto-generated alongside the 8-layer scaffold.
+
+### Implementation impact on substrate skill (still unbuilt)
+
+If/when step 4 (skill build) executes, v2 changes the spec:
+
+- **New mode:** `portfolio-resonance` — given a candidate flag-pierce, surfaces the three Portfolio Operator outputs alongside the 8-layer scaffold
+- **Layer-3 constellation file** (PRT-046) gains a column: `cross-domain-overlap-with-other-portfolio-nodes`
+- **Layer-8 contribution charter** gains a section: `tools/assets/audiences that cross-flow back into other portfolio nodes`
+- **Audit script** (`audit.sh`) gains a check: every domain instantiation must declare at least one entry in each of the three Portfolio Operator outputs (or explicit `# none-yet` placeholder)
+
+### Money-flow restatement (user's framing, verbatim)
+
+"we make money by making other people money."
+
+The Portfolio Operator is the mechanism by which one engagement returns multi-fold value: tool extraction + cross-domain artifact + audience cross-flow + meta-skill capital. Single-engagement client fee is the smallest pillar; portfolio-level returns dominate over time. This is why "selfishness is a feature" lands — the user isn't extracting from friends, the user is building a portfolio whose total return exceeds the sum of single-engagement returns *because* every engagement amortizes through three additional channels.
+
+### Schema v2 invariants
+
+- Every flag-pierce instantiates the 8 layers ✓ (unchanged from v1)
+- AND fires three Portfolio Operator cross-flows ← v2 addition
+- Selfish-altruistic loop still locks practitioner-mode ✓
+- Magnetic membrane still governs single-domain in/out ✓
+
+### Why v2 matters now (not later)
+
+Without v2, the substrate could ship 8 great vertical files per friend and still leave cross-pollination diagnoses (the most valuable artifacts of the Rob session) unaccounted-for. The PRT-045 synthesis was *the* breakout insight; v2 makes that breakout systematically generated rather than session-luck. Each future flag-pierce auto-produces N-1 cross-pollination diagnoses without anyone having to notice the opportunity.
+
+### Persistence trail (v2)
+
+- Memory artifact appended (this commit)
+- Plan file appended (this commit)
+- IRF-PRT-048 already tracks the substrate skill build; no new IRF entry needed (Portfolio Operator is part of the substrate, not a separate work-item)
+- chezmoi-add → push → working trees clean

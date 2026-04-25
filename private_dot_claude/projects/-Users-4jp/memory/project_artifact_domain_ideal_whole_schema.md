@@ -62,3 +62,35 @@ Trinity-dispatch: Claude masterminds + merges; Codex/Gemini/OpenCode generate vo
 - Sibling: `project_artifact_pde_skill.md` (PDE = product layer; this = domain layer beneath)
 - Generalizes: PRT-046 (75-person constellation = layer 3 instance)
 - Validated by: PRT-045 cross-pollination diagnosis (BODI/Hokage transplant works because both share substrate)
+
+---
+
+## v2 Addition — Portfolio Operator (2026-04-25 follow-up)
+
+User refined the schema: every flag-pierce isn't just a self-contained vertical — it's a **node in the user's portfolio graph**. This adds a *third* operator alongside the selfish-altruistic loop and magnetic membrane.
+
+**The Portfolio Operator** — three cross-flows fire whenever a domain instantiates:
+
+1. **Meta-skill flow** — transferable practices that exist in every domain become first-class objects: marketing, community-building, voice/writing craft, audience cultivation. User may have low direct interest in friend's primary domain (e.g., Jessica's sad-girl-relationships content) but high interest in the meta-skill substrate. Meta-skills are extractable and reusable across the portfolio.
+
+2. **Domain-pair overlap** — every flag-pierce creates N-1 new conversations: friend-domain × user-domain, friend-domain × every-other-friend-domain. Rob×fitness creates Rob×Hokage cross-pollination (PRT-045 was an instance). Jessica×relationships creates Jessica×Sticks. Each overlap is a publishable artifact opportunity (essay, video, joint product).
+
+3. **Tool/audience cross-flow** — every domain engagement spawns reusable tools (scripts, frameworks, templates) AND audiences. Tools amortize across the portfolio. Audiences cross-pollinate (Sticks borrows Jessica's relationship audience; Hokage borrows BODI's fitness audience).
+
+**Why this is operator-class not layer-class:** layers describe what a domain *has* (ontology, lineage, constellation, etc.); operators describe how *flow* happens. The Portfolio Operator acts on the whole portfolio simultaneously, not inside a single domain. Parallel to the magnetic membrane (single-domain pull/push) and the selfish-altruistic loop (single-engagement self-cycle).
+
+**Stress-test on existing instances:**
+- **Rob (chess + fitness):** PRT-045 cross-pollination diagnosis was *already* the Portfolio Operator firing in retrospect — BODI funnel transplanted to Hokage, Hokage premium-content transplanted to BODI. v1 captured it as a one-off synthesis; v2 names the operator that *generates* such syntheses systematically.
+- **Jessica (relationships + Sticks):** primary domain low user-interest; meta-skill (writing/voice) high; cross-flow with Sticks app via audience. Three Portfolio Operator outputs per engagement: writing-craft tool extraction + Jessica×Sticks publication + audience-cross-flow plan.
+- **Future flag-pierce (Matty + N):** same three outputs auto-generated alongside the 8-layer scaffold.
+
+**Implementation impact on substrate skill (still unbuilt):**
+- New mode: `portfolio-resonance` — given a candidate flag-pierce, surfaces the three Portfolio Operator outputs alongside the 8-layer scaffold
+- Layer-3 constellation file (PRT-046) gains a column: `cross-domain-overlap-with-other-portfolio-nodes`
+- Layer-8 contribution charter gains a section: `tools/assets/audiences that cross-flow back into other portfolio nodes`
+
+**Why this matters now:** v1 schema was generative-per-domain. v2 makes it **portfolio-aware**. Without v2, the substrate could ship 8 great vertical files per friend and still leave the cross-pollination diagnoses (the most valuable artifacts of the entire Rob session) unaccounted-for. The PRT-045 synthesis was *the* breakout insight; v2 makes that breakout systematically generated rather than session-luck.
+
+**Money-flow restatement (user's framing):** "we make money by making other people money." The Portfolio Operator is the mechanism by which one engagement returns multi-fold value: tool extraction + cross-domain artifact + audience cross-flow + meta-skill capital. Single-engagement compensation (client fee) is the smallest pillar; portfolio-level returns dominate over time.
+
+**Schema v2 invariants:** every flag-pierce instantiates the 8 layers (unchanged) AND fires three Portfolio Operator cross-flows (new). Selfish-altruistic loop and magnetic membrane unchanged.
