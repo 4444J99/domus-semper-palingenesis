@@ -24,7 +24,7 @@ for cfg in "${HOME}/.claude.json" "${HOME}/.claude/settings.json" "${HOME}/.loca
   if [[ -n "$hits" ]]; then
     while IFS= read -r line; do
       DEPLOYED_HITS="${DEPLOYED_HITS}${cfg#"$HOME/"}:${line}"$'\n'
-    done <<< "$hits"
+    done <<<"$hits"
   fi
 done
 
@@ -39,7 +39,7 @@ fi
 # ── Output ──
 if [[ "$MODE" == "count" ]]; then
   echo "$COUNT"
-  exit $(( COUNT > 0 ? 1 : 0 ))
+  exit $((COUNT > 0 ? 1 : 0))
 fi
 
 if [[ "$MODE" == "hook" ]]; then
