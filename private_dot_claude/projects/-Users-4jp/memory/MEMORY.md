@@ -5,7 +5,7 @@
 - [Core identity](user_core_identity.md) — Humanities creator chasing the zeitgeist; every system has failed him; ORGANVM is the carrier wave
 
 ## Active Artifacts
-- [Spiral renderer — Maddie's site](project_artifact_spiral_maddie.md) — `spiral.ts`; V3.1 mobile camera-Z viewport polish shipped 2026-04-25 (commit 39128e3); V4 node-shape design pending Maddie reply
+- [Spiral renderer — Maddie's site](project_artifact_spiral_maddie.md) — `spiral.ts`; V5.10 materia-particle physics shipped 2026-04-25 (12 commits d8b34b6→e12b742); V4 dual-variants + sleek pass live (DONE-447); awaiting Maddie A/B/blend pick
 - [Product Domain Engine skill](project_artifact_pde_skill.md) — Conductor skill at `~/Workspace/a-i--skills/skills/project-management/product-domain-engine/`; 4 modes + 5-phase protocol + audit script; shipped 2026-04-25 (cf92479)
 - [HANDOFF — sovereign-systems--elevate-align](project_artifact_handoff_elevate_align.md) — Repo-root 5-group relay file (V4 shapes, mobile, CI, domain, filter affiliates); shipped 2026-04-25 (commit 454a047)
 - [Landing-engine slices 1+3 SHIPPED](project_artifact_landing_engine_plan.md) — Spiral+Hokage shared primitive; spiral 3d8cabd (3 personas live), hokage a2ef26f (3 personas SSG); slice 2 (Keystatic) deferred
@@ -56,7 +56,11 @@
 - [Rob/BODI funnel call 2026-04-25](project_rob_bodi_funnel_call_20260425.md) — strategic diagnosis: Hokage has premium content/no funnel, BODI has funnel/no premium content; Rob homework = links + 75-person constellation; source transcript in `~/Downloads/Sales-Funnel-Strategy-Content-Audit.md`
 
 - [Session 2026-04-25 hokage+PDE](project_session_2026-04-25_hokage_chess_pde.md) — Full hokage-chess build + Product Domain Engine formalization; 49 files, 10 vacuums, 3 repos
+- [Session 2026-04-25 chakra-stars](project_session_2026-04-25_chakra_stars.md) — DONE-440 V2 chakra-color stars + round 2 lightening (commit 02c90a2) + DONE-441 V3 framing fix (commit 845fcaf); GH#53 closed; uncovered Apr 23 lightening claimed-shipped-but-never-deployed
 - [Session 2026-04-25 handoff-relay](project_session_2026-04-25_handoff_relay.md) — Worked both 5-group HANDOFFs; DONE-442..446 (spiral mobile, chezmoi sync, registry, hokage seed+ROB doc, PDE skill) + OG metadata; hokagechess.com confirmed available
+- [Session 2026-04-25 V4 dual-variants](project_session_2026-04-25_v4_dual_variants.md) — DONE-447; spiral V4 dual variants `?variant=symbols` (13 sacred symbols) + `?variant=stars` (procedural refracted-light) + sleek pass killing emojis; superseded by V5 series; post-hoc reconstruction from IRF
+- [Session 2026-04-25 engine+infra+landing](project_session_2026-04-25_engine_infra_landing.md) — DONE-448..455 (8 atoms, 4 repos: spiral/hokage/CCE/dotfiles); landing-engine v1, multi-part conversations adapter (290+298+311 tests), resolve-bootstrap, full hanging-items plan; +21 vacuums atomized; post-hoc reconstruction
+- [Session 2026-04-25 V5 materia-physics](project_session_2026-04-25_v5_materia_physics.md) — V5→V5.10 spiral 12 commits d8b34b6→e12b742 (particles ARE the icon shape, bouncing-substrate, variant divergence); NO IRF entry yet (retrospective atomization deferred); post-hoc reconstruction from git log
 - [Session 2026-04-25 evening — Rob cross-pollination](project_session_2026-04-25_evening_cross_pollination.md) — 6 docs in hokage-chess across 5 commits; PRT-040/041 → DONE, PRT-043/044/045 → OPEN; transcript mirrored, BODI+Hokage funnel architectures + synthesis shipped; SYS-156 surfaced as blocked-on-3-user-auths
 
 ## Process

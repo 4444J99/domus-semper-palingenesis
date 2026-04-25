@@ -1,6 +1,6 @@
 ---
 name: Spiral renderer — Maddie's Elevate Align site
-description: Three.js 3D helix hero — V4 dual variants + SLEEK PASS shipped 2026-04-25 (b8d105b/19c6339/b6c9cdd/b4882bb pushed); ?variant=symbols (13 sacred symbols) + ?variant=stars (generative refracted-light); emojis killed, typographic labels added; IRF DONE-447; awaiting Maddie's pick
+description: V5→V5.10 SHIPPED 2026-04-25 (12 commits d8b34b6→e12b742; materia-particle physics — particles ARE the icon shape, bouncing-substrate, variant divergence). Last open feedback: Maddie still picking A vs B vs blend; 13 chakra colors retained throughout V5 series. Earlier same-day: V4 dual variants + sleek pass shipped (DONE-447, commits b8d105b/19c6339/b6c9cdd).
 type: project
 originSessionId: ae0b2fe6-dfcb-4069-897c-cc02d3e4668b
 ---
@@ -20,24 +20,43 @@ originSessionId: ae0b2fe6-dfcb-4069-897c-cc02d3e4668b
 
 **For whom:** Maddie (client — see `collaborator_maddie.md`)
 
-**State:** V4 dual-variants + SLEEK PASS SHIPPED 2026-04-25 (commits `b8d105b` V4, `19c6339` client-decisions doc, `b6c9cdd` sleek pass, `b4882bb` plan+PDF mirror — all pushed to `main`). Both variants live behind `?variant=` query param. Sleek pass killed emoji sprites entirely, added typographic name labels (uppercase Inter 400, 0.22em letter-spacing, two-pass shadow, always-visible) for at-a-glance node clarity. ORB_RADIUS bumped 0.4→0.55, smoother bevels, stars `emissiveIntensity` 0.85. **Plan:** `.claude/plans/2026-04-25-spiral-v4-dual-variants-and-sleek-pass.md`. **Maddie PDF:** `docs/maddie/2026-04-25-message-spiral-feedback.pdf` (mirrored from Desktop). **IRF entry:** DONE-447 (commit `6fb1ae9` on `meta-organvm/organvm-corpvs-testamentvm`, pushed). **GH#54 closed.** Deploy to pages.dev still requires `wrangler pages deploy` (CI broken per GH#52). **Both URLs sent to Maddie 2026-04-25** (post-sleek-pass) — awaiting her pick of A vs B vs blend.
+**State:** **V5→V5.10 materia-particle physics SHIPPED 2026-04-25** (12 commits `d8b34b6`→`e12b742`, all pushed to `main`). Iterative push — V5 themed solar systems inside shapes → V5.2 transparent vessel + per-node materia → V5.5 materia bound by icon substrate via raycast → V5.7 vessel removed, materia density IS the icon → V5.8 600 spring-bound particles per node hold the icon shape → V5.9 bouncing-substrate physics + variant divergence → V5.10 kill bloom + normal blending so materia colors read. Final visual: particles ARE the shape; 13 chakra colors retained; bouncing physics + variant divergence give per-node character. **No IRF entry yet for V5 series** — retrospective atomization deferred to user confirm. **Earlier same-day** (DONE-447): V4 dual-variants + SLEEK PASS shipped (`b8d105b` V4, `19c6339` client-decisions doc, `b6c9cdd` sleek pass, `b4882bb` plan+PDF mirror) — V4 introduced `?variant=symbols` (13 sacred symbols across 8+ traditions) and `?variant=stars` (per-node procedural geometry, MeshPhysicalMaterial transmission/ior/dispersion); sleek pass killed emoji sprites, added typographic Inter labels, ORB_RADIUS 0.4→0.55. V5 series subsumed and replaced the V4 dual-variant approach. **Plan:** `.claude/plans/2026-04-25-spiral-v4-dual-variants-and-sleek-pass.md`. **Maddie PDF:** `docs/maddie/2026-04-25-message-spiral-feedback.pdf`. **DONE-447 IRF:** commit `6fb1ae9` on `meta-organvm/organvm-corpvs-testamentvm`. **GH#54 closed.** Deploy via `wrangler pages deploy` (CI broken per GH#52). **Awaiting Maddie reaction to V5.10 + A/B/blend pick.**
 
-**Live:** https://sovereign-systems-spiral.pages.dev/ — V3.1 baseline, V4 needs wrangler push (CI auto-deploy still broken per GH#52). After deploy: `?variant=symbols` (default) and `?variant=stars`.
+**Live:** https://sovereign-systems-spiral.pages.dev/ — V5.10 currently deployed via local wrangler (CI auto-deploy still broken per GH#52). V4 `?variant=` URL params no longer relevant (V5 series replaced the dual-variant approach with single-direction materia iteration).
 
 **Latest commits (all pushed):**
+- `e12b742` (2026-04-25) — V5.10: kill bloom + normal blending so materia colors read
+- `3d930fe` (2026-04-25) — V5.9: bouncing-substrate physics + variant divergence
+- `62371d1` (2026-04-25) — V5.8: 600 spring-bound particles per node hold the icon shape
+- `18b9ffa` (2026-04-25) — V5.7: remove vessel, materia density IS the icon
+- `6bffc00` (2026-04-25) — V5.6: strip planets/sun/static dust, add phase-particle physics
+- `f955706` (2026-04-25) — V5.5: materia bound by icon substrate via raycast inside-test
+- `4f9f778` (2026-04-25) — V5.4: 99% volumetric fill via per-node materia particle field
+- `ea71592` (2026-04-25) — TDZ fix: keplerBoost referenced semiMajor before clamp declared it
+- `3758ef9` (2026-04-25) — V5.3: universe contained inside shape boundary
+- `f7315f2` (2026-04-25) — V5.2: restore shape as transparent vessel + per-node materia
+- `ba052b1` (2026-04-25) — V5.1: physics-driven uniqueness, eccentric orbits, denser cosmos
+- `d8b34b6` (2026-04-25) — V5: themed solar systems inside each shape, generative bg substrate
+- `3d8cabd` (2026-04-25) — landing-engine slice 1 — Persona × Narrative × Section composer (DONE-454)
+- `11533e7` (2026-04-25) — landing-engine plan v1 (DONE-448)
+- `b4882bb` (2026-04-25) — Maddie PDF mirror + V4/sleek-pass plan
+- `b6c9cdd` (2026-04-25) — V4 sleek pass (kill emojis, add Inter labels, smoother bevels)
 - `19c6339` (2026-04-25) — Maddie V4 client-decisions doc (verbatim transcript + decoded spec)
-- `b8d105b` (2026-04-25 12:55) — **V4 dual variants**: `?variant=symbols` (13 sacred symbols across Egyptian/Christian/Islamic/Jewish/Hindu/Buddhist/Taoist/Pythagorean/Celtic/Masonic traditions; cross+heart → solar cross + vesica piscis) + `?variant=stars` (per-node procedural geometry 5–12 points, jittered radii/twist, MeshPhysicalMaterial transmission/ior/dispersion/iridescence for "refracted light on water"); color ramp extended 8 stops (red-orange added, crown violet lightened); Ankh assembly via mergeGeometries
-- `39128e3` (2026-04-25) — V3.1 mobile camera-Z viewport-aware (cameraZForViewport: 12 mobile / 18 desktop, resize listener)
+- `b8d105b` (2026-04-25 12:55) — V4 dual variants (`?variant=symbols` + `?variant=stars`)
+- `39128e3` (2026-04-25) — V3.1 mobile camera-Z viewport-aware (DONE-442)
 - `454a047` (2026-04-25) — auto-tracked repo-root HANDOFF.md (5-group relay file)
 - `d380086` — V4 design proposals doc (Proposal A sacred symbols + Proposal B generative)
-- `845fcaf` — V3: bg matches `--color-ocean-900`, helix compressed (HELIX_HEIGHT 20→14), camera (0,0,18), canvas h-[calc(100vh-240px)] so the full helix fits above the fold
+- `845fcaf` — V3: bg matches `--color-ocean-900`, helix compressed, camera tuned (DONE-441)
 - `c7bca33` — V2: handoff doc
-- `02c90a2` — V2: chakra-colored 5-point stars + round 2 lightening
+- `02c90a2` — V2: chakra-colored 5-point stars + round 2 lightening (DONE-440)
 - `cdd046e` (2026-04-23) — V1: round 1 lightening (was never deployed — CI broken)
 
 **IRF entries (corpus):**
 - DONE-440 (commit `70a7008`) — V2 chakra stars + round 2 lightening
+- DONE-441 (commit `81d6471`) — V3 framing fix (bg matches page, helix in fold)
 - DONE-442 (commit `39128e3`) — V3.1 mobile camera-Z viewport-aware
+- DONE-447 (commit `6fb1ae9`) — V4 dual variants + sleek pass (S-maddie-spiral-v4-dual-variants-2026-04-25)
+- V5→V5.10 (12 commits d8b34b6→e12b742, no IRF entry yet — retrospective atomization deferred to user confirm)
 
 **GH issues open / closed:**
 - ✅ #53 closed — original chakra-stars feature request (V2 shipped)
