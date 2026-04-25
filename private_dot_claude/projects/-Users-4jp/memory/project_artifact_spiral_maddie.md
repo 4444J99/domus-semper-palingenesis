@@ -1,6 +1,6 @@
 ---
 name: Spiral renderer — Maddie's Elevate Align site
-description: Three.js 3D helix hero — V4 DUAL VARIANTS shipped 2026-04-25 (commit b8d105b); ?variant=symbols (13 sacred symbols) + ?variant=stars (generative refracted-light); awaiting Maddie's pick
+description: Three.js 3D helix hero — V4 dual variants + SLEEK PASS shipped 2026-04-25 (b8d105b/19c6339/b6c9cdd/b4882bb pushed); ?variant=symbols (13 sacred symbols) + ?variant=stars (generative refracted-light); emojis killed, typographic labels added; IRF DONE-447; awaiting Maddie's pick
 type: project
 originSessionId: ae0b2fe6-dfcb-4069-897c-cc02d3e4668b
 ---
@@ -20,7 +20,7 @@ originSessionId: ae0b2fe6-dfcb-4069-897c-cc02d3e4668b
 
 **For whom:** Maddie (client — see `collaborator_maddie.md`)
 
-**State:** V4 dual-variant SHIPPED 2026-04-25 12:55 (commit `b8d105b`, pushed). Both variants live behind `?variant=` query param. Typographic-label refinement (emoji→Inter uppercase + letter-spacing) is in-progress on top of V4. Deploy to pages.dev still requires `wrangler pages deploy` (CI broken per GH#52).
+**State:** V4 dual-variants + SLEEK PASS SHIPPED 2026-04-25 (commits `b8d105b` V4, `19c6339` client-decisions doc, `b6c9cdd` sleek pass, `b4882bb` plan+PDF mirror — all pushed to `main`). Both variants live behind `?variant=` query param. Sleek pass killed emoji sprites entirely, added typographic name labels (uppercase Inter 400, 0.22em letter-spacing, two-pass shadow, always-visible) for at-a-glance node clarity. ORB_RADIUS bumped 0.4→0.55, smoother bevels, stars `emissiveIntensity` 0.85. **Plan:** `.claude/plans/2026-04-25-spiral-v4-dual-variants-and-sleek-pass.md`. **Maddie PDF:** `docs/maddie/2026-04-25-message-spiral-feedback.pdf` (mirrored from Desktop). **IRF entry:** DONE-447 (commit `6fb1ae9` on `meta-organvm/organvm-corpvs-testamentvm`, pushed). **GH#54 closed.** Deploy to pages.dev still requires `wrangler pages deploy` (CI broken per GH#52). Awaiting Maddie's pick of A vs B vs blend.
 
 **Live:** https://sovereign-systems-spiral.pages.dev/ — V3.1 baseline, V4 needs wrangler push (CI auto-deploy still broken per GH#52). After deploy: `?variant=symbols` (default) and `?variant=stars`.
 
