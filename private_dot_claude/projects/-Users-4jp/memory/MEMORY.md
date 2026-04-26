@@ -30,6 +30,7 @@
 ## Active Projects
 - [Achilles session workload](project_achilles_session_workload.md) — Next-Claude-session compile (2026-04-25); excludes Spiral/Hokage/Maddie/Rob; Tier 1 PRT-048 skill + SYS-156 + CI cascade + IRF hygiene
 - [Achilles master attack and victory plan](project_achilles_master_attack_plan.md) — Additive execution-order plan (2026-04-25); keeps PRT-048 first, splits SYS-156 into humans-waiting + 1,433-failure CI surface, and defines the real victory path
+- [Achilles full gap-closure implementation plan](project_achilles_full_gap_closure_plan.md) — Implementation companion (2026-04-25); routes non-Achilles gaps outward and gives closure steps for every Achilles-owned gap
 - [VACUUM — 890 CI failures unsourced](project_vacuum_ci_cascade_890_unsourced.md) — Achilles Tier-1 #3 number has no upstream ledger; re-derive via `gh run list` before acting (2026-04-25)
 - [VACUUM — PRT/SYS/DONE ID authority undefined](project_vacuum_prt_sys_done_id_authority.md) — IDs return 0 matches in fossil-record.json; rule #23 compliance broken until authority store is located or built (2026-04-25)
 - [Becka McKay thread](project_becka_mckay_thread.md) — Outreach to former MFA thesis advisor (FAU); 5-email thread; awaiting reply after redirecting substance question to practical asks (2026-04-18)
