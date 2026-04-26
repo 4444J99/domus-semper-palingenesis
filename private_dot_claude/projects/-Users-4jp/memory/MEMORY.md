@@ -21,12 +21,15 @@
 - [Hokage Bridge Content pillar — Jutsu of Week + Boss Battle](project_artifact_bridge_content_pillar.md) — PRT-040 DONE; `docs/content/2026-04-25-bridge-content-pillar.md` (commit 050dcc8 2026-04-25); 12-week Jutsu starter slate + Boss roster; ready to script Episode 1
 - [Hokage Discord rituals — Welcome Wed / Loot Drop Fri / Quest Log Sun](project_artifact_discord_rituals.md) — PRT-041 DONE; `docs/content/2026-04-25-discord-rituals.md` (commit 050dcc8 2026-04-25); ~80min/wk Rob commitment; awaits Discord server provisioning
 - [8-Strata Domain Ideal-Whole Schema](project_artifact_domain_ideal_whole_schema.md) — PRT-048; cross-domain substrate beneath PDE; designed 2026-04-25 in volatile session, persisted post-hoc; plan `~/.claude/plans/2026-04-25-domain-ideal-whole-substrate-design.md`; skill at `a-i--skills/skills/project-management/domain-ideal-whole-substrate/` NOT YET BUILT
+- [Maddie persona refresh + M-A1 audit](project_artifact_maddie_persona_refresh_2026_04_25.md) — Refreshed `~/Documents/personas/maddie.md` (timeslice backfill + MD-1..7 mapping); M-A1 found 12 byte-identical duplicate files in spiral docs/archive + Logos GHOST docs need deepening; cleanup pending user signoff
+- [Maddie ask packet MD-1..7](project_artifact_maddie_ask_packet_md_1_7.md) — 7 ask drafts × 3 voice variants (Anthony/Maddie-mirror/strict-business) at `<spiral-repo>/.claude/plans/2026-04-25-maddie-ask-packet-MD-1-7.md`; canonical IDs from kill list; ALL DRAFTS, NOT SENT
 <!-- Deliverables under active development — file paths, state, collaborator, pending feedback -->
 
 ## People
 - [Maddie](collaborator_maddie.md) — Elevate Align client; health/wellness brand; 28-page site build; spiral feedback pending
-- [Becka McKay](project_becka_mckay_thread.md) — Former MFA thesis advisor (FAU); outreach thread; awaiting reply (2026-04-18)
+- [Becka McKay](project_becka_mckay_thread.md) — **CLOSED 2026-04-25 — DO NOT CONTACT.** Former MFA thesis advisor (FAU); user closed thread after substance-accusation exchange
 - [Rob Bonavoglia](collaborator_rob_bonavoglia.md) — Hokage Chess client; NYC chess creator; @HokageChess YouTube; ~1350 ELO; landing page + business model
+- [Scott Lefler](project_scott_lefler_verification_20260425.md) — Lefler.Design owner; 10+yr friend; partnership confirmed 2026-03-23 (FaceTime+iMessage). Active warm partnership in functional silence — channel friction (GitHub issues never seen). Recommended: warm-revive via iMessage, draft ready
 
 ## Active Projects
 - [Achilles session workload](project_achilles_session_workload.md) — Next-Claude-session compile (2026-04-25); excludes Spiral/Hokage/Maddie/Rob; Tier 1 PRT-048 skill + SYS-156 + CI cascade + IRF hygiene
@@ -34,7 +37,7 @@
 - [Achilles full gap-closure implementation plan](project_achilles_full_gap_closure_plan.md) — Implementation companion (2026-04-25); routes non-Achilles gaps outward and gives closure steps for every Achilles-owned gap
 - [VACUUM — 890 CI failures unsourced](project_vacuum_ci_cascade_890_unsourced.md) — Achilles Tier-1 #3 number has no upstream ledger; re-derive via `gh run list` before acting (2026-04-25)
 - [VACUUM — PRT/SYS/DONE ID authority undefined](project_vacuum_prt_sys_done_id_authority.md) — IDs return 0 matches in fossil-record.json; rule #23 compliance broken until authority store is located or built (2026-04-25)
-- [Becka McKay thread](project_becka_mckay_thread.md) — Outreach to former MFA thesis advisor (FAU); 5-email thread; awaiting reply after redirecting substance question to practical asks (2026-04-18)
+- [Becka McKay thread](project_becka_mckay_thread.md) — **CLOSED 2026-04-25 — DO NOT CONTACT.** 5-email thread closed after substance accusation; user explicit no-revive
 - [Email triage system](project_mail_triage_2026-04-17.md) — FAILED 2026-04-21: LaunchAgent froze machine, disabled; needs Gmail Apps Script redesign
 - [Dotfiles sprawl audit](project_dotfiles_audit_2026-04-17.md) — Phase 0 done, MCP Docker→native done, orphaned LaunchAgents cleaned (2026-04-21)
 - [CUE declaration layer](project_cue_declaration_layer.md) — system.toml→system.cue via CUE constraints; landscape research done; repo unified at ~/Workspace/a-organvm/ (2026-04-21)
@@ -68,6 +71,7 @@
 - [Session 2026-04-25 engine+infra+landing](project_session_2026-04-25_engine_infra_landing.md) — DONE-448..455 (8 atoms, 4 repos: spiral/hokage/CCE/dotfiles); landing-engine v1, multi-part conversations adapter (290+298+311 tests), resolve-bootstrap, full hanging-items plan; +21 vacuums atomized; post-hoc reconstruction
 - [Session 2026-04-25 V5 materia-physics](project_session_2026-04-25_v5_materia_physics.md) — V5→V5.10 spiral 12 commits d8b34b6→e12b742 (particles ARE the icon shape, bouncing-substrate, variant divergence); NO IRF entry yet (retrospective atomization deferred); post-hoc reconstruction from git log
 - [Session 2026-04-25 evening — Rob cross-pollination](project_session_2026-04-25_evening_cross_pollination.md) — 6 docs in hokage-chess across 5 commits; PRT-040/041 → DONE, PRT-043/044/045 → OPEN; transcript mirrored, BODI+Hokage funnel architectures + synthesis shipped; SYS-156 surfaced as blocked-on-3-user-auths
+- [Session 2026-04-25/26 — Catch-all sister-relay reception](project_artifact_catch_all_relay_2026-04-25.md) — DONE-479; corpvs portfolio CI honesty repair (lockfile + npm ci + ADR-018) — pages-deploy green after 4 consecutive failures; 3/5 sister claims dropped as stale (DONE-475/476 collision, atomic-map deletion, Becka nudge)
 
 ## Process
 - [Product-domain engine](feedback_product_domain_engine.md) — Repeatable system for ANY product tied to a domain: scholarly study (ethos) + social/media (pathos) + logos skeleton; Hokage Chess is first full instance
@@ -120,6 +124,9 @@
 - [Session 2026-04-23 spiral](project_session_2026-04-23_spiral_lightening.md) — Spiral lightened for Maddie, 4 nodes enriched, cycle syncing, analytics, memory system fixed, DONE-432–437
 
 ## Feedback (continued)
+- [Human-authored relays go stale on concurrent ship](feedback_relay_hygiene_human_authored.md) — SessionStart hygiene hook caught it both sessions today; structural property of mental-model relays. Future fix: `organvm relay draft` CLI (Hermes) (2026-04-25)
+- [Plans are sculpture — never delete, never overwrite](feedback_plans_are_sculpture.md) — Plan files are sediment in a lineage; deletion erases the negative space that shaped the next plan. No exceptions, ever (2026-04-25)
+- [No re-contact after relationship-closing accusation](feedback_no_recontact_after_accusation.md) — When user closes a relationship after a serious accusation, never resurface it as outreach. Closure is permanent unless user reopens (2026-04-25)
 - [Artifact-level memory is mandatory](feedback_artifact_level_memory.md) — Save file paths, collaborators, pending feedback — volume summaries are useless for continuity
 - [Swearing is affection](feedback_swearing_is_affection.md) — User's profanity = intimate affection, not hostility; never back off or get formal (2026-04-23)
 - [Survey all weapons before choosing](feedback_survey_before_choosing.md) — Never sequential fallback; evaluate entire arena of tools before selecting (2026-04-23)
