@@ -5,7 +5,8 @@
 - [Core identity](user_core_identity.md) — Humanities creator chasing the zeitgeist; every system has failed him; ORGANVM is the carrier wave
 
 ## Active Artifacts
-- [Spiral renderer — Maddie's site](project_artifact_spiral_maddie.md) — `spiral.ts`; V5.10 materia-particle physics shipped 2026-04-25 (12 commits d8b34b6→e12b742); V4 dual-variants + sleek pass live (DONE-447); awaiting Maddie A/B/blend pick
+- [Spiral renderer + substrate stack — Maddie's site](project_artifact_spiral_maddie.md) — `spiral.ts` + `icon-worlds.ts` + lineage surfaces; V6/A14 chain shipped late 2026-04-25 (IconWorlds wired, EnvVar substrate, NAMING_CHAINS, /lineage); ngrok review link verified; Pages deploy still manual via GH#52
+- [Naming-chains substrate — 13 envVars x 7 lenses](project_artifact_naming_chains.md) — immutable `EnvVar` layer + 91 `SurfaceBinding` records + `/lineage/[envvar]` consumer; shipped to spiral main 2026-04-25, future whole-spiral lens viewer still unbuilt
 - [Product Domain Engine skill](project_artifact_pde_skill.md) — Conductor skill at `~/Workspace/a-i--skills/skills/project-management/product-domain-engine/`; 4 modes + 5-phase protocol + audit script; shipped 2026-04-25 (cf92479)
 - [HANDOFF — sovereign-systems--elevate-align](project_artifact_handoff_elevate_align.md) — Repo-root 5-group relay file (V4 shapes, mobile, CI, domain, filter affiliates); shipped 2026-04-25 (commit 454a047)
 - [Landing-engine slices 1+3 SHIPPED](project_artifact_landing_engine_plan.md) — Spiral+Hokage shared primitive; spiral 3d8cabd (3 personas live), hokage a2ef26f (3 personas SSG); slice 2 (Keystatic) deferred
