@@ -23,6 +23,7 @@
 - [8-Strata Domain Ideal-Whole Schema](project_artifact_domain_ideal_whole_schema.md) — PRT-048; cross-domain substrate beneath PDE; designed 2026-04-25 in volatile session, persisted post-hoc; plan `~/.claude/plans/2026-04-25-domain-ideal-whole-substrate-design.md`; skill at `a-i--skills/skills/project-management/domain-ideal-whole-substrate/` NOT YET BUILT
 - [Maddie persona refresh + M-A1 audit](project_artifact_maddie_persona_refresh_2026_04_25.md) — Refreshed `~/Documents/personas/maddie.md` (timeslice backfill + MD-1..7 mapping); M-A1 found 12 byte-identical duplicate files in spiral docs/archive + Logos GHOST docs need deepening; cleanup pending user signoff
 - [Maddie ask packet MD-1..7](project_artifact_maddie_ask_packet_md_1_7.md) — 7 ask drafts × 3 voice variants (Anthony/Maddie-mirror/strict-business) at `<spiral-repo>/.claude/plans/2026-04-25-maddie-ask-packet-MD-1-7.md`; canonical IDs from kill list; ALL DRAFTS, NOT SENT
+- [Titan-keeper architecture plan](../../../plans/2026-04-25-titan-keeper-architecture.md) — Chronos/Mnemosyne/Gaia keeper CLIs + persona-routing hook + PreToolUse deny hooks. Born from DONE-475/476 collision; resolves write-path race conditions mechanically. SPEC ONLY, NOT YET BUILT (2026-04-25)
 <!-- Deliverables under active development — file paths, state, collaborator, pending feedback -->
 
 ## People
