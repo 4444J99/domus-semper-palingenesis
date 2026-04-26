@@ -31,8 +31,10 @@
 - [Becka McKay](project_becka_mckay_thread.md) — **CLOSED 2026-04-25 — DO NOT CONTACT.** Former MFA thesis advisor (FAU); user closed thread after substance-accusation exchange
 - [Rob Bonavoglia](collaborator_rob_bonavoglia.md) — Hokage Chess client; NYC chess creator; @HokageChess YouTube; ~1350 ELO; landing page + business model
 - [Scott Lefler](project_scott_lefler_verification_20260425.md) — Lefler.Design owner; 10+yr friend; partnership confirmed 2026-03-23 (FaceTime+iMessage). Active warm partnership in functional silence — channel friction (GitHub issues never seen). Recommended: warm-revive via iMessage, draft ready
+- [Jessica (stub)](collaborator_jessica.md) — PRE-ACTIVE STUB; education + relationships domain per DIWS schema v2.2; no last name / state / channel known; refine on next mention. Do NOT outreach without explicit user direction (Becka precedent)
 
 ## Active Projects
+- [Modular-synthesis portfolio unification](project_portfolio_unification_2026-04-25.md) — 4-stream plan (Δ shipped, Σ+Τ dispatchable, Ω+Synthesis pending); 25 IRF-PRT-050..074 dark-matter rows shipped to corpvs; portfolio docs at `meta-organvm/organvm-corpvs-testamentvm/docs/portfolio/` (2026-04-25)
 - [Achilles session workload](project_achilles_session_workload.md) — Next-Claude-session compile (2026-04-25); excludes Spiral/Hokage/Maddie/Rob; Tier 1 PRT-048 skill + SYS-156 + CI cascade + IRF hygiene
 - [Achilles master attack and victory plan](project_achilles_master_attack_plan.md) — Additive execution-order plan (2026-04-25); keeps PRT-048 first, splits SYS-156 into humans-waiting + 1,433-failure CI surface, and defines the real victory path
 - [Achilles full gap-closure implementation plan](project_achilles_full_gap_closure_plan.md) — Implementation companion (2026-04-25); routes non-Achilles gaps outward and gives closure steps for every Achilles-owned gap
