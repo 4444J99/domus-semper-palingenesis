@@ -185,6 +185,8 @@ jobs:
           domain_system_defensive = "ci.test"
           domain_email = "ci@test.com"
           domain_registrar = "none"
+          organvm_dir = "a-organvm"
+          skills_dir = "a-i--skills"
           TOML
       - name: Run chezmoi init + apply
         run: |
@@ -231,6 +233,8 @@ jobs:
           domain_system_defensive = "ci.test"
           domain_email = "ci@test.com"
           domain_registrar = "none"
+          organvm_dir = "a-organvm"
+          skills_dir = "a-i--skills"
           TOML
       - name: Run chezmoi init + apply
         run: chezmoi init --apply --source="$GITHUB_WORKSPACE"
