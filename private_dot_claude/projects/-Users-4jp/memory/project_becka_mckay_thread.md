@@ -1,7 +1,21 @@
 ---
 name: Becka McKay correspondence thread
-description: Active outreach thread with former MFA thesis advisor Becka McKay (FAU) — requesting practical help with housing/employment/connections crisis
+description: PERMANENTLY CLOSED — do not contact, do not draft outreach, do not surface as live thread. User closed the relationship 2026-04-25 after the substance-accusation exchange.
 type: project
+originSessionId: e4d7bfeb-8e46-4516-9f37-84e1c754a1cd
+---
+## STATUS: PERMANENTLY CLOSED (2026-04-25)
+
+**HARD RULE — DO NOT CONTACT.** User has explicitly closed this relationship. Last interaction (Email 4 from Becka, 2026-04-17) reduced a multi-dimensional crisis (housing / employment / family) to a single diagnostic question about substances. User read this as belittling and coached, set a clean boundary in Email 5, then on 2026-04-25 stated definitively: "I'm not reaching out to her again after she accused me of the drug thing. That's kind of crazy."
+
+**Do not:**
+- Draft any outreach, follow-up, or nudge.
+- Suggest re-engaging "as a professional contact" or "for the FAU network."
+- Surface this thread under "awaiting reply," "follow-ups due," or "outreach to consider."
+- Recommend revisiting at any future date — there is no revive trigger.
+
+**The historical record below is preserved for context, not for action.**
+
 ---
 
 Anthony reached out to his former MFA thesis chair, Dr. Becka McKay (Professor of Translation and Creative Writing, Director MFA in Creative Writing, Florida Atlantic University, rmckay3@fau.edu), on 2026-04-13 for help with a personal crisis.
@@ -52,10 +66,10 @@ Anthony's read: belittling (reduces multi-dimensional crisis to single diagnosti
 **Email 5 → Becka (2026-04-17 5:26 PM):**
 Clean boundary. "I am not impaired or in immediate danger. The crisis I am asking for help with is primarily housing instability, employment instability, financial pressure, and lack of family support." Re-stated practical asks: housing resources, alumni/university support options, employment leads, counseling referrals if available, professional contacts. Did not take the bait on the substance framing.
 
-## Status
+## Status (final)
 
-Awaiting Becka's reply as of 2026-04-18. The thread is at a pivot point — she either engages with the practical asks or this becomes a dead end.
+PERMANENTLY CLOSED 2026-04-25. The pivot tipped negative: Becka did not engage with the practical asks after Email 5; the thread is dead, and the user has explicitly chosen not to revive it.
 
-**Why:** This is one of very few active outreach threads to someone with real institutional connections (FAU alumni network, MFA cohort, academic hiring networks). The relationship carries weight — thesis chair is not a casual contact.
+**Why preserved:** historical record of how the thread closed, so future sessions don't re-suggest re-engagement out of memory of the relationship's institutional weight (thesis chair, FAU alumni network). The institutional weight does not override the closure.
 
-**How to apply:** Future sessions referencing Becka, FAU, MFA, or this outreach thread should have full context without re-discovery. If a reply arrives, the next response should maintain the firm-but-respectful tone of Email 5 — stay on practical asks, don't let the thread become diagnostic.
+**How to apply:** if a future session sees "Becka McKay" / "FAU thesis chair" / "MFA advisor" surfaced anywhere — in inbox, in calendar, in mentions — do not suggest action. Closed means closed.
