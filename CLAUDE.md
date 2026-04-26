@@ -189,6 +189,11 @@ Previously deployed agents (now removed from source):
 
 See feedback memory `feedback_no_launchagents.md` for full rationale.
 
+### CI Troubleshooting
+If `macOS Integration` or `Doctor Check` jobs fail with "map has no entry for key", ensure the
+`Setup CI chezmoi config` step in `.github/workflows/lint.yml` includes all required keys
+(e.g., `organvm_dir`, `skills_dir`).
+
 ## Apply-Time Scripts (`.chezmoiscripts/`)
 
 | Script | Trigger | Purpose |
