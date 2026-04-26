@@ -77,6 +77,7 @@
 - [Session 2026-04-25 evening — Rob cross-pollination](project_session_2026-04-25_evening_cross_pollination.md) — 6 docs in hokage-chess across 5 commits; PRT-040/041 → DONE, PRT-043/044/045 → OPEN; transcript mirrored, BODI+Hokage funnel architectures + synthesis shipped; SYS-156 surfaced as blocked-on-3-user-auths
 - [Session 2026-04-25 catch-all + titan-keeper](project_session_2026-04-25_catch_all_titan_keeper.md) — Catch-all relay reception; shipped DONE collision repair (6aa7cd4), Becka closure, sculpture rule, Scott Lefler 7-channel verification, titan-keeper architecture spec, stale-propagation diagnosis; yielded astro v6 lane to sister (DONE-479)
 - [Session 2026-04-25/26 — Catch-all sister-relay reception](project_artifact_catch_all_relay_2026-04-25.md) — DONE-479; corpvs portfolio CI honesty repair (lockfile + npm ci + ADR-018) — pages-deploy green after 4 consecutive failures; 3/5 sister claims dropped as stale (DONE-475/476 collision, atomic-map deletion, Becka nudge)
+- [Session 2026-04-26 — hall-monitor close-out](project_session_2026-04-26_hall_monitor_closeout.md) — DONE-488; 15 live-only memories mirrored → chezmoi (commit 70e5ade); IRF-PRT-075 logged for 57-scope systemic drift; statusline + substrate hooks shipped (commit 989b898 corpvs)
 
 ## Process
 - [Product-domain engine](feedback_product_domain_engine.md) — Repeatable system for ANY product tied to a domain: scholarly study (ethos) + social/media (pathos) + logos skeleton; Hokage Chess is first full instance
