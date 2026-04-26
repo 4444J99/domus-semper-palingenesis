@@ -1,0 +1,773 @@
+#!/usr/bin/env python3
+"""substrate-check — Substrate predicates + per-utterance atomization.
+
+Twin-purpose CLI binding the prompt-substrate distillation
+(`~/.claude/plans/2026-04-26-prompt-sequence-distillation-env-fn-iso-substrate.md`)
+to executable predicates and a linguistic-kind tagger.
+
+Subcommands:
+    atomize <text>            Tokenize, classify by linguisticKind, persist.
+    gate <name> [--target X]  Run one substrate predicate. Exit 1 on violation.
+    verify-close              Composite: parity + vacuum (active plans).
+    list-kinds                Print the LinguisticKind taxonomy.
+
+Conventions match resolve-audit / resolve-bootstrap:
+    --hook   JSON envelope for SessionStart/SessionEnd/PreToolUse hooks.
+    --json   Machine-readable output.
+    Exit 0 on pass, 1 on violation.
+
+Atom records share schema with unified-atoms.jsonl (unified_id, source_type,
+title, body, etc.) plus the new `linguisticKind` field. Records land in
+`utterance-atoms.jsonl` alongside the other 5 atom stores so `organvm atoms`
+sees them naturally.
+"""
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import os
+import re
+import subprocess
+import sys
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Any
+
+HOME = Path.home()
+ATOMS_DIR = HOME / "Workspace/organvm/organvm-corpvs-testamentvm/data/atoms"
+UTTERANCE_FILE = ATOMS_DIR / "utterance-atoms.jsonl"
+PLANS_GLOB_DIR = HOME / ".claude/plans"
+SESSIONS_DIR = HOME / ".claude/projects"
+SETTINGS_JSON = HOME / ".claude/settings.json"
+
+# ── LinguisticKind taxonomy ──────────────────────────────────────────
+KINDS = [
+    "ELEMENT",              # substantive content unit
+    "NON_WORD",             # grammatical glue
+    "SPACE_FILLER",         # rhetorical filler / hesitation / emphasis
+    "ACTING_SEQUENCE",      # imperative phrase that does something
+    "ENV_VAR_DECLARATION",  # $VAR = "value" or $VAR={…}
+    "INTERROGATIVE",        # question seeking confirmation/closure
+    "META_DIRECTIVE",       # governance ("never overwrite", "rules are additive")
+]
+
+NON_WORDS = {
+    "a", "an", "the", "of", "and", "or", "but", "to", "in", "on", "at",
+    "for", "with", "by", "from", "as", "is", "are", "was", "were", "be",
+    "been", "being", "has", "have", "had", "do", "does", "did", "i", "you",
+    "he", "she", "it", "we", "they", "me", "him", "her", "us", "them",
+    "this", "that", "these", "those", "my", "your", "his", "its", "our",
+    "their",
+}
+SPACE_FILLERS = {
+    "okay", "ok", "so", "um", "uh", "hmm", "well", "right", "yeah", "yep",
+    "huh", "like", "actually", "basically", "literally", "really", "just",
+    "anyway", "anyhow", "alright", "honestly", "obviously", "essentially",
+}
+ACTION_VERBS = {
+    "proceed", "dispatch", "review", "rename", "expand", "ingest", "digest",
+    "alchemize", "atomize", "implement", "build", "deploy", "verify",
+    "check", "audit", "compose", "distill", "synthesize", "bootstrap",
+    "execute", "fan", "fanout", "merge", "stage", "commit", "push",
+    "fortify", "harden", "evolve", "bloom", "refine", "sort", "classify",
+    "extract", "render", "scaffold", "design", "draft", "tighten", "create",
+    "translate", "produce", "formalize", "encode", "express", "deploy",
+    "research", "plan", "log", "save", "send", "tokenize", "validate",
+}
+META_PATTERNS = [
+    r"\bnever\s+(overwrite|delete|reduce|skip)\b",
+    r"\brules?\s+are\s+additive\b",
+    r"\bN/?A\s+is\b.*\bvacuum\b",
+    r"\blocal:remote\s*=\s*1:1\b",
+    r"\bif\s+lost.*recover\s+immediately\b",
+    r"\bcommit\s+all\s+push\b",
+    r"\btriple[- ]check\b",
+    r"\b(plans?|atoms?|rules?)\s+are\s+(permanent|sculpture)\b",
+]
+ENV_VAR_RE = re.compile(r"\$[A-Z_][A-Z0-9_]*\s*[=:]")
+ENV_VAR_FREE_RE = re.compile(r"\$[A-Z_][A-Z0-9_]+\b")
+INTERROG_RE = re.compile(r"\?+\s*$")
+SENT_SPLIT_RE = re.compile(r"(?<=[\.\?\!])\s+(?=[A-Z\$])")
+PHRASE_SPLIT_RE = re.compile(r"[;,]\s+")
+TOKEN_SPLIT_RE = re.compile(r"\s+")
+WORD_RE = re.compile(r"^[A-Za-z][A-Za-z'\-]*$")
+QMARK_RUN_RE = re.compile(r"^[\?!\.…]{2,}$")
+
+
+# ── Classification ───────────────────────────────────────────────────
+def classify(unit: str) -> str:
+    """Assign one of seven LinguisticKinds to the given text unit."""
+    s = unit.strip()
+    if not s:
+        return "SPACE_FILLER"
+    if QMARK_RUN_RE.match(s):
+        return "SPACE_FILLER"
+    if ENV_VAR_RE.search(s):
+        return "ENV_VAR_DECLARATION"
+    low = s.lower()
+    for pat in META_PATTERNS:
+        if re.search(pat, low):
+            return "META_DIRECTIVE"
+    if INTERROG_RE.search(s):
+        return "INTERROGATIVE"
+    # Single-token classification
+    bare = re.sub(r"[^\w\-']", "", low)
+    if bare and " " not in s:
+        if bare in NON_WORDS:
+            return "NON_WORD"
+        if bare in SPACE_FILLERS:
+            return "SPACE_FILLER"
+    # Multi-token: look for action-verb at head
+    head_word = re.sub(r"[^\w]", "", s.split(maxsplit=1)[0].lower())
+    if head_word in ACTION_VERBS:
+        return "ACTING_SEQUENCE"
+    # Substantive content otherwise
+    return "ELEMENT"
+
+
+def _scan_phrase(phrase: str, out: list[tuple[str, str]]) -> None:
+    """Decompose a phrase into (kind, unit) pairs, always reaching token level.
+
+    If the phrase head is an action verb, emit an ACTING_SEQUENCE atom for
+    the phrase AND tokenize the words inside — so 'dispatch fleet' becomes
+    one ACTING_SEQUENCE plus two individual tokens. Always tokenizes down.
+
+    Env-var tokens emitted at phrase-level are tracked and skipped during
+    token-level scan to prevent duplicate atoms with the same content hash.
+    """
+    phrase = phrase.strip()
+    if not phrase:
+        return
+    head = re.sub(r"[^\w]", "", phrase.split(maxsplit=1)[0].lower())
+    multi = len(phrase.split()) >= 2
+    if head in ACTION_VERBS and multi:
+        out.append(("ACTING_SEQUENCE", phrase))
+    env_vars_seen: set[str] = set()
+    for m in ENV_VAR_FREE_RE.finditer(phrase):
+        out.append(("ENV_VAR_DECLARATION", m.group(0)))
+        env_vars_seen.add(m.group(0))
+    for tok in TOKEN_SPLIT_RE.split(phrase):
+        tok = tok.strip(",.;:")
+        if not tok or tok in env_vars_seen:
+            continue
+        out.append((classify(tok), tok))
+
+
+def tokenize(text: str) -> list[tuple[str, str]]:
+    """Split text into (kind, unit) pairs.
+
+    Always reaches the token level. Sentence/phrase-level kinds are emitted
+    as ADDITIONAL atoms alongside their constituent tokens so every word
+    lands on the scale (per user's explicit directive).
+    """
+    out: list[tuple[str, str]] = []
+    sentences = [s.strip() for s in SENT_SPLIT_RE.split(text.strip()) if s.strip()]
+    multi_sentence = len(sentences) > 1
+    for sent in sentences:
+        # Emit sentence-level INTERROGATIVE only when there are multiple
+        # sentences (otherwise the parent atom already carries it).
+        if multi_sentence and INTERROG_RE.search(sent):
+            out.append(("INTERROGATIVE", sent))
+        # ENV_VAR sentence-level emission stays useful even single-sentence
+        # because the parent might classify as ELEMENT or META_DIRECTIVE.
+        if ENV_VAR_RE.search(sent):
+            out.append(("ENV_VAR_DECLARATION", sent))
+        for phrase in PHRASE_SPLIT_RE.split(sent):
+            _scan_phrase(phrase, out)
+    return out
+
+
+# ── Atom persistence ─────────────────────────────────────────────────
+def _hash(text: str) -> str:
+    return hashlib.sha1(text.encode("utf-8")).hexdigest()[:12]
+
+
+def _now() -> str:
+    return datetime.now(timezone.utc).strftime("%Y-%m-%d")
+
+
+def _existing_hashes() -> set[str]:
+    if not UTTERANCE_FILE.exists():
+        return set()
+    seen: set[str] = set()
+    with UTTERANCE_FILE.open() as f:
+        for line in f:
+            try:
+                r = json.loads(line)
+                seen.add(r.get("original_id", ""))
+            except Exception:
+                pass
+    return seen
+
+
+def _append(records: list[dict[str, Any]]) -> None:
+    UTTERANCE_FILE.parent.mkdir(parents=True, exist_ok=True)
+    with UTTERANCE_FILE.open("a") as f:
+        for r in records:
+            f.write(json.dumps(r) + "\n")
+
+
+def atomize_cmd(text: str, json_out: bool = False) -> int:
+    """Atomize a text. Returns exit code (0=success, 0=dedup-noop)."""
+    text = (text or "").strip()
+    if not text:
+        print("substrate-check atomize: empty input", file=sys.stderr)
+        return 0
+    parent_hash = _hash(text)
+    seen = _existing_hashes()
+    if parent_hash in seen:
+        msg = f"DEDUP: matched utterance-{parent_hash} (no new atoms written)"
+        if json_out:
+            print(json.dumps({"dedup": True, "parent_id": parent_hash}))
+        else:
+            print(msg)
+        return 0
+    parent_kind = classify(text)
+    parent = {
+        "unified_id": f"utterance-{parent_hash}",
+        "original_id": parent_hash,
+        "source_type": "utterance",
+        "title": (text[:80] + ("…" if len(text) > 80 else "")),
+        "body": text,
+        "date": _now(),
+        "status": "captured",
+        "domain": "linguistic",
+        "priority": "P3",
+        "tags": [],
+        "actionable": False,
+        "agent": "substrate-check",
+        "linked_ids": [],
+        "parent_id": None,
+        "linguisticKind": parent_kind,
+        "cwd": str(Path.cwd()),
+    }
+    children: list[dict[str, Any]] = []
+    counts = {k: 0 for k in KINDS}
+    for kind, unit in tokenize(text):
+        ch_hash = _hash(parent_hash + ":" + unit)
+        children.append({
+            "unified_id": f"utterance-{ch_hash}",
+            "original_id": ch_hash,
+            "source_type": "utterance-token",
+            "title": unit[:80],
+            "body": unit,
+            "date": _now(),
+            "status": "captured",
+            "domain": "linguistic",
+            "priority": "P3",
+            "tags": [kind],
+            "actionable": False,
+            "agent": "substrate-check",
+            "linked_ids": [parent["unified_id"]],
+            "parent_id": parent["unified_id"],
+            "linguisticKind": kind,
+        })
+        counts[kind] += 1
+    parent["linked_ids"] = [c["unified_id"] for c in children]
+    parent["tags"] = sorted({c["linguisticKind"] for c in children})
+    _append([parent] + children)
+    summary = (
+        f"Atomized {len(children)} tokens [{parent['unified_id']}]: "
+        + ", ".join(f"{counts[k]} {k.lower()}" for k in KINDS if counts[k])
+    )
+    if json_out:
+        print(json.dumps({
+            "parent_id": parent["unified_id"],
+            "child_count": len(children),
+            "kinds": counts,
+            "file": str(UTTERANCE_FILE),
+        }))
+    else:
+        print(summary)
+    return 0
+
+
+# ── Predicate gates ──────────────────────────────────────────────────
+# Vacuum patterns: only flag when these tokens appear as VALUES (after a colon
+# in YAML/markdown-key context) or as a structured field marker — not when they
+# appear inside English prose, code blocks, or backtick-quoted discussion.
+VACUUM_VALUE_RE = re.compile(
+    r"^\s*[\w-]+\s*:\s*(N\/?A|TBD|TODO|FIXME|XXX)\s*$",
+    re.IGNORECASE,
+)
+# Bare-word vacuum: only on lines that are JUST the marker (e.g., a table cell
+# spanning the whole line, or a single-token list entry).
+VACUUM_BARE_RE = re.compile(
+    r"^\s*[-*]?\s*(N\/?A|TBD|TODO|FIXME|XXX)\s*$",
+    re.IGNORECASE,
+)
+
+
+def gate_vacuum(target: Path) -> tuple[bool, list[str]]:
+    if not target.exists():
+        return True, []
+    violations: list[str] = []
+    try:
+        in_code_fence = False
+        for i, line in enumerate(target.read_text().splitlines(), 1):
+            stripped = line.strip()
+            # Track fenced code blocks — never flag inside them
+            if stripped.startswith("```"):
+                in_code_fence = not in_code_fence
+                continue
+            if in_code_fence:
+                continue
+            # Skip lines containing the marker inside backticks (prose/discussion)
+            if "`" in line:
+                no_backticks = re.sub(r"`[^`]*`", "", line)
+                if not re.search(r"\b(N\/?A|TBD|TODO|FIXME|XXX)\b", no_backticks):
+                    continue
+            if VACUUM_VALUE_RE.match(line) or VACUUM_BARE_RE.match(line):
+                violations.append(f"{target.name}:{i}: {stripped[:120]}")
+    except Exception as e:
+        violations.append(f"{target}: read error: {e}")
+    return (len(violations) == 0), violations
+
+
+def gate_parity(repo: Path | None = None) -> tuple[bool, list[str]]:
+    repo = repo or Path.cwd()
+    try:
+        st = subprocess.run(
+            ["git", "-C", str(repo), "status", "--porcelain"],
+            capture_output=True, text=True, timeout=5,
+        )
+        if st.returncode != 0:
+            return True, []  # not a git repo, parity n/a
+        dirty = [l for l in st.stdout.splitlines() if l.strip()]
+        unpushed = subprocess.run(
+            ["git", "-C", str(repo), "rev-list", "@{u}..HEAD", "--count"],
+            capture_output=True, text=True, timeout=5,
+        )
+        ahead = 0
+        if unpushed.returncode == 0 and unpushed.stdout.strip().isdigit():
+            ahead = int(unpushed.stdout.strip())
+        violations = []
+        if dirty:
+            violations.append(f"{len(dirty)} dirty file(s) in {repo.name}")
+        if ahead:
+            violations.append(f"{ahead} unpushed commit(s) in {repo.name}")
+        return (not violations), violations
+    except Exception:
+        return True, []
+
+
+def gate_enum(key: str, value: str) -> tuple[bool, list[str]]:
+    """Check value against allowed substrate-layer-A enums."""
+    enums = {
+        "NEXT_ARTIFACT": {
+            "REPO_ARCHITECTURE", "LANDING_PAGE", "SALES_ONE_PAGER",
+            "TECHNICAL_SPEC", "PITCH_DECK", "CODE_SCAFFOLD",
+            "EXPERIMENT_DESIGN_PACK", "IMPLEMENTATION_BLUEPRINT",
+            "RESEARCH_ATLAS", "ROS_SPEC", "ANNOTATED_BIBLIOGRAPHY",
+            "SYNTHESIZING_DOC", "ALCHEMIZING_DOC", "IMPLEMENTATION_SPEC",
+        },
+        "MODE": {"LEAN_MVP", "FULL_STACK", "MULTI_TENANT_SAAS"},
+        "DEPTH": {"OPERATOR_GRADE", "DISSERTATION_GRADE"},
+    }
+    allowed = enums.get(key)
+    if allowed is None:
+        return False, [f"unknown enum key: {key} (known: {sorted(enums)})"]
+    if value not in allowed:
+        return False, [f"{key}={value} not in {sorted(allowed)}"]
+    return True, []
+
+
+def gate_additive(diff: str) -> tuple[bool, list[str]]:
+    """Refuse rule deletions; allow only additions."""
+    deletions = [l for l in diff.splitlines() if l.startswith("-") and not l.startswith("---")]
+    if deletions:
+        return False, [f"non-additive: {len(deletions)} deletion(s)"]
+    return True, []
+
+
+def emit_hook_violations(event: str, violations: list[str], gate_name: str) -> None:
+    if not violations:
+        return
+    msg = f"SUBSTRATE-CHECK [{gate_name}]: {len(violations)} violation(s)\\n• " + "\\n• ".join(
+        v.replace('"', "'").replace("\n", " ") for v in violations[:8]
+    )
+    payload = {"hookSpecificOutput": {"hookEventName": event, "additionalContext": msg}}
+    print(json.dumps(payload))
+
+
+# ── Subcommand dispatchers ───────────────────────────────────────────
+def cmd_gate(args: argparse.Namespace) -> int:
+    name = args.name
+    violations: list[str] = []
+    ok = True
+    event = "PreToolUse"
+    if name == "vacuum":
+        if not args.target:
+            print("gate vacuum requires --target FILE", file=sys.stderr)
+            return 2
+        ok, violations = gate_vacuum(Path(args.target))
+    elif name == "parity":
+        ok, violations = gate_parity()
+        event = "SessionEnd"
+    elif name == "enum":
+        if not args.key or args.value is None:
+            print("gate enum requires --key NAME --value V", file=sys.stderr)
+            return 2
+        ok, violations = gate_enum(args.key, args.value)
+    elif name == "additive":
+        diff = sys.stdin.read() if not sys.stdin.isatty() else ""
+        ok, violations = gate_additive(diff)
+    else:
+        print(f"unknown gate: {name}", file=sys.stderr)
+        return 2
+    if args.hook:
+        emit_hook_violations(event, violations, name)
+        return 0
+    if args.json:
+        print(json.dumps({"gate": name, "ok": ok, "violations": violations}))
+    else:
+        if ok:
+            print(f"PASS [{name}]")
+        else:
+            print(f"FAIL [{name}]: {len(violations)} violation(s)")
+            for v in violations[:20]:
+                print(f"  • {v}")
+    return 0 if ok else 1
+
+
+def cmd_verify_close(args: argparse.Namespace) -> int:
+    failures: list[str] = []
+    par_ok, par_v = gate_parity()
+    if not par_ok:
+        failures.extend(par_v)
+    # Scan the most recently modified plan file for vacuums
+    if PLANS_GLOB_DIR.exists():
+        plans = sorted(
+            PLANS_GLOB_DIR.glob("*.md"),
+            key=lambda p: p.stat().st_mtime,
+            reverse=True,
+        )
+        if plans:
+            ok, v = gate_vacuum(plans[0])
+            if not ok:
+                failures.extend([f"vacuum in {plans[0].name}: {x}" for x in v[:3]])
+    if args.hook:
+        if failures:
+            emit_hook_violations("SessionEnd", failures, "verify-close")
+        else:
+            print(json.dumps({"hookSpecificOutput": {
+                "hookEventName": "SessionEnd",
+                "additionalContext": "SUBSTRATE-CHECK [verify-close]: PASS — parity holds, no vacuums detected.",
+            }}))
+        return 0
+    if args.json:
+        print(json.dumps({"verify_close": "ok" if not failures else "fail", "violations": failures}))
+        return 0 if not failures else 1
+    if not failures:
+        print("verify-close: PASS")
+        return 0
+    print(f"verify-close: FAIL ({len(failures)} violations)")
+    for f in failures[:20]:
+        print(f"  • {f}")
+    return 1
+
+
+def cmd_atomize(args: argparse.Namespace) -> int:
+    text = args.text
+    if not text and not sys.stdin.isatty():
+        text = sys.stdin.read()
+    return atomize_cmd(text or "", json_out=args.json)
+
+
+def cmd_list_kinds(_: argparse.Namespace) -> int:
+    for k in KINDS:
+        print(k)
+    return 0
+
+
+# ── Cross-session governance ─────────────────────────────────────────
+def _session_recency(p: Path) -> float:
+    """Most recent mtime across the session dir's transcript files."""
+    try:
+        files = list(p.glob("*.jsonl"))
+        if not files:
+            return p.stat().st_mtime
+        return max(f.stat().st_mtime for f in files)
+    except Exception:
+        return 0.0
+
+
+def _interrogative_atoms_by_cwd() -> dict[str, list[dict[str, Any]]]:
+    """Bucket parent INTERROGATIVE atoms by their captured cwd."""
+    by_cwd: dict[str, list[dict[str, Any]]] = {}
+    if not UTTERANCE_FILE.exists():
+        return by_cwd
+    with UTTERANCE_FILE.open() as f:
+        for line in f:
+            try:
+                r = json.loads(line)
+            except Exception:
+                continue
+            if r.get("parent_id") is None and r.get("linguisticKind") == "INTERROGATIVE":
+                by_cwd.setdefault(r.get("cwd", "unknown"), []).append(r)
+    return by_cwd
+
+
+def cmd_sessions(args: argparse.Namespace) -> int:
+    if not SESSIONS_DIR.exists():
+        print("no sessions directory at", SESSIONS_DIR, file=sys.stderr)
+        return 0
+    sessions = []
+    for d in SESSIONS_DIR.iterdir():
+        if not d.is_dir():
+            continue
+        sessions.append((d, _session_recency(d)))
+    sessions.sort(key=lambda s: s[1], reverse=True)
+    debt_buckets = _interrogative_atoms_by_cwd() if args.subcmd == "debt" else {}
+    rows = []
+    for d, mt in sessions:
+        scope = d.name
+        # Reverse-engineer cwd from the dir name: "-Users-4jp-..." → "/Users/4jp/..."
+        cwd_guess = "/" + scope.lstrip("-").replace("--", "{DBLDASH}").replace("-", "/").replace("{DBLDASH}", "--")
+        debt = len(debt_buckets.get(cwd_guess, []))
+        age_days = (datetime.now(timezone.utc).timestamp() - mt) / 86400 if mt else 999
+        rows.append({"scope": scope, "cwd": cwd_guess, "debt": debt, "age_days": round(age_days, 1)})
+    if args.subcmd == "debt":
+        rows = [r for r in rows if r["debt"] > 0]
+        rows.sort(key=lambda r: (r["debt"], -r["age_days"]), reverse=True)
+    if args.json:
+        print(json.dumps(rows, indent=2))
+        return 0
+    if args.subcmd == "debt" and not rows:
+        print("No INTERROGATIVE debt across sessions.")
+        return 0
+    print(f"{'AGE(d)':>7s}  {'DEBT':>4s}  SCOPE")
+    print("─" * 70)
+    for r in rows[: args.limit]:
+        print(f"{r['age_days']:7.1f}  {r['debt']:4d}  {r['scope']}")
+    return 0
+
+
+# ── Atom→entity routing ──────────────────────────────────────────────
+def _load_known_entities() -> dict[str, list[str]]:
+    """Build a tiny entity registry from MEMORY.md.
+
+    Keys: 'people', 'projects'. Values: lowercase tokens that should
+    surface as entity-mentions in ELEMENT atoms.
+    """
+    reg = {"people": [], "projects": []}
+    mem = HOME / ".claude/projects/-Users-4jp/memory/MEMORY.md"
+    if not mem.exists():
+        return reg
+    try:
+        text = mem.read_text()
+    except Exception:
+        return reg
+    in_people = False
+    in_artifacts = False
+    for line in text.splitlines():
+        s = line.strip()
+        if s.startswith("## People"):
+            in_people, in_artifacts = True, False
+            continue
+        if s.startswith("## Active Artifacts"):
+            in_people, in_artifacts = False, True
+            continue
+        if s.startswith("## ") and (in_people or in_artifacts):
+            in_people = in_artifacts = False
+        if (in_people or in_artifacts) and s.startswith("- ["):
+            m = re.match(r"-\s+\[([^\]]+)\]", s)
+            if m:
+                name = m.group(1).split(" — ")[0].split(" (")[0].strip().lower()
+                if in_people:
+                    reg["people"].append(name)
+                else:
+                    reg["projects"].append(name)
+    return reg
+
+
+def cmd_route(args: argparse.Namespace) -> int:
+    if not args.atom_id:
+        print("route requires an atom id (utterance-XXXXXXXXXXXX)", file=sys.stderr)
+        return 2
+    if not UTTERANCE_FILE.exists():
+        print("no utterance store yet", file=sys.stderr)
+        return 2
+    target_id = args.atom_id if args.atom_id.startswith("utterance-") else f"utterance-{args.atom_id}"
+    parent = None
+    children: list[dict[str, Any]] = []
+    with UTTERANCE_FILE.open() as f:
+        for line in f:
+            try:
+                r = json.loads(line)
+            except Exception:
+                continue
+            if r.get("unified_id") == target_id:
+                parent = r
+            elif r.get("parent_id") == target_id:
+                children.append(r)
+    if parent is None:
+        print(f"atom {target_id} not found", file=sys.stderr)
+        return 1
+    reg = _load_known_entities()
+    elements = [c["body"].lower() for c in children if c.get("linguisticKind") == "ELEMENT"]
+    elements_blob = " ".join(elements + [parent.get("body", "").lower()])
+    matches = {"people": [], "projects": []}
+    for kind, names in reg.items():
+        for name in names:
+            if name and name in elements_blob:
+                matches[kind].append(name)
+    if args.json:
+        print(json.dumps({"atom": target_id, "matches": matches}, indent=2))
+        return 0
+    print(f"Atom: {target_id}")
+    print(f"  body: {parent.get('body','')[:80]}")
+    print(f"  cwd:  {parent.get('cwd','?')}")
+    print(f"  kind: {parent.get('linguisticKind','?')}")
+    print(f"Matched people:   {matches['people'] or '—'}")
+    print(f"Matched projects: {matches['projects'] or '—'}")
+    return 0
+
+
+# ── Surgical hook installer ──────────────────────────────────────────
+def _hook_entries() -> dict[str, list[dict[str, Any]]]:
+    """The three substrate-check hook entries we want spliced in."""
+    bin_path = str(HOME / ".local/bin/substrate-check")
+    wrapper = str(HOME / ".claude/hooks/substrate-atomize-hook.sh")
+    return {
+        "UserPromptSubmit": [{
+            "hooks": [{
+                "type": "command",
+                "command": wrapper,
+                "timeout": 3,
+            }],
+        }],
+        "PreToolUse": [{
+            "matcher": "Write",
+            "if": "Write(*plans/*.md)",
+            "hooks": [{
+                "type": "command",
+                "command": f"{bin_path} gate vacuum --target \"$CLAUDE_TOOL_ARG_FILE_PATH\" --hook 2>/dev/null; true",
+                "timeout": 5,
+            }],
+        }],
+        "SessionEnd": [{
+            "hooks": [{
+                "type": "command",
+                "command": f"{bin_path} verify-close --hook 2>/dev/null; true",
+                "timeout": 10,
+                "statusMessage": "Substrate verify-close...",
+            }],
+        }],
+    }
+
+
+def _entry_present(existing: list[dict[str, Any]], target: dict[str, Any]) -> bool:
+    """Idempotency check: does an entry with the same command string already exist?"""
+    target_cmd = target.get("hooks", [{}])[0].get("command", "")
+    for entry in existing:
+        for h in entry.get("hooks", []):
+            if h.get("command", "").startswith(target_cmd.split()[0]):
+                return True
+    return False
+
+
+def cmd_install_hooks(args: argparse.Namespace) -> int:
+    if not SETTINGS_JSON.exists():
+        print(f"settings file not found: {SETTINGS_JSON}", file=sys.stderr)
+        return 1
+    try:
+        data = json.loads(SETTINGS_JSON.read_text())
+    except Exception as e:
+        print(f"could not parse settings.json: {e}", file=sys.stderr)
+        return 1
+    hooks_root = data.setdefault("hooks", {})
+    plan = []
+    for event, entries in _hook_entries().items():
+        existing = hooks_root.setdefault(event, [])
+        for entry in entries:
+            if _entry_present(existing, entry):
+                plan.append((event, "skip (already present)", entry))
+            else:
+                plan.append((event, "ADD", entry))
+    if not any(action == "ADD" for _, action, _ in plan):
+        print("All substrate-check hooks already installed. No-op.")
+        return 0
+    print("Plan:")
+    for event, action, entry in plan:
+        cmd = entry.get("hooks", [{}])[0].get("command", "")[:72]
+        print(f"  {action:5s}  {event:20s}  {cmd}")
+    print()
+    if not args.yes:
+        try:
+            ans = input("Apply these changes to ~/.claude/settings.json? [y/N] ").strip().lower()
+        except (EOFError, KeyboardInterrupt):
+            ans = ""
+        if ans != "y":
+            print("Aborted; no changes made.")
+            return 0
+    # Backup
+    ts = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    backup = SETTINGS_JSON.with_name(f"settings.json.bak.{ts}")
+    backup.write_text(SETTINGS_JSON.read_text())
+    # Apply
+    for event, action, entry in plan:
+        if action == "ADD":
+            hooks_root[event].append(entry)
+    SETTINGS_JSON.write_text(json.dumps(data, indent=2))
+    print(f"Wrote: {SETTINGS_JSON}")
+    print(f"Backup: {backup}")
+    print("Restart Claude Code (or open a new session) to activate the hooks.")
+    return 0
+
+
+# ── Main ─────────────────────────────────────────────────────────────
+def main() -> int:
+    p = argparse.ArgumentParser(
+        prog="substrate-check",
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    sub = p.add_subparsers(dest="cmd", required=True)
+
+    a = sub.add_parser("atomize", help="Tokenize + classify + persist")
+    a.add_argument("text", nargs="?", default="")
+    a.add_argument("--json", action="store_true")
+    a.set_defaults(func=cmd_atomize)
+
+    g = sub.add_parser("gate", help="Run a substrate predicate")
+    g.add_argument("name", choices=["vacuum", "parity", "enum", "additive"])
+    g.add_argument("--target")
+    g.add_argument("--key")
+    g.add_argument("--value")
+    g.add_argument("--hook", action="store_true")
+    g.add_argument("--json", action="store_true")
+    g.set_defaults(func=cmd_gate)
+
+    v = sub.add_parser("verify-close", help="Composite session-close predicate")
+    v.add_argument("--hook", action="store_true")
+    v.add_argument("--json", action="store_true")
+    v.set_defaults(func=cmd_verify_close)
+
+    sub.add_parser("list-kinds", help="Print LinguisticKind taxonomy").set_defaults(func=cmd_list_kinds)
+
+    s = sub.add_parser("sessions", help="Cross-session governance")
+    s.add_argument("subcmd", choices=["list", "debt"], default="list", nargs="?")
+    s.add_argument("--limit", type=int, default=20)
+    s.add_argument("--json", action="store_true")
+    s.set_defaults(func=cmd_sessions)
+
+    r = sub.add_parser("route", help="Route an atom to known entities (people, projects)")
+    r.add_argument("atom_id", help="utterance-XXXXXXXXXXXX or just the hex")
+    r.add_argument("--json", action="store_true")
+    r.set_defaults(func=cmd_route)
+
+    i = sub.add_parser("install-hooks", help="Splice the 3 substrate-check hooks into ~/.claude/settings.json (idempotent, with confirm)")
+    i.add_argument("--yes", action="store_true", help="Skip the confirmation prompt")
+    i.set_defaults(func=cmd_install_hooks)
+
+    args = p.parse_args()
+    return args.func(args)
+
+
+if __name__ == "__main__":
+    try:
+        sys.exit(main())
+    except KeyboardInterrupt:
+        sys.exit(130)

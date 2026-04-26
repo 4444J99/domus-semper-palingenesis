@@ -1,0 +1,99 @@
+#!/usr/bin/env bash
+# Pre-commit hook: done-id-counter collision guard
+#
+# Prevents DONE-475/476-class incidents (4 collisions to date as of 2026-04-25).
+# Per IRF-PRT-072, the protocol was documented but never mechanically enforced.
+#
+# Triggers on commits that touch data/done-id-counter.json.
+# Compares local counter against remote; blocks if stale.
+#
+# Built as part of DIWS Stream Τ. Per universal rule #55: NO LaunchAgents,
+# NO timer-based execution. This hook fires only on git commits — entirely
+# event-driven.
+#
+# Installed by chezmoi at ~/.claude/hooks/check-done-id-counter.sh (rendered
+# from this .tmpl by chezmoi if templated). For per-repo install:
+#   ln -s ~/.claude/hooks/check-done-id-counter.sh /path/to/repo/.git/hooks/pre-commit
+
+set -euo pipefail
+
+COUNTER_REL_PATH="data/done-id-counter.json"
+REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || true)"
+
+# If we're not in a git repo, exit clean (nothing to check).
+[[ -z "$REPO_ROOT" ]] && exit 0
+
+COUNTER_PATH="$REPO_ROOT/$COUNTER_REL_PATH"
+
+# If the counter file isn't part of this repo, skip.
+[[ ! -f "$COUNTER_PATH" ]] && exit 0
+
+# If the counter file isn't being modified in this commit, skip.
+if ! git diff --cached --name-only | grep -qx "$COUNTER_REL_PATH"; then
+  exit 0
+fi
+
+echo "[check-done-id-counter] verifying counter against remote..."
+
+# Read the staged (about-to-be-committed) value.
+STAGED_NEXT_ID=$(git show ":$COUNTER_REL_PATH" 2>/dev/null | python3 -c \
+  'import json, sys; print(json.load(sys.stdin).get("next_id", 0))' 2>/dev/null || echo "0")
+
+# Fetch latest remote without merging.
+git fetch origin --quiet 2>&1 | head -5 || true
+
+# Try to read remote's counter from origin/main (or origin/HEAD).
+REMOTE_REF="$(git rev-parse origin/main 2>/dev/null || git rev-parse origin/HEAD 2>/dev/null || true)"
+if [[ -z "$REMOTE_REF" ]]; then
+  echo "[check-done-id-counter] no remote ref found — proceeding (single-machine commit OK)"
+  exit 0
+fi
+
+REMOTE_NEXT_ID=$(git show "$REMOTE_REF:$COUNTER_REL_PATH" 2>/dev/null | python3 -c \
+  'import json, sys; print(json.load(sys.stdin).get("next_id", 0))' 2>/dev/null || echo "0")
+
+# Read the local pre-modification value (HEAD, before staging).
+HEAD_NEXT_ID=$(git show "HEAD:$COUNTER_REL_PATH" 2>/dev/null | python3 -c \
+  'import json, sys; print(json.load(sys.stdin).get("next_id", 0))' 2>/dev/null || echo "0")
+
+echo "[check-done-id-counter] HEAD: $HEAD_NEXT_ID | staged: $STAGED_NEXT_ID | remote: $REMOTE_NEXT_ID"
+
+# Block if remote is ahead of HEAD — local is stale.
+if (( REMOTE_NEXT_ID > HEAD_NEXT_ID )); then
+  cat >&2 <<EOF
+
+[check-done-id-counter] BLOCKED — remote counter is ahead of local.
+
+  remote next_id: $REMOTE_NEXT_ID
+  local HEAD next_id: $HEAD_NEXT_ID
+  staged next_id: $STAGED_NEXT_ID
+
+A concurrent session has claimed DONE-IDs since you last pulled.
+Pull and re-stage before committing:
+
+  git pull --rebase origin main
+  # Re-read the counter, claim from the new ceiling, re-stage.
+
+This guard prevents DONE-NNN collision incidents (4 to date as of 2026-04-25).
+EOF
+  exit 1
+fi
+
+# Block if staged is BELOW HEAD — counter going backwards.
+if (( STAGED_NEXT_ID < HEAD_NEXT_ID )); then
+  cat >&2 <<EOF
+
+[check-done-id-counter] BLOCKED — counter regression.
+
+  HEAD next_id: $HEAD_NEXT_ID
+  staged next_id: $STAGED_NEXT_ID
+
+The counter went backwards. This is never correct — DONE-IDs are append-only.
+Reset the counter to at least HEAD's value and re-stage.
+EOF
+  exit 1
+fi
+
+# Otherwise: clean increment from HEAD; allow.
+echo "[check-done-id-counter] OK — clean increment ($HEAD_NEXT_ID → $STAGED_NEXT_ID)"
+exit 0

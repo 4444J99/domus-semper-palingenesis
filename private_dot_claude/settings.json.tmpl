@@ -212,6 +212,17 @@
             "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"additionalContext\":\"HARD BLOCK \u2014 LaunchAgent creation is forbidden. Every incident froze the machine. On-demand CLI only.\"}}'"
           }
         ]
+      },
+      {
+        "matcher": "Write",
+        "if": "Write(*plans/*.md)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "{{ .chezmoi.homeDir }}/.local/bin/substrate-check gate vacuum --target \"$CLAUDE_TOOL_ARG_FILE_PATH\" --hook 2>/dev/null; true",
+            "timeout": 5
+          }
+        ]
       }
     ],
     "PostToolUse": [
@@ -269,6 +280,15 @@
             "timeout": 5
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "{{ .chezmoi.homeDir }}/.claude/hooks/substrate-atomize-hook.sh",
+            "timeout": 3
+          }
+        ]
       }
     ],
     "SessionEnd": [
@@ -297,6 +317,16 @@
             "type": "command",
             "command": "{{ .chezmoi.homeDir }}/.claude/hooks/session-prompt-capture.sh 2>/dev/null; true",
             "timeout": 30
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "{{ .chezmoi.homeDir }}/.local/bin/substrate-check verify-close --hook 2>/dev/null; true",
+            "timeout": 10,
+            "statusMessage": "Substrate verify-close..."
           }
         ]
       }

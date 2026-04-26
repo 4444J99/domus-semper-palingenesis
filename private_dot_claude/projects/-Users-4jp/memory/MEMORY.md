@@ -20,7 +20,8 @@
 - [Cross-pollination master diagnosis synthesis](project_artifact_cross_pollination_master_diagnosis.md) — PRT-045; canonical 1-page diagnosis ref; `docs/business/2026-04-25-cross-pollination-master-diagnosis.md` (commit c404b5a 2026-04-25); awaiting Rob acknowledgment
 - [Hokage Bridge Content pillar — Jutsu of Week + Boss Battle](project_artifact_bridge_content_pillar.md) — PRT-040 DONE; `docs/content/2026-04-25-bridge-content-pillar.md` (commit 050dcc8 2026-04-25); 12-week Jutsu starter slate + Boss roster; ready to script Episode 1
 - [Hokage Discord rituals — Welcome Wed / Loot Drop Fri / Quest Log Sun](project_artifact_discord_rituals.md) — PRT-041 DONE; `docs/content/2026-04-25-discord-rituals.md` (commit 050dcc8 2026-04-25); ~80min/wk Rob commitment; awaits Discord server provisioning
-- [8-Strata Domain Ideal-Whole Schema](project_artifact_domain_ideal_whole_schema.md) — PRT-048; cross-domain substrate beneath PDE; designed 2026-04-25 in volatile session, persisted post-hoc; plan `~/.claude/plans/2026-04-25-domain-ideal-whole-substrate-design.md`; skill at `a-i--skills/skills/project-management/domain-ideal-whole-substrate/` NOT YET BUILT
+- [8-Strata Domain Ideal-Whole Schema](project_artifact_domain_ideal_whole_schema.md) — PRT-048; cross-domain substrate beneath PDE; schema v2.2 (4 operators, Phase 0 audit, Phase 0.5 engine board, mandatory dissertation Layer 8); skill BUILT v2.2 at `a-i--skills/skills/project-management/domain-ideal-whole-substrate/SKILL.md` (verified 2026-04-25); POC not yet instantiated against client domain
+- [Personalized Client Storefront Substrate v1](project_artifact_storefront_substrate_2026_04_25.md) — Slice 1 scaffolded 2026-04-25 (skill `personalized-storefront-render`, schema `storefront-v1`, Rob `lexicon.yaml`, hokage-chess `storefront.config.yaml`, frontmatter on bridge-content-pillar); 4 trinity agents returned (repo verification, `cce corpus persona-extract` spec, application-pipeline 5-recruiter-class slice, 3-phase upstream refactor architecture); slice 1 deploy DEFERRED (Next.js APIs differ); session research artifact at `~/.claude/plans/2026-04-25-storefront-session-research-prima-materia-and-all-roads.md`
 - [Maddie persona refresh + M-A1 audit](project_artifact_maddie_persona_refresh_2026_04_25.md) — Refreshed `~/Documents/personas/maddie.md` (timeslice backfill + MD-1..7 mapping); M-A1 found 12 byte-identical duplicate files in spiral docs/archive + Logos GHOST docs need deepening; cleanup pending user signoff
 - [Maddie ask packet MD-1..7](project_artifact_maddie_ask_packet_md_1_7.md) — 7 ask drafts × 3 voice variants (Anthony/Maddie-mirror/strict-business) at `<spiral-repo>/.claude/plans/2026-04-25-maddie-ask-packet-MD-1-7.md`; canonical IDs from kill list; ALL DRAFTS, NOT SENT
 - [Titan-keeper architecture plan](../../../plans/2026-04-25-titan-keeper-architecture.md) — Chronos/Mnemosyne/Gaia keeper CLIs + persona-routing hook + PreToolUse deny hooks. Born from DONE-475/476 collision; resolves write-path race conditions mechanically. SPEC ONLY, NOT YET BUILT (2026-04-25)
@@ -94,6 +95,7 @@
 - [Mole optimize + Library cleanup](project_mole_library_cleanup_2026-04-18.md) — Patched mole for Tahoe, 37 GB reclaimed from ~/Library/ orphans+caches (2026-04-18)
 
 ## Feedback
+- [Intake = alchemical decomposition](feedback_intake_alchemical_decomposition.md) — Humanities surface = ideal realm; back-end MUST be rule-generated, never transcribed (2026-04-26)
 - [Rules first, implementations derive](feedback_rules_first.md) — Universal classification system is the FRAME, not a forward arc; build the law, implementations self-place (2026-04-17)
 - [Full implementations required](feedback_full_implementations.md) — No stubs, placeholders, or partial code ever
 - [Iterate toward ideal](feedback_iterate_toward_ideal.md) — Never settle for first take; challenge placement, naming, boundaries before building
@@ -128,6 +130,8 @@
 - [Session 2026-04-23 spiral](project_session_2026-04-23_spiral_lightening.md) — Spiral lightened for Maddie, 4 nodes enriched, cycle syncing, analytics, memory system fixed, DONE-432–437
 
 ## Feedback (continued)
+- [Charge-test + multiversal recall](feedback_charge_test_and_multiversal_recall.md) — Ingest bite-by-bite; keep only charged particles (attract/repel); index for resurrection across all future query-vectors (2026-04-26)
+- [Sincerity invariant](feedback_sincerity_invariant.md) — A particle is admissible iff it has a verifiable referent; no fabrication, no performative claims; the schema enforces it (2026-04-26)
 - [Human-authored relays go stale on concurrent ship](feedback_relay_hygiene_human_authored.md) — SessionStart hygiene hook caught it both sessions today; structural property of mental-model relays. Future fix: `organvm relay draft` CLI (Hermes) (2026-04-25)
 - [Plans are sculpture — never delete, never overwrite](feedback_plans_are_sculpture.md) — Plan files are sediment in a lineage; deletion erases the negative space that shaped the next plan. No exceptions, ever (2026-04-25)
 - [No re-contact after relationship-closing accusation](feedback_no_recontact_after_accusation.md) — When user closes a relationship after a serious accusation, never resurface it as outreach. Closure is permanent unless user reopens (2026-04-25)
@@ -143,6 +147,7 @@
 - [Do what is asked — never preempt](feedback_priority_hierarchy.md) — NEVER decide priorities for the user; do exactly what is asked, when asked; jobs/grants/infra ONLY when explicitly requested (2026-04-23)
 - [The system IS the product](feedback_system_is_the_product.md) — ORGANVM visible+working = client acquisition; jobs are smallest pillar; building the system IS revenue; stop asking, start working
 - [Cross-session lane parsing](feedback_cross_session_lane_parsing.md) — "X active" at session open = active *elsewhere*, not "work on X here"; pick a non-colliding lane from the relay (2026-04-25) (2026-04-23)
+- [No pick-one menus](feedback_no_pick_one_menus.md) — Wallet metaphor: check all rooms, not one. Execute all paths in logic-dictated order; sequencing is my job, not user's (2026-04-26)
 
 ## References
 - [Conductor MCP server](reference_conductor_mcp.md) — Live as of 2026-04-14, FRAME→SHAPE→BUILD→PROVE lifecycle
