@@ -131,6 +131,7 @@
 - [Session 2026-04-23 spiral](project_session_2026-04-23_spiral_lightening.md) — Spiral lightened for Maddie, 4 nodes enriched, cycle syncing, analytics, memory system fixed, DONE-432–437
 
 ## Feedback (continued)
+- [Asks are black holes — physical address required](feedback_black_hole_asks.md) — An ask isn't vacuum; it's gravitational mass that warps space-time. Every ask gets a real IRF row / file / issue the moment it lands. Bullets ≠ black holes (2026-04-26)
 - [Charge-test + multiversal recall](feedback_charge_test_and_multiversal_recall.md) — Ingest bite-by-bite; keep only charged particles (attract/repel); index for resurrection across all future query-vectors (2026-04-26)
 - [Sincerity invariant](feedback_sincerity_invariant.md) — A particle is admissible iff it has a verifiable referent; no fabrication, no performative claims; the schema enforces it (2026-04-26)
 - [Human-authored relays go stale on concurrent ship](feedback_relay_hygiene_human_authored.md) — SessionStart hygiene hook caught it both sessions today; structural property of mental-model relays. Future fix: `organvm relay draft` CLI (Hermes) (2026-04-25)
