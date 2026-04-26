@@ -15,6 +15,7 @@ SKIP_VALUE_RE = re.compile(r"(?i)\b(changeme|example|placeholder|your[_-]?(key|t
 CORPUS_PATHS = (
     "data/prompt-registry/",
     "data/session-transcripts/",
+    "data/corpora/",                 # corpvs: prompt corpora JSONL (verbatim user prompts, FP-heavy)
     "private_dot_claude/plans/",     # chezmoi: Claude plan files (theoretical content)
     ".claude/plans/",                # Claude plan files in any repo
 )
