@@ -1,0 +1,53 @@
+#!/usr/bin/env zsh
+# thread-close — mark a thread closed, capture pending decisions, optionally seed primer.
+set -euo pipefail
+
+if [[ $# -lt 1 ]]; then
+  echo "usage: thread-close <thread-id> [--primer 'one-line summary']" >&2
+  exit 1
+fi
+
+THREAD_ID="$1"; shift
+PRIMER=""
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --primer) PRIMER="$2"; shift 2 ;;
+    *) echo "thread-close: unknown flag: $1" >&2; exit 1 ;;
+  esac
+done
+
+SESSIONS_DIR="${HOME}/.claude/sessions"
+STATE_FILE="${SESSIONS_DIR}/${THREAD_ID}/state.json"
+
+if ! command -v jq >/dev/null 2>&1; then
+  echo "thread-close: jq is required" >&2
+  exit 1
+fi
+
+if [[ ! -f "$STATE_FILE" ]]; then
+  echo "thread-close: no state.json at $STATE_FILE" >&2
+  exit 1
+fi
+
+# Idempotency: if already closed, exit 0 with notice.
+current_state=$(jq -r '.state // "?"' "$STATE_FILE")
+if [[ "$current_state" == "closed" ]]; then
+  echo "thread-close: $THREAD_ID already closed (no-op)" >&2
+  exit 0
+fi
+
+NOW=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+TMP=$(mktemp)
+if [[ -n "$PRIMER" ]]; then
+  jq --arg now "$NOW" --arg primer "$PRIMER" \
+    '.state = "closed" | .closed_at = $now | .last_touched_at = $now | .primer = $primer' \
+    "$STATE_FILE" > "$TMP"
+else
+  jq --arg now "$NOW" \
+    '.state = "closed" | .closed_at = $now | .last_touched_at = $now' \
+    "$STATE_FILE" > "$TMP"
+fi
+mv "$TMP" "$STATE_FILE"
+
+echo "closed: $THREAD_ID at $NOW"
+[[ -n "$PRIMER" ]] && echo "primer seeded: ${PRIMER:0:80}"

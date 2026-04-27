@@ -1,0 +1,68 @@
+#!/usr/bin/env zsh
+# thread-list — enumerate all threads with their state.json metadata.
+# Filters: --state {active|dormant|closed}, --surface S1..S5, --classification {audit|build|explore}
+set -euo pipefail
+
+SESSIONS_DIR="${HOME}/.claude/sessions"
+state_filter=""
+surface_filter=""
+class_filter=""
+show_legacy=1
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --state) state_filter="$2"; shift 2 ;;
+    --surface) surface_filter="$2"; shift 2 ;;
+    --classification) class_filter="$2"; shift 2 ;;
+    --no-legacy) show_legacy=0; shift ;;
+    -h|--help)
+      echo "usage: thread-list [--state S] [--surface X] [--classification C] [--no-legacy]"
+      exit 0 ;;
+    *) echo "thread-list: unknown flag: $1" >&2; exit 1 ;;
+  esac
+done
+
+if ! command -v jq >/dev/null 2>&1; then
+  echo "thread-list: jq is required (brew install jq)" >&2
+  exit 1
+fi
+
+[[ -d "$SESSIONS_DIR" ]] || { echo "thread-list: $SESSIONS_DIR does not exist" >&2; exit 1; }
+
+printf "%-7s %-8s %-9s %-44s %-19s %s\n" SURFACE CLASS STATE NAME LAST_TOUCH ID
+printf "%-7s %-8s %-9s %-44s %-19s %s\n" ------- ----- ----- ---- ---------- --
+
+local rows=()
+for dir in "$SESSIONS_DIR"/*/; do
+  [[ -d "$dir" ]] || continue
+  thread_id="${dir:t}"
+  state_file="${dir}state.json"
+
+  if [[ -f "$state_file" ]]; then
+    surface=$(jq -r '.surface // "?"' "$state_file" 2>/dev/null)
+    class=$(jq -r '.classification // "?"' "$state_file" 2>/dev/null)
+    state=$(jq -r '.state // "?"' "$state_file" 2>/dev/null)
+    name=$(jq -r '.descriptive_name // "?"' "$state_file" 2>/dev/null)
+    touched=$(jq -r '.last_touched_at // "?"' "$state_file" 2>/dev/null)
+  else
+    [[ "$show_legacy" -eq 0 ]] && continue
+    surface="—"
+    class="—"
+    state="no-state"
+    name="${thread_id}"
+    touched="—"
+  fi
+
+  [[ -n "$state_filter" && "$state" != "$state_filter" ]] && continue
+  [[ -n "$surface_filter" && "$surface" != "$surface_filter" ]] && continue
+  [[ -n "$class_filter" && "$class" != "$class_filter" ]] && continue
+
+  name_truncated="${name:0:42}"
+  touched_short="${touched:0:19}"
+  rows+=("${touched_short}|${surface}|${class}|${state}|${name_truncated}|${thread_id}")
+done
+
+# Sort by last_touched_at desc, then print
+print -l "${rows[@]}" | sort -r | while IFS='|' read -r touched surface class state name id; do
+  printf "%-7s %-8s %-9s %-44s %-19s %s\n" "$surface" "$class" "$state" "$name" "$touched" "$id"
+done

@@ -1,0 +1,81 @@
+#!/usr/bin/env bash
+# anti-paste-guard — UserPromptSubmit hook
+#
+# Closes F1 (recursive paste): sessions where prior Claude Code output is pasted
+# verbatim as a new prompt, training the system to treat smoothing as substrate.
+#
+# Triggers on prompts >5KB containing ≥2 Claude Code output signatures.
+# Blocks with primer-load instructions. Bypass token: ALLOW_PASTE.
+#
+# Hook input (stdin, JSON):
+#   { "prompt": "...", "session_id": "...", ... }
+# Hook output (stdout, JSON):
+#   { "decision": "block", "reason": "..." }   on detection
+#   nothing                                     when allowed
+
+set -euo pipefail
+
+input="$(cat)"
+
+prompt="$(printf '%s' "$input" | python3 -c '
+import sys, json
+try:
+    d = json.load(sys.stdin)
+    print(d.get("prompt", ""), end="")
+except Exception:
+    pass
+' 2>/dev/null || true)"
+
+[[ -z "$prompt" ]] && exit 0
+
+# Explicit bypass for genuine long external content
+if [[ "$prompt" == *"ALLOW_PASTE"* ]]; then
+    exit 0
+fi
+
+# Size threshold — short prompts always pass
+prompt_size=${#prompt}
+if [[ "$prompt_size" -lt 5000 ]]; then
+    exit 0
+fi
+
+# Signature scan — count Claude Code output markers
+sig_count=0
+[[ "$prompt" == *"⏺ "* ]]                 && sig_count=$((sig_count+1))
+[[ "$prompt" == *"╌╌╌"* ]]                 && sig_count=$((sig_count+1))
+[[ "$prompt" == *"claude --dangerously"* ]] && sig_count=$((sig_count+1))
+[[ "$prompt" == *"▝▜█████▛▘"* ]]           && sig_count=$((sig_count+1))
+[[ "$prompt" == *"★ Insight"* ]]           && sig_count=$((sig_count+1))
+[[ "$prompt" == *"⎿"* ]]                  && sig_count=$((sig_count+1))
+[[ "$prompt" == *"Resume this session with"* ]] && sig_count=$((sig_count+1))
+
+# 2+ signatures + >5KB = recursive paste
+if [[ "$sig_count" -lt 2 ]]; then
+    exit 0
+fi
+
+# Find candidate threads to suggest
+candidates="$(~/.local/bin/thread-list --state active 2>/dev/null | head -5 || echo "(thread-list unavailable)")"
+
+python3 -c '
+import json, sys
+candidates = """'"${candidates//\"/\\\"}"'"""
+size = '"$prompt_size"'
+sigs = '"$sig_count"'
+reason = (
+    f"RECURSIVE PASTE DETECTED — F1 pathology.\n\n"
+    f"Prompt is {size} bytes (>5KB) and contains {sigs} Claude Code output signatures.\n"
+    f"Pasting prior session output as a new prompt creates context fragmentation and\n"
+    f"trains the system to treat smoothing as substrate. The substrate already exists.\n\n"
+    f"DO INSTEAD:\n"
+    f"  1. Find the thread:    thread-list --state active\n"
+    f"  2. Load its primer:    thread-prime <thread-id>   (returns ≤2KB)\n"
+    f"  3. Re-prompt with primer + your new instruction.\n\n"
+    f"Active threads right now:\n{candidates}\n\n"
+    f"BYPASS: prefix your prompt with the literal token  ALLOW_PASTE  if this is\n"
+    f"genuine long external content (not Claude Code session output).\n\n"
+    f"Guard: ~/.local/bin/anti-paste-guard  •  Closes F1 from\n"
+    f"~/.claude/plans/2026-04-27-thread-governance-proposal.md"
+)
+print(json.dumps({"decision": "block", "reason": reason}))
+'

@@ -1,0 +1,109 @@
+#!/usr/bin/env zsh
+# thread-init-legacy — one-shot migration: derive state.json for every existing session dir.
+# Idempotent: skips dirs that already have state.json.
+set -euo pipefail
+
+SESSIONS_DIR="${HOME}/.claude/sessions"
+DRY_RUN=0
+[[ "${1:-}" == "--dry-run" ]] && DRY_RUN=1
+
+if ! command -v jq >/dev/null 2>&1; then
+  echo "thread-init-legacy: jq is required" >&2
+  exit 1
+fi
+
+[[ -d "$SESSIONS_DIR" ]] || { echo "thread-init-legacy: $SESSIONS_DIR does not exist" >&2; exit 1; }
+
+local derived=0 skipped=0 nofile=0
+
+for dir in "$SESSIONS_DIR"/*/; do
+  [[ -d "$dir" ]] || continue
+  thread_id="${dir:t}"
+  state_file="${dir}state.json"
+
+  if [[ -f "$state_file" ]]; then
+    skipped=$((skipped + 1))
+    continue
+  fi
+
+  # Find first .jsonl in dir (Claude Code session transcript)
+  jsonl=""
+  for f in "$dir"/*.jsonl(N); do
+    jsonl="$f"
+    break
+  done
+
+  # Derive descriptive_name from first user prompt
+  descriptive=""
+  if [[ -n "$jsonl" && -f "$jsonl" ]]; then
+    first_prompt=$(jq -r 'select(.type == "user") | (.message.content // .content // empty) | if type == "string" then . else (.[0].text // "") end' "$jsonl" 2>/dev/null \
+      | grep -v '^$' \
+      | head -1 \
+      | head -c 80 || true)
+    if [[ -n "$first_prompt" ]]; then
+      descriptive=$(echo "$first_prompt" \
+        | tr '[:upper:]' '[:lower:]' \
+        | tr -c 'a-z0-9' '-' \
+        | sed -E 's/-+/-/g; s/^-+//; s/-+$//')
+    fi
+  fi
+  [[ -z "$descriptive" ]] && descriptive="untitled-${thread_id}"
+
+  # Detect legacy random-word pattern (e.g. 2026-04-13--async-sparking-sonnet)
+  legacy_name=""
+  if [[ "$thread_id" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}--[a-z]+-[a-z]+-[a-z]+$ ]]; then
+    legacy_name="${thread_id##*--}"
+  fi
+
+  # Timestamps from JSONL or dir mtime
+  if [[ -n "$jsonl" ]]; then
+    last_touch=$(stat -f '%Sm' -t '%Y-%m-%dT%H:%M:%SZ' "$jsonl")
+  else
+    last_touch=$(stat -f '%Sm' -t '%Y-%m-%dT%H:%M:%SZ' "$dir")
+    nofile=$((nofile + 1))
+  fi
+  opened=$(stat -f '%Sm' -t '%Y-%m-%dT%H:%M:%SZ' "$dir")
+
+  # State: dormant if older than 7 days
+  now_epoch=$(date +%s)
+  touched_epoch=$(date -j -f '%Y-%m-%dT%H:%M:%SZ' "$last_touch" +%s 2>/dev/null || echo "$now_epoch")
+  age_days=$(( (now_epoch - touched_epoch) / 86400 ))
+  if (( age_days > 7 )); then
+    state="dormant"
+  else
+    state="active"
+  fi
+
+  if (( DRY_RUN )); then
+    echo "WOULD CREATE: ${thread_id} → ${descriptive} (${state}, age=${age_days}d)"
+  else
+    jq -n \
+      --arg tid "$thread_id" \
+      --arg desc "$descriptive" \
+      --arg legacy "$legacy_name" \
+      --arg opened "$opened" \
+      --arg touched "$last_touch" \
+      --arg state "$state" \
+      '{
+        thread_id: $tid,
+        descriptive_name: $desc,
+        legacy_name: (if $legacy == "" then null else $legacy end),
+        surface: "S1",
+        classification: "explore",
+        state: $state,
+        opened_at: $opened,
+        last_touched_at: $touched,
+        closed_at: null,
+        pending_decisions: [],
+        primer: null,
+        schema_version: 1
+      }' > "$state_file"
+    derived=$((derived + 1))
+  fi
+done
+
+if (( DRY_RUN )); then
+  echo "DRY RUN: would derive=$(($(ls -d "$SESSIONS_DIR"/*/ 2>/dev/null | wc -l | tr -d ' ') - skipped)) skipped=$skipped"
+else
+  echo "init-legacy: derived=$derived skipped=$skipped (no-jsonl=$nofile)"
+fi

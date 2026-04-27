@@ -289,6 +289,15 @@
             "timeout": 3
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "{{ .chezmoi.homeDir }}/.local/bin/anti-paste-guard",
+            "timeout": 5
+          }
+        ]
       }
     ],
     "SessionEnd": [
