@@ -49,7 +49,7 @@ A three-cadence Gemini integration for the Rob lane that:
 
 ### Mode contract
 
-Every Gemini invocation MUST declare its mode in the opening prompt. Allowed modes:
+Every artifact-producing invocation (Gemini, Claude, Codex, OpenCode, future agents) MUST declare its mode in the opening prompt and pass through Codex reconciliation against repo HEAD before the artifact is treated as shipped. Allowed modes:
 
 - **`drift`** — produce a contradiction ledger only. Compare maintained docs (audit, persona, seed.yaml, system-report) against current repo HEAD. Output structure: numerical drift (commits, pages, files), state drift (formalized vs in-principle, locked vs decision-required), claim drift (declared produces edges vs fulfilled).
 - **`redteam`** — hostile reconstruction. Forbidden inputs: maintained summary docs. Allowed inputs: raw intake (`docs/handoff-*`, `docs/superpowers/intakes/*`, message extractions, PDFs). Output: contradiction ledger + drift ledger + "what everyone is overconfident about" + revised ontology + one structural recommendation that changes the project, not the wording.

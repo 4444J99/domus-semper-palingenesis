@@ -36,6 +36,10 @@
 - [Cascade Layer F — Network as substrate](project_artifact_layer_f_network_persona.md) — personas-as-sub-substrates + 8 archetype YAMLs + opportunity atom kind + critic mode; SPEC, unbuilt (2026-04-27)
 - [Cascade Layer G — Meta-process (repetition)](project_artifact_layer_g_meta_process.md) — choreography-as-YAML; 6 initial meta-processes from today's cascade; highest-leverage next session work (2026-04-27)
 - [Session 2026-04-27 — Seven-layer cascade](project_session_2026-04-27_seven_layer_cascade.md) — Major architecture milestone: 7 cascade plans + close-out audit + April ULTIMA commit `b431063` + chezmoi mirror `1e7e9d4`; substrate fully designed, unbuilt
+- [Hokage+Spiral keyword extraction + Drive content map](project_artifact_2026_04_27_keyword_extraction_drive_map.md) — domain vs function language stripped of stop-words; 9 active Drive lanes catalogued Mar-24→Apr-27 with author-context tags (2026-04-27)
+- [Meta-processor spec — instances → universal substrate](project_artifact_meta_processor_spec_2026_04_27.md) — Maddie/Rob are instances; 13-row universal-business substrate × 7 Cascade Layers = cell matrix; Anthony's role-history is negative-space calibration set; JCPenney first proof (2026-04-27)
+- [Surfaces + Canonical operations registry](project_artifact_surfaces_and_operations_2026_04_27.md) — 5 surfaces (S1 internal/S2 client/S3 public/S4 visual/S5 theoretical); 7-phase ops pipeline + 5 variant axes + 5 pillars + 8 persona lenses; 3.4M-cell action space → 2,520-invocation menu (2026-04-27)
+- [Substrate self-audit (2026-04-27)](project_artifact_2026_04_27_substrate_self_audit.md) — Verdict MIXED; 4 layers (disk/claim/triadic-lens/vacuum); 15 VACs catalogued; top P0s: fix 3.4M-formula error + run JCPenney intake; falsification = 24h re-audit
 <!-- Deliverables under active development — file paths, state, collaborator, pending feedback -->
 
 ## People
