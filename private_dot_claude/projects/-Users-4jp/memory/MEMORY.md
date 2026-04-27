@@ -25,6 +25,17 @@
 - [Maddie persona refresh + M-A1 audit](project_artifact_maddie_persona_refresh_2026_04_25.md) — Refreshed `~/Documents/personas/maddie.md` (timeslice backfill + MD-1..7 mapping); M-A1 found 12 byte-identical duplicate files in spiral docs/archive + Logos GHOST docs need deepening; cleanup pending user signoff
 - [Maddie ask packet MD-1..7](project_artifact_maddie_ask_packet_md_1_7.md) — 7 ask drafts × 3 voice variants (Anthony/Maddie-mirror/strict-business) at `<spiral-repo>/.claude/plans/2026-04-25-maddie-ask-packet-MD-1-7.md`; canonical IDs from kill list; ALL DRAFTS, NOT SENT
 - [Titan-keeper architecture plan](../../../plans/2026-04-25-titan-keeper-architecture.md) — Chronos/Mnemosyne/Gaia keeper CLIs + persona-routing hook + PreToolUse deny hooks. Born from DONE-475/476 collision; resolves write-path race conditions mechanically. SPEC ONLY, NOT YET BUILT (2026-04-25)
+- [April 2026 Ultima Evolution](project_april_2026_ultima_evolution.md) — 287 sessions × 9 predicates → 4 base tables + 5 projection views + ULTIMA.md at `organvm-corpvs-testamentvm/docs/corpus/`; April standardization baseline frozen 2026-04-27; 42/287 unsafe-close need recovery
+- [Rob × Gemini warm clock spec](project_artifact_rob_gemini_warm_clock.md) — 3-cadence Gemini/Codex/Claude division for Rob lane; Phase A unrun; audit baseline e43e972 (2026-04-27)
+- [Rob × Maddie × Trailing artifact catalog](project_artifact_2026_04_27_rob_maddie_trailing_catalog.md) — 598-line exhaustive inventory: 3 territories, 18 sections, drift ledger, 14 black-hole asks (2026-04-27)
+- [Cascade Layer A — Density (time)](project_artifact_layer_a_density.md) — D(t,F) signal over prompt-atoms; 4-component weight vector + JSON filter DSL; SPEC, Slice 1 unbuilt (2026-04-27)
+- [Cascade Layer B — Lens-grid (space)](project_artifact_layer_b_lens_grid.md) — classifications.jsonl + lens YAMLs + TUI `dm sketch` + disagreement panel; SPEC, unbuilt (2026-04-27)
+- [Cascade Layer C — Phase + Telos](project_artifact_layer_c_phase_telos.md) — 4-quadrant phase (in/out/dream/void) + telos yearning vectors + cross-domain scanner; SPEC, unbuilt (2026-04-27)
+- [Cascade Layer D — Universality + self-awareness](project_artifact_layer_d_universality.md) — universal-atom schema + scanners (iCloud/Notes/Voice/Photos/etc) + substrate-meta atoms; SPEC, unbuilt (2026-04-27)
+- [Cascade Layer E — Filter substrate (operator)](project_artifact_layer_e_filter_substrate.md) — decompose→purify→distill; bidirectional surface↔generative; statusline first-light demo; SPEC, unbuilt (2026-04-27)
+- [Cascade Layer F — Network as substrate](project_artifact_layer_f_network_persona.md) — personas-as-sub-substrates + 8 archetype YAMLs + opportunity atom kind + critic mode; SPEC, unbuilt (2026-04-27)
+- [Cascade Layer G — Meta-process (repetition)](project_artifact_layer_g_meta_process.md) — choreography-as-YAML; 6 initial meta-processes from today's cascade; highest-leverage next session work (2026-04-27)
+- [Session 2026-04-27 — Seven-layer cascade](project_session_2026-04-27_seven_layer_cascade.md) — Major architecture milestone: 7 cascade plans + close-out audit + April ULTIMA commit `b431063` + chezmoi mirror `1e7e9d4`; substrate fully designed, unbuilt
 <!-- Deliverables under active development — file paths, state, collaborator, pending feedback -->
 
 ## People
