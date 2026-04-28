@@ -1,21 +1,31 @@
 #!/usr/bin/env bash
-# anti-paste-guard — UserPromptSubmit hook
+# anti-paste-guard — UserPromptSubmit hook (opt-in)
 #
 # Closes F1 (recursive paste): sessions where prior Claude Code output is pasted
 # verbatim as a new prompt, training the system to treat smoothing as substrate.
 #
-# Triggers on prompts >5KB containing ≥2 Claude Code output signatures.
-# Blocks with primer-load instructions. Bypass token: ALLOW_PASTE.
+# DORMANT BY DEFAULT. Activate with:    paste-guard on
+# Deactivate with:                      paste-guard off
+# Status:                               paste-guard status
+#
+# When active, triggers on prompts >5KB containing ≥2 Claude Code output
+# signatures and blocks with primer-load instructions.
+# Per-prompt bypass token (works either way): ALLOW_PASTE.
 #
 # Hook input (stdin, JSON):
 #   { "prompt": "...", "session_id": "...", ... }
 # Hook output (stdout, JSON):
 #   { "decision": "block", "reason": "..." }   on detection
-#   nothing                                     when allowed
+#   nothing                                     when allowed or dormant
 
 set -euo pipefail
 
 input="$(cat)"
+
+# Sentinel-gated: dormant unless ~/.claude/.anti-paste-guard.enabled exists.
+# This makes the guard opt-in rather than always-on — see
+# ~/.claude/plans/if-you-review-every-concurrent-hamming.md (Phase E).
+[[ -f "$HOME/.claude/.anti-paste-guard.enabled" ]] || exit 0
 
 prompt="$(printf '%s' "$input" | python3 -c '
 import sys, json

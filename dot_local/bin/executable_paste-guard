@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+# paste-guard — toggle the anti-paste-guard UserPromptSubmit hook on/off
+#
+# The hook itself lives at ~/.local/bin/anti-paste-guard and is dormant unless
+# the sentinel file ~/.claude/.anti-paste-guard.enabled exists. This CLI just
+# touches/removes that sentinel.
+#
+# Usage:
+#   paste-guard on       # activate the guard
+#   paste-guard off      # deactivate the guard (default state)
+#   paste-guard status   # show current state
+#
+# Companion to: thread-list, thread-prime, thread-close, thread-init-legacy.
+# See ~/.claude/plans/if-you-review-every-concurrent-hamming.md (Phase E).
+
+set -euo pipefail
+
+SENTINEL="$HOME/.claude/.anti-paste-guard.enabled"
+
+case "${1:-status}" in
+  on|enable|activate)
+    mkdir -p "$(dirname "$SENTINEL")"
+    touch "$SENTINEL"
+    echo "anti-paste-guard: ON"
+    echo "  Sentinel: $SENTINEL"
+    echo "  Hook will block pastes >5KB containing ≥2 Claude Code signatures."
+    echo "  Per-prompt bypass: prefix with ALLOW_PASTE."
+    ;;
+  off|disable|deactivate)
+    rm -f "$SENTINEL"
+    echo "anti-paste-guard: OFF"
+    echo "  Sentinel removed: $SENTINEL"
+    echo "  All pastes will pass through unmodified."
+    ;;
+  status|"")
+    if [[ -f "$SENTINEL" ]]; then
+      echo "anti-paste-guard: ON   ($SENTINEL exists)"
+    else
+      echo "anti-paste-guard: OFF  (default — sentinel absent)"
+    fi
+    ;;
+  -h|--help|help)
+    sed -n '2,15p' "$0" | sed 's/^# \{0,1\}//'
+    ;;
+  *)
+    echo "paste-guard: unknown command '$1'" >&2
+    echo "Usage: paste-guard [on|off|status]" >&2
+    exit 2
+    ;;
+esac
