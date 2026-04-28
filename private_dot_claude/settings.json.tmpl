@@ -343,7 +343,7 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "/bin/bash {{ .chezmoi.homeDir }}/.claude/statusline-command.sh"
+    "command": {{ printf "bash -c '%s'" (replace "'" "'\\''" (include "private_dot_claude/executable_statusline-command.sh")) | toJson }}
   },
   "enabledPlugins": {
     "context7@claude-plugins-official": true,
