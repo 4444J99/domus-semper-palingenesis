@@ -1,174 +1,200 @@
 # Memory
 
+## Plans Index
+- [All plans (299 on disk)](../../../plans/INDEX.md) — auto-generated; date-sorted; full file list outside MEMORY.md cap
+
 ## User
-- [Personal situation](user_personal_situation.md) — Housing/employment/family crisis; Staten Island; survival-level instability alongside technical work
-- [Core identity](user_core_identity.md) — Humanities creator chasing the zeitgeist; every system has failed him; ORGANVM is the carrier wave
+- [Personal situation](user_personal_situation.md) — Housing/employment crisis; Staten Island; survival-level instability
+- [Core identity](user_core_identity.md) — Humanities creator; ORGANVM = carrier wave for zeitgeist thesis
 
 ## Active Artifacts
-- [Spiral renderer + substrate stack — Maddie's site](project_artifact_spiral_maddie.md) — `spiral.ts` + `icon-worlds.ts` + lineage surfaces; V6/A14 chain shipped late 2026-04-25 (IconWorlds wired, EnvVar substrate, NAMING_CHAINS, /lineage); ngrok review link verified; Pages deploy still manual via GH#52
-- [Naming-chains substrate — 13 envVars x 7 lenses](project_artifact_naming_chains.md) — immutable `EnvVar` layer + 91 `SurfaceBinding` records + `/lineage/[envvar]` consumer; shipped to spiral main 2026-04-25, future whole-spiral lens viewer still unbuilt
-- [Product Domain Engine skill](project_artifact_pde_skill.md) — Conductor skill at `~/Workspace/a-i--skills/skills/project-management/product-domain-engine/`; 4 modes + 5-phase protocol + audit script; shipped 2026-04-25 (cf92479)
-- [HANDOFF — sovereign-systems--elevate-align](project_artifact_handoff_elevate_align.md) — Repo-root 5-group relay file (V4 shapes, mobile, CI, domain, filter affiliates); shipped 2026-04-25 (commit 454a047)
-- [Landing-engine slices 1+3 SHIPPED](project_artifact_landing_engine_plan.md) — Spiral+Hokage shared primitive; spiral 3d8cabd (3 personas live), hokage a2ef26f (3 personas SSG); slice 2 (Keystatic) deferred
-- [Multi-part conversations.json patch (ChatGPT + Claude)](project_artifact_chatgpt_multipart_patch.md) — `discover_bundle_roots` + dedup; ChatGPT 1785fa2, Claude cb2bc9e in conversation-corpus-engine 2026-04-25; 298 tests pass
-- [Hokage Chess v6 refresh](project_artifact_hokage_v6_refresh.md) — Strategy v6 + pitch deck v3 + business plan v2; lineage-integrated; 2,212 lines; commit 14650a4 in `4444J99/hokage-chess` 2026-04-25; pending Rob review
-- [Full hanging-items plan (2026-04-25)](project_artifact_full_hanging_plan.md) — 39 items, 5 domains, 9 user-decision points; commit c0f54a8 in dotfiles 2026-04-25; sequenced critical path + parallel dispatch
-- [resolve-bootstrap script + dead-path cleanup](project_artifact_resolve_bootstrap.md) — Built missing companion to resolve-audit; pruned 103 dead entries from .claude.json (106→22) + codex config.toml; commit 85ad1bc dotfiles 2026-04-25
-- [chatgpt_exporter_to_bundle converter](project_artifact_chatgpt_exporter_converter.md) — Bridges chatgptexporter.com per-conv JSON to standard ChatGPT bundle; brainstorm-export-20260423 ingest verified (14 threads, 75 pairs); commit 7e3da5d in conversation-corpus-engine 2026-04-25
-- [BODI funnel-with-premium-content architecture](project_artifact_bodi_funnel_premium_content.md) — PRT-043; `docs/business/2026-04-25-bodi-funnel-with-premium-content-architecture.md` in `4444J99/hokage-chess` (commit c404b5a 2026-04-25); awaiting Rob premium-content link delivery
-- [Hokage 4-level funnel architecture](project_artifact_hokage_4level_funnel.md) — PRT-044; `docs/business/2026-04-25-hokage-4-level-funnel-architecture.md` (commit c404b5a 2026-04-25); BLOCKED on Kit API key (PRT-030) for L2 deploy
-- [Cross-pollination master diagnosis synthesis](project_artifact_cross_pollination_master_diagnosis.md) — PRT-045; canonical 1-page diagnosis ref; `docs/business/2026-04-25-cross-pollination-master-diagnosis.md` (commit c404b5a 2026-04-25); awaiting Rob acknowledgment
-- [Hokage Bridge Content pillar — Jutsu of Week + Boss Battle](project_artifact_bridge_content_pillar.md) — PRT-040 DONE; `docs/content/2026-04-25-bridge-content-pillar.md` (commit 050dcc8 2026-04-25); 12-week Jutsu starter slate + Boss roster; ready to script Episode 1
-- [Hokage Discord rituals — Welcome Wed / Loot Drop Fri / Quest Log Sun](project_artifact_discord_rituals.md) — PRT-041 DONE; `docs/content/2026-04-25-discord-rituals.md` (commit 050dcc8 2026-04-25); ~80min/wk Rob commitment; awaits Discord server provisioning
-- [8-Strata Domain Ideal-Whole Schema](project_artifact_domain_ideal_whole_schema.md) — PRT-048; cross-domain substrate beneath PDE; schema v2.2 (4 operators, Phase 0 audit, Phase 0.5 engine board, mandatory dissertation Layer 8); skill BUILT v2.2 at `a-i--skills/skills/project-management/domain-ideal-whole-substrate/SKILL.md` (verified 2026-04-25); POC not yet instantiated against client domain
-- [Personalized Client Storefront Substrate v1](project_artifact_storefront_substrate_2026_04_25.md) — Slice 1 scaffolded 2026-04-25 (skill `personalized-storefront-render`, schema `storefront-v1`, Rob `lexicon.yaml`, hokage-chess `storefront.config.yaml`, frontmatter on bridge-content-pillar); 4 trinity agents returned (repo verification, `cce corpus persona-extract` spec, application-pipeline 5-recruiter-class slice, 3-phase upstream refactor architecture); slice 1 deploy DEFERRED (Next.js APIs differ); session research artifact at `~/.claude/plans/2026-04-25-storefront-session-research-prima-materia-and-all-roads.md`
-- [Maddie persona refresh + M-A1 audit](project_artifact_maddie_persona_refresh_2026_04_25.md) — Refreshed `~/Documents/personas/maddie.md` (timeslice backfill + MD-1..7 mapping); M-A1 found 12 byte-identical duplicate files in spiral docs/archive + Logos GHOST docs need deepening; cleanup pending user signoff
-- [Maddie ask packet MD-1..7](project_artifact_maddie_ask_packet_md_1_7.md) — 7 ask drafts × 3 voice variants (Anthony/Maddie-mirror/strict-business) at `<spiral-repo>/.claude/plans/2026-04-25-maddie-ask-packet-MD-1-7.md`; canonical IDs from kill list; ALL DRAFTS, NOT SENT
-- [Titan-keeper architecture plan](../../../plans/2026-04-25-titan-keeper-architecture.md) — Chronos/Mnemosyne/Gaia keeper CLIs + persona-routing hook + PreToolUse deny hooks. Born from DONE-475/476 collision; resolves write-path race conditions mechanically. SPEC ONLY, NOT YET BUILT (2026-04-25)
-- [April 2026 Ultima Evolution](project_april_2026_ultima_evolution.md) — 287 sessions × 9 predicates → 4 base tables + 5 projection views + ULTIMA.md at `organvm-corpvs-testamentvm/docs/corpus/`; April standardization baseline frozen 2026-04-27; 42/287 unsafe-close need recovery
-- [Rob × Gemini warm clock spec](project_artifact_rob_gemini_warm_clock.md) — 3-cadence Gemini/Codex/Claude division for Rob lane; Phase A unrun; audit baseline e43e972 (2026-04-27)
-- [Rob × Maddie × Trailing artifact catalog](project_artifact_2026_04_27_rob_maddie_trailing_catalog.md) — 598-line exhaustive inventory: 3 territories, 18 sections, drift ledger, 14 black-hole asks (2026-04-27)
-- [Cascade Layer A — Density (time)](project_artifact_layer_a_density.md) — D(t,F) signal over prompt-atoms; 4-component weight vector + JSON filter DSL; SPEC, Slice 1 unbuilt (2026-04-27)
-- [Cascade Layer B — Lens-grid (space)](project_artifact_layer_b_lens_grid.md) — classifications.jsonl + lens YAMLs + TUI `dm sketch` + disagreement panel; SPEC, unbuilt (2026-04-27)
-- [Cascade Layer C — Phase + Telos](project_artifact_layer_c_phase_telos.md) — 4-quadrant phase (in/out/dream/void) + telos yearning vectors + cross-domain scanner; SPEC, unbuilt (2026-04-27)
-- [Cascade Layer D — Universality + self-awareness](project_artifact_layer_d_universality.md) — universal-atom schema + scanners (iCloud/Notes/Voice/Photos/etc) + substrate-meta atoms; SPEC, unbuilt (2026-04-27)
-- [Cascade Layer E — Filter substrate (operator)](project_artifact_layer_e_filter_substrate.md) — decompose→purify→distill; bidirectional surface↔generative; statusline first-light demo; SPEC, unbuilt (2026-04-27)
-- [Cascade Layer F — Network as substrate](project_artifact_layer_f_network_persona.md) — personas-as-sub-substrates + 8 archetype YAMLs + opportunity atom kind + critic mode; SPEC, unbuilt (2026-04-27)
-- [Cascade Layer G — Meta-process (repetition)](project_artifact_layer_g_meta_process.md) — choreography-as-YAML; 6 initial meta-processes from today's cascade; highest-leverage next session work (2026-04-27)
-- [Session 2026-04-27 — Seven-layer cascade](project_session_2026-04-27_seven_layer_cascade.md) — Major architecture milestone: 7 cascade plans + close-out audit + April ULTIMA commit `b431063` + chezmoi mirror `1e7e9d4`; substrate fully designed, unbuilt
-- [Hokage+Spiral keyword extraction + Drive content map](project_artifact_2026_04_27_keyword_extraction_drive_map.md) — domain vs function language stripped of stop-words; 9 active Drive lanes catalogued Mar-24→Apr-27 with author-context tags (2026-04-27)
-- [Meta-processor spec — instances → universal substrate](project_artifact_meta_processor_spec_2026_04_27.md) — Maddie/Rob are instances; 13-row universal-business substrate × 7 Cascade Layers = cell matrix; Anthony's role-history is negative-space calibration set; JCPenney first proof (2026-04-27)
-- [Surfaces + Canonical operations registry](project_artifact_surfaces_and_operations_2026_04_27.md) — 5 surfaces (S1 internal/S2 client/S3 public/S4 visual/S5 theoretical); 7-phase ops pipeline + 5 variant axes + 5 pillars + 8 persona lenses; 3.4M-cell action space → 2,520-invocation menu (2026-04-27)
-- [Substrate self-audit (2026-04-27)](project_artifact_2026_04_27_substrate_self_audit.md) — Verdict MIXED; 4 layers (disk/claim/triadic-lens/vacuum); 15 VACs catalogued; top P0s: fix 3.4M-formula error + run JCPenney intake; falsification = 24h re-audit
-<!-- Deliverables under active development — file paths, state, collaborator, pending feedback -->
+- [Propulsion plan 2026-04-27](../../../plans/what-s-logically-next-extensibly-eager-giraffe.md) — Stream A surfaced (NOT sent); Streams B+C done; D deferred
+- [Decision card 2026-04-27](../../../plans/2026-04-27-decision-card-hanging-plan.md) — 7 decisions + 3 user-composed sends; awaits user
+- [Conductor CLI repair](project_artifact_conductor_cli_repair_2026_04_27.md) — editable install fixed; Dispatch Protocol unblocked
+- [Plans INDEX.md](project_artifact_plan_index_2026_04_27.md) — 299 entries; MEMORY.md drift closed
+- [Spiral renderer — Maddie's site](project_artifact_spiral_maddie.md) — V6/A14; IconWorlds + substrate; Pages deploy manual (GH#52)
+- [Naming-chains substrate](project_artifact_naming_chains.md) — 13 envVars × 7 lenses; whole-spiral viewer unbuilt
+- [Product Domain Engine skill](project_artifact_pde_skill.md) — 4 modes + 5-phase; shipped 2026-04-25
+- [HANDOFF — elevate-align](project_artifact_handoff_elevate_align.md) — 5-group relay; shipped 2026-04-25
+- [Landing-engine slices 1+3](project_artifact_landing_engine_plan.md) — Spiral+Hokage; slice 2 (Keystatic) deferred
+- [Multi-part conversations patch](project_artifact_chatgpt_multipart_patch.md) — ChatGPT+Claude; 298 tests pass
+- [Hokage Chess v6 refresh](project_artifact_hokage_v6_refresh.md) — Strategy+pitch+business; pending Rob review
+- [Full hanging-items plan](project_artifact_full_hanging_plan.md) — 39 items, 5 domains, 9 decisions (2026-04-25)
+- [resolve-bootstrap + cleanup](project_artifact_resolve_bootstrap.md) — 103 dead entries pruned; commit 85ad1bc
+- [chatgpt_exporter converter](project_artifact_chatgpt_exporter_converter.md) — Per-conv JSON→bundle; commit 7e3da5d
+- [BODI funnel architecture](project_artifact_bodi_funnel_premium_content.md) — PRT-043; awaiting Rob link
+- [Hokage 4-level funnel](project_artifact_hokage_4level_funnel.md) — PRT-044; BLOCKED on Kit API key
+- [Cross-pollination diagnosis](project_artifact_cross_pollination_master_diagnosis.md) — PRT-045; awaiting Rob ack
+- [Bridge Content pillar](project_artifact_bridge_content_pillar.md) — PRT-040 DONE; ready to script Ep 1
+- [Discord rituals](project_artifact_discord_rituals.md) — PRT-041 DONE; awaits Discord provisioning
+- [Domain Ideal-Whole Schema](project_artifact_domain_ideal_whole_schema.md) — PRT-048; 8-strata; skill built v2.2
+- [Storefront Substrate v1](project_artifact_storefront_substrate_2026_04_25.md) — Slice 1 scaffolded; deploy DEFERRED
+- [Maddie persona + M-A1 audit](project_artifact_maddie_persona_refresh_2026_04_25.md) — 7 dupes DELETED 2026-04-27 (commit c2c729f); persona refresh standing
+- [Maddie ask packet MD-1..7](project_artifact_maddie_ask_packet_md_1_7.md) — 7 asks × 3 voices; DRAFTS, NOT SENT
+- [Titan-keeper architecture](../../../plans/2026-04-25-titan-keeper-architecture.md) — SPEC ONLY, NOT BUILT
+- [April ULTIMA Evolution](project_april_2026_ultima_evolution.md) — 287 sessions → tables+views; frozen 2026-04-27
+- [Rob × Gemini warm clock](project_artifact_rob_gemini_warm_clock.md) — 3-cadence spec; Phase A unrun
+- [Rob+Maddie trailing catalog](project_artifact_2026_04_27_rob_maddie_trailing_catalog.md) — 598-line inventory; 14 black-hole asks
+- [Seven-layer cascade (A-G)](project_session_2026-04-27_seven_layer_cascade.md) — All SPEC, unbuilt; G = highest leverage
+- [Keyword extraction + Drive map](project_artifact_2026_04_27_keyword_extraction_drive_map.md) — 9 Drive lanes catalogued
+- [Meta-processor spec](project_artifact_meta_processor_spec_2026_04_27.md) — Universal-business × 7 layers; JCPenney proof
+- [Surfaces + ops registry](project_artifact_surfaces_and_operations_2026_04_27.md) — 5 surfaces × 7 ops; 2,520 invocations
+- [Substrate self-audit](project_artifact_2026_04_27_substrate_self_audit.md) — MIXED; 15 VACs; fix 3.4M formula
+- [Thread Governance Triple](project_artifact_thread_governance_2026_04_27.md) — F1/F2/F3 cured; F4 partial
+- [Anti-paste-guard G1 shipped](project_artifact_anti_paste_guard_g1.md) — UserPromptSubmit hook blocks recursive paste; commit 57533f9; G2-G5 deferred
+- [Alpha→Omega spec](project_artifact_2026_04_27_theoretical_specification_omega_alpha_to_omega.md) — Cursor-born; pulses + adversary taxonomy
+- [Pending iMessages (Scott + Rob)](project_artifact_pending_imessages_2026_04_27.md) — Drafts ready; user sends manually; Sean Saito DM sibling
+- [Maddie trail (refreshed)](project_artifact_maddie_trail_2026_04_27.md) — 13-lane snapshot 2026-04-27; 7 asks-from-her, 4 owed-to-her, CI token blocker
+- [Rob trail (refreshed)](project_artifact_rob_trail_2026_04_27.md) — 13-lane snapshot 2026-04-27; 6 asks-from-him, 3 owed-to-him, Kit+Discord blockers; L7+L8 vacuums
+- [Rob Inbound Engine Spec](project_artifact_rob_inbound_engine_spec_2026_04_28.md) — Architectural pivot from manual SDR to automated inbound
+- [Scott trail](project_artifact_scott_trail_2026_04_28.md) — 13-lane snapshot 2026-04-28; 6 asks-from-us unseen, channel friction block
+- [Person-tied project macro](../../../plans/2026-04-27-person-tied-project-macro.md) — 13 universal lanes derived from M+R; §4 onboarding protocol for Scott/Jessica/others
+- [Maddie prompt chronology](../../../prompts/maddie-prompt-chronology-2026-04-27.md) — 262 prompts; 2026-03-25→04-18; full text; project-filter scope (elevate-align)
+- [Rob prompt chronology](../../../prompts/rob-prompt-chronology-2026-04-27.md) — 230 prompts; 2026-03-25→04-16; full text; project-filter scope (Workspace-4444J99)
+- [Maddie universe map](project_artifact_maddie_universe_2026_04_27.md) — 7-ring orbit (core→suggestions); high-leverage adds: POSSE, Bridge Content port, 8-strata fill, Three.js, a11y
+- [Rob universe map](project_artifact_rob_universe_2026_04_27.md) — 7-ring orbit; high-leverage adds: Twitch, Chess.com affiliate, Shorts/TikTok, Stockfish pipeline, NYC scene, 8-strata fill, Patreon
+- [Universe overlap (M ∩ R)](project_artifact_universe_overlap_2026_04_27.md) — bridges + mutual contribution flows + POV; biggest leverage: 8-strata fill + Maddie cadence vacuum
+- [Potentials catalog](../../../plans/2026-04-27-potentials-catalog.md) — ~50 repos + Karpathy LLM-wiki + Noah Beddome + resume narrative routed to orbits; SECURITY: antigravity token w/ admin:enterprise scope flagged for rotation
+- [Case-wide deep dive 2026-04-27](../../../plans/these-projects-are-getting-shimmying-lerdorf.md) — 13-part synthesis; three-layer architecture + drift vectors; §XI forced choice = Noah Beddome reply
+- [Noah Beddome reply draft](project_artifact_noah_beddome_reply_draft.md) — Two-slot LinkedIn DM; DRAFT-READY-TO-SEND; user manual send required
 
 ## People
-- [Maddie](collaborator_maddie.md) — Elevate Align client; health/wellness brand; 28-page site build; spiral feedback pending
-- [Becka McKay](project_becka_mckay_thread.md) — **CLOSED 2026-04-25 — DO NOT CONTACT.** Former MFA thesis advisor (FAU); user closed thread after substance-accusation exchange
-- [Rob Bonavoglia](collaborator_rob_bonavoglia.md) — Hokage Chess client; NYC chess creator; @HokageChess YouTube; ~1350 ELO; landing page + business model
-- [Scott Lefler](project_scott_lefler_verification_20260425.md) — Lefler.Design owner; 10+yr friend; partnership confirmed 2026-03-23 (FaceTime+iMessage). Active warm partnership in functional silence — channel friction (GitHub issues never seen). Recommended: warm-revive via iMessage, draft ready
-- [Jessica (stub)](collaborator_jessica.md) — PRE-ACTIVE STUB; education + relationships domain per DIWS schema v2.2; no last name / state / channel known; refine on next mention. Do NOT outreach without explicit user direction (Becka precedent)
+- [Maddie](collaborator_maddie.md) — Elevate Align; health/wellness; spiral feedback pending
+- [Becka McKay](project_becka_mckay_thread.md) — **CLOSED 2026-04-25 — DO NOT CONTACT**
+- [Rob Bonavoglia](collaborator_rob_bonavoglia.md) — Hokage Chess; NYC chess; @HokageChess
+- [Scott Lefler](collaborator_scott_lefler.md) — Lefler.Design; 10+yr friend; warm-revive via iMessage
+- [Jessica (stub)](collaborator_jessica.md) — PRE-ACTIVE; education domain; no outreach w/o user direction
+- [Noah Beddome](collaborator_noah_beddome.md) — Platform engineering / DevEx-Infra owner; LinkedIn warm thread since 2026-03-21; awaiting user's scheduling reply (draft ready)
 
 ## Active Projects
-- [Modular-synthesis portfolio unification](project_portfolio_unification_2026-04-25.md) — 4-stream plan (Δ shipped, Σ+Τ dispatchable, Ω+Synthesis pending); 25 IRF-PRT-050..074 dark-matter rows shipped to corpvs; portfolio docs at `meta-organvm/organvm-corpvs-testamentvm/docs/portfolio/` (2026-04-25)
-- [Achilles session workload](project_achilles_session_workload.md) — Next-Claude-session compile (2026-04-25); excludes Spiral/Hokage/Maddie/Rob; Tier 1 PRT-048 skill + SYS-156 + CI cascade + IRF hygiene
-- [Achilles master attack and victory plan](project_achilles_master_attack_plan.md) — Additive execution-order plan (2026-04-25); keeps PRT-048 first, splits SYS-156 into humans-waiting + 1,433-failure CI surface, and defines the real victory path
-- [Achilles full gap-closure implementation plan](project_achilles_full_gap_closure_plan.md) — Implementation companion (2026-04-25); routes non-Achilles gaps outward and gives closure steps for every Achilles-owned gap
-- [VACUUM — 890 CI failures unsourced](project_vacuum_ci_cascade_890_unsourced.md) — Achilles Tier-1 #3 number has no upstream ledger; re-derive via `gh run list` before acting (2026-04-25)
-- [VACUUM — PRT/SYS/DONE ID authority undefined](project_vacuum_prt_sys_done_id_authority.md) — IDs return 0 matches in fossil-record.json; rule #23 compliance broken until authority store is located or built (2026-04-25)
-- [Becka McKay thread](project_becka_mckay_thread.md) — **CLOSED 2026-04-25 — DO NOT CONTACT.** 5-email thread closed after substance accusation; user explicit no-revive
-- [Email triage system](project_mail_triage_2026-04-17.md) — FAILED 2026-04-21: LaunchAgent froze machine, disabled; needs Gmail Apps Script redesign
-- [Dotfiles sprawl audit](project_dotfiles_audit_2026-04-17.md) — Phase 0 done, MCP Docker→native done, orphaned LaunchAgents cleaned (2026-04-21)
-- [CUE declaration layer](project_cue_declaration_layer.md) — system.toml→system.cue via CUE constraints; landscape research done; repo unified at ~/Workspace/a-organvm/ (2026-04-21)
-- [Institutional substrate](project_institutional_substrate.md) — 19 institutional primitives, 4 operators, 4 formations (AEGIS/OIKONOMIA/PRAXIS/TESSERA); spec complete, implementation Phase 0 next (2026-04-20)
-- [Organ morphogenesis](project_organ_morphogenesis.md) — Shift from numbered organs to emergent formations; SECVRITY/PERSONA as first named clusters (2026-04-17)
-- [4444J99 organ identity](project_4444J99_organ_identity.md) — 4444J99 = persona/"digital masks" organ; SEC organ undefined; infra repos may move (2026-04-17)
-- [CCE CPU throttling + Gemini spike](project_cce_cpu_throttle_gemini.md) — taskpolicy+trigram deployed; Gemini cache decrypted, web API next (2026-04-16)
-- [Plugin marketplace fix](project_plugin_fix_2026-04-16.md) — SSH clone, hooks `if` regression fixed; private_dot_claude confirmed in chezmoi (2026-04-16)
-- [Domain architecture](project_domain_architecture.md) — 6 domains, 3 circles, Cloudflare, env vars in chezmoi (2026-04-16)
-- [Zeitgeist carrier wave thesis](project_zeitgeist_thesis.md) — Music→film→TV→internet→systems; needs research, essays, thesis, dissertation; dispatch to agent fleet (2026-04-21)
-- [ORGANVM system state](project_organvm_pactvm.md) — 10 organs, 145 repos, omega 9/20, DONE counter ~405, 4th collision incident
-- [system-system--system atoms](project_system_system_atoms.md) — 238 atoms, 56.7% FORMAL, GH-#8 closable, 55-atom gap to 80% target (2026-04-20)
-- [OSS contribution sweep](project_oss_contribution_sweep.md) — 21 PRs, 11 bumped (stagger violation), 3 LinkedIn drafts unpublished (2026-04-21)
-- [iCloud folder sync broken](project_icloud_folder_sync_broken.md) — Runaway conflict loop, needs Apple server-side reset
-- [Time Machine SSD conversion](project_timemachine_ssd_conversion.md) — exFAT→APFS reformat deferred, needs staging drive
-- [Sticky note atoms 2026-04-22](project_sticky_note_atoms_2026-04-22.md) — 29 atoms across 8 domains: social, domains, legal, architecture, research, skills, governance, client
-- [Fish boil atoms 2026-04-22](project_fish_boil_2026-04-22.md) — 4 atoms: Karpathy wiki architecture, 8! permutations, USPIS report, markdown linting standards
-- [Tenet Protocol](project_tenet_protocol.md) — Every force triggers its opposing force simultaneously; dual-direction activation on all dispatches (2026-04-22)
-- [Wave-particle principle](project_wave_particle_principle.md) — Everything is particle AND wave; nothing solid but appears solid; superposition until observed/acted upon (2026-04-22)
-- [Prompt corpus dump](project_prompt_corpus_dump_2026-04-22.md) — 200+ prompt atoms dumped; lifecycle phrases extracted; rest needs atomization session (2026-04-22)
-- [Prompt triage complete](project_prompt_triage_complete.md) — 24,599 atoms triaged, 2,012 duplicates consolidated, 14,898 OPEN; pipeline + dedup built (2026-04-22)
-- [Micro-element multiversality](project_micro_element_multiversality.md) — Each atom is a multiverse; sub-atomic decomposition needed for true backlog (2026-04-22)
-- [Prompt atomization pipeline](project_prompt_atomization_pipeline.md) — Full 3-layer pipeline: 47,299 unified atoms, 113 trajectories, 918 open backlog (2026-04-23)
-- [Hokage Chess client](project_hokage_chess_client.md) — Rob Bonavoglia; landing page + business + ROB-FIRST-30-DAYS + seed.yaml + registry registered + OG metadata; deploy/domain/Kit pending (2026-04-25)
-- [Rob/BODI funnel call 2026-04-25](project_rob_bodi_funnel_call_20260425.md) — strategic diagnosis: Hokage has premium content/no funnel, BODI has funnel/no premium content; Rob homework = links + 75-person constellation; source transcript in `~/Downloads/Sales-Funnel-Strategy-Content-Audit.md`
+- [Portfolio unification](project_portfolio_unification_2026-04-25.md) — 4 streams; 25 dark-matter rows shipped
+- [Achilles workload](project_achilles_session_workload.md) — PRT-048 + SYS-156 + CI + IRF
+- [Achilles master attack](project_achilles_master_attack_plan.md) — Execution order; splits SYS-156
+- [Achilles gap-closure](project_achilles_full_gap_closure_plan.md) — Routes gaps outward
+- [VACUUM — CI failures](project_vacuum_ci_cascade_890_unsourced.md) — Re-derive via `gh run list`
+- [VACUUM — ID authority](project_vacuum_prt_sys_done_id_authority.md) — PRT/SYS/DONE store missing
+- [Email triage](project_mail_triage_2026-04-17.md) — FAILED; needs Apps Script redesign
+- [CUE declaration layer](project_cue_declaration_layer.md) — Research done; repo at a-organvm
+- [Institutional substrate](project_institutional_substrate.md) — 19 primitives; spec done; Phase 0 next
+- [Organ morphogenesis](project_organ_morphogenesis.md) — Numbered→named formations
+- [4444J99 organ identity](project_4444J99_organ_identity.md) — Persona organ; SEC undefined
+- [CCE CPU throttle](project_cce_cpu_throttle_gemini.md) — taskpolicy deployed; web API next
+- [Zeitgeist thesis](project_zeitgeist_thesis.md) — Music→film→TV→internet→systems; dispatch to fleet
+- [ORGANVM state](project_organvm_pactvm.md) — 10 organs, 145 repos, omega 9/20
+- [system-system atoms](project_system_system_atoms.md) — 238 atoms, 56.7% FORMAL
+- [OSS sweep](project_oss_contribution_sweep.md) — 21 PRs; stagger violation (2026-04-21)
+- [iCloud sync broken](project_icloud_folder_sync_broken.md) — Needs Apple server-side reset
+- [Time Machine SSD](project_timemachine_ssd_conversion.md) — Deferred; needs staging drive
+- [Tenet Protocol](project_tenet_protocol.md) — Every force triggers its opposite
+- [Wave-particle](project_wave_particle_principle.md) — Particle AND wave; superposition until observed
+- [Prompt atomization pipeline](project_prompt_atomization_pipeline.md) — 47,299 atoms; 918 open
+- [Micro-element multiversality](project_micro_element_multiversality.md) — Sub-atomic decomposition needed
+- [Hokage Chess client](project_hokage_chess_client.md) — Deploy/domain/Kit pending
+- [Rob/BODI funnel call](project_rob_bodi_funnel_call_20260425.md) — Rob homework: links + constellation
 
-- [Session 2026-04-25 hokage+PDE](project_session_2026-04-25_hokage_chess_pde.md) — Full hokage-chess build + Product Domain Engine formalization; 49 files, 10 vacuums, 3 repos
-- [Session 2026-04-25 chakra-stars](project_session_2026-04-25_chakra_stars.md) — DONE-440 V2 chakra-color stars + round 2 lightening (commit 02c90a2) + DONE-441 V3 framing fix (commit 845fcaf); GH#53 closed; uncovered Apr 23 lightening claimed-shipped-but-never-deployed
-- [Session 2026-04-25 handoff-relay](project_session_2026-04-25_handoff_relay.md) — Worked both 5-group HANDOFFs; DONE-442..446 (spiral mobile, chezmoi sync, registry, hokage seed+ROB doc, PDE skill) + OG metadata; hokagechess.com confirmed available
-- [Session 2026-04-25 V4 dual-variants](project_session_2026-04-25_v4_dual_variants.md) — DONE-447; spiral V4 dual variants `?variant=symbols` (13 sacred symbols) + `?variant=stars` (procedural refracted-light) + sleek pass killing emojis; superseded by V5 series; post-hoc reconstruction from IRF
-- [Session 2026-04-25 engine+infra+landing](project_session_2026-04-25_engine_infra_landing.md) — DONE-448..455 (8 atoms, 4 repos: spiral/hokage/CCE/dotfiles); landing-engine v1, multi-part conversations adapter (290+298+311 tests), resolve-bootstrap, full hanging-items plan; +21 vacuums atomized; post-hoc reconstruction
-- [Session 2026-04-25 V5 materia-physics](project_session_2026-04-25_v5_materia_physics.md) — V5→V5.10 spiral 12 commits d8b34b6→e12b742 (particles ARE the icon shape, bouncing-substrate, variant divergence); NO IRF entry yet (retrospective atomization deferred); post-hoc reconstruction from git log
-- [Session 2026-04-25 evening — Rob cross-pollination](project_session_2026-04-25_evening_cross_pollination.md) — 6 docs in hokage-chess across 5 commits; PRT-040/041 → DONE, PRT-043/044/045 → OPEN; transcript mirrored, BODI+Hokage funnel architectures + synthesis shipped; SYS-156 surfaced as blocked-on-3-user-auths
-- [Session 2026-04-25 catch-all + titan-keeper](project_session_2026-04-25_catch_all_titan_keeper.md) — Catch-all relay reception; shipped DONE collision repair (6aa7cd4), Becka closure, sculpture rule, Scott Lefler 7-channel verification, titan-keeper architecture spec, stale-propagation diagnosis; yielded astro v6 lane to sister (DONE-479)
-- [Session 2026-04-25/26 — Catch-all sister-relay reception](project_artifact_catch_all_relay_2026-04-25.md) — DONE-479; corpvs portfolio CI honesty repair (lockfile + npm ci + ADR-018) — pages-deploy green after 4 consecutive failures; 3/5 sister claims dropped as stale (DONE-475/476 collision, atomic-map deletion, Becka nudge)
-- [Session 2026-04-26 — hall-monitor close-out](project_session_2026-04-26_hall_monitor_closeout.md) — DONE-488; 15 live-only memories mirrored → chezmoi (commit 70e5ade); IRF-PRT-075 logged for 57-scope systemic drift; statusline + substrate hooks shipped (commit 989b898 corpvs)
+## Session Logs
+- [2026-04-27 propulsion plan](project_session_2026-04-27_propulsion_plan.md) — Stream A/B/C/D execution; conductor repaired; INDEX built; atom pipeline refreshed (253 reconciled)
+- [2026-04-27 cascade](project_session_2026-04-27_seven_layer_cascade.md) — 7 plans + ULTIMA + chezmoi mirror
+- [2026-04-26 hall-monitor](project_session_2026-04-26_hall_monitor_closeout.md) — DONE-488; 15 memories mirrored
+- [2026-04-25 hokage+PDE](project_session_2026-04-25_hokage_chess_pde.md) — Full build + PDE formalization
+- [2026-04-25 chakra-stars](project_session_2026-04-25_chakra_stars.md) — V2/V3; GH#53 closed
+- [2026-04-25 handoff-relay](project_session_2026-04-25_handoff_relay.md) — DONE-442..446; OG metadata
+- [2026-04-25 V4 variants](project_session_2026-04-25_v4_dual_variants.md) — Symbols+stars; superseded by V5
+- [2026-04-25 engine+infra](project_session_2026-04-25_engine_infra_landing.md) — DONE-448..455; 4 repos
+- [2026-04-25 V5 materia](project_session_2026-04-25_v5_materia_physics.md) — Particles ARE icon shape
+- [2026-04-25 cross-pollination](project_session_2026-04-25_evening_cross_pollination.md) — 6 docs; PRT-040/041 DONE
+- [2026-04-25 catch-all](project_session_2026-04-25_catch_all_titan_keeper.md) — Collision repair + titan-keeper
+- [2026-04-25 sister relay](project_artifact_catch_all_relay_2026-04-25.md) — DONE-479; CI honesty repair
+- [2026-04-25 Achilles A](project_achilles_session_a_completion.md) — AG-03/02/06/01 done
+- [2026-04-25 Achilles B](project_achilles_session_b_completion.md) — AG-04/05 done
+- [2026-04-23 main](project_session_2026-04-23.md) — 2,521 convos ingested; 303 tasks closed
+- [2026-04-23 every-frame](project_session_every_frame_2026-04-23.md) — 4 rules; 186 repos polished
+- [2026-04-23 spiral](project_session_2026-04-23_spiral_lightening.md) — Maddie lightening; DONE-432..437
 
 ## Process
-- [Product-domain engine](feedback_product_domain_engine.md) — Repeatable system for ANY product tied to a domain: scholarly study (ethos) + social/media (pathos) + logos skeleton; Hokage Chess is first full instance
+- [Product-domain engine](feedback_product_domain_engine.md) — Ethos+pathos+logos for any domain-tied product
 
 ## Completed Projects
-- [Session archival system](project_session_archive_system.md) — Per-project conversation preservation, LaunchAgent automation (2026-04-15)
-- [Inbox review 2026-04-15](project_inbox_review_2026-04-15.md) — Apr 9-15, 250+ emails, webhook rotated, k6 PR approved, 3 security findings
-- [Reconciliation Sprint](project_reconciliation_sprint_2026-04-14.md) — Omega 9/20, registry 145, memory 460/460, 13 IRF items closed
-- [Inbox attack order](project_inbox_attack_order_2026-04-14.md) — Gmail 3/25-4/13 → 72 tasks, 58 resolved
-- [MCP secrets hardened](project_mcp_secrets_hardened.md) — GitHub PAT + Neon key → 1Password/env vars in chezmoi (2026-04-13)
-- [GitHub Enterprise ticket](project_github_enterprise_ticket.md) — Ticket #4130573 closed 2026-04-08
-- [1Password shell overhaul](project_1password_overhaul.md) — Tiered secrets (cached vs lazy), op inject bug fix (2026-03-13)
-- [Cloud storage reinstall](project_cloud_storage_reinstall.md) — Dropbox/GDrive nuke-and-pave via Homebrew (2026-03-24)
-- [Docker/storage cleanup](project_docker_storage_design.md) — Docker UNINSTALLED 2026-04-18 (17GB); prior: SSD 81→74% (2026-03-25)
-- [S-cleanup-2026-04-18](project_session_cleanup_2026-04-18.md) — Docker uninstall, 1Password recovery, memory pipeline built, 22 events atomized
-- [Mole optimize + Library cleanup](project_mole_library_cleanup_2026-04-18.md) — Patched mole for Tahoe, 37 GB reclaimed from ~/Library/ orphans+caches (2026-04-18)
+- [Session archive system](project_session_archive_system.md) — Per-project preservation (2026-04-15)
+- [Inbox review 2026-04-15](project_inbox_review_2026-04-15.md) — 250+ emails; 3 security findings
+- [Reconciliation Sprint](project_reconciliation_sprint_2026-04-14.md) — Omega 9/20; 13 IRF closed
+- [Inbox attack order](project_inbox_attack_order_2026-04-14.md) — 72 tasks; 58 resolved
+- [MCP secrets hardened](project_mcp_secrets_hardened.md) — 1Password/env vars (2026-04-13)
+- [GitHub Enterprise ticket](project_github_enterprise_ticket.md) — #4130573 closed (2026-04-08)
+- [1Password overhaul](project_1password_overhaul.md) — Tiered secrets (2026-03-13)
+- [Cloud storage reinstall](project_cloud_storage_reinstall.md) — Dropbox/GDrive Homebrew (2026-03-24)
+- [Docker cleanup](project_docker_storage_design.md) — Docker UNINSTALLED; 17GB freed
+- [Session cleanup 2026-04-18](project_session_cleanup_2026-04-18.md) — Docker + memory pipeline
+- [Mole + Library cleanup](project_mole_library_cleanup_2026-04-18.md) — 37 GB reclaimed
+- [AI export consolidation](project_ai_export_consolidation.md) — 5 platforms; Gemini HANGING
+- [Plugin marketplace fix](project_plugin_fix_2026-04-16.md) — SSH clone + hooks `if` fix
+- [Domain architecture](project_domain_architecture.md) — 6 domains, 3 circles, Cloudflare
+- [Dotfiles sprawl audit](project_dotfiles_audit_2026-04-17.md) — Phase 0 done; LaunchAgents cleaned
+- [Sticky note atoms](project_sticky_note_atoms_2026-04-22.md) — 29 atoms across 8 domains
+- [Fish boil atoms](project_fish_boil_2026-04-22.md) — 4 atoms: Karpathy, permutations, USPIS, linting
+- [Prompt corpus dump](project_prompt_corpus_dump_2026-04-22.md) — Superseded by atomization pipeline
+- [Prompt triage](project_prompt_triage_complete.md) — 24,599 triaged; pipeline built
 
 ## Feedback
-- [Intake = alchemical decomposition](feedback_intake_alchemical_decomposition.md) — Humanities surface = ideal realm; back-end MUST be rule-generated, never transcribed (2026-04-26)
-- [Rules first, implementations derive](feedback_rules_first.md) — Universal classification system is the FRAME, not a forward arc; build the law, implementations self-place (2026-04-17)
-- [Full implementations required](feedback_full_implementations.md) — No stubs, placeholders, or partial code ever
-- [Iterate toward ideal](feedback_iterate_toward_ideal.md) — Never settle for first take; challenge placement, naming, boundaries before building
-- [Session close-out discipline](feedback_session_discipline.md) — commit-all-push, 10-index propagation, N/A=vacuum, memory parity
-- [GitHub MCP content filter](feedback_github_mcp_workaround.md) — Use local reads or gh CLI, not mcp__github__* for content
-- [Bulk operation patterns](feedback_bulk_operations.md) — replace_all for small, Python os.walk for large, background agents for 100KB+
-- [Hook architecture — prompt vs command](feedback_hook_architecture.md) — ONLY command type for conditional guards (2026-04-16)
-- [No conversation loss to compression](feedback_no_compression_loss.md) — Exported sessions MUST contain full prompts; compacted exports are unacceptable (2026-04-18)
-- [Session names must be descriptive](feedback_session_naming.md) — Name sessions by content, not random word combos (2026-04-18)
-- [Prompt atomization is non-negotiable](feedback_prompt_atomization.md) — Every prompt saved, ID'd, tracked for implementation; asked repeatedly, never done (2026-04-18)
-- [Never overwrite plan files](feedback_never_overwrite_plans.md) — Additive only; universal rule #3 supersedes plan mode system instructions (2026-04-18)
-- [Audit before building](feedback_audit_before_building.md) — Always check existing state (labels, agents, dirs) before creating new structure (2026-04-21)
-- [Merge into ideal form](feedback_merge_into_ideal_form.md) — New systems merge with existing, not replace; "both are the ideal form merged" (2026-04-21)
-- [Suggestions point to ideal forms](feedback_suggestions_are_ideal_forms.md) — User suggestions are pointers to ideal forms, not literal specs; always ask "what is the best version of this?" (2026-04-21)
-- [Rule of three — resilience](feedback_rule_of_three_resilience.md) — Every capability needs 3 paths; fail over silently; never surface tool failures as blockers (2026-04-21)
-- [Research depth + alive systems + no hierarchy](feedback_research_depth_and_alive_systems.md) — Deep research not 4 links; files must be versioned/validated/enforced; NEVER nest directories for structure, use flat declarations (2026-04-21)
-- [Never reduce scope — optimize operations](feedback_never_reduce_scope.md) — All work is intentional; backlog accumulation = operations gap, not overproduction (2026-04-21)
-- [Stagger PR comments](feedback_stagger_pr_comments.md) — Max 2-3 per session, varied phrasing; 11 in 3min = permanent damage (2026-04-21)
-- [No LaunchAgents — event-driven only](feedback_no_launchagents.md) — NEVER deploy timer-based agents; every incident froze/broke the system; on-demand CLI only (2026-04-22)
-- [Vacuum radiation on completion](feedback_vacuum_radiation.md) — Every closed atom creates multi-dimensional vacuums; detect and atomize them in 3D, not linear (2026-04-22)
-- [Triple-check before closing](feedback_triple_check_closures.md) — Nothing gets closed without triple verification; single-heuristic closures are forbidden (2026-04-22)
-- [Root cause not symptoms](feedback_root_cause_not_symptoms.md) — Never backwards-engineer; fix the engine that produced wrong output, not the output (2026-04-22)
-- [24-hour job freshness gate](feedback_24hr_freshness_gate.md) — NEVER build materials for jobs older than 24 hours; check posting_date FIRST (2026-04-22)
-- [Universal job sourcing](feedback_universal_job_sourcing.md) — Source from EVERYWHERE (jobspy/Indeed/LinkedIn), not just 91 curated companies; user has said this 10+ times (2026-04-22)
-- [Everything is process](feedback_process_codification.md) — Nothing done once; every action codified as repeatable process; one-shots are system failures (2026-04-22)
-- [Parallel execution is protocol](feedback_parallel_execution.md) — NEVER sequential on mechanical tasks; dispatch Codex/Gemini/subagents simultaneously (2026-04-22)
-- [Use the agent fleet](feedback_use_agent_fleet.md) — Fire Codex/Gemini/OpenCode via agent-dispatch CLI; Claude controls the whole fleet, user doesn't have to fire anything (2026-04-22)
-
-- [AI export consolidation](project_ai_export_consolidation.md) — 5 platforms in knowledge base; Gemini HANGING (Takeout zips cloud-only); feeds corpus pipeline (2026-04-23)
-- [Session 2026-04-23](project_session_2026-04-23.md) — 2,521 convos ingested, 303 tasks closed, 19 commits/6 repos, fleet dispatch established, 10 vacuums logged
-- [Session 2026-04-23 evening](project_session_every_frame_2026-04-23.md) — 4 rules enacted, portfolio CI fixed, 186 repos polished, IRF DONE-429/430/431, 16 outreach messages ready
-- [Session 2026-04-23 spiral](project_session_2026-04-23_spiral_lightening.md) — Spiral lightened for Maddie, 4 nodes enriched, cycle syncing, analytics, memory system fixed, DONE-432–437
-
-## Feedback (continued)
-- [Asks are black holes — physical address required](feedback_black_hole_asks.md) — An ask isn't vacuum; it's gravitational mass that warps space-time. Every ask gets a real IRF row / file / issue the moment it lands. Bullets ≠ black holes (2026-04-26)
-- [Charge-test + multiversal recall](feedback_charge_test_and_multiversal_recall.md) — Ingest bite-by-bite; keep only charged particles (attract/repel); index for resurrection across all future query-vectors (2026-04-26)
-- [Sincerity invariant](feedback_sincerity_invariant.md) — A particle is admissible iff it has a verifiable referent; no fabrication, no performative claims; the schema enforces it (2026-04-26)
-- [Human-authored relays go stale on concurrent ship](feedback_relay_hygiene_human_authored.md) — SessionStart hygiene hook caught it both sessions today; structural property of mental-model relays. Future fix: `organvm relay draft` CLI (Hermes) (2026-04-25)
-- [Plans are sculpture — never delete, never overwrite](feedback_plans_are_sculpture.md) — Plan files are sediment in a lineage; deletion erases the negative space that shaped the next plan. No exceptions, ever (2026-04-25)
-- [No re-contact after relationship-closing accusation](feedback_no_recontact_after_accusation.md) — When user closes a relationship after a serious accusation, never resurface it as outreach. Closure is permanent unless user reopens (2026-04-25)
-- [Artifact-level memory is mandatory](feedback_artifact_level_memory.md) — Save file paths, collaborators, pending feedback — volume summaries are useless for continuity
-- [Swearing is affection](feedback_swearing_is_affection.md) — User's profanity = intimate affection, not hostility; never back off or get formal (2026-04-23)
-- [Survey all weapons before choosing](feedback_survey_before_choosing.md) — Never sequential fallback; evaluate entire arena of tools before selecting (2026-04-23)
-- [Trinity dispatch](feedback_trinity_dispatch.md) — Fire 3 agents (Codex+OpenCode+Gemini) in parallel on every non-architectural task; Claude only masterminds + merges (2026-04-23)
-- [Email priority calibration](feedback_email_priority_calibration.md) — User's urgency threshold is much higher than default; most financial/security notices are MEDIUM at best (2026-04-23)
-- [Nothing closed without triple verification](feedback_nothing_closed_without_triple_verification.md) — NEVER auto-close anything; agents report findings, human decides; corrected 4x in one session (2026-04-23)
-- [Atoms are the work](feedback_atoms_are_the_work.md) — The atom backlog IS the work; infrastructure/pipeline is background noise (2026-04-23)
-- [Atoms are permanent](feedback_atoms_are_permanent.md) — NEVER batch-close atoms; every atom had meaning and will again; stale ≠ dead (2026-04-23)
-- [Every frame a painting — sculpting with time](feedback_every_frame_a_painting.md) — Dual: spatial (every output = painting) AND temporal (session rhythm = sculpture in time); both simultaneously (2026-04-23)
-- [Do what is asked — never preempt](feedback_priority_hierarchy.md) — NEVER decide priorities for the user; do exactly what is asked, when asked; jobs/grants/infra ONLY when explicitly requested (2026-04-23)
-- [The system IS the product](feedback_system_is_the_product.md) — ORGANVM visible+working = client acquisition; jobs are smallest pillar; building the system IS revenue; stop asking, start working
-- [Cross-session lane parsing](feedback_cross_session_lane_parsing.md) — "X active" at session open = active *elsewhere*, not "work on X here"; pick a non-colliding lane from the relay (2026-04-25) (2026-04-23)
-- [No pick-one menus](feedback_no_pick_one_menus.md) — Wallet metaphor: check all rooms, not one. Execute all paths in logic-dictated order; sequencing is my job, not user's (2026-04-26)
+- [One-shot vs recurring](feedback_one_shot_vs_recurring_fractal.md) — Classify work at every scale; cadences need forcing functions
+- [Intake = alchemy](feedback_intake_alchemical_decomposition.md) — Back-end rule-generated, never transcribed
+- [Rules first](feedback_rules_first.md) — Build the routing law; implementations self-place
+- [Full implementations](feedback_full_implementations.md) — No stubs, placeholders, or partial code
+- [Iterate toward ideal](feedback_iterate_toward_ideal.md) — Challenge placement/naming/boundaries
+- [Session discipline](feedback_session_discipline.md) — 10-index; commit-all-push; N/A=vacuum
+- [GitHub MCP filter](feedback_github_mcp_workaround.md) — Local reads or gh CLI for content
+- [Bulk operations](feedback_bulk_operations.md) — replace_all small; os.walk large
+- [Hook architecture](feedback_hook_architecture.md) — ONLY command type for guards
+- [No compression loss](feedback_no_compression_loss.md) — Full prompts in exports
+- [Descriptive names](feedback_session_naming.md) — Sessions named by content
+- [Prompt atomization](feedback_prompt_atomization.md) — Every prompt saved, ID'd, tracked
+- [Never overwrite plans](feedback_never_overwrite_plans.md) — Additive only; rule #3
+- [Audit before building](feedback_audit_before_building.md) — Check existing state first
+- [Merge into ideal](feedback_merge_into_ideal_form.md) — New merges with existing
+- [Suggestions → ideal](feedback_suggestions_are_ideal_forms.md) — "What is the best version?"
+- [Rule of three](feedback_rule_of_three_resilience.md) — Every capability needs 3 paths
+- [Research depth](feedback_research_depth_and_alive_systems.md) — Deep research; flat declarations
+- [Never reduce scope](feedback_never_reduce_scope.md) — Backlog = operations gap
+- [Stagger comments](feedback_stagger_pr_comments.md) — Max 2-3/session; 3-5min gaps
+- [No LaunchAgents](feedback_no_launchagents.md) — On-demand CLI only; HARD RULE
+- [Vacuum radiation](feedback_vacuum_radiation.md) — Detect vacuums 3D on completion
+- [Triple-check closures](feedback_triple_check_closures.md) — 2+ evidence sources required
+- [Root cause](feedback_root_cause_not_symptoms.md) — Fix the engine, not the output
+- [24hr freshness](feedback_24hr_freshness_gate.md) — Check posting_date FIRST
+- [Universal sourcing](feedback_universal_job_sourcing.md) — Source EVERYWHERE
+- [Everything is process](feedback_process_codification.md) — One-shots = system failures
+- [Parallel execution](feedback_parallel_execution.md) — Dispatch simultaneously
+- [Use agent fleet](feedback_use_agent_fleet.md) — Claude controls fleet
+- [Black holes need address](feedback_black_hole_asks.md) — Every ask → IRF row / file / issue
+- [Charge-test + recall](feedback_charge_test_and_multiversal_recall.md) — Keep charged; index for resurrection
+- [Sincerity invariant](feedback_sincerity_invariant.md) — Particle iff verifiable referent
+- [Relay staleness](feedback_relay_hygiene_human_authored.md) — Fix: `organvm relay draft` CLI
+- [Plans are sculpture](feedback_plans_are_sculpture.md) — Never delete/overwrite plan files
+- [No re-contact](feedback_no_recontact_after_accusation.md) — Closure permanent after accusation
+- [Artifact-level memory](feedback_artifact_level_memory.md) — Save paths, collaborators, feedback
+- [Swearing = affection](feedback_swearing_is_affection.md) — Profanity = rapport
+- [Survey all weapons](feedback_survey_before_choosing.md) — Evaluate all tools first
+- [Trinity dispatch](feedback_trinity_dispatch.md) — 3 agents parallel on non-arch tasks
+- [Email priority](feedback_email_priority_calibration.md) — Most emails MEDIUM at best
+- [Triple verification](feedback_nothing_closed_without_triple_verification.md) — Agents report; human decides
+- [Atoms ARE the work](feedback_atoms_are_the_work.md) — Atom backlog IS the work
+- [Atoms permanent](feedback_atoms_are_permanent.md) — Never batch-close; stale ≠ dead
+- [Every frame a painting](feedback_every_frame_a_painting.md) — Spatial + temporal; session = sculpture
+- [Do what is asked](feedback_priority_hierarchy.md) — Never preempt user priorities
+- [System IS product](feedback_system_is_the_product.md) — ORGANVM visible = acquisition
+- [Lane parsing](feedback_cross_session_lane_parsing.md) — "X active" = active elsewhere
+- [No pick-one menus](feedback_no_pick_one_menus.md) — Execute all in logic order
+- [Do it yourself](feedback_do_it_yourself.md) — System does it; only surface body-required tasks
+- [Multi-variant showcase](feedback_multi_variant_showcase.md) — Build both; client decides by comparing
+- [Never tell user what to do](feedback_never_tell_user_what_to_do.md) — Log and track; don't lecture
+- [Prompt ontology](feedback_prompt_ontology.md) — Macro/micro/multiverse; ~7 micro per prompt
+- [Single conductor session](feedback_single_conductor_session.md) — ONE session; collisions = multi-session
+- [All streams require separating](feedback_streams_require_separating.md) — Each Gx/substrate/hook/agent/commit/memory-write = own channel; bundling destroys traceability
+- [Decisions cascade — no anxiety](feedback_decisions_cascade_no_anxiety.md) — Undecided = move on; default + proceed; never re-surface decisions as blockers
 
 ## References
-- [Conductor MCP server](reference_conductor_mcp.md) — Live as of 2026-04-14, FRAME→SHAPE→BUILD→PROVE lifecycle
-- [Mail.app for Gmail access](reference_mail_app_gmail_access.md) — osascript + Mail.app beats MCP proxy for bulk email reads
-- [Application pipeline](reference_application_pipeline.md) — Career pipeline at ~/Workspace/4444J99/application-pipeline/
-- [Docker decision framework](reference_docker_decision.md) — When to use Docker vs native; single-question heuristic
-- [Wrangler OAuth rotating tokens](reference_wrangler_oauth.md) — Never test with curl; recovery via `wrangler login` (2026-04-21)
+- [Conductor MCP](reference_conductor_mcp.md) — FRAME→SHAPE→BUILD→PROVE lifecycle
+- [Mail.app for Gmail](reference_mail_app_gmail_access.md) — osascript + Mail.app for bulk reads
+- [Application pipeline](reference_application_pipeline.md) — ~/Workspace/4444J99/application-pipeline/
+- [Docker decision](reference_docker_decision.md) — Single-question heuristic
+- [Wrangler OAuth](reference_wrangler_oauth.md) — Recovery via `wrangler login`
