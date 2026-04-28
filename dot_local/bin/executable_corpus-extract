@@ -19,16 +19,21 @@ import sys
 from pathlib import Path
 
 def extract_blocks(text: str, tag: str) -> list[str]:
-    # Support both <tag>...</tag> and [tag]...[/tag] or just starting with [tag]
-    # Utopic multi-format support
-    patterns = [
-        rf"<{re.escape(tag)}[^>]*>(.*?)</{re.escape(tag)}>",
-        rf"\[{re.escape(tag)}\][\s\n]*(.*?)[\s\n]*\[/{re.escape(tag)}\]",
-        rf"\[{re.escape(tag)}\][\s\n]*(.*?)(?=\n\s*\[|$)"
+    esc = re.escape(tag)
+    delim_patterns = [
+        (rf"<{esc}[^>]*>(.*?)</{esc}>", re.DOTALL | re.IGNORECASE),
+        (rf"\[{esc}\][\s\n]*(.*?)[\s\n]*\[/{esc}\]", re.DOTALL | re.IGNORECASE),
+        (rf"\[{esc}\][\s\n]*(.*?)(?=\n\s*\[|$)", re.DOTALL | re.IGNORECASE),
     ]
-    blocks = []
-    for p in patterns:
-        blocks.extend(re.findall(p, text, re.DOTALL | re.IGNORECASE))
+    header_pattern = (
+        rf"^#{{1,6}}\s+(?:[IVX]+\.\s+)?(?:CORE\s+)?{esc}\b[^\n]*\n(.*?)(?=^#{{1,6}}\s|\Z)",
+        re.DOTALL | re.IGNORECASE | re.MULTILINE,
+    )
+    id_pattern = (rf"^id:\s*{esc}__([^\s\n]+)", re.MULTILINE | re.IGNORECASE)
+
+    blocks: list[str] = []
+    for p, flags in delim_patterns + [header_pattern, id_pattern]:
+        blocks.extend(re.findall(p, text, flags))
     return [b.strip() for b in blocks if b.strip()]
 
 def main() -> int:
