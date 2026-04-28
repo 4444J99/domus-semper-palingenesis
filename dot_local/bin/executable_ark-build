@@ -1,0 +1,335 @@
+#!/usr/bin/env python3
+"""ark-build — assemble a chronological corpus of every user prompt across
+all 4jp Claude Code project scopes within a date window.
+
+Usage:
+    ark-build [--since YYYY-MM-DD] [--until YYYY-MM-DD] [--out PATH]
+
+Defaults:
+    --since: 2026-04-19
+    --until: today
+    --out:   ~/.claude/plans/2026-04-27-ark-past-week-prompts.md
+
+Walks ~/.claude/projects/-Users-4jp*/ for *.jsonl, extracts records where
+type=="user" and the content is a real prompt (not a tool_result, not a
+synthetic command wrapper), then writes a navigable markdown artifact.
+"""
+from __future__ import annotations
+
+import argparse
+import collections
+import datetime as dt
+import json
+import os
+import re
+import sys
+from pathlib import Path
+from typing import Iterable
+
+PROJECTS_ROOT = Path.home() / ".claude" / "projects"
+SCOPE_GLOB = "-Users-4jp*"
+DEFAULT_OUT = Path.home() / ".claude" / "plans" / "2026-04-27-ark-past-week-prompts.md"
+
+# Patterns that mark a "user" record as synthetic, not a real human prompt
+SYNTHETIC_PREFIXES = (
+    "<local-command-caveat>",
+    "<command-name>",
+    "<command-message>",
+    "<system-reminder>",
+    "Caveat: The messages below were generated",
+)
+# Some records are pure command echoes — strip wrapper and see if anything remains
+WRAPPER_TAG_RE = re.compile(
+    r"<(local-command-caveat|command-name|command-message|command-args|"
+    r"system-reminder|user-prompt-submit-hook)[^>]*>.*?</\1>",
+    re.DOTALL,
+)
+
+
+def extract_user_text(record: dict) -> str | None:
+    """Pull the human-authored text from a `type=="user"` record, or None
+    if the record is a tool_result, a synthetic wrapper, or empty."""
+    msg = record.get("message")
+    if not isinstance(msg, dict):
+        return None
+    content = msg.get("content")
+    text_chunks: list[str] = []
+    if isinstance(content, str):
+        text_chunks.append(content)
+    elif isinstance(content, list):
+        for c in content:
+            if not isinstance(c, dict):
+                continue
+            if c.get("type") == "tool_result":
+                # tool result, not a human prompt
+                return None
+            if c.get("type") == "text":
+                text_chunks.append(c.get("text", ""))
+    if not text_chunks:
+        return None
+    text = "\n".join(text_chunks).strip()
+    if not text:
+        return None
+    # Strip wrapper tags and see if substance remains
+    stripped = WRAPPER_TAG_RE.sub("", text).strip()
+    if not stripped:
+        return None
+    # If the only content is a synthetic prefix with no following user words
+    if any(text.lstrip().startswith(p) for p in SYNTHETIC_PREFIXES) and len(stripped) < 30:
+        return None
+    return text  # return original (not stripped) so wrappers are visible in chronology
+
+
+def parse_iso(ts: str) -> dt.datetime | None:
+    if not ts:
+        return None
+    try:
+        # tolerate Z suffix
+        return dt.datetime.fromisoformat(ts.replace("Z", "+00:00"))
+    except Exception:
+        return None
+
+
+def scope_label(project_dir: Path) -> str:
+    """Convert -Users-4jp-Workspace-foo to a readable scope label."""
+    name = project_dir.name
+    if not name.startswith("-Users-4jp"):
+        return name
+    rest = name[len("-Users-4jp"):]
+    if not rest:
+        return "/Users/4jp"
+    # rest starts with '-', the rest are path segments separated by '-'
+    return "/Users/4jp" + rest.replace("-", "/")
+
+
+def iter_prompts(since: dt.datetime, until: dt.datetime) -> Iterable[dict]:
+    for project_dir in sorted(PROJECTS_ROOT.glob(SCOPE_GLOB)):
+        if not project_dir.is_dir():
+            continue
+        for jsonl in sorted(project_dir.glob("*.jsonl")):
+            try:
+                mtime = dt.datetime.fromtimestamp(jsonl.stat().st_mtime, tz=dt.timezone.utc)
+            except OSError:
+                continue
+            if mtime < since:
+                # quick reject — file untouched in window
+                continue
+            session_id = jsonl.stem
+            scope = scope_label(project_dir)
+            try:
+                with jsonl.open() as f:
+                    for line_no, line in enumerate(f, 1):
+                        try:
+                            rec = json.loads(line)
+                        except Exception:
+                            continue
+                        if rec.get("type") != "user":
+                            continue
+                        ts = parse_iso(rec.get("timestamp", ""))
+                        if ts is None:
+                            continue
+                        if ts < since or ts > until:
+                            continue
+                        text = extract_user_text(rec)
+                        if text is None:
+                            continue
+                        yield {
+                            "ts": ts,
+                            "scope": scope,
+                            "session_id": session_id,
+                            "text": text,
+                            "uuid": rec.get("uuid", ""),
+                            "cwd": rec.get("cwd", ""),
+                            "git_branch": rec.get("gitBranch", ""),
+                            "file": str(jsonl),
+                            "line": line_no,
+                        }
+            except OSError:
+                continue
+
+
+def first_clause(text: str, n: int = 80) -> str:
+    """Return a one-line opening clause for index display."""
+    # Strip wrapper tags for index display
+    cleaned = WRAPPER_TAG_RE.sub("", text).strip()
+    cleaned = re.sub(r"\s+", " ", cleaned)
+    if not cleaned:
+        cleaned = text.strip().splitlines()[0] if text.strip() else "(empty)"
+    return cleaned[:n] + ("…" if len(cleaned) > n else "")
+
+
+def render_ark(
+    prompts: list[dict],
+    since: dt.datetime,
+    until: dt.datetime,
+    max_prompt_bytes: int | None = None,
+) -> str:
+    out: list[str] = []
+    out.append("# The Ark — Past-Week Prompt Corpus")
+    out.append("")
+    out.append(f"**Window:** {since.date()} → {until.date()}  ")
+    out.append(f"**Scopes:** all `~/.claude/projects/-Users-4jp*/`  ")
+    out.append(f"**Total prompts:** {len(prompts)}  ")
+    if max_prompt_bytes is not None:
+        truncated_count = sum(1 for p in prompts if len(p["text"]) > max_prompt_bytes)
+        out.append(f"**Distillation:** prompts >{max_prompt_bytes:,} bytes shown as stubs ({truncated_count} of {len(prompts)} truncated)  ")
+    out.append(f"**Generated:** {dt.datetime.now(dt.timezone.utc).isoformat(timespec='seconds')}  ")
+    out.append(f"**Built by:** `~/.local/bin/ark-build`")
+    out.append("")
+    out.append("---")
+    out.append("")
+    out.append("## How to read this")
+    out.append("")
+    out.append("Three layers, in order:")
+    out.append("")
+    out.append("1. **Index** — every prompt in chronological order with its opening clause.")
+    out.append("2. **Through-lines** — recurring themes derived from the corpus.")
+    out.append("3. **Full chronology** — every prompt verbatim, in order, scope-tagged.")
+    out.append("")
+    out.append("This is the substrate. Read it before resuming work — these are the ")
+    out.append("prompts that composed the past week. The Muses' record, not a summary.")
+    out.append("")
+    out.append("---")
+    out.append("")
+
+    # --- Index ---
+    out.append("## 1. Index")
+    out.append("")
+    by_date = collections.defaultdict(list)
+    for p in prompts:
+        by_date[p["ts"].date()].append(p)
+    for date in sorted(by_date.keys()):
+        day_prompts = by_date[date]
+        out.append(f"### {date.isoformat()} — {len(day_prompts)} prompts")
+        out.append("")
+        out.append("| Time (UTC) | Scope | Length | Opening clause |")
+        out.append("|---|---|---:|---|")
+        for p in day_prompts:
+            time_s = p["ts"].strftime("%H:%M")
+            scope_short = p["scope"].replace("/Users/4jp", "~").replace("/Workspace/", "/W/")
+            length = len(p["text"])
+            clause = first_clause(p["text"], 70).replace("|", "\\|")
+            out.append(f"| {time_s} | `{scope_short}` | {length} | {clause} |")
+        out.append("")
+
+    # --- Through-lines ---
+    out.append("---")
+    out.append("")
+    out.append("## 2. Through-lines")
+    out.append("")
+    out.append("Recurring named entities and themes (case-insensitive substring match across all prompts).")
+    out.append("")
+    themes = [
+        ("Maddie / elevate-align", ["maddie", "elevate", "align"]),
+        ("Rob / Hokage Chess", ["rob", "hokage", "bonavoglia"]),
+        ("Scott Lefler", ["scott", "lefler"]),
+        ("Noah Beddome", ["noah", "beddome"]),
+        ("Anti-paste-guard / yellow paste", ["paste-guard", "anti-paste", "allow_paste", "yellow"]),
+        ("Conductor / dispatch", ["conductor", "dispatch", "fleet"]),
+        ("ORGANVM / organ", ["organvm", "organ"]),
+        ("Plans / planning", ["plan", "planning", ".claude/plans"]),
+        ("Memory / MEMORY.md", ["memory", "memory.md", "memories"]),
+        ("Atoms / IRF", ["atom", "irf", "atomization"]),
+        ("Spirals / chakra-stars", ["spiral", "chakra", "icon"]),
+        ("Substrate / materia", ["substrate", "materia"]),
+        ("Sessions / chronology", ["session", "chronology", "transcript"]),
+        ("Yellow paste / blocked", ["yellow", "blocked", "blocking"]),
+        ("Vacuums / N/A", ["vacuum", "n/a", "vacuums"]),
+    ]
+    out.append("| Theme | Prompts | Sample timestamps |")
+    out.append("|---|---:|---|")
+    for name, keywords in themes:
+        matches = [
+            p for p in prompts
+            if any(k in p["text"].lower() for k in keywords)
+        ]
+        if not matches:
+            continue
+        sample_ts = ", ".join(m["ts"].strftime("%m-%d %H:%M") for m in matches[:3])
+        if len(matches) > 3:
+            sample_ts += f", … (+{len(matches)-3} more)"
+        out.append(f"| {name} | {len(matches)} | {sample_ts} |")
+    out.append("")
+
+    # --- Full chronology ---
+    out.append("---")
+    out.append("")
+    out.append("## 3. Full chronology")
+    out.append("")
+    out.append("Every prompt verbatim. Headers carry timestamp, scope, and session-id (truncated).")
+    out.append("Use `Ctrl-F` for the timestamp from the Index to jump.")
+    out.append("")
+    for p in prompts:
+        ts_s = p["ts"].strftime("%Y-%m-%d %H:%M:%S UTC")
+        scope_short = p["scope"].replace("/Users/4jp", "~")
+        sid_short = p["session_id"][:8]
+        out.append(f"### {ts_s} · `{scope_short}` · `{sid_short}`")
+        out.append("")
+        text = p["text"]
+        if max_prompt_bytes is not None and len(text) > max_prompt_bytes:
+            head = text[:max_prompt_bytes]
+            fence = "```"
+            while fence in head:
+                fence += "`"
+            out.append(fence)
+            out.append(head)
+            out.append(fence)
+            out.append("")
+            out.append(
+                f"> **[truncated]** prompt is {len(text):,} bytes total — first {max_prompt_bytes:,} shown above. "
+                f"Likely a recursive paste of prior session output. "
+                f"Full text in `{p['file']}` line {p['line']}."
+            )
+            out.append("")
+        else:
+            fence = "```"
+            while fence in text:
+                fence += "`"
+            out.append(fence)
+            out.append(text)
+            out.append(fence)
+            out.append("")
+
+    return "\n".join(out)
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--since", default="2026-04-19", help="ISO date (default 2026-04-19)")
+    ap.add_argument("--until", default=None, help="ISO date (default: now)")
+    ap.add_argument("--out", default=str(DEFAULT_OUT), help="output markdown path")
+    ap.add_argument(
+        "--max-prompt-bytes",
+        type=int,
+        default=None,
+        help="truncate prompts longer than this to a stub (omit for full chronology)",
+    )
+    args = ap.parse_args()
+
+    since = dt.datetime.fromisoformat(args.since).replace(tzinfo=dt.timezone.utc)
+    if args.until:
+        until = dt.datetime.fromisoformat(args.until).replace(tzinfo=dt.timezone.utc)
+    else:
+        until = dt.datetime.now(dt.timezone.utc)
+
+    print(f"[ark-build] window: {since.isoformat()} → {until.isoformat()}", file=sys.stderr)
+    prompts = sorted(iter_prompts(since, until), key=lambda p: p["ts"])
+    print(f"[ark-build] extracted {len(prompts)} real user prompts", file=sys.stderr)
+
+    out_path = Path(args.out).expanduser()
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    body = render_ark(prompts, since, until, max_prompt_bytes=args.max_prompt_bytes)
+    out_path.write_text(body)
+    print(f"[ark-build] wrote {out_path} ({len(body)} bytes)", file=sys.stderr)
+
+    # Print quick summary
+    by_date = collections.Counter(p["ts"].date() for p in prompts)
+    print("[ark-build] per-day counts:", file=sys.stderr)
+    for date in sorted(by_date):
+        print(f"  {date}: {by_date[date]}", file=sys.stderr)
+
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
