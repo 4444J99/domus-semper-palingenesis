@@ -65,7 +65,18 @@ This becomes a hard rule for closure-cards going forward, mirrored into `feedbac
 
 ## Part 2 — External Pre-Work Forms Package
 
-The user has eight categories of work that can advance during the session-limit gap. Each form below is self-contained: it states the goal, the work, where to record the output, and how the next Claude session re-integrates it.
+The user has thirteen categories of work that can advance during the session-limit gap (8 in the initial cut + 5 added in self-audit gap-closure). Each form below is self-contained: it states the goal, the work, where to record the output, and how the next Claude session re-integrates it.
+
+**Form types matrix:**
+
+| Type | Forms |
+|---|---|
+| Brainstorming (subjective generation) | B, F |
+| Experimentation (empirical capture) | C |
+| Exploration (information gathering) | D, J |
+| Pre-work (preparation for next session) | A, E, G, H, K |
+| Strategic brief (offline thinking) | L, M |
+| System hygiene (maintenance) | I |
 
 The forms are designed against the active feedback rules:
 - `feedback_decisions_cascade_no_anxiety` — every undecided item gets a default + proceed signal
@@ -182,6 +193,81 @@ When sessions are scarce, the user's *own context window* becomes the bottleneck
 | `~/Workspace/organvm/my-knowledge-base/.conductor/active-handoff.md` | What Gemini is doing while you wait | Read fully; this is the parallel-track work |
 | `~/.claude/plans/2026-04-28-decision-cascade-typed-hejlsberg.md` | The 8-decision board | Read; cross-reference against Form B above |
 | `~/.claude/plans/these-projects-are-getting-shimmying-lerdorf.md` | 13-part case-wide synthesis (last big strategy doc) | Deep read; this is the "where am I" anchor |
+
+### Form I — System Hygiene: MEMORY.md Cleanup
+
+**Type:** System maintenance (mechanical)
+**Time:** 20 min
+**Output:** Pruned `MEMORY.md` ≤200 lines
+**Why:** Currently 208 lines — exceeds the 200-line cap stated in the auto-memory frontmatter rule. Lines beyond ~200 are truncated at session load, meaning later entries are silently invisible. Self-audit caveat: my own MEMORY.md edit added the 208th line, so this is partly self-inflicted.
+
+**Steps:**
+1. Open `~/.claude/projects/-Users-4jp/memory/MEMORY.md`.
+2. Identify candidates for consolidation in `Active Artifacts` section: entries that can be merged (e.g., the multiple "trail (refreshed)" entries for the same person), or entries that can move to a topic file pointed to from the index (per the auto-memory rule).
+3. Aim: trim to ≤195 lines for safety margin.
+4. **Do not delete** any memory file content — this is index pruning only. The detail moves into topic files; the MEMORY.md line shortens.
+
+### Form J — Exploration: Atom Backlog P0/P1 Spot-Check
+
+**Type:** Triage / exploration
+**Time:** 30 min
+**Output:** New file `~/.claude/plans/2026-04-28-atom-backlog-p0-p1-spotcheck.md`
+**Reference:** Session-start hook reported `14898 OPEN` atoms; top P0/P1 visible in the briefing.
+
+The atom backlog is the work (`feedback_atoms_are_the_work`). During a session-limit gap, scanning the top P0/P1 entries by hand surfaces what should drive the next Claude session's focus — without burning a session token on a triage pass.
+
+**Steps:**
+1. Run `organvm atoms list --status open --priority P0 | head -30`.
+2. For each P0 atom: write one line — *what is it, is it stale, does it need a Claude session or can it move to Gemini/Codex?*
+3. Repeat for top 30 P1.
+4. Mark 3–5 highest-leverage items for the next Claude session's first move.
+
+### Form K — User-Actions When Vendor Blockers Clear
+
+**Type:** Pre-work / 5-minute mechanical actions
+**Time:** Variable; each ~5–15 min when triggered
+**Output:** Append `## done-2026-04-28` section to corresponding decision card line
+
+Items previously tagged "deferred — user blocker" are *exactly* the work the user can do during the gap. Each item below is a user-action with clear preconditions:
+
+| ID | Action | Preconditions | Where to confirm done |
+|---|---|---|---|
+| **A4** | Cloudflare custom-domain auth for `elevatealign.com` | Logged into Cloudflare; have Maddie's GoDaddy CNAME (depends on Send 2/Maddie MD-2) | Update `2026-04-28-decision-cascade-typed-hejlsberg.md` row A4 to `done` |
+| **A6** | Cloudflare CI token for auto-deploy (GH#52) | A4 done; can navigate to Cloudflare token-creation UI | Same decision card; row A6 |
+| **B5** | Kit (ConvertKit) API key paste | Logged into Kit account; locate API key page | Paste into env file; record path in decision card row B5 |
+| **B13** | Trademark clearance — initial research | None — Google search for "trademark clearance attorney NYC startup" | Note 3 candidate names + rate ranges in B13 row |
+
+**Sequencing:** A4 → A6 (sequential). B5 and B13 can run any order, after Form A sends 1–5.
+
+### Form L — Brief: Gemini Envelope Task Priority
+
+**Type:** Strategic brief (offline thinking)
+**Time:** 15 min
+**Output:** Append `## priority-brief-2026-04-28` to `~/Workspace/organvm/my-knowledge-base/.conductor/active-handoff.md`
+**Reference:** The handoff envelope lists T1–T7 (concrete) + T8–T10 (optional substrate).
+
+Gemini will pick "any of T1–T7" by default. To shape Gemini's allocation toward the user's preferred bias:
+
+1. Re-read T1–T10 in the active-handoff envelope.
+2. Pick the 3 tasks the user would most like done first; pick 2 the user would deprioritize.
+3. Write a 5-bullet priority brief — Gemini reads this on its next start and weighs accordingly.
+
+This is the user's only chance to bias Gemini's path before the parallel work runs.
+
+### Form M — Codex Envelope Drafting (C1/C2)
+
+**Type:** Spec drafting (mechanical)
+**Time:** 25 min
+**Output:** New file `~/.claude/plans/2026-04-28-codex-envelope-c1-c2.md`
+**Status:** The original closure card mentioned "Codex routing for 2 mechanical specs" but no envelope was drafted. This form drafts it offline so the next Codex session has work waiting.
+
+**Steps:**
+1. Re-read the audit table — Codex was tagged for "2 mechanical specs" tied to C1/C2 IDs in the prior session.
+2. Locate C1/C2 in `~/.claude/plans/sessions-123-gemini-typed-hejlsberg.md` or surrounding plan files.
+3. Draft a Codex envelope (mirror the structure of `my-knowledge-base/.conductor/active-handoff.md`) with: scope, locked files, locked repos, concrete task list, cross-verification requirement.
+4. Save at `~/Workspace/organvm/<target-repo>/.conductor/active-handoff.md` ready for Codex pickup.
+
+This is the dispatch loop's missing leg — without C1/C2 envelope, the prior closure-card claim of "Codex C1/C2 awaits a Codex session" is incomplete.
 
 ### Form H — Pre-Work: Session Re-Entry Checklist
 
