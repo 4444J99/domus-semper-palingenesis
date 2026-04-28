@@ -1,0 +1,69 @@
+#!/usr/bin/env python3
+"""corpus-extract — pull tagged artifacts (e.g. <brainstorm>, [IDEA])
+from a prompt corpus or raw JSONL history.
+
+Usage:
+    corpus-extract --pattern TAG [--in PATH] [--out DIR]
+
+Defaults:
+    --in:  ~/.claude/plans/2026-04-28-ark-universal.md
+    --out: ./extractions/
+
+Built to reach back into the substrate and salvage lost gems.
+"""
+from __future__ import annotations
+
+import argparse
+import re
+import sys
+from pathlib import Path
+
+def extract_blocks(text: str, tag: str) -> list[str]:
+    # Support both <tag>...</tag> and [tag]...[/tag] or just starting with [tag]
+    # Utopic multi-format support
+    patterns = [
+        rf"<{re.escape(tag)}[^>]*>(.*?)</{re.escape(tag)}>",
+        rf"\[{re.escape(tag)}\][\s\n]*(.*?)[\s\n]*\[/{re.escape(tag)}\]",
+        rf"\[{re.escape(tag)}\][\s\n]*(.*?)(?=\n\s*\[|$)"
+    ]
+    blocks = []
+    for p in patterns:
+        blocks.extend(re.findall(p, text, re.DOTALL | re.IGNORECASE))
+    return [b.strip() for b in blocks if b.strip()]
+
+def main() -> int:
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--pattern", required=True, help="tag to search for (e.g. brainstorm)")
+    ap.add_argument("--in-file", help="input file (default: last generated Ark)")
+    ap.add_argument("--out-dir", default="./extractions", help="output directory")
+    args = ap.parse_args()
+
+    in_path = Path(args.in_file or "~/.claude/plans/2026-04-28-ark-universal.md").expanduser()
+    if not in_path.exists():
+        print(f"Error: input file {in_path} not found", file=sys.stderr)
+        return 1
+
+    content = in_path.read_text()
+    blocks = extract_blocks(content, args.pattern)
+    
+    if not blocks:
+        print(f"No blocks found matching '{args.pattern}'", file=sys.stderr)
+        return 0
+
+    out_dir = Path(args.out_dir).expanduser()
+    out_dir.mkdir(parents=True, exist_ok=True)
+    
+    print(f"Extracted {len(blocks)} blocks for '{args.pattern}'", file=sys.stderr)
+    for i, block in enumerate(blocks, 1):
+        # Generate a slug from the first few words
+        first_line = block.splitlines()[0]
+        slug = re.sub(r"[^a-z0-9]+", "-", first_line.lower())[:30].strip("-")
+        filename = f"{args.pattern}-{i:02d}-{slug}.md"
+        dest = out_dir / filename
+        dest.write_text(block)
+        print(f"  -> {dest}", file=sys.stderr)
+
+    return 0
+
+if __name__ == "__main__":
+    sys.exit(main())

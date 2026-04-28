@@ -3,6 +3,8 @@ date: 2026-04-27
 slug: decision-card-hanging-plan
 classification: decision-card
 state: awaiting-user
+last_surfaced: 2026-04-28
+surfaced_by: sleepy-clover-reification
 inherits_from:
   - 2026-04-25-hanging-items-full-implementation-plan.md
   - what-s-logically-next-extensibly-eager-giraffe.md (Stream C)
@@ -10,6 +12,10 @@ note: |
   Stream C surface from the propulsion plan. Single-card record of every
   hanging-plan item that requires user action. NOT a menu — the user clears
   at their own cadence; system tracks closures.
+reify_log:
+  - 2026-04-28: Card surfaced as part of sleepy-clover P0 reification pass.
+    All 7 user decisions + 3 user-composed sends remain awaiting user touch.
+    No items dropped or deferred this pass.
 ---
 
 # Decision Card — Hanging Plan (2026-04-25 → 2026-04-27)
