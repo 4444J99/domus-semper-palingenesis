@@ -18,6 +18,7 @@ CORPUS_PATHS = (
     "data/corpora/",                 # corpvs: prompt corpora JSONL (verbatim user prompts, FP-heavy)
     "private_dot_claude/plans/",     # chezmoi: Claude plan files (theoretical content)
     ".claude/plans/",                # Claude plan files in any repo
+    "prompt-corpus/",                # praxis-perpetua: session-export narratives (FP-heavy)
 )
 
 PATTERNS = [
