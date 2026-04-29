@@ -53,6 +53,7 @@
 - [Probe-reality gap](feedback_probe_reality_gap.md) — bench preflight greens on tiny probes; real dispatches still fail on model/scale; classify per-call, not on cache trust
 - [Session-as-seed / black-hole geometry](feedback_session_as_seed.md) — plant named vacuum with gravity, never fill; re-plant between agent passes; peer-readability test at every phase transition
 - [Plan approval ≠ execution authority](feedback_plan_approval_is_not_execution_auth.md) — ExitPlanMode approval doesn't authorize visible-to-others or acolyte-deferred actions; verification asks ≠ execution asks
+- [Preserve compactions](feedback_preserve_compactions.md) — every `/compact` (and silent autocompaction) gets dumped to a dated on-disk file; in-context summary is volatile
 
 ## Client Projects
 - [Sovereign Spiral — Maddie](project_sovereign_spiral_maddie.md) — 13-node 3D helix, Three.js, water funnel, GHL, phases: ELEVATE/ALIGN/UNLOCK
