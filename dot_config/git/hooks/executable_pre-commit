@@ -118,7 +118,9 @@ print("Add 'allow-secret' to a line to bypass a specific false positive.", file=
 sys.exit(1)
 PY
 
-# Chain pre-commit framework hooks if available and configured
+# Chain pre-commit framework hooks if available and configured.
+# Use ${1+"$@"} so an empty positional-parameter list does not trip
+# `set -u` on bash 3.2 (which macOS still ships at /bin/bash).
 if command -v pre-commit &>/dev/null && [[ -f .pre-commit-config.yaml ]]; then
-  exec pre-commit run --hook-stage pre-commit "${@}"
+  exec pre-commit run --hook-stage pre-commit ${1+"$@"}
 fi
