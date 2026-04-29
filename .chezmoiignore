@@ -90,3 +90,16 @@ _registry/
 .claude/projects/*/*.jsonl
 .claude/projects/*/[0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f]-*
 .claude/projects/*/sessions-index.json
+
+# Privilege firewall (2026-04-28) — case-content classes never enter chezmoi/git/iCloud-shared.
+# Defends against accidental chezmoi add of any case-related material.
+# See ~/Workspace/organvm/organvm-corpvs-testamentvm/docs/privilege-firewall.md
+**/lawsuit/**
+**/litigation/**
+**/case-files/**
+**/discovery/**
+**/depositions/**
+*-privileged.*
+*-privileged
+Documents/Legal-Active/**
+Library/PrivilegeAuditDB/**
