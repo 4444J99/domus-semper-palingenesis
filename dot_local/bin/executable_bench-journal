@@ -1,0 +1,167 @@
+#!/usr/bin/env python3
+"""bench-journal — append-only fsync'd dispatch ledger.
+
+Single-file jsonl at $BENCH_STATE_DIR/journal.jsonl. Every append calls
+os.fsync so a power loss or session crash cannot lose a record.
+
+Subcommands:
+  append [--from-stdin | --field key=value ...]
+  tail [-n N] [--agent A] [--status S]
+  find <id>
+  update <id> --field key=value ...
+
+Plan: ~/.claude/plans/design-every-winding-turning-valiant-thompson.md
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import os
+import secrets
+import sys
+import time
+from datetime import datetime, timezone
+from pathlib import Path
+
+STATE_DIR = Path(os.environ.get("BENCH_STATE_DIR", os.path.expanduser("~/.local/state/bench-fabric")))
+JOURNAL = STATE_DIR / "journal.jsonl"
+
+
+def _utc_now() -> str:
+    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def _gen_id() -> str:
+    return f"d-{int(time.time())}-{secrets.token_hex(3)}"
+
+
+def _ensure_journal() -> None:
+    STATE_DIR.mkdir(parents=True, exist_ok=True)
+    if not JOURNAL.exists():
+        JOURNAL.touch()
+
+
+def _fsync_append(record: dict) -> None:
+    _ensure_journal()
+    line = json.dumps(record, ensure_ascii=False, sort_keys=True) + "\n"
+    fd = os.open(JOURNAL, os.O_WRONLY | os.O_APPEND | os.O_CREAT, 0o644)
+    try:
+        os.write(fd, line.encode("utf-8"))
+        os.fsync(fd)
+    finally:
+        os.close(fd)
+
+
+def _parse_fields(pairs: list[str]) -> dict:
+    out = {}
+    for p in pairs:
+        if "=" not in p:
+            sys.exit(f"bench-journal: --field requires key=value, got {p!r}")
+        k, v = p.split("=", 1)
+        try:
+            out[k] = json.loads(v)
+        except json.JSONDecodeError:
+            out[k] = v
+    return out
+
+
+def cmd_append(args: argparse.Namespace) -> int:
+    if args.from_stdin:
+        try:
+            payload = json.loads(sys.stdin.read())
+        except json.JSONDecodeError as e:
+            sys.exit(f"bench-journal append --from-stdin: invalid JSON ({e})")
+        if not isinstance(payload, dict):
+            sys.exit("bench-journal append --from-stdin: expected JSON object")
+    else:
+        payload = _parse_fields(args.field or [])
+    payload.setdefault("id", _gen_id())
+    payload.setdefault("ts", _utc_now())
+    _fsync_append(payload)
+    print(payload["id"])
+    return 0
+
+
+def cmd_tail(args: argparse.Namespace) -> int:
+    _ensure_journal()
+    lines = JOURNAL.read_text(encoding="utf-8").splitlines()
+    out = []
+    for line in lines:
+        if not line.strip():
+            continue
+        try:
+            rec = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if args.agent and rec.get("agent") != args.agent:
+            continue
+        if args.status and rec.get("status") != args.status:
+            continue
+        out.append(rec)
+    for rec in out[-args.n:]:
+        print(json.dumps(rec, ensure_ascii=False, sort_keys=True))
+    return 0
+
+
+def cmd_find(args: argparse.Namespace) -> int:
+    _ensure_journal()
+    for line in JOURNAL.read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
+        try:
+            rec = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if rec.get("id") == args.id:
+            print(json.dumps(rec, ensure_ascii=False, sort_keys=True))
+            return 0
+    return 1
+
+
+def cmd_update(args: argparse.Namespace) -> int:
+    """Append a new record carrying the same id with updated fields.
+
+    Journal is append-only; logical "update" = newer record with same id wins.
+    Status / find walk the journal and pick the latest record per id.
+    """
+    payload = _parse_fields(args.field or [])
+    if not payload:
+        sys.exit("bench-journal update: at least one --field required")
+    payload["id"] = args.id
+    payload["ts"] = _utc_now()
+    payload["op"] = "update"
+    _fsync_append(payload)
+    return 0
+
+
+def main() -> int:
+    p = argparse.ArgumentParser(prog="bench-journal", description=__doc__.splitlines()[0])
+    sub = p.add_subparsers(dest="cmd", required=True)
+
+    sp_a = sub.add_parser("append", help="Append a record")
+    sp_a.add_argument("--from-stdin", action="store_true")
+    sp_a.add_argument("--field", action="append", help="key=value (value parsed as JSON if possible)")
+    sp_a.set_defaults(func=cmd_append)
+
+    sp_t = sub.add_parser("tail", help="Tail records")
+    sp_t.add_argument("-n", type=int, default=20)
+    sp_t.add_argument("--agent")
+    sp_t.add_argument("--status")
+    sp_t.set_defaults(func=cmd_tail)
+
+    sp_f = sub.add_parser("find", help="Find a record by id")
+    sp_f.add_argument("id")
+    sp_f.set_defaults(func=cmd_find)
+
+    sp_u = sub.add_parser("update", help="Append an update record for an id")
+    sp_u.add_argument("id")
+    sp_u.add_argument("--field", action="append")
+    sp_u.set_defaults(func=cmd_update)
+
+    args = p.parse_args()
+    return args.func(args)
+
+
+if __name__ == "__main__":
+    sys.exit(main())

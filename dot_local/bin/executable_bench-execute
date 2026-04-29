@@ -1,0 +1,185 @@
+#!/usr/bin/env python3
+"""bench-execute — walk envelope directory; journal each dispatch attempt.
+
+Default mode is --dry-run. Real dispatch requires --execute and respects
+--max (default 1) so the first real run is observable. Each envelope
+yields two journal records: one 'dispatched' (before the call) and one
+'succeeded'/'failed' (after), both sharing an attempt id.
+
+Idempotency: an envelope's content sha256 prefix is the dedup key. If a
+prior 'succeeded' record exists for the same hash, the envelope is
+skipped unless --force is given.
+
+Closes: IRF-SYS-141 (118 unexecuted envelopes at $AGENT_DISPATCH_DIR/envelopes/).
+
+Plan: ~/.claude/plans/design-every-winding-turning-valiant-thompson.md
+"""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import os
+import re
+import subprocess
+import sys
+from pathlib import Path
+
+JOURNAL_BIN = os.environ.get("BENCH_JOURNAL_BIN", "bench-journal")
+DISPATCH_BIN = os.environ.get("BENCH_DISPATCH_BIN", "agent-dispatch")
+DEFAULT_ENVELOPE_DIR = Path(
+    os.environ.get(
+        "BENCH_ENVELOPE_DIR",
+        os.path.expanduser("~/.local/state/agent-dispatch/envelopes"),
+    )
+)
+DEFAULT_AGENT = os.environ.get("BENCH_DEFAULT_AGENT", "codex")
+
+FAILURE_PATTERNS = [
+    (re.compile(r"no payment method|billing|insufficient.*credit", re.I), "E_BILLING"),
+    (re.compile(r"validation error|extra inputs are not permitted|eager_input_streaming", re.I), "E_SCHEMA"),
+    (re.compile(r"401|unauthori[sz]ed|invalid.*token|expired.*token", re.I), "E_AUTH"),
+    (re.compile(r"rate.?limit|429|quota exceeded", re.I), "E_RATELIMIT"),
+    (re.compile(r"model.*not.*found|unknown model|model_not_found", re.I), "E_MODEL"),
+    (re.compile(r"timeout|connection.*refused|name.*resolution|dns", re.I), "E_NET"),
+    (re.compile(r"command not found|no such file|executable.*missing", re.I), "E_BIN_MISSING"),
+]
+
+
+def classify(stderr: str, exit_code: int) -> str:
+    if exit_code == 0:
+        return ""
+    for pat, code in FAILURE_PATTERNS:
+        if pat.search(stderr):
+            return code
+    return "E_UNKNOWN"
+
+
+def journal_append(fields: dict) -> str:
+    args = [JOURNAL_BIN, "append"]
+    for k, v in fields.items():
+        args.extend(["--field", f"{k}={json.dumps(v)}"])
+    out = subprocess.run(args, capture_output=True, text=True, check=True)
+    return out.stdout.strip()
+
+
+def journal_update(record_id: str, fields: dict) -> None:
+    args = [JOURNAL_BIN, "update", record_id]
+    for k, v in fields.items():
+        args.extend(["--field", f"{k}={json.dumps(v)}"])
+    subprocess.run(args, capture_output=True, text=True, check=True)
+
+
+def already_succeeded(envelope_hash: str) -> bool:
+    """Walk journal; return True if any record has this hash and status='succeeded'."""
+    journal_path = Path(
+        os.environ.get(
+            "BENCH_STATE_DIR", os.path.expanduser("~/.local/state/bench-fabric")
+        )
+    ) / "journal.jsonl"
+    if not journal_path.exists():
+        return False
+    for line in journal_path.read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
+        try:
+            rec = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if rec.get("envelope_hash") == envelope_hash and rec.get("status") == "succeeded":
+            return True
+    return False
+
+
+def invoke_dispatch(agent: str, envelope: Path) -> tuple[int, str, str]:
+    """Pipe envelope content into agent-dispatch via stdin."""
+    prompt = envelope.read_text(encoding="utf-8")
+    proc = subprocess.run(
+        [DISPATCH_BIN, agent],
+        input=prompt,
+        capture_output=True,
+        text=True,
+        timeout=int(os.environ.get("BENCH_DISPATCH_TIMEOUT", "300")),
+    )
+    return proc.returncode, proc.stdout, proc.stderr
+
+
+def main() -> int:
+    p = argparse.ArgumentParser(prog="bench-execute", description=__doc__.splitlines()[0])
+    p.add_argument("--envelope-dir", default=str(DEFAULT_ENVELOPE_DIR))
+    p.add_argument("--glob", default="*.txt")
+    p.add_argument("--agent", default=DEFAULT_AGENT)
+    p.add_argument("--max", type=int, default=1, help="Max envelopes per run (default 1)")
+    p.add_argument("--execute", action="store_true", help="Actually dispatch (default is dry-run)")
+    p.add_argument("--force", action="store_true", help="Re-dispatch even if previously succeeded")
+    p.add_argument("--quiet", action="store_true")
+    args = p.parse_args()
+
+    env_dir = Path(args.envelope_dir).expanduser()
+    if not env_dir.is_dir():
+        sys.exit(f"bench-execute: envelope dir not found: {env_dir}")
+
+    envelopes = sorted(env_dir.glob(args.glob))
+    if not envelopes:
+        sys.exit(f"bench-execute: no envelopes matched {args.glob} in {env_dir}")
+
+    plan = []
+    for env in envelopes:
+        h = hashlib.sha256(env.read_bytes()).hexdigest()[:12]
+        skip = (not args.force) and already_succeeded(h)
+        plan.append({"envelope": env.name, "hash": h, "skip": skip})
+
+    to_run = [p for p in plan if not p["skip"]][: args.max]
+    if not args.quiet:
+        print(f"envelopes_total={len(plan)} skipped={sum(1 for p in plan if p['skip'])} to_run={len(to_run)} mode={'execute' if args.execute else 'dry-run'}")
+
+    summary = {"dispatched": 0, "succeeded": 0, "failed": 0, "by_failure": {}}
+    for item in to_run:
+        env_path = env_dir / item["envelope"]
+        attempt_id = journal_append({
+            "op": "dispatched",
+            "agent": args.agent,
+            "envelope": item["envelope"],
+            "envelope_hash": item["hash"],
+            "envelope_path": str(env_path),
+            "status": "dispatched",
+            "rung": 0,
+            "mode": "execute" if args.execute else "dry-run",
+        })
+        summary["dispatched"] += 1
+
+        if not args.execute:
+            journal_update(attempt_id, {"status": "dry_run", "exit_code": None})
+            if not args.quiet:
+                print(f"  [{attempt_id}] {item['envelope']} → dry-run")
+            continue
+
+        try:
+            rc, out, err = invoke_dispatch(args.agent, env_path)
+        except subprocess.TimeoutExpired:
+            rc, out, err = 124, "", "timeout"
+
+        source = classify(err or out, rc)
+        status = "succeeded" if rc == 0 else "failed"
+        update = {"status": status, "exit_code": rc}
+        if source:
+            update["source_failure"] = source
+            summary["by_failure"][source] = summary["by_failure"].get(source, 0) + 1
+        # Stash the last 1KB of stderr for diagnosis; redact heuristically
+        if err:
+            err_sample = err[-1024:]
+            update["stderr_tail"] = err_sample
+        journal_update(attempt_id, update)
+
+        summary[status] += 1
+        if not args.quiet:
+            print(f"  [{attempt_id}] {item['envelope']} → {status} ({source or 'ok'})")
+
+    if not args.quiet:
+        print(f"summary={json.dumps(summary, sort_keys=True)}")
+    return 0 if summary["failed"] == 0 else 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())

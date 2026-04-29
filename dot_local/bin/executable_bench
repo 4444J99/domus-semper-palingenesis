@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+# bench — entrypoint for the bench fabric (hydra-design)
+#
+# Routes `bench <verb> [args...]` to the verb-specific binary in PATH.
+# Every invocation runs a 1-second lazy tend pass on entry (when bench-tend
+# is installed). State lives at ~/.local/state/bench-fabric/.
+#
+# Plan: ~/.claude/plans/design-every-winding-turning-valiant-thompson.md
+
+set -euo pipefail
+
+STATE_DIR="${BENCH_STATE_DIR:-${HOME}/.local/state/bench-fabric}"
+mkdir -p "$STATE_DIR"
+
+show_help() {
+  cat <<'HELP'
+bench — bench-dispatch fabric
+
+Usage: bench <verb> [args...]
+
+Verbs:
+  journal     Append, tail, find, or update dispatch journal entries
+  execute     Walk envelope directory; dispatch each via agent-dispatch
+  preflight   Probe agent auth/billing/schema/model availability
+  sanitize    Strip provider-incompatible request fields; fence response
+  dispatch    Cascade across a ladder of agents with verify
+  verify      Constraint check on a submission folder
+  isolate     Run a command under sandbox-exec for an agent
+  tend        Sweep stale dispatches; emit return-queue receipts
+  status      Show fabric health (journal + preflight cache)
+
+Each verb is a separate binary. `bench <verb> --help` for verb-specific help.
+HELP
+}
+
+verb="${1:-}"
+shift || true
+
+case "$verb" in
+  ""|-h|--help|help)
+    show_help
+    exit 0
+    ;;
+esac
+
+# Lazy tend on entry — bounded, never blocks the verb.
+# Skip when running tend itself, or when BENCH_NO_TEND is set, or when bench-tend
+# is not yet installed.
+if [[ "$verb" != "tend" && -z "${BENCH_NO_TEND:-}" ]] && command -v bench-tend >/dev/null 2>&1; then
+  ( BENCH_NO_TEND=1 bench-tend --lazy >/dev/null 2>&1 ) &
+fi
+
+target="bench-${verb}"
+if ! command -v "$target" >/dev/null 2>&1; then
+  printf 'bench: unknown verb: %s\n' "$verb" >&2
+  printf 'try: bench --help\n' >&2
+  exit 2
+fi
+
+exec "$target" "$@"
