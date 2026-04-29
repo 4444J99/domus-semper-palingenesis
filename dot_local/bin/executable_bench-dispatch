@@ -1,0 +1,265 @@
+#!/usr/bin/env python3
+"""bench-dispatch — cascade dispatch across a ladder of bench agents.
+
+For each rung:
+  1. Read preflight cache (cache age recorded per attempt — TOCTOU mitigation).
+  2. If RED, skip rung; journal a "skipped" record.
+  3. Append "dispatched" record (durably, before the side effect).
+  4. Invoke agent-dispatch with stdin prompt.
+  5. Pipe output through bench-sanitize --mode response.
+  6. On success: append "succeeded" record, emit fenced output to stdout, return 0.
+  7. On failure: classify, append "failed" record, jitter-backoff, try next rung.
+
+Hard cap: ladder depth ≤ 3. Idempotency key = sha256(prompt+ladder)[:12].
+
+Plan: ~/.claude/plans/design-every-winding-turning-valiant-thompson.md
+"""
+
+from __future__ import annotations
+
+import argparse
+import fcntl
+import hashlib
+import json
+import os
+import random
+import re
+import subprocess
+import sys
+import time
+from pathlib import Path
+
+STATE_DIR = Path(os.environ.get("BENCH_STATE_DIR", os.path.expanduser("~/.local/state/bench-fabric")))
+LOCKS_DIR = STATE_DIR / "locks"
+JOURNAL_BIN = os.environ.get("BENCH_JOURNAL_BIN", "bench-journal")
+PREFLIGHT_BIN = os.environ.get("BENCH_PREFLIGHT_BIN", "bench-preflight")
+SANITIZE_BIN = os.environ.get("BENCH_SANITIZE_BIN", "bench-sanitize")
+DISPATCH_BIN = os.environ.get("BENCH_DISPATCH_BIN", "agent-dispatch")
+DEFAULT_LADDER = os.environ.get("BENCH_DEFAULT_LADDER", "codex,gemini,opencode")
+LADDER_MAX = 3
+
+FAILURE_PATTERNS = [
+    (re.compile(r"no payment method|billing|insufficient.*credit", re.I), "E_BILLING"),
+    (re.compile(r"validation error|extra inputs are not permitted|eager_input_streaming", re.I), "E_SCHEMA"),
+    (re.compile(r"401|unauthori[sz]ed|invalid.*token|expired.*token", re.I), "E_AUTH"),
+    (re.compile(r"rate.?limit|429|quota exceeded", re.I), "E_RATELIMIT"),
+    (re.compile(r"model.*not.*found|unknown model", re.I), "E_MODEL"),
+    (re.compile(r"timeout|connection.*refused|name.*resolution", re.I), "E_NET"),
+]
+
+
+def classify(text: str, exit_code: int) -> str:
+    if exit_code == 0:
+        return ""
+    for pat, code in FAILURE_PATTERNS:
+        if pat.search(text or ""):
+            return code
+    return "E_UNKNOWN"
+
+
+def journal_append(fields: dict) -> str:
+    args = [JOURNAL_BIN, "append"]
+    for k, v in fields.items():
+        args.extend(["--field", f"{k}={json.dumps(v)}"])
+    out = subprocess.run(args, capture_output=True, text=True, check=True)
+    return out.stdout.strip()
+
+
+def journal_update(record_id: str, fields: dict) -> None:
+    args = [JOURNAL_BIN, "update", record_id]
+    for k, v in fields.items():
+        args.extend(["--field", f"{k}={json.dumps(v)}"])
+    subprocess.run(args, capture_output=True, text=True, check=True)
+
+
+def read_preflight(agent: str) -> dict | None:
+    """Read preflight cache via the bin so we honor its TTL/format."""
+    try:
+        proc = subprocess.run(
+            [PREFLIGHT_BIN, agent, "--no-probe", "--json"],
+            capture_output=True, text=True, timeout=5,
+        )
+    except (subprocess.TimeoutExpired, FileNotFoundError):
+        return None
+    if proc.returncode in (0, 1, 2):
+        try:
+            arr = json.loads(proc.stdout or "[]")
+        except json.JSONDecodeError:
+            return None
+        return arr[0] if arr else None
+    return None
+
+
+def acquire_lock(agent: str):
+    LOCKS_DIR.mkdir(parents=True, exist_ok=True)
+    lock_path = LOCKS_DIR / f"{agent}.lock"
+    fd = os.open(str(lock_path), os.O_CREAT | os.O_RDWR, 0o644)
+    try:
+        fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except BlockingIOError:
+        os.close(fd)
+        return None
+    return fd
+
+
+def release_lock(fd: int) -> None:
+    try:
+        fcntl.flock(fd, fcntl.LOCK_UN)
+    finally:
+        os.close(fd)
+
+
+def sanitize_response(text: str, agent: str) -> str:
+    try:
+        proc = subprocess.run(
+            [SANITIZE_BIN, "--mode", "response", "--agent", agent],
+            input=text, capture_output=True, text=True, timeout=10,
+        )
+    except (subprocess.TimeoutExpired, FileNotFoundError):
+        return text
+    return proc.stdout if proc.returncode == 0 else text
+
+
+def invoke_agent(agent: str, prompt: str, timeout: int) -> tuple[int, str, str]:
+    proc = subprocess.run(
+        [DISPATCH_BIN, agent],
+        input=prompt, capture_output=True, text=True, timeout=timeout,
+    )
+    return proc.returncode, proc.stdout, proc.stderr
+
+
+def jitter_sleep() -> None:
+    time.sleep(random.uniform(1.0, 3.0))
+
+
+def run_rung(agent: str, rung: int, prompt: str, idem: str, timeout: int, dry_run: bool) -> dict:
+    """Run a single rung; return outcome dict (status, source_failure, attempt_id)."""
+    pf = read_preflight(agent) or {}
+    pf_status = pf.get("status", "unknown")
+    pf_age = pf.get("_age_seconds")
+    pf_source = pf.get("source_failure")
+
+    if pf_status == "red":
+        attempt = journal_append({
+            "op": "skipped",
+            "agent": agent,
+            "rung": rung,
+            "idem": idem,
+            "preflight_status": pf_status,
+            "preflight_age_seconds": pf_age,
+            "preflight_source": pf_source,
+            "status": "skipped",
+            "summary": "preflight RED",
+        })
+        return {"status": "skipped", "attempt_id": attempt, "source_failure": pf_source or "E_PREFLIGHT_RED"}
+
+    lock_fd = acquire_lock(agent)
+    if lock_fd is None:
+        attempt = journal_append({
+            "op": "skipped",
+            "agent": agent,
+            "rung": rung,
+            "idem": idem,
+            "status": "skipped",
+            "summary": "agent class lock held by another dispatch",
+        })
+        return {"status": "skipped", "attempt_id": attempt, "source_failure": "E_LOCK_HELD"}
+
+    try:
+        attempt = journal_append({
+            "op": "dispatched",
+            "agent": agent,
+            "rung": rung,
+            "idem": idem,
+            "preflight_status": pf_status,
+            "preflight_age_seconds": pf_age,
+            "status": "dispatched",
+            "mode": "dry-run" if dry_run else "execute",
+        })
+
+        if dry_run:
+            journal_update(attempt, {"status": "dry_run", "exit_code": None})
+            return {"status": "dry_run", "attempt_id": attempt, "stdout": "", "source_failure": None}
+
+        try:
+            rc, out, err = invoke_agent(agent, prompt, timeout)
+        except subprocess.TimeoutExpired:
+            rc, out, err = 124, "", "timeout"
+        except FileNotFoundError as e:
+            rc, out, err = 127, "", str(e)
+
+        source = classify((err or "") + (out or ""), rc)
+        status = "succeeded" if rc == 0 else "failed"
+        update = {"status": status, "exit_code": rc}
+        if source:
+            update["source_failure"] = source
+        if err:
+            update["stderr_tail"] = err[-1024:]
+        journal_update(attempt, update)
+        return {"status": status, "attempt_id": attempt, "stdout": out, "stderr": err, "source_failure": source}
+    finally:
+        release_lock(lock_fd)
+
+
+def main() -> int:
+    p = argparse.ArgumentParser(prog="bench-dispatch", description=__doc__.splitlines()[0])
+    src = p.add_mutually_exclusive_group()
+    src.add_argument("--prompt", help="Prompt as a string")
+    src.add_argument("--prompt-file", help="Read prompt from file (recommended)")
+    p.add_argument("--ladder", default=DEFAULT_LADDER, help=f"Comma-separated agent ladder (default {DEFAULT_LADDER})")
+    p.add_argument("--timeout", type=int, default=300)
+    p.add_argument("--dry-run", action="store_true", help="Walk the ladder but do not invoke agents")
+    p.add_argument("--quiet", action="store_true")
+    args = p.parse_args()
+
+    if args.prompt_file:
+        prompt = Path(args.prompt_file).read_text(encoding="utf-8")
+    elif args.prompt:
+        prompt = args.prompt
+    elif not sys.stdin.isatty():
+        prompt = sys.stdin.read()
+    else:
+        sys.exit("bench-dispatch: provide --prompt, --prompt-file, or stdin")
+
+    rungs = [a.strip() for a in args.ladder.split(",") if a.strip()]
+    if not rungs:
+        sys.exit("bench-dispatch: empty ladder")
+    if len(rungs) > LADDER_MAX:
+        sys.exit(f"bench-dispatch: ladder depth {len(rungs)} exceeds cap {LADDER_MAX}")
+
+    idem = hashlib.sha256((prompt + "\n" + args.ladder).encode("utf-8")).hexdigest()[:12]
+    if not args.quiet:
+        sys.stderr.write(f"bench-dispatch idem={idem} ladder={rungs}\n")
+
+    cascade = []
+    final = None
+    for i, agent in enumerate(rungs):
+        outcome = run_rung(agent, i, prompt, idem, args.timeout, args.dry_run)
+        cascade.append({"agent": agent, "rung": i, **{k: v for k, v in outcome.items() if k != "stdout"}})
+        if outcome["status"] in ("succeeded", "dry_run"):
+            final = outcome
+            break
+        if i < len(rungs) - 1 and not args.dry_run:
+            jitter_sleep()
+
+    journal_append({
+        "op": "cascade_summary",
+        "idem": idem,
+        "ladder": rungs,
+        "cascade": cascade,
+        "final_status": final["status"] if final else "all_failed",
+    })
+
+    if not args.quiet:
+        sys.stderr.write(json.dumps({"idem": idem, "cascade": cascade}, sort_keys=True) + "\n")
+
+    if final and final.get("status") == "succeeded":
+        sys.stdout.write(sanitize_response(final.get("stdout", ""), agent=cascade[-1]["agent"]))
+        return 0
+    if final and final.get("status") == "dry_run":
+        return 0
+    return 2
+
+
+if __name__ == "__main__":
+    sys.exit(main())
