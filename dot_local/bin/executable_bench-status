@@ -1,0 +1,158 @@
+#!/usr/bin/env python3
+"""bench-status — render fabric health from journal + preflight cache.
+
+Reads:
+  $BENCH_STATE_DIR/journal.jsonl       — every dispatch attempt
+  $BENCH_STATE_DIR/preflight/*.json    — last probe per agent
+
+Renders:
+  - Per-agent preflight status (green/yellow/red, age)
+  - Recent journal stats (last N records by status)
+  - Failure breakdown by classified source code
+  - In-flight (dispatched but not resolved) count
+
+Plan: ~/.claude/plans/design-every-winding-turning-valiant-thompson.md
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import os
+import sys
+from datetime import datetime, timezone
+from pathlib import Path
+
+STATE_DIR = Path(os.environ.get("BENCH_STATE_DIR", os.path.expanduser("~/.local/state/bench-fabric")))
+JOURNAL = STATE_DIR / "journal.jsonl"
+PREFLIGHT_DIR = STATE_DIR / "preflight"
+
+
+def _utc_now() -> str:
+    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def read_journal() -> list[dict]:
+    if not JOURNAL.exists():
+        return []
+    out = []
+    for line in JOURNAL.read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
+        try:
+            out.append(json.loads(line))
+        except json.JSONDecodeError:
+            continue
+    return out
+
+
+def read_preflight() -> list[dict]:
+    if not PREFLIGHT_DIR.exists():
+        return []
+    out = []
+    for p in sorted(PREFLIGHT_DIR.glob("*.json")):
+        try:
+            out.append(json.loads(p.read_text(encoding="utf-8")))
+        except (json.JSONDecodeError, OSError):
+            continue
+    return out
+
+
+def latest_per_id(records: list[dict]) -> dict[str, dict]:
+    latest: dict[str, dict] = {}
+    for r in records:
+        rid = r.get("id")
+        if not rid:
+            continue
+        latest[rid] = r
+    return latest
+
+
+def summarize(records: list[dict], preflight: list[dict]) -> dict:
+    latest = latest_per_id(records)
+    by_status: dict[str, int] = {}
+    by_failure: dict[str, int] = {}
+    by_agent: dict[str, dict[str, int]] = {}
+    for r in latest.values():
+        s = r.get("status", "unknown")
+        by_status[s] = by_status.get(s, 0) + 1
+        sf = r.get("source_failure")
+        if sf:
+            by_failure[sf] = by_failure.get(sf, 0) + 1
+        agent = r.get("agent", "unknown")
+        by_agent.setdefault(agent, {})
+        by_agent[agent][s] = by_agent[agent].get(s, 0) + 1
+
+    in_flight = [r for r in latest.values() if r.get("status") == "dispatched"]
+
+    return {
+        "as_of": _utc_now(),
+        "journal_records_total": len(records),
+        "ids_tracked": len(latest),
+        "by_status": by_status,
+        "by_failure": by_failure,
+        "by_agent": by_agent,
+        "in_flight_count": len(in_flight),
+        "preflight": [
+            {
+                "agent": p.get("agent"),
+                "status": p.get("status"),
+                "source_failure": p.get("source_failure"),
+                "age_seconds": p.get("_age_seconds"),
+                "ts": p.get("ts"),
+            }
+            for p in preflight
+        ],
+    }
+
+
+def render(summary: dict) -> str:
+    lines = [
+        f"bench-status as_of={summary['as_of']} records={summary['journal_records_total']} ids={summary['ids_tracked']} in_flight={summary['in_flight_count']}",
+        "",
+        "preflight:",
+    ]
+    if not summary["preflight"]:
+        lines.append("  (no probes cached — run `bench preflight`)")
+    else:
+        lines.append("  agent       status  source           ts")
+        for p in summary["preflight"]:
+            lines.append(
+                "  {a:<11} {s:<7} {sf:<16} {ts}".format(
+                    a=p.get("agent", "?"),
+                    s=p.get("status", "?"),
+                    sf=p.get("source_failure") or "—",
+                    ts=p.get("ts") or "—",
+                )
+            )
+    lines.extend(["", "by_status:"])
+    for k, v in sorted(summary["by_status"].items()):
+        lines.append(f"  {k:<14} {v}")
+    if summary["by_failure"]:
+        lines.append("")
+        lines.append("by_failure_source:")
+        for k, v in sorted(summary["by_failure"].items()):
+            lines.append(f"  {k:<14} {v}")
+    if summary["by_agent"]:
+        lines.append("")
+        lines.append("by_agent:")
+        for agent, statuses in sorted(summary["by_agent"].items()):
+            parts = ", ".join(f"{k}={v}" for k, v in sorted(statuses.items()))
+            lines.append(f"  {agent:<11} {parts}")
+    return "\n".join(lines)
+
+
+def main() -> int:
+    p = argparse.ArgumentParser(prog="bench-status", description=__doc__.splitlines()[0])
+    p.add_argument("--json", action="store_true")
+    args = p.parse_args()
+    summary = summarize(read_journal(), read_preflight())
+    if args.json:
+        print(json.dumps(summary, indent=2, sort_keys=True))
+    else:
+        print(render(summary))
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
