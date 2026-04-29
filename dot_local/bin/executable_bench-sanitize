@@ -1,0 +1,171 @@
+#!/usr/bin/env python3
+"""bench-sanitize — provider-aware request/response middleware.
+
+Reads stdin, applies rules from $BENCH_RULES_FILE
+(default ~/.local/lib/bench-fabric/sanitize_rules.yaml), writes to stdout.
+
+Modes:
+  --mode request   strip incompatible fields from a JSON payload before send
+  --mode response  fence bench output as data; strip ANSI; redact secret shapes
+
+The request mode currently operates on JSON passed via stdin — useful for the
+forward dispatch path in Step 4. opencode's binary builds its own wire requests
+internally and is not yet intercepted; the rules file documents the strip set
+as a forward contract.
+
+Plan: ~/.claude/plans/design-every-winding-turning-valiant-thompson.md
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import os
+import re
+import sys
+from pathlib import Path
+
+try:
+    import yaml
+except ImportError:
+    sys.exit("bench-sanitize: PyYAML not installed. Run: pip3 install pyyaml")
+
+
+RULES_FILE = Path(
+    os.environ.get(
+        "BENCH_RULES_FILE",
+        os.path.expanduser("~/.local/lib/bench-fabric/sanitize_rules.yaml"),
+    )
+)
+
+
+def load_rules() -> dict:
+    if not RULES_FILE.exists():
+        sys.exit(f"bench-sanitize: rules file not found: {RULES_FILE}")
+    return yaml.safe_load(RULES_FILE.read_text(encoding="utf-8"))
+
+
+def rule_matches(rule: dict, agent: str, model: str, provider: str) -> bool:
+    when = rule.get("when", {})
+    if "agent" in when and when["agent"] not in ("*", agent):
+        return False
+    if "model_prefix" in when and not model.startswith(when["model_prefix"]):
+        return False
+    if "model_contains" in when:
+        wanted = when["model_contains"]
+        if isinstance(wanted, str):
+            wanted = [wanted]
+        if not any(w in model for w in wanted):
+            return False
+    if "provider_contains" in when:
+        wanted = when["provider_contains"]
+        if isinstance(wanted, str):
+            wanted = [wanted]
+        if not any(w in provider for w in wanted):
+            return False
+    return True
+
+
+def strip_path(payload, dotted: str) -> int:
+    """Walk a dotted path with `*` wildcards and remove matching keys.
+
+    Returns count removed.
+    """
+    parts = dotted.split(".")
+    return _strip_recursive(payload, parts)
+
+
+def _strip_recursive(node, parts: list[str]) -> int:
+    if not parts:
+        return 0
+    head, *tail = parts
+    removed = 0
+    if isinstance(node, dict):
+        if head == "*":
+            for k in list(node.keys()):
+                removed += _strip_recursive(node[k], tail)
+        elif head in node:
+            if not tail:
+                del node[head]
+                removed += 1
+            else:
+                removed += _strip_recursive(node[head], tail)
+    elif isinstance(node, list):
+        if head == "*":
+            for item in node:
+                removed += _strip_recursive(item, tail)
+        else:
+            try:
+                idx = int(head)
+            except ValueError:
+                return 0
+            if 0 <= idx < len(node):
+                removed += _strip_recursive(node[idx], tail)
+    return removed
+
+
+def cmd_request(args, rules) -> int:
+    raw = sys.stdin.read()
+    try:
+        payload = json.loads(raw)
+    except json.JSONDecodeError as e:
+        sys.exit(f"bench-sanitize --mode request: stdin is not valid JSON ({e})")
+
+    summary = {"applied": [], "removed_total": 0}
+    for rule in rules.get("request", []):
+        if not rule_matches(rule, args.agent or "", args.model or "", args.provider or ""):
+            continue
+        rule_removed = 0
+        for field in rule.get("strip_fields", []):
+            rule_removed += strip_path(payload, field)
+        if rule_removed:
+            summary["applied"].append({"id": rule["id"], "removed": rule_removed})
+            summary["removed_total"] += rule_removed
+
+    if args.report:
+        sys.stderr.write(json.dumps(summary, sort_keys=True) + "\n")
+    print(json.dumps(payload, ensure_ascii=False))
+    return 0
+
+
+def cmd_response(args, rules) -> int:
+    text = sys.stdin.read()
+    summary = {"applied": []}
+    for rule in rules.get("response", []):
+        if not rule_matches(rule, args.agent or "", args.model or "", args.provider or ""):
+            continue
+        for op in rule.get("apply", []):
+            kind = op.get("kind")
+            if kind == "regex_replace":
+                new_text, n = re.subn(op["pattern"], op["replacement"], text)
+                if n:
+                    summary["applied"].append({"id": rule["id"], "kind": kind, "count": n})
+                text = new_text
+            elif kind == "wrap":
+                text = op.get("prefix", "") + text + op.get("suffix", "")
+                summary["applied"].append({"id": rule["id"], "kind": kind, "count": 1})
+            else:
+                sys.stderr.write(f"bench-sanitize: unknown op kind: {kind}\n")
+    if args.report:
+        sys.stderr.write(json.dumps(summary, sort_keys=True) + "\n")
+    sys.stdout.write(text)
+    return 0
+
+
+def main() -> int:
+    p = argparse.ArgumentParser(prog="bench-sanitize", description=__doc__.splitlines()[0])
+    p.add_argument("--mode", required=True, choices=["request", "response"])
+    p.add_argument("--agent", default="")
+    p.add_argument("--model", default="")
+    p.add_argument("--provider", default="")
+    p.add_argument("--report", action="store_true", help="Emit a JSON summary on stderr")
+    args = p.parse_args()
+
+    rules = load_rules()
+    if args.mode == "request":
+        return cmd_request(args, rules)
+    return cmd_response(args, rules)
+
+
+if __name__ == "__main__":
+    sys.exit(main())

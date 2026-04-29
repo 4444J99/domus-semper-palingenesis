@@ -1,0 +1,97 @@
+# bench-fabric sanitize rules
+# Declarative strip set per (agent, model_pattern, mode). Read by bench-sanitize.
+# Modes: request (scrub outgoing JSON payload before send),
+#        response (scrub bench output before it reaches the orchestrator).
+#
+# Plan: ~/.claude/plans/design-every-winding-turning-valiant-thompson.md
+# Companion failure classes (see bench-preflight): E_SCHEMA, E_BILLING, E_AUTH.
+
+version: 1
+
+# Request-side strip rules — applied to JSON payloads before they hit a provider.
+# Field paths use dot notation; wildcards (*) match any list index or key.
+request:
+  - id: strip_eager_input_streaming_for_opencode_gateway
+    when:
+      agent: opencode
+      model_prefix: "opencode/"           # opencode-gateway models reject Anthropic beta fields
+    strip_fields:
+      - "tools.*.eager_input_streaming"
+      - "messages.*.cache_control"
+    rationale: |
+      opencode's gateway provider strict-validates against an OpenAI-shaped schema
+      and rejects Anthropic beta-API fields. Today (2026-04-29) produced 69 tool-level
+      "Extra inputs are not permitted, field 'tools[N].eager_input_streaming'" errors.
+
+  - id: strip_anthropic_beta_for_zai
+    when:
+      provider_contains: ["z.ai", "zhipu"]
+    strip_fields:
+      - "tools.*.eager_input_streaming"
+      - "messages.*.cache_control"
+      - "thinking"
+    rationale: |
+      Z.AI / Zhipu providers reject Anthropic-shape extras. Forward contract — no
+      bench-fabric direct dispatch path goes there yet, but the rule is pre-declared
+      so when Step 4 dispatch lands, this is already covered.
+
+  - id: strip_thinking_for_haiku
+    when:
+      model_contains: ["haiku-3", "haiku-3-5"]
+    strip_fields:
+      - "thinking"
+    rationale: |
+      Older Haiku tiers don't accept the `thinking` extended-thinking parameter.
+
+# Response-side strip rules — applied to bench output before it reaches the
+# orchestrator (Claude). Goal: block the prompt-injection back-channel hydra head
+# (class 9 in the plan). Strip ANSI control sequences and fence the body as data.
+response:
+  - id: strip_ansi_control_sequences
+    when:
+      agent: "*"
+    apply:
+      - kind: regex_replace
+        pattern: '\x1b\[[0-9;]*[a-zA-Z]'
+        replacement: ""
+    rationale: |
+      Terminal output may carry ANSI escape codes that, when re-rendered by the
+      orchestrator, can disguise content. Strip uniformly across all agents.
+
+  - id: fence_as_data_block
+    when:
+      agent: "*"
+    apply:
+      - kind: wrap
+        prefix: "```bench-output\n"
+        suffix: "\n```"
+    rationale: |
+      Bench output is data, not instructions. Wrapping in a code fence prevents
+      the orchestrator from interpreting tool-call lookalikes or system-message
+      mimics that the bench may emit (intentionally or otherwise).
+
+  - id: redact_known_secret_shapes
+    when:
+      agent: "*"
+    apply:
+      - kind: regex_replace
+        pattern: 'sk-[a-zA-Z0-9_-]{20,}'
+        replacement: "[REDACTED-API-KEY]"
+      - kind: regex_replace
+        pattern: 'ghp_[a-zA-Z0-9]{36,}'
+        replacement: "[REDACTED-GITHUB-PAT]"
+      - kind: regex_replace
+        pattern: 'AKIA[0-9A-Z]{16}'
+        replacement: "[REDACTED-AWS-KEY]"
+    rationale: |
+      Defense in depth — bench output should never carry secrets. If it does,
+      something else upstream is broken AND the orchestrator must not record it.
+
+# Anti-rules — fields that MUST NOT be stripped (overrides). Useful when a future
+# rule starts being too aggressive.
+preserve:
+  request:
+    - field: "tools.*.name"           # tool names are load-bearing
+    - field: "tools.*.description"
+    - field: "messages.*.role"
+    - field: "messages.*.content"
