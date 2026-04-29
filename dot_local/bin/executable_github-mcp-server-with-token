@@ -1,0 +1,16 @@
+#!/bin/zsh
+# Launcher that hydrates GITHUB_PERSONAL_ACCESS_TOKEN from `gh auth token`
+# at MCP server startup, then execs github-mcp-server.
+# Used by Codex's config.toml so we don't hardcode tokens in plaintext config.
+set -e
+if ! command -v gh >/dev/null 2>&1; then
+  echo "gh CLI not found — install with: brew install gh" >&2
+  exit 127
+fi
+TOKEN="$(gh auth token 2>/dev/null)"
+if [[ -z "$TOKEN" ]]; then
+  echo "gh auth token returned empty — run: gh auth login" >&2
+  exit 1
+fi
+export GITHUB_PERSONAL_ACCESS_TOKEN="$TOKEN"
+exec /opt/homebrew/bin/github-mcp-server "$@"
