@@ -48,6 +48,9 @@
 - [Plans are artifacts](feedback_plans_are_artifacts.md) — every plan committed to repo, never local-only
 - [Be part of the creation](feedback_part_of_creation.md) — COVENANT: derive from logic, don't present menus; Claude is participant, not consultant
 - [Sequential merge deploys](feedback_sequential_merge_deploys.md) — merge PRs one at a time, wait for deploy; batch merge burned CF token
+- [Respect suggested paths](feedback_respect_suggested_paths.md) — when user offers numbered paths, pick one or name the blocker; never silently invent Path 3
+- [Probe-reality gap](feedback_probe_reality_gap.md) — bench preflight greens on tiny probes; real dispatches still fail on model/scale; classify per-call, not on cache trust
+- [Session-as-seed / black-hole geometry](feedback_session_as_seed.md) — plant named vacuum with gravity, never fill; re-plant between agent passes; peer-readability test at every phase transition
 
 ## Client Projects
 - [Sovereign Spiral — Maddie](project_sovereign_spiral_maddie.md) — 13-node 3D helix, Three.js, water funnel, GHL, phases: ELEVATE/ALIGN/UNLOCK
