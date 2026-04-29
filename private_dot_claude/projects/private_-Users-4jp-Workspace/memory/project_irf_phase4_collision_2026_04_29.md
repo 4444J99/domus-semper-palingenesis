@@ -63,3 +63,37 @@ Before any IRF row insertion, grep for the exact ID-range to be claimed in the c
 ### Open question for next session
 
 `memory/` directory at corpvs-testamentvm root (676K, gitignored 2026-04-29) contains harvested Claude session memory + 50+ Gemini session UUIDs. Origin and intended destination unknown. Needs classification before either tracking, routing to intake/, or destruction.
+
+---
+
+## AMENDMENT 2026-04-29 (later that evening, universal close-out audit)
+
+**Resume recipe re-stale-d.** Verified during universal close-out audit (commit `384aed4` in corpvs-testamentvm, 19:25 ET): the proposed PRT-060..065 rebind is **also unworkable** — those IDs are TAKEN by live work added between this memory file's write and now in `S-modular-synthesis-portfolio-unification`:
+
+- PRT-060: Kit API key (P0 — gates Hokage L2)
+- PRT-061: hokagechess.com domain (P0)
+- PRT-062: Hokage OG image
+- PRT-063: Hokage mobile QA
+- PRT-064: Character Sheet onboarding
+- PRT-065: Maddie filter URLs (GH#49)
+- (also taken: PRT-070 Scott Lefler decision packet, PRT-074 Persons-index meta-pattern)
+
+**Likely-free PRT IDs (MUST grep at insert-time, not from this note):** PRT-066, PRT-067, PRT-068, PRT-069, PRT-071, PRT-072, PRT-073, PRT-075+.
+
+**Generalizable lesson upgraded:** Memory is hypothesis recursively. A memory file recording an ID-collision recovery is itself frozen at the moment of write; its recipe goes stale exactly the same way as the original plan did. Verification-of-verification applies even to recovery-recipe memories. **Any IRF insert MUST grep against the CURRENT file at insert-time, not against any prior snapshot — including snapshots stored in memory files.**
+
+### Phase 4 retroactive corrections — EXECUTED 2026-04-29 evening
+
+The 4 corrections that didn't need new IDs were executable:
+- IRF-PRT-029 ✓ CLOSED (commit b0e3a9f — OG metadata + favicon)
+- IRF-PRT-030 ✓ CLOSED (commit c253df8 — Kit form handler)
+- IRF-III-032/033/034 ← appended `Blocker: BROWSER-VERIFY-PENDING (target 2026-05-13)`
+
+(See universal close-out audit plan at `~/.claude/plans/external-streams-1-pr-335-vivid-lake.md` for the full receipt.)
+
+### Phase 4 new-row insertions — STILL DEFERRED
+
+M/R/X/META rows need:
+1. Fresh IRF grep at insert-time
+2. Per-form scope sentences from user (10 total) — OR
+3. Phases 6/7 (form-write) executed first so each row anchors to its written artifact
