@@ -1,0 +1,47 @@
+;; bench-fabric default sandbox profile
+;; Substitution: ${SUBMISSION_DIR} → resolved at run time by bench-isolate.
+;; Rule order: SBPL applies the LAST matching rule. (allow default) is the
+;; permissive baseline; deny rules below override it for protected paths.
+;;
+;; Plan: ~/.claude/plans/design-every-winding-turning-valiant-thompson.md
+
+(version 1)
+
+;; Permissive baseline — bench agents need to read code, fork tools, hit network.
+(allow default)
+
+;; Deny writes to system records — the protected-path deny-list.
+(deny file-write*
+  (subpath "${HOME}/.claude/plans")
+  (subpath "${HOME}/.claude/memory")
+  (subpath "${HOME}/.claude/projects")
+  (subpath "${HOME}/.local/state/agent-dispatch")
+  (subpath "${HOME}/.local/state/bench-fabric")
+  (subpath "${HOME}/.local/state/conductor")
+  (subpath "${HOME}/.ssh")
+  (literal "${HOME}/.gitconfig"))
+
+;; Deny modifying chezmoi source tree — autoCommit + autoPush would publish.
+(deny file-write*
+  (subpath "${HOME}/Workspace/domus-semper-palingenesis"))
+
+;; Deny touching protected names anywhere (RELAY.md, INST-INDEX-*, seed.yaml,
+;; registry-v2.json) by regex match against full path.
+(deny file-write*
+  (regex #"/RELAY\.md$")
+  (regex #"/active-handoff\.md$")
+  (regex #"/INST-INDEX-[^/]*$")
+  (regex #"/seed\.yaml$")
+  (regex #"/registry-v2\.json$")
+  (regex #"/governance-rules\.json$"))
+
+;; Re-allow the dispatch's own submission folder (whitelisted last → wins).
+(allow file-write*
+  (subpath "${SUBMISSION_DIR}"))
+
+;; Re-allow caches and temp dirs — necessary for tool ergonomics.
+(allow file-write*
+  (subpath "/private/tmp")
+  (subpath "/private/var/folders")
+  (regex #"/Caches/")
+  (regex #"\.cache/"))

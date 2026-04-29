@@ -1,0 +1,173 @@
+#!/usr/bin/env python3
+"""bench-isolate — wrap a command in a sandbox-exec profile per agent.
+
+Modes (env BENCH_ISOLATE_MODE):
+  log-only (default for rollout week) — run without sandbox-exec, but capture
+                                        protected-path mtimes before/after.
+                                        Surface any breaches in a post-hoc report.
+  enforce                              — run under sandbox-exec with the agent's
+                                        profile. Real prevention.
+  off                                  — run unwrapped (debugging only).
+
+Profile resolution:
+  $BENCH_LIB/sandbox/<agent>.sb.tmpl  if exists
+  $BENCH_LIB/sandbox/default.sb.tmpl  fallback
+
+Substitution variables:
+  ${HOME}           literal $HOME
+  ${SUBMISSION_DIR} from --submission-dir or BENCH_SUBMISSION_DIR
+
+Usage:
+  bench-isolate --agent <name> --submission-dir <dir> -- <command> [args...]
+
+Plan: ~/.claude/plans/design-every-winding-turning-valiant-thompson.md
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import os
+import shlex
+import subprocess
+import sys
+import tempfile
+import time
+from pathlib import Path
+
+LIB_DIR = Path(os.environ.get("BENCH_LIB", os.path.expanduser("~/.local/lib/bench-fabric")))
+SANDBOX_DIR = LIB_DIR / "sandbox"
+MODE = os.environ.get("BENCH_ISOLATE_MODE", "log-only")
+HOME = os.environ.get("HOME", str(Path.home()))
+
+PROTECTED = [
+    Path(HOME) / ".claude" / "plans",
+    Path(HOME) / ".claude" / "memory",
+    Path(HOME) / ".claude" / "projects",
+    Path(HOME) / ".local" / "state" / "agent-dispatch",
+    Path(HOME) / ".local" / "state" / "bench-fabric",
+    Path(HOME) / ".local" / "state" / "conductor",
+    Path(HOME) / ".ssh",
+    Path(HOME) / ".gitconfig",
+    Path(HOME) / "Workspace" / "domus-semper-palingenesis",
+]
+
+
+def resolve_profile(agent: str) -> Path:
+    candidate = SANDBOX_DIR / f"{agent}.sb.tmpl"
+    if candidate.exists():
+        return candidate
+    fallback = SANDBOX_DIR / "default.sb.tmpl"
+    if not fallback.exists():
+        sys.exit(f"bench-isolate: no profile found at {fallback}")
+    return fallback
+
+
+def render_profile(template: Path, submission_dir: str) -> Path:
+    text = template.read_text(encoding="utf-8")
+    rendered = text.replace("${HOME}", HOME).replace("${SUBMISSION_DIR}", submission_dir)
+    fd, path = tempfile.mkstemp(prefix="bench-isolate-", suffix=".sb")
+    os.write(fd, rendered.encode("utf-8"))
+    os.close(fd)
+    return Path(path)
+
+
+def snapshot_protected() -> dict[str, dict[str, float]]:
+    """Map of {path: {child_path: mtime}} for each protected root that exists."""
+    snap: dict[str, dict[str, float]] = {}
+    for root in PROTECTED:
+        try:
+            if not root.exists():
+                continue
+            tree = {}
+            if root.is_file():
+                tree[str(root)] = root.stat().st_mtime
+            else:
+                for p in root.rglob("*"):
+                    if p.is_file():
+                        try:
+                            tree[str(p)] = p.stat().st_mtime
+                        except OSError:
+                            continue
+            snap[str(root)] = tree
+        except (OSError, PermissionError):
+            continue
+    return snap
+
+
+def diff_snapshots(before: dict, after: dict) -> list[dict]:
+    breaches = []
+    for root, after_tree in after.items():
+        before_tree = before.get(root, {})
+        for path, mt in after_tree.items():
+            prev = before_tree.get(path)
+            if prev is None:
+                breaches.append({"kind": "new_file", "path": path, "root": root})
+            elif mt > prev:
+                breaches.append({"kind": "modified", "path": path, "root": root, "from_mtime": prev, "to_mtime": mt})
+    return breaches
+
+
+def run_with_sandbox(profile_path: Path, cmd: list[str]) -> int:
+    full = ["sandbox-exec", "-f", str(profile_path), *cmd]
+    return subprocess.call(full)
+
+
+def main() -> int:
+    p = argparse.ArgumentParser(prog="bench-isolate", description=__doc__.splitlines()[0])
+    p.add_argument("--agent", required=True)
+    p.add_argument("--submission-dir", default=os.environ.get("BENCH_SUBMISSION_DIR", str(Path.cwd())))
+    p.add_argument("--mode", default=MODE, choices=["log-only", "enforce", "off"])
+    p.add_argument("--report-file", help="Write the post-hoc breach report here (log-only mode)")
+    p.add_argument("cmd", nargs=argparse.REMAINDER, help="-- <command> to wrap")
+    args = p.parse_args()
+
+    cmd = args.cmd
+    if cmd and cmd[0] == "--":
+        cmd = cmd[1:]
+    if not cmd:
+        sys.exit("bench-isolate: no command given (use `-- <cmd>`)")
+
+    submission_dir = str(Path(args.submission_dir).expanduser().resolve())
+    Path(submission_dir).mkdir(parents=True, exist_ok=True)
+
+    if args.mode == "off":
+        sys.stderr.write("bench-isolate: mode=off — running unwrapped\n")
+        return subprocess.call(cmd)
+
+    if args.mode == "log-only":
+        before = snapshot_protected()
+        start = time.time()
+        rc = subprocess.call(cmd)
+        after = snapshot_protected()
+        breaches = diff_snapshots(before, after)
+        report = {
+            "mode": "log-only",
+            "agent": args.agent,
+            "submission_dir": submission_dir,
+            "started_epoch": start,
+            "ended_epoch": time.time(),
+            "exit_code": rc,
+            "would_be_denied_breaches": breaches,
+        }
+        out = json.dumps(report, indent=2, sort_keys=True)
+        if args.report_file:
+            Path(args.report_file).expanduser().write_text(out + "\n", encoding="utf-8")
+        else:
+            sys.stderr.write(out + "\n")
+        return rc
+
+    # mode == "enforce"
+    profile_template = resolve_profile(args.agent)
+    profile_path = render_profile(profile_template, submission_dir)
+    try:
+        return run_with_sandbox(profile_path, cmd)
+    finally:
+        try:
+            profile_path.unlink()
+        except OSError:
+            pass
+
+
+if __name__ == "__main__":
+    sys.exit(main())
