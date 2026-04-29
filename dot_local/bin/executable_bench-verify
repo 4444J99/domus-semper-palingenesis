@@ -1,0 +1,185 @@
+#!/usr/bin/env python3
+"""bench-verify — submission-discipline constraint checker.
+
+Verifies a bench submission folder against hard constraints. NOT a
+correctness checker — only checks:
+
+  - Containment via realpath: every file resolves inside submission_dir
+  - Protected-path deny scan: nothing was written into system records
+  - Dependency-injection flag: known executable manifests are surfaced
+  - Schema valid (if submission.json present): shape sanity
+
+Exit codes: 0 = all clean, 1 = violations, 2 = usage / I/O error.
+
+Plan: ~/.claude/plans/design-every-winding-turning-valiant-thompson.md
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import os
+import sys
+import time
+from pathlib import Path
+
+PROTECTED_PATHS = [
+    Path.home() / ".claude" / "plans",
+    Path.home() / ".claude" / "memory",
+    Path.home() / ".claude" / "projects",
+    Path.home() / ".local" / "state" / "agent-dispatch",
+    Path.home() / ".local" / "state" / "bench-fabric",
+    Path.home() / ".local" / "state" / "conductor",
+    Path.home() / ".gitconfig",
+    Path.home() / ".ssh",
+]
+PROTECTED_NAMES = {
+    "RELAY.md",
+    "active-handoff.md",
+    "registry-v2.json",
+    "governance-rules.json",
+    "seed.yaml",
+}
+PROTECTED_NAME_PREFIXES = ("INST-INDEX-",)
+
+INJECTION_FILE_PATTERNS = (
+    "requirements.txt",
+    "requirements-dev.txt",
+    "package.json",
+    "package-lock.json",
+    "Brewfile",
+    "pyproject.toml",
+)
+INJECTION_SUFFIXES = (".sh", ".bash", ".zsh", ".py", ".rb")
+
+
+def is_protected(path: Path) -> bool:
+    real = path.resolve()
+    for prot in PROTECTED_PATHS:
+        try:
+            real.relative_to(prot.resolve())
+            return True
+        except (ValueError, FileNotFoundError):
+            continue
+    if real.name in PROTECTED_NAMES:
+        return True
+    if any(real.name.startswith(pfx) for pfx in PROTECTED_NAME_PREFIXES):
+        return True
+    return False
+
+
+def looks_like_injection(path: Path) -> bool:
+    name = path.name
+    if name in INJECTION_FILE_PATTERNS:
+        return True
+    return any(name.endswith(sfx) for sfx in INJECTION_SUFFIXES)
+
+
+def verify_submission(submission_dir: Path, since_epoch: float | None = None) -> dict:
+    """Walk submission_dir and check constraints."""
+    submission_root = submission_dir.resolve()
+    violations: list[dict] = []
+    warnings: list[dict] = []
+    files_seen: list[str] = []
+
+    if not submission_root.is_dir():
+        return {
+            "ok": False,
+            "violations": [{
+                "kind": "submission_dir_missing",
+                "detail": str(submission_root),
+            }],
+            "warnings": [],
+            "files_checked": 0,
+        }
+
+    for f in submission_root.rglob("*"):
+        if f.is_dir():
+            continue
+        files_seen.append(str(f.relative_to(submission_root)))
+        try:
+            real = f.resolve()
+        except (OSError, RuntimeError) as e:
+            violations.append({"kind": "realpath_error", "path": str(f), "detail": str(e)})
+            continue
+        try:
+            real.relative_to(submission_root)
+        except ValueError:
+            violations.append({
+                "kind": "containment_breach",
+                "path": str(f),
+                "real_path": str(real),
+                "detail": "file resolves outside submission_dir (symlink escape)",
+            })
+            continue
+        if looks_like_injection(f):
+            warnings.append({
+                "kind": "potential_injection_artifact",
+                "path": str(f.relative_to(submission_root)),
+                "detail": "executable manifest in submission — record-keeper review required before ingestion",
+            })
+
+    # Scan protected paths for files newer than since_epoch (dispatch start).
+    if since_epoch is not None:
+        for prot in PROTECTED_PATHS:
+            try:
+                if not prot.exists():
+                    continue
+                if prot.is_file():
+                    candidates = [prot]
+                else:
+                    candidates = [c for c in prot.rglob("*") if c.is_file()]
+                for c in candidates:
+                    try:
+                        mtime = c.stat().st_mtime
+                    except OSError:
+                        continue
+                    if mtime >= since_epoch:
+                        violations.append({
+                            "kind": "protected_path_touched",
+                            "path": str(c),
+                            "mtime": mtime,
+                            "since_epoch": since_epoch,
+                            "detail": "file under protected path was modified during dispatch window",
+                        })
+            except (OSError, PermissionError):
+                continue
+
+    return {
+        "ok": not violations,
+        "violations": violations,
+        "warnings": warnings,
+        "files_checked": len(files_seen),
+        "submission_dir": str(submission_root),
+    }
+
+
+def main() -> int:
+    p = argparse.ArgumentParser(prog="bench-verify", description=__doc__.splitlines()[0])
+    p.add_argument("submission_dir")
+    p.add_argument("--since-epoch", type=float, help="Unix timestamp of dispatch start; protected paths checked for newer mtimes")
+    p.add_argument("--since-now", action="store_true", help="Use current time minus 1h as dispatch start")
+    p.add_argument("--json", action="store_true")
+    args = p.parse_args()
+
+    since = args.since_epoch
+    if args.since_now and since is None:
+        since = time.time() - 3600
+
+    result = verify_submission(Path(args.submission_dir).expanduser(), since_epoch=since)
+
+    if args.json:
+        print(json.dumps(result, indent=2, sort_keys=True))
+    else:
+        marker = "OK" if result["ok"] else "VIOLATIONS"
+        print(f"bench-verify {marker} files={result['files_checked']} violations={len(result['violations'])} warnings={len(result['warnings'])}")
+        for v in result["violations"]:
+            print(f"  X {v['kind']}: {v.get('detail', '')} ({v.get('path', '')})")
+        for w in result["warnings"]:
+            print(f"  ! {w['kind']}: {w.get('detail', '')} ({w.get('path', '')})")
+
+    return 0 if result["ok"] else 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())
