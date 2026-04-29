@@ -34,6 +34,7 @@
 - [Nothing Local Only](feedback_nothing_local_only.md) — every artifact pushed to remote
 - [N/A Is A Vacuum](feedback_na_is_vacuum.md) — every N/A is an imperative
 - [Triadic Review Protocol](feedback_triadic_review.md) — 3 POVs minimum, amorphous constitution
+- [Triangulation Protocol](feedback_triangulation_protocol.md) — COVENANT: closure earned through three-way witness (Ideal/Reduction/Artifact); friction is the artifact
 - [Session Close-Out Protocol](feedback_session_closeout.md) — IRF → 10-index propagation → N/A audit → git clean
 - [Gmail filter precision](feedback_gmail_filter_precision.md) — COVENANT: create new labels, never misfile
 - [Exhaust all tools first](feedback_exhaust_tools_first.md) — never suggest manual action until every path searched
@@ -51,6 +52,7 @@
 - [Respect suggested paths](feedback_respect_suggested_paths.md) — when user offers numbered paths, pick one or name the blocker; never silently invent Path 3
 - [Probe-reality gap](feedback_probe_reality_gap.md) — bench preflight greens on tiny probes; real dispatches still fail on model/scale; classify per-call, not on cache trust
 - [Session-as-seed / black-hole geometry](feedback_session_as_seed.md) — plant named vacuum with gravity, never fill; re-plant between agent passes; peer-readability test at every phase transition
+- [Plan approval ≠ execution authority](feedback_plan_approval_is_not_execution_auth.md) — ExitPlanMode approval doesn't authorize visible-to-others or acolyte-deferred actions; verification asks ≠ execution asks
 
 ## Client Projects
 - [Sovereign Spiral — Maddie](project_sovereign_spiral_maddie.md) — 13-node 3D helix, Three.js, water funnel, GHL, phases: ELEVATE/ALIGN/UNLOCK
@@ -70,6 +72,11 @@
 - [Multiverse architecture](project_multiverse_architecture.md) — 4 strata, INSTANCE.toml approved (IRF-SYS-101), repos at ~/
 - [Networking signals](project_networking_signals.md) — 33 GH followers, Aden/Hive 5-person cluster, LinkedIn views from dbt/Elastic/W&B/Wikimedia
 - [Coverage matrix & generative grammar](project_coverage_matrix_grammar.md) — 31/120 cells (25.8%), 6 repos dispatched to Codex (IRF-SYS-118)
+- [IRF Phase 4 collision (2026-04-29)](project_irf_phase4_collision_2026_04_29.md) — triple-stream close-out paused; rebind R/X rows to PRT-060..065; 4 retro corrections still safe to execute
+
+## Pending Plans (approved but unexecuted)
+- **Valiant Squid** — `~/.claude/plans/some-brainstorms-for-planting-valiant-squid.md` — approved 2026-04-29; 0/7 actions executed; needs dedicated session
+- **Triple-stream close-out Phases 4-10** — plan in `2026-04-29-175940-local-command-caveatcaveat-the-messages-below.txt` lines 940-1145 (gitignored, recoverable from `~/.claude/projects/-Users-4jp-Workspace/...`); see `project_irf_phase4_collision_2026_04_29.md` for re-bind recipe
 
 ## Development feedback
 - [Ceremony vs specification](feedback_ceremony_vs_specification.md) — non-code files unique to a repo = specs, not waste
