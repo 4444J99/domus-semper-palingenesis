@@ -11,6 +11,7 @@
 - [project_maddie-decisions-20260404.md](project_maddie-decisions-20260404.md) — Revenue 10% confirmed, node arch LOCKED+CLOSED (13 nodes), creature selves locked, bones-first
 - [project_maddie-decisions-20260414.md](project_maddie-decisions-20260414.md) — GHL branch delineation, written revenue terms (broader), water/filter ASAP, #36 walkthrough, nonprofit vision
 - [project_nonprofit-pervasive.md](project_nonprofit-pervasive.md) — Nonprofit is THE mission, not P3 side item. Commercial spiral funds it. Pervasive in all Maddie context
+- [project_session_2026_04_30_sort_streams.md](project_session_2026_04_30_sort_streams.md) — 6 temp transcripts sorted; Maddie/Rob/workspace-meta filed; parity verified via SHA + diff guards; auto-commit pipeline observed
 
 ## Feedback
 - [feedback_additive-only.md](feedback_additive-only.md) — Never overwrite, always add; audit sorts after
@@ -22,6 +23,7 @@
 - [feedback_secret-scanner-session-artifacts.md](feedback_secret-scanner-session-artifacts.md) — Pre-commit hook flags session JSONL/transcripts; split commits, use allow-secret markers
 - [feedback_pr-per-phase.md](feedback_pr-per-phase.md) — PR per phase, submit for GH feedback, move on; merge only after all feedback addressed
 - [feedback_atomized-wants-primacy.md](feedback_atomized-wants-primacy.md) — Atomized wants doc IS the artifact, not a stepping stone. Cartographical fossil record.
+- [feedback_stream_repo_alignment.md](feedback_stream_repo_alignment.md) — Maddie→sovereign-systems, Rob→hokage-chess, workspace-meta→~/.claude/sessions+meta-organvm mirror; SHA+diff guards before any rm
 
 ## Reference
 - [reference_maddie-credentials.md](reference_maddie-credentials.md) — Client platform credentials and contact
