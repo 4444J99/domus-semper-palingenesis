@@ -8,7 +8,13 @@
 - [Core identity](user_core_identity.md) — Humanities creator; ORGANVM = carrier wave for zeitgeist thesis
 
 ## Active Artifacts
+- [/init audit-workflow design 2026-04-30](project_session_2026-04-30_init_workflow_design.md) — Workflows A/B/C; bounded Apply/Defer/Dismiss forcing function eliminates hung-proposal failure mode; IRF-OPS-018/019/020/021 added; plan mirrored to chezmoi source
 - [Insights snapshot system 2026-04-30](project_artifact_insights_snapshot_system_2026_04_30.md) — CLI tooling + SessionEnd hook archives /insights report.html before rolling-window overwrite; commit `d6aeb8e4` pushed; IRF-MON-013 + DONE-522 queued
+- [Corpus rescue + 100% audit 2026-04-30](../../../plans/was-all-100-context-scalable-bird.md) — 5 TMPDIR sessions rescued to portfolio (commit 30bd9d6); structural-extraction pivot; Overreach Incident surfaced → IRF-OPS-014
+- [Session corpus 2026-04-29](project_artifact_session_corpus_rescue_2026_04_29.md) — 5 Claude.ai exports preserved at portfolio/sessions/claude-ai-exports/2026-04-29/; 8 File-C pending decisions
+- [Corpus rescue close-out session 2026-04-30](project_session_2026-04-30_corpus_rescue_close_out.md) — Header-only failure → structural extraction; 5 sessions rescued; 4 IRF rows added; 3 memory entries; full Sisyphus close-out
+- [Gemini session audit + form extension 2026-04-28](../../../plans/2026-04-28-gemini-session-audit-and-form-extension.md) — Gemini af959950 left 4 artifacts UNCOMMITTED across 3 repos; HANDOFF-PLAN misplaced; thesis/antithesis/synthesis written; Forms 11–16 designed
+- [Forms 11–16 / N–S extension pack](../../../plans/2026-04-28-forms-11-through-16-extension-pack.md) — Cross-agent verify, dirty-repo reconcile, cross-repo patch, elevation sheet, scaling decision, stale-memory; print-ready offline pre-work
 - [Propulsion plan 2026-04-27](../../../plans/what-s-logically-next-extensibly-eager-giraffe.md) — Stream A surfaced (NOT sent); Streams B+C done; D deferred
 - [Decision card 2026-04-27](../../../plans/2026-04-27-decision-card-hanging-plan.md) — 7 decisions + 3 user-composed sends; awaits user
 - [Conductor CLI repair](project_artifact_conductor_cli_repair_2026_04_27.md) — editable install fixed; Dispatch Protocol unblocked
@@ -49,6 +55,8 @@
 - [Rob trail (refreshed)](project_artifact_rob_trail_2026_04_27.md) — 13-lane snapshot 2026-04-27; 6 asks-from-him, 3 owed-to-him, Kit+Discord blockers; L7+L8 vacuums
 - [Rob Inbound Engine Spec](project_artifact_rob_inbound_engine_spec_2026_04_28.md) — Architectural pivot from manual SDR to automated inbound
 - [Scott trail](project_artifact_scott_trail_2026_04_28.md) — 13-lane snapshot 2026-04-28; 6 asks-from-us unseen, channel friction block
+- [Audit reverify + 13 forms 2026-04-28](project_artifact_audit_reverify_external_forms_2026_04_28.md) — 8/8 commits verified; A-M forms (incl. self-audit gap-closure I-M) for offline pre-work during session-limit gap
+- [Workstream taxonomy 2026-04-28](../../../plans/2026-04-28-domain-persona-workstreams-taxonomy.md) — 12 domains × 10 personas × 6 sequenced clusters; brand-free dispatch schema; commit 9b6dd49
 - [Person-tied project macro](../../../plans/2026-04-27-person-tied-project-macro.md) — 13 universal lanes derived from M+R; §4 onboarding protocol for Scott/Jessica/others
 - [Maddie prompt chronology](../../../prompts/maddie-prompt-chronology-2026-04-27.md) — 262 prompts; 2026-03-25→04-18; full text; project-filter scope (elevate-align)
 - [Rob prompt chronology](../../../prompts/rob-prompt-chronology-2026-04-27.md) — 230 prompts; 2026-03-25→04-16; full text; project-filter scope (Workspace-4444J99)
@@ -58,6 +66,9 @@
 - [Potentials catalog](../../../plans/2026-04-27-potentials-catalog.md) — ~50 repos + Karpathy LLM-wiki + Noah Beddome + resume narrative routed to orbits; SECURITY: antigravity token w/ admin:enterprise scope flagged for rotation
 - [Case-wide deep dive 2026-04-27](../../../plans/these-projects-are-getting-shimmying-lerdorf.md) — 13-part synthesis; three-layer architecture + drift vectors; §XI forced choice = Noah Beddome reply
 - [Noah Beddome reply draft](project_artifact_noah_beddome_reply_draft.md) — Two-slot LinkedIn DM; DRAFT-READY-TO-SEND; user manual send required
+- [Privilege firewall 2026-04-28](project_artifact_privilege_firewall_2026_04_28.md) — Case-content guard; trigger conditions for post-litigation pitch
+- [CURIA Phase 0 spec](../../../plans/2026-04-28-curia-organ-viii-specification.md) — ORGAN-VIII charter; judicial layer for ORGANVM; Phase 1 begins 2026-04-29
+- [Legal-domain skill stub](project_artifact_legal_domain_skill_stub_2026_04_28.md) — 8-strata template; references/ POST-TRIGGER-ONLY; closes IRF-PRT-048
 
 ## People
 - [Maddie](collaborator_maddie.md) — Elevate Align; health/wellness; spiral feedback pending
@@ -66,6 +77,7 @@
 - [Scott Lefler](collaborator_scott_lefler.md) — Lefler.Design; 10+yr friend; warm-revive via iMessage
 - [Jessica (stub)](collaborator_jessica.md) — PRE-ACTIVE; education domain; no outreach w/o user direction
 - [Noah Beddome](collaborator_noah_beddome.md) — Platform engineering / DevEx-Infra owner; LinkedIn warm thread since 2026-03-21; awaiting user's scheduling reply (draft ready)
+- [Micah Longo](collaborator_micah.md) — Attorney, active litigation; PRIVILEGE-SEALED; post-trigger Praxis Curia pitch (DRAFT-LOCKED); see also `collaborator_micah_PRIVILEGE_BOUNDARY.md`
 
 ## Active Projects
 - [Portfolio unification](project_portfolio_unification_2026-04-25.md) — 4 streams; 25 dark-matter rows shipped
@@ -94,6 +106,9 @@
 - [Rob/BODI funnel call](project_rob_bodi_funnel_call_20260425.md) — Rob homework: links + constellation
 
 ## Session Logs
+- [2026-04-28 lawsuit-substrate-CURIA](project_session_2026-04-28_lawsuit_curia.md) — 5 deliverables shipped: privilege firewall + CURIA Phase 0 spec + Micah dossier (sealed) + legal-domain skill stub (gated) + plan-as-artifact
+- [2026-04-28 typed-hejlsberg](project_session_2026-04-28_typed_hejlsberg.md) — Encompass+surpass: routed 4 stranded items, 7 commits across 4 repos, fixed global pre-commit hook, composed Gemini envelope (closes dispatch loop)
+- [2026-04-27 keen-frog closure](project_session_2026-04-27_keen_frog_closure.md) — Verified handoff vs disk: Group A pre-deleted, Group B not actual duplicates; plan closed honestly without false deletions; resolve-audit (20 path violations) surfaced
 - [2026-04-27 propulsion plan](project_session_2026-04-27_propulsion_plan.md) — Stream A/B/C/D execution; conductor repaired; INDEX built; atom pipeline refreshed (253 reconciled)
 - [2026-04-27 cascade](project_session_2026-04-27_seven_layer_cascade.md) — 7 plans + ULTIMA + chezmoi mirror
 - [2026-04-26 hall-monitor](project_session_2026-04-26_hall_monitor_closeout.md) — DONE-488; 15 memories mirrored
@@ -182,6 +197,7 @@
 - [Atoms permanent](feedback_atoms_are_permanent.md) — Never batch-close; stale ≠ dead
 - [Every frame a painting](feedback_every_frame_a_painting.md) — Spatial + temporal; session = sculpture
 - [Do what is asked](feedback_priority_hierarchy.md) — Never preempt user priorities
+- [Overreach Incident — acolyte-deferred = hard gate](feedback_overreach_incident_acolyte_deferred.md) — When acolyte defers a decision to user, do NOT execute it; 2026-04-29 incident: 17 commits pushed to hokage main without authorization
 - [System IS product](feedback_system_is_the_product.md) — ORGANVM visible = acquisition
 - [Lane parsing](feedback_cross_session_lane_parsing.md) — "X active" = active elsewhere
 - [No pick-one menus](feedback_no_pick_one_menus.md) — Execute all in logic order
