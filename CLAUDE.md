@@ -72,13 +72,19 @@ domus-semper-palingenesis/
 │   │   └── … (agent-run, agent-tmux, normalize-names, photo-sort, theme-switch, …)
 │   ├── share/                  # XDG_DATA_HOME overrides
 │   └── state/                  # XDG_STATE_HOME
-├── private_dot_claude/         # ~/.claude/ — Claude Code config, CLAUDE.md.tmpl, settings.json
+├── private_dot_claude/         # ~/.claude/ — Claude Code config, hooks, plans, projects (memory)
+│   ├── CLAUDE.md.tmpl          # Global Claude instructions
+│   ├── settings.json.tmpl      # Hooks, plugins, statusLine
+│   ├── executable_statusline-command.sh
+│   ├── symlink_skills.tmpl     # ~/.claude/skills → workspace skills dir
+│   ├── hooks/                  # PreToolUse / SessionStart guards
+│   ├── plans/                  # Plan files (additive, never overwritten — Universal Rule #5)
+│   ├── projects/               # Per-project memory (auto memory system)
+│   ├── scripts/                # Helper scripts
+│   └── templates/              # CONTRIBUTING/CODE_OF_CONDUCT/SECURITY templates
 ├── private_dot_ssh/            # ~/.ssh/ — SSH config (private)
 ├── private_Library/
-│   ├── LaunchAgents/           # macOS LaunchAgent plists (templated)
-│   │   ├── com.chezmoi.self-heal.plist.tmpl
-│   │   ├── com.domus.daemon.plist.tmpl
-│   │   └── … (sort, desktop-router, downloads-tidy, naming-maintenance, …)
+│   ├── LaunchAgents/           # EMPTY — all plists removed 2026-04-22 (see "LaunchAgents (macOS)" below)
 │   └── private_Application Support/
 ├── private_Documents/          # Personal documents (private perms)
 ├── symlink_dot_gemini          # ~/.gemini → ~/.local/share/gemini
@@ -165,29 +171,12 @@ domus doctor            # Full system check
 
 Aliases: `dm`, `dms`, `dma`, `dmp`, `dmpd`, `dmm`, `dmmq`
 
-## LaunchAgents (macOS)
+## LaunchAgents (macOS) — REMOVED
 
-**Note:** All plist templates have been removed from `private_Library/LaunchAgents/` in the chezmoi
-source tree (2026-04-22). LaunchAgents caused repeated system freezes and resource contention.
-The operational model has shifted to on-demand CLI invocation only. The scripts that backed these
-agents remain in `dot_local/bin/` and can be run manually.
-
-Previously deployed agents (now removed from source):
-
-| Agent | Purpose | Former Status |
-|-------|---------|---------------|
-| `com.4jp.cce-refresh` | CCE session refresh (6h) | Was Active |
-| `com.4jp.cloudflared.organvm` | Cloudflare tunnel | Was Active |
-| `com.4jp.memory-sync` | Claude memory sync | Was Active |
-| `com.4jp.organvm.soak-snapshot` | Soak test snapshot | Was Active |
-| `com.4jp.session-archive` | Session archival | Was Active |
-| `com.4jp.mail-triage` | Inbox triage | Was Active |
-| `com.chezmoi.self-heal` | Periodic chezmoi apply | Was Gated |
-| `com.domus.daemon` | Background daemon | Was Gated |
-| `com.domus.sort` | File sort | Was Gated |
-| Various file-automation agents | Desktop routing, downloads, naming, etc. | Was Gated |
-
-See feedback memory `feedback_no_launchagents.md` for full rationale.
+All plist templates were deleted from `private_Library/LaunchAgents/` on 2026-04-22 after
+repeated system freezes and resource contention incidents. Operational model shifted to
+on-demand CLI invocation only — the underlying scripts remain in `dot_local/bin/` and run
+manually. Full rationale: `feedback_no_launchagents.md` (memory).
 
 ### CI Troubleshooting
 If `macOS Integration` or `Doctor Check` jobs fail with "map has no entry for key", ensure the
@@ -196,18 +185,24 @@ If `macOS Integration` or `Doctor Check` jobs fail with "map has no entry for ke
 
 ## Apply-Time Scripts (`.chezmoiscripts/`)
 
-| Script | Trigger | Purpose |
-|--------|---------|---------|
-| `run_onchange_before_install-packages.sh.tmpl` | On Brewfile hash change | `brew bundle` from `~/.config/homebrew/Brewfile` |
-| `run_once_after_setup-directories.sh.tmpl` | Once | Create XDG dirs, Projects/, etc. |
-| `run_once_after_migrate-zsh-xdg.sh.tmpl` | Once | Migrate zsh config to XDG locations |
-| `run_once_macos-defaults.sh.tmpl` | Once | Apply macOS system defaults |
-| `run_onchange_after_link-skills.sh.tmpl` | On change | Symlink skills into `~/.claude/skills/` |
-| `run_onchange_after_ensure-xdg-symlinks.sh.tmpl` | On change | Ensure XDG symlinks are correct |
-| `run_onchange_after_check-claude-extensions.sh.tmpl` | On change | Report missing Claude Desktop extensions |
-| `run_onchange_after_sync-skills.sh.tmpl` | On change | Sync AI skills |
-| `run_onchange_after_setup-vscode-mcp.sh.tmpl` | On change | Configure VSCode MCP |
-| `run_onchange_after_load-launchagent.sh.tmpl` | On change | Reload LaunchAgents |
+`ls .chezmoiscripts/` is the canonical list. Operationally important categories:
+
+| Phase | Script | Purpose |
+|-------|--------|---------|
+| **before** | `run_before_validate-no-hardcoded-paths.sh.tmpl` | Pre-apply path-drift guard — can BLOCK `chezmoi apply` if violations found |
+| **before** | `run_onchange_before_install-packages.sh.tmpl` | `brew bundle` from `~/.config/homebrew/Brewfile` on Brewfile hash change |
+| **once / setup** | `run_once_after_setup-directories.sh.tmpl` | Create XDG dirs, Projects/, etc. |
+| **once / setup** | `run_once_after_create-agents-dirs.sh.tmpl` | Create `~/.local/share/agents/` workspace tree |
+| **once / migrations** | `run_once_after_migrate-zsh-xdg.sh.tmpl` | Migrate zsh config to XDG locations |
+| **once / migrations** | `run_once_after_migrate-home-xdg-phase2.sh.tmpl`, `…-phase3.sh.tmpl` | Multi-phase $HOME → XDG migration |
+| **once / cleanup** | `run_once_after_cleanup-{home-clutter,stale-dotfiles,dead-xdg-symlinks}.sh.tmpl` | Idempotent legacy-state cleanup |
+| **once / system** | `run_once_macos-defaults.sh.tmpl`, `run_once_after_spotlight-exclusions.sh.tmpl` | macOS preferences |
+| **once / tools** | `run_once_after_install-gh-extensions.sh.tmpl`, `run_once_after_seed-zoxide.sh.tmpl`, `run_once_after_docker-xdg-bridge.sh.tmpl` | One-time tool provisioning |
+| **onchange** | `run_onchange_after_link-skills.sh.tmpl`, `run_onchange_after_sync-skills.sh.tmpl` | Symlink + sync skills into `~/.claude/skills/` |
+| **onchange** | `run_onchange_after_ensure-xdg-symlinks.sh.tmpl` | Maintain XDG symlinks |
+| **onchange** | `run_onchange_after_check-claude-extensions.sh.tmpl`, `run_onchange_after_install-gemini-extensions.sh.tmpl` | Claude / Gemini extension management |
+| **onchange** | `run_onchange_after_setup-vscode-mcp.sh.tmpl` | Configure VSCode MCP |
+| **onchange** | `run_onchange_after_load-launchagent.sh.tmpl` | Vestigial — no-op since plists were removed 2026-04-22; kept for safety |
 
 ## Commands
 

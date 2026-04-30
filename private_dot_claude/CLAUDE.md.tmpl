@@ -1,9 +1,18 @@
 # Claude Code Instructions
 
+## Editing this file
+
+**This file is rendered.** The deployed `~/.claude/CLAUDE.md` is generated from this template
+at `private_dot_claude/CLAUDE.md.tmpl` plus include partials in `dot_config/ai-context/*.md.tmpl`
+and `dot_config/ai-skills/`. Edits go to the source — editing the deployed file is futile (next
+`chezmoi apply` overwrites it). With `autoCommit` + `autoPush` enabled in chezmoi config, every
+apply ships changes to GitHub.
+
 {{- $systemInfo := include "dot_config/ai-context/system-info.md.tmpl" }}
 {{- $codeStyle := include "dot_config/ai-context/code-style.md.tmpl" }}
 {{- $planDiscipline := include "dot_config/ai-context/plan-discipline.md.tmpl" }}
 {{- $voicePolicy := include "dot_config/ai-context/voice-governance.md.tmpl" }}
+{{- $workingState := include "dot_config/ai-context/working-state-capture.md.tmpl" }}
 {{ $systemInfo }}
 {{ $codeStyle }}
 ## Claude-Specific
@@ -12,6 +21,24 @@
 
 - **Claude Plans Directory**: `.claude/plans/` within each project
 - **Claude Global Plans Fallback**: `~/.claude/plans/` (only for non-project contexts)
+
+### Insights CLI tools
+
+Snapshot system shipped 2026-04-30 (commit `d6aeb8e4`):
+- `insights-snapshot [--only-if-newer] [--quiet]` — archive `/insights report.html` immutably
+- `insights-list` — chronological one-line summary
+- `insights-diff [old] [new]` — compare two snapshots
+- `insights-drift [--since DATE] [--narrative-only]` — multi-snapshot trajectory
+
+A SessionEnd hook (entry #5 in `private_dot_claude/settings.json.tmpl`) auto-archives the report
+before the rolling-window overwrite.
+
+### Hook reference
+
+Hooks are configured in `private_dot_claude/settings.json.tmpl` (chezmoi source). Census
+2026-04-30: 16 PreToolUse, 5 SessionStart, 5 SessionEnd, 3 UserPromptSubmit, 3 PostToolUse,
+1 Stop. **Warning:** JSON formatters strip unknown `if` fields — verify hook conditionals after
+any formatting pass.
 
 {{ $planDiscipline }}
 
@@ -24,45 +51,7 @@
 {{- $universalRules := include "dot_config/ai-context/universal-rules.md.tmpl" }}
 {{ $universalRules }}
 
-## Working State Capture (Session Close-Out)
-
-Before the 10-index close-out, capture working state so the next session starts warm:
-
-### Artifacts
-For every deliverable built or modified during the session, save a project-type memory
-(`project_artifact_*.md`) with:
-- **What**: one-line description
-- **Where**: file path(s) — absolute or repo-relative
-- **Project**: which repo it lives in
-- **For whom**: collaborator name if applicable
-- **State**: draft / in-review / feedback-pending / shipped
-- **Pending feedback**: verbatim quotes from collaborators
-- **Next action**: what needs to happen next
-
-File paths for active deliverables MUST be saved. The "don't save file paths" heuristic
-does not apply to artifacts under active development — you cannot "derive" that a spiral
-was built for Maddie by searching the filesystem. Save the path.
-
-### People
-For every person mentioned in a session who is not already in memory, save a user-type
-memory (`collaborator_*.md`) with:
-- **Who**: name and relationship
-- **Context**: what we're working on together
-- **Last interaction**: date and what happened
-- **Open threads**: what's pending
-
-### Session Memory Format
-Session memories MUST include an Artifacts section BEFORE summary stats:
-
-```
-**Artifacts (working state):**
-- [name] — `path/to/file` — [state] — [pending feedback]
-
-**Completed:**
-- [summary stats]
-```
-
-Working state is what matters for continuity. Volume metrics are secondary.
+{{ $workingState }}
 
 ## Universal Rules (All Projects, All Sessions)
 
