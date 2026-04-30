@@ -24,6 +24,7 @@
 - [feedback_pr-per-phase.md](feedback_pr-per-phase.md) — PR per phase, submit for GH feedback, move on; merge only after all feedback addressed
 - [feedback_atomized-wants-primacy.md](feedback_atomized-wants-primacy.md) — Atomized wants doc IS the artifact, not a stepping stone. Cartographical fossil record.
 - [feedback_stream_repo_alignment.md](feedback_stream_repo_alignment.md) — Maddie→sovereign-systems, Rob→hokage-chess, workspace-meta→~/.claude/sessions+meta-organvm mirror; SHA+diff guards before any rm
+- [feedback_no_deferring_obvious_decisions.md](feedback_no_deferring_obvious_decisions.md) — Execute cleanup/commit/push when safety preconditions are met; the human directs vision, not Y/N gates
 
 ## Reference
 - [reference_maddie-credentials.md](reference_maddie-credentials.md) — Client platform credentials and contact
