@@ -8,6 +8,7 @@
 - [Core identity](user_core_identity.md) — Humanities creator; ORGANVM = carrier wave for zeitgeist thesis
 
 ## Active Artifacts
+- [Content-engine unification 2026-04-30](project_artifact_content_engine_unification_2026_04_30.md) — PR #21 squash-merged (`4abab4a`); legacy `a-organvm/content-engine--asset-amplifier` archived on GitHub; archive tag preserves SHA on canonical; canonical-only state; first OPS-023 proof-case closed; L1-L5 verification protocol established for remaining ~117 repos
 - [Origin unity follow-up 2026-04-30](project_artifact_origin_unity_2026_04_30.md) — PR #21 on organvm-iii-ergon/content-engine--asset-amplifier (vacuum closures: CANDIDATE promo + README dual-runtime + .gitignore); IRF-OPS-023 added (commit d6f4968); no deletions; ~118-repo systemic split-origin pattern surfaced
 - [Codex export finding 2026-04-30](project_artifact_codex_export_finding.md) — No CLI flag; ~/.codex/history.jsonl = prompts-only (145k entries), ~/.codex/sessions/**/rollout-*.jsonl = full typed envelope (filter response_item + role==user|assistant)
 - [/init audit-workflow design 2026-04-30](project_session_2026-04-30_init_workflow_design.md) — Workflows A/B/C; bounded Apply/Defer/Dismiss forcing function eliminates hung-proposal failure mode; IRF-OPS-018/019/020/021 added; plan mirrored to chezmoi source
