@@ -8,6 +8,7 @@
 - [Core identity](user_core_identity.md) — Humanities creator; ORGANVM = carrier wave for zeitgeist thesis
 
 ## Active Artifacts
+- [Insights snapshot system 2026-04-30](project_artifact_insights_snapshot_system_2026_04_30.md) — CLI tooling + SessionEnd hook archives /insights report.html before rolling-window overwrite; commit `d6aeb8e4` pushed; IRF-MON-013 + DONE-522 queued
 - [Propulsion plan 2026-04-27](../../../plans/what-s-logically-next-extensibly-eager-giraffe.md) — Stream A surfaced (NOT sent); Streams B+C done; D deferred
 - [Decision card 2026-04-27](../../../plans/2026-04-27-decision-card-hanging-plan.md) — 7 decisions + 3 user-composed sends; awaits user
 - [Conductor CLI repair](project_artifact_conductor_cli_repair_2026_04_27.md) — editable install fixed; Dispatch Protocol unblocked
