@@ -1,0 +1,233 @@
+#!/usr/bin/env python3
+"""insights-diff — compare two insights snapshots.
+
+Usage:
+  insights-diff <THEN_dir> <NOW_dir>
+  insights-diff <THEN_stamp> <NOW_stamp>     (resolved under ~/.claude/usage-data/snapshots/)
+  insights-diff                              (defaults: oldest vs newest snapshot)
+
+Reports:
+  - stat deltas (messages, sessions, commits, lines, files, …)
+  - window slide (left edge, right edge, span change)
+  - session aged-out / new-in (when session-ids.txt available on both sides)
+  - project-area moves (added / removed / count delta)
+  - narrative phrase shifts (key_pattern, fun_ending_headline, at-a-glance)
+"""
+from __future__ import annotations
+import argparse
+import datetime as dt
+import difflib
+import json
+import pathlib
+import sys
+
+SNAPDIR = pathlib.Path.home() / ".claude" / "usage-data" / "snapshots"
+
+
+def resolve(arg: str) -> pathlib.Path:
+    p = pathlib.Path(arg)
+    if p.is_dir():
+        return p
+    candidate = SNAPDIR / arg
+    if candidate.is_dir():
+        return candidate
+    sys.exit(f"insights-diff: snapshot not found: {arg}")
+
+
+def load(path: pathlib.Path) -> dict:
+    mf = path / "manifest.json"
+    if not mf.exists():
+        sys.exit(f"insights-diff: no manifest.json in {path}")
+    return json.loads(mf.read_text())
+
+
+def num(v):
+    """Coerce '1,123' -> 1123 if possible, else None."""
+    if v is None:
+        return None
+    if isinstance(v, (int, float)):
+        return v
+    s = str(v).replace(",", "").strip()
+    try:
+        return int(s)
+    except ValueError:
+        try:
+            return float(s)
+        except ValueError:
+            return None
+
+
+def fmt_delta(a, b) -> str:
+    na, nb = num(a), num(b)
+    if na is not None and nb is not None:
+        d = nb - na
+        sign = "+" if d > 0 else ""
+        return f"{a} → {b}  ({sign}{d:g})"
+    return f"{a} → {b}"
+
+
+def section(title: str) -> None:
+    print()
+    print(f"## {title}")
+    print()
+
+
+def diff_stats(then: dict, now: dict) -> None:
+    section("Stats")
+    keys = sorted(set(then.get("stats", {}).keys()) | set(now.get("stats", {}).keys()))
+    for k in keys:
+        a = then.get("stats", {}).get(k)
+        b = now.get("stats", {}).get(k)
+        if a == b:
+            print(f"  {k:>20}: {a}  (unchanged)")
+        else:
+            print(f"  {k:>20}: {fmt_delta(a, b)}")
+
+
+def diff_window(then: dict, now: dict) -> None:
+    section("Window")
+    tw, nw = then.get("window", {}), now.get("window", {})
+    print(
+        f"  THEN: {tw.get('start')} → {tw.get('end')}  ({tw.get('days')}d span)"
+    )
+    print(
+        f"  NOW : {nw.get('start')} → {nw.get('end')}  ({nw.get('days')}d span)"
+    )
+    if tw.get("start") and nw.get("start"):
+        ds = (
+            dt.date.fromisoformat(nw["start"]) - dt.date.fromisoformat(tw["start"])
+        ).days
+        de = (
+            dt.date.fromisoformat(nw["end"]) - dt.date.fromisoformat(tw["end"])
+        ).days
+        print(f"  edge slide: left {ds:+d}d   right {de:+d}d")
+
+
+def diff_session_ids(then_dir: pathlib.Path, now_dir: pathlib.Path) -> None:
+    section("Session IDs (analyzed pool)")
+    tids_p = then_dir / "session-ids.txt"
+    nids_p = now_dir / "session-ids.txt"
+    if not tids_p.exists() or not nids_p.exists():
+        missing = []
+        if not tids_p.exists():
+            missing.append(then_dir.name)
+        if not nids_p.exists():
+            missing.append(now_dir.name)
+        print(f"  (skipped — session-ids.txt missing in: {', '.join(missing)})")
+        return
+    tids = {l.strip() for l in tids_p.read_text().splitlines() if l.strip()}
+    nids = {l.strip() for l in nids_p.read_text().splitlines() if l.strip()}
+    aged_out = sorted(tids - nids)
+    new_in = sorted(nids - tids)
+    print(f"  aged out (in THEN, not NOW): {len(aged_out)}")
+    for s in aged_out[:10]:
+        print(f"    - {s}")
+    if len(aged_out) > 10:
+        print(f"    … ({len(aged_out) - 10} more)")
+    print(f"  new in   (in NOW, not THEN): {len(new_in)}")
+    for s in new_in[:10]:
+        print(f"    + {s}")
+    if len(new_in) > 10:
+        print(f"    … ({len(new_in) - 10} more)")
+
+
+def diff_areas(then: dict, now: dict) -> None:
+    section("Project areas")
+    ta = {a["name"]: a for a in then.get("areas", [])}
+    na = {a["name"]: a for a in now.get("areas", [])}
+    removed = sorted(set(ta) - set(na))
+    added = sorted(set(na) - set(ta))
+    common = sorted(set(ta) & set(na))
+    if removed:
+        print("  removed:")
+        for n in removed:
+            print(f"    - {n} ({ta[n].get('session_count_label','?')})")
+    if added:
+        print("  added:")
+        for n in added:
+            print(f"    + {n} ({na[n].get('session_count_label','?')})")
+    if common:
+        print("  count changes:")
+        for n in common:
+            a = ta[n].get("session_count")
+            b = na[n].get("session_count")
+            if a != b:
+                print(f"    ~ {n}: {a} → {b}")
+
+
+def diff_phrase(label: str, a: str | None, b: str | None) -> None:
+    print(f"### {label}")
+    if a == b:
+        print(f"  (unchanged): {a}")
+        print()
+        return
+    print(f"  THEN: {a}")
+    print(f"  NOW : {b}")
+    if a and b:
+        sm = difflib.SequenceMatcher(None, a, b)
+        ratio = sm.ratio()
+        print(f"  similarity: {ratio:.2f}")
+    print()
+
+
+def diff_narrative(then: dict, now: dict) -> None:
+    section("Narrative")
+    diff_phrase("key_pattern", then.get("key_pattern"), now.get("key_pattern"))
+    diff_phrase(
+        "fun_ending_headline",
+        then.get("fun_ending_headline"),
+        now.get("fun_ending_headline"),
+    )
+    section("At a glance")
+    keys = sorted(
+        set(then.get("at_a_glance", {}).keys()) | set(now.get("at_a_glance", {}).keys())
+    )
+    for k in keys:
+        diff_phrase(
+            k,
+            then.get("at_a_glance", {}).get(k),
+            now.get("at_a_glance", {}).get(k),
+        )
+
+
+def main() -> int:
+    p = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    p.add_argument("then", nargs="?", help="THEN snapshot dir or stamp")
+    p.add_argument("now", nargs="?", help="NOW snapshot dir or stamp")
+    p.add_argument(
+        "--narrative-only",
+        action="store_true",
+        help="only show narrative phrase deltas",
+    )
+    args = p.parse_args()
+
+    if not args.then or not args.now:
+        snaps = sorted(d for d in SNAPDIR.glob("*") if d.is_dir())
+        if len(snaps) < 2:
+            sys.exit("insights-diff: need at least 2 snapshots; have %d" % len(snaps))
+        then_dir, now_dir = snaps[0], snaps[-1]
+        print(
+            f"# (auto) THEN={then_dir.name}  NOW={now_dir.name}  "
+            f"({len(snaps)} snapshots total)"
+        )
+    else:
+        then_dir = resolve(args.then)
+        now_dir = resolve(args.now)
+
+    then = load(then_dir)
+    now = load(now_dir)
+
+    print(f"# insights-diff  {then_dir.name}  →  {now_dir.name}")
+    print(f"  THEN subtitle: {then.get('subtitle','(missing)')}")
+    print(f"  NOW  subtitle: {now.get('subtitle','(missing)')}")
+    if not args.narrative_only:
+        diff_stats(then, now)
+        diff_window(then, now)
+        diff_session_ids(then_dir, now_dir)
+        diff_areas(then, now)
+    diff_narrative(then, now)
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

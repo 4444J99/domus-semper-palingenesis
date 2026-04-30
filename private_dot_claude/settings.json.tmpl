@@ -338,6 +338,16 @@
             "statusMessage": "Substrate verify-close..."
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "{{ .chezmoi.homeDir }}/.local/bin/insights-snapshot --only-if-newer --quiet 2>/dev/null; true",
+            "timeout": 15,
+            "statusMessage": "Insights snapshot..."
+          }
+        ]
       }
     ]
   },

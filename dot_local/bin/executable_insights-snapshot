@@ -1,0 +1,296 @@
+#!/usr/bin/env python3
+"""insights-snapshot — freeze a /insights report.html into an immutable archive.
+
+Reads ~/.claude/usage-data/report.html (or --src) and writes:
+  <snapshots>/<ISO-stamp>/
+    report.html         (verbatim copy)
+    facets.tar.gz       (compressed facets/, if --src is the live report)
+    session-ids.txt     (UUIDs from facets/, if available)
+    manifest.json       (extracted structured fields)
+    narrative.md        (prose extracts for human diffing)
+
+Idempotent: if the target dir already exists, manifest.json + narrative.md are
+re-extracted in place and existing report.html is left alone.
+
+Anchors are class-based (stat, subtitle, project-area, glance-section,
+fun-headline) — not bare substring greps — so prose containing forbidden
+keywords does not trip the extractor.
+"""
+from __future__ import annotations
+import argparse
+import datetime as dt
+import html
+import json
+import os
+import pathlib
+import re
+import shutil
+import subprocess
+import sys
+
+USAGE_DIR = pathlib.Path.home() / ".claude" / "usage-data"
+DEFAULT_SRC = USAGE_DIR / "report.html"
+DEFAULT_SNAPDIR = USAGE_DIR / "snapshots"
+
+
+def _txt(s: str) -> str:
+    """Strip tags + collapse whitespace + decode HTML entities."""
+    s = re.sub(r"<[^>]+>", " ", s)
+    s = html.unescape(s)
+    return re.sub(r"\s+", " ", s).strip()
+
+
+def _find_block(html_doc: str, cls: str) -> str | None:
+    """Return inner text of first <* class="cls ..."> ... </*> block, balanced naively."""
+    m = re.search(rf'<(\w+)\s+[^>]*class="{re.escape(cls)}[^"]*"[^>]*>', html_doc)
+    if not m:
+        return None
+    tag = m.group(1)
+    depth = 1
+    i = m.end()
+    open_re = re.compile(rf"<{tag}\b[^>]*>")
+    close_re = re.compile(rf"</{tag}>")
+    while depth > 0 and i < len(html_doc):
+        no = open_re.search(html_doc, i)
+        nc = close_re.search(html_doc, i)
+        if not nc:
+            return None
+        if no and no.start() < nc.start():
+            depth += 1
+            i = no.end()
+        else:
+            depth -= 1
+            i = nc.end()
+            if depth == 0:
+                return html_doc[m.end() : nc.start()]
+    return None
+
+
+def _all_blocks(html_doc: str, cls: str):
+    """Yield inner text of every <* class="cls ..."> block."""
+    for m in re.finditer(
+        rf'<(\w+)\s+[^>]*class="{re.escape(cls)}[^"]*"[^>]*>', html_doc
+    ):
+        tag = m.group(1)
+        depth = 1
+        i = m.end()
+        open_re = re.compile(rf"<{tag}\b[^>]*>")
+        close_re = re.compile(rf"</{tag}>")
+        while depth > 0 and i < len(html_doc):
+            no = open_re.search(html_doc, i)
+            nc = close_re.search(html_doc, i)
+            if not nc:
+                break
+            if no and no.start() < nc.start():
+                depth += 1
+                i = no.end()
+            else:
+                depth -= 1
+                i = nc.end()
+                if depth == 0:
+                    yield html_doc[m.end() : nc.start()]
+                    break
+
+
+def extract_manifest(html_doc: str, source: str, mtime_iso: str) -> dict:
+    out: dict = {
+        "snapshot_at": dt.datetime.now().replace(microsecond=0).isoformat(),
+        "source": source,
+        "report_mtime": mtime_iso,
+        "stats": {},
+        "window": {},
+        "areas": [],
+        "at_a_glance": {},
+    }
+
+    # Subtitle: "X messages across Y sessions (Z total) | DATE to DATE"
+    sub = _find_block(html_doc, "subtitle")
+    if sub:
+        s = _txt(sub)
+        out["subtitle"] = s
+        m = re.search(
+            r"([\d,]+)\s*messages?\s*across\s*([\d,]+)\s*sessions?\s*\(([\d,]+)\s*total\)",
+            s,
+        )
+        if m:
+            out["stats"]["messages"] = int(m.group(1).replace(",", ""))
+            out["stats"]["sessions_analyzed"] = int(m.group(2).replace(",", ""))
+            out["stats"]["sessions_total"] = int(m.group(3).replace(",", ""))
+        m = re.search(r"(\d{4}-\d{2}-\d{2})\s*to\s*(\d{4}-\d{2}-\d{2})", s)
+        if m:
+            d1 = dt.date.fromisoformat(m.group(1))
+            d2 = dt.date.fromisoformat(m.group(2))
+            out["window"] = {
+                "start": m.group(1),
+                "end": m.group(2),
+                "days": (d2 - d1).days + 1,
+            }
+
+    # Labeled stats (Messages, Lines, Files, Days, Msgs/Day, etc.)
+    for blk in _all_blocks(html_doc, "stat"):
+        v = re.search(r'class="stat-value"[^>]*>([^<]+)<', blk)
+        l = re.search(r'class="stat-label"[^>]*>([^<]+)<', blk)
+        if v and l:
+            label = _txt(l.group(1)).lower().replace("/", "_per_").replace(" ", "_")
+            value = _txt(v.group(1))
+            out["stats"][label] = value
+
+    # Commits (lives in prose, not a labeled stat)
+    for m in re.finditer(r"([\d,]+)\s+commits?\b", html_doc):
+        try:
+            out["stats"]["commits"] = int(m.group(1).replace(",", ""))
+            break
+        except ValueError:
+            continue
+
+    # Hours: "Xh" pattern in subtitle/header
+    m = re.search(r"·\s*([\d,]+)h\b", html_doc)
+    if m:
+        out["stats"]["hours"] = int(m.group(1).replace(",", ""))
+
+    # Project areas
+    for blk in _all_blocks(html_doc, "project-area"):
+        name_m = re.search(r'class="area-name"[^>]*>([^<]+)<', blk)
+        count_m = re.search(r'class="area-count"[^>]*>([^<]+)<', blk)
+        desc_m = re.search(r'class="area-desc"[^>]*>([^<]+)<', blk)
+        if name_m:
+            count_raw = _txt(count_m.group(1)) if count_m else ""
+            num = re.search(r"(\d+)", count_raw)
+            out["areas"].append(
+                {
+                    "name": _txt(name_m.group(1)),
+                    "session_count_label": count_raw,
+                    "session_count": int(num.group(1)) if num else None,
+                    "description": _txt(desc_m.group(1)) if desc_m else "",
+                }
+            )
+
+    # Key pattern (class="key-insight" wraps "<strong>Key pattern:</strong> TEXT")
+    ki = _find_block(html_doc, "key-insight")
+    if ki:
+        ki_clean = re.sub(r"<strong>[^<]*</strong>", "", ki, count=1)
+        out["key_pattern"] = _txt(ki_clean)
+
+    # Fun headline
+    fh = _find_block(html_doc, "fun-headline")
+    if fh:
+        out["fun_ending_headline"] = _txt(fh).strip('"').strip("“”")
+
+    # At a glance: 4 sections — working / hindering / quick wins / horizon
+    for blk in _all_blocks(html_doc, "glance-section"):
+        m = re.match(r"\s*<strong>([^<]+)</strong>\s*([\s\S]+)", blk)
+        if m:
+            key = (
+                _txt(m.group(1))
+                .rstrip(":")
+                .lower()
+                .replace("'", "")
+                .replace(" ", "_")
+            )
+            out["at_a_glance"][key] = _txt(m.group(2))
+
+    return out
+
+
+def write_narrative_md(manifest: dict, dest: pathlib.Path) -> None:
+    lines: list[str] = []
+    lines.append(f"# Insights snapshot — {manifest['snapshot_at']}")
+    lines.append("")
+    if manifest.get("subtitle"):
+        lines.append(f"**Header:** {manifest['subtitle']}")
+        lines.append("")
+    s = manifest.get("stats", {})
+    if s:
+        lines.append("## Stats")
+        for k, v in s.items():
+            lines.append(f"- {k}: {v}")
+        lines.append("")
+    w = manifest.get("window", {})
+    if w:
+        lines.append(
+            f"## Window\n- {w.get('start')} → {w.get('end')} ({w.get('days')}d)\n"
+        )
+    if manifest.get("key_pattern"):
+        lines.append(f"## Key pattern\n\n{manifest['key_pattern']}\n")
+    if manifest.get("fun_ending_headline"):
+        lines.append(f"## Fun ending\n\n> {manifest['fun_ending_headline']}\n")
+    if manifest.get("areas"):
+        lines.append("## Project areas")
+        for a in manifest["areas"]:
+            lines.append(
+                f"- **{a['name']}** ({a.get('session_count_label','')}): {a.get('description','')}"
+            )
+        lines.append("")
+    if manifest.get("at_a_glance"):
+        lines.append("## At a glance")
+        for k, v in manifest["at_a_glance"].items():
+            lines.append(f"### {k}\n\n{v}\n")
+    dest.write_text("\n".join(lines))
+
+
+def snapshot(src: pathlib.Path, snapdir: pathlib.Path, stamp: str | None = None) -> pathlib.Path:
+    if not src.exists():
+        sys.exit(f"insights-snapshot: source not found: {src}")
+    if stamp is None:
+        mt = dt.datetime.fromtimestamp(src.stat().st_mtime)
+        stamp = mt.strftime("%Y-%m-%dT%H%M")
+    target = snapdir / stamp
+    target.mkdir(parents=True, exist_ok=True)
+    report_dest = target / "report.html"
+    if not report_dest.exists():
+        shutil.copy2(src, report_dest)
+    # If src is the live report, also archive facets/ + session-ids
+    live = USAGE_DIR / "report.html"
+    if src.resolve() == live.resolve():
+        facets = USAGE_DIR / "facets"
+        if facets.is_dir():
+            ids = sorted(p.stem for p in facets.glob("*.json"))
+            (target / "session-ids.txt").write_text("\n".join(ids) + "\n")
+            tar_path = target / "facets.tar.gz"
+            if not tar_path.exists():
+                subprocess.run(
+                    ["tar", "-C", str(USAGE_DIR), "-czf", str(tar_path), "facets"],
+                    check=True,
+                )
+    # Always (re)extract manifest + narrative — idempotent
+    html_doc = report_dest.read_text(errors="replace")
+    mtime_iso = dt.datetime.fromtimestamp(report_dest.stat().st_mtime).isoformat()
+    manifest = extract_manifest(html_doc, source=str(src), mtime_iso=mtime_iso)
+    (target / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
+    write_narrative_md(manifest, target / "narrative.md")
+    return target
+
+
+def main() -> int:
+    p = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    p.add_argument("--src", type=pathlib.Path, default=DEFAULT_SRC)
+    p.add_argument("--snapdir", type=pathlib.Path, default=DEFAULT_SNAPDIR)
+    p.add_argument("--stamp", help="override snapshot stamp (default: src mtime)")
+    p.add_argument(
+        "--quiet",
+        action="store_true",
+        help="suppress info output (for hook use)",
+    )
+    p.add_argument(
+        "--only-if-newer",
+        action="store_true",
+        help="exit 0 without snapshotting if a snapshot for src mtime exists",
+    )
+    args = p.parse_args()
+
+    if args.only_if_newer and args.src.exists():
+        mt = dt.datetime.fromtimestamp(args.src.stat().st_mtime)
+        candidate = args.snapdir / mt.strftime("%Y-%m-%dT%H%M")
+        if (candidate / "manifest.json").exists():
+            if not args.quiet:
+                print(f"insights-snapshot: up to date ({candidate.name})")
+            return 0
+
+    target = snapshot(args.src, args.snapdir, args.stamp)
+    if not args.quiet:
+        print(f"insights-snapshot: wrote {target}")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
