@@ -9,6 +9,7 @@
 
 ## Active Artifacts
 - [/init audit-workflow design 2026-04-30](project_session_2026-04-30_init_workflow_design.md) — Workflows A/B/C; bounded Apply/Defer/Dismiss forcing function eliminates hung-proposal failure mode; IRF-OPS-018/019/020/021 added; plan mirrored to chezmoi source
+- [/init Workflow A dry-run 2026-04-30](project_session_2026-04-30_init_workflow_A_dryrun.md) — Validated A on organvm-corpvs-testamentvm; closed IRF-OPS-019, opened OPS-022 (dirty data files); commit `d6c6bf7`; no hung proposal
 - [Insights snapshot system 2026-04-30](project_artifact_insights_snapshot_system_2026_04_30.md) — CLI tooling + SessionEnd hook archives /insights report.html before rolling-window overwrite; commit `d6aeb8e4` pushed; IRF-MON-013 + DONE-522 queued
 - [Corpus rescue + 100% audit 2026-04-30](../../../plans/was-all-100-context-scalable-bird.md) — 5 TMPDIR sessions rescued to portfolio (commit 30bd9d6); structural-extraction pivot; Overreach Incident surfaced → IRF-OPS-014
 - [Session corpus 2026-04-29](project_artifact_session_corpus_rescue_2026_04_29.md) — 5 Claude.ai exports preserved at portfolio/sessions/claude-ai-exports/2026-04-29/; 8 File-C pending decisions
