@@ -109,6 +109,7 @@
 - [Rob/BODI funnel call](project_rob_bodi_funnel_call_20260425.md) — Rob homework: links + constellation
 
 ## Session Logs
+- [2026-04-30 codex-export-routing](project_session_2026-04-30_codex_export_routing.md) — Routed Codex finding (no flag) → memory + IRF-SYS-056 amendment + GH#28 (CCE converter); hall-monitor caught + recovered parity violation via domus-memory-sync; chezmoi commits `fd5e0f2`+`7c54620`; testamentvm `78d36f7`
 - [2026-04-28 lawsuit-substrate-CURIA](project_session_2026-04-28_lawsuit_curia.md) — 5 deliverables shipped: privilege firewall + CURIA Phase 0 spec + Micah dossier (sealed) + legal-domain skill stub (gated) + plan-as-artifact
 - [2026-04-28 typed-hejlsberg](project_session_2026-04-28_typed_hejlsberg.md) — Encompass+surpass: routed 4 stranded items, 7 commits across 4 repos, fixed global pre-commit hook, composed Gemini envelope (closes dispatch loop)
 - [2026-04-27 keen-frog closure](project_session_2026-04-27_keen_frog_closure.md) — Verified handoff vs disk: Group A pre-deleted, Group B not actual duplicates; plan closed honestly without false deletions; resolve-audit (20 path violations) surfaced
