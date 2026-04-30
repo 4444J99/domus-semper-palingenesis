@@ -14,7 +14,7 @@ originSessionId: 65184385-3fa6-43fb-96f5-2d3afe37bfb6
 
 **For whom:** Maddie (collaborator) / Anthony (operator)
 
-**State:** persona refresh APPLIED; M-A1 audit COMPLETE with findings; M-A1 destructive cleanup PENDING user signoff
+**State:** persona refresh APPLIED; M-A1 audit COMPLETE with findings; M-A1 destructive cleanup **DONE 2026-04-27** (commit `c2c729f` on main, pushed). 7 files removed: 5× `extracted/atoms/` (S1/S2/S3/S7/S8) + 2× `source-bundle/spiral/concepts-to-add-in/` (chatgpt-idea-implementation-strategies.txt + chatgpt-vision-board-creation-guide.txt). **Decision direction inverted from memory's original recommendation**: kept `verification/gemini/` as upstream source-of-truth (memory had recommended keeping `extracted/atoms/`); kept categorized location (business/, mindset/) over staging (concepts-to-add-in/). Net dedup: 0 byte-identical duplicates remain in `docs/archive/`.
 
 **Refresh changes (M-A2 applied):**
 - Source basis split into Derived (analytical) and Raw (primary) subsections
@@ -31,8 +31,8 @@ originSessionId: 65184385-3fa6-43fb-96f5-2d3afe37bfb6
 | RA-3 shallow timeslices (~30 lines each) | **APPLICABLE different surface**: Maddie has no 8-strata substrate; analogous shallow-research-artifact issue lives in `docs/logos/` — telos 27 lines, pragma 46, praxis 44, receptio 36, alchemical-io 67. CLAUDE.md flags Logos Layer status as GHOST (Symmetry 0.5) | wc -l confirmed |
 
 **Pending feedback / next action:**
-- User signoff needed before deleting 13 duplicate files in `docs/archive/extracted/atoms/` vs `docs/archive/verification/gemini/` (recommend: keep `extracted/atoms/` as canonical; archive verification/gemini dir to a timestamped snapshot)
-- Logos docs deepening: 5 docs at 27-67 lines need to grow into real research artifacts per CLAUDE.md GHOST flag — or formally accept the gap
+- ~~M-A1 dedup~~ DONE in c2c729f (7 files, not 13 — memory had double-counted file-pairs as files)
+- Logos docs deepening: 5 docs at 27-67 lines need to grow into real research artifacts per CLAUDE.md GHOST flag — or formally accept the gap (still pending)
 - Spiral nodes "not viewable" issue from earlier investigation parked; raise next session if Maddie surfaces it
 
 **Master kill list reference:** `the-work-carried-through-smooth-mountain.md` rows MA-1, MA-2 (Maddie agent fixes); MD-1..7 canonical IDs at lines 47-55.

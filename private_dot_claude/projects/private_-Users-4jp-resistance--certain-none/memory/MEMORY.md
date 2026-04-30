@@ -1,0 +1,7 @@
+- [Session 2026-04-28 tending pass](session_2026-04-28-tending.md) — manifested 8 sessions touching this workspace; STATUS-2026-04-28.md is the durable record
+- [Workspace role](project_workspace_role.md) — `~/resistance--certain-none/` is transient triage; nothing should remain here
+- [Artifact: 410b5729 domain-theme audit](project_artifact_410b5729_domain_theme_audit.md) — `~/.claude/plans/2026-04-27-domus-domain-theme-relevance-audit.md`
+- [Artifact: 6a6b1953 gravity-field compilation](project_artifact_6a6b1953_gravity_field.md) — `~/Workspace/meta-organvm/praxis-perpetua/prompt-corpus/snapshots/2026-04-27/GRAVITY-FIELD-COMPILATION-2026-04-27.md`
+- [Artifact: 2637c4d6 QA completeness pass](project_artifact_2637c4d6_qa_completeness.md) — 4 artifacts in `…/snapshots/2026-04-28/` + atoms patch + committed plan
+- [Orphan: 77bf0b84 work-list inventory](project_orphan_77bf0b84_inventory.md) — substantive inventory delivered to chat only; never persisted
+- [Pending decisions](project_pending_decisions_2026-04-28.md) — atoms merge (D1) and Untitled stub disposition (D2)

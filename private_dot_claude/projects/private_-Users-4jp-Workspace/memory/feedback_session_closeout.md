@@ -2,11 +2,13 @@
 name: Session close-out protocol — IRF update, 10-index propagation, nothing local only
 description: ABSOLUTE RULE — every session must end with IRF update, propagation to all 10 indices, and verification that every artifact is git-tracked and pushed. The prompting sequence is the supreme order.
 type: feedback
+originSessionId: d8688a3d-d497-402f-8b54-730a1d675faa
 ---
-
 **RULE: The close-out sequence is non-negotiable.** Every session follows this exact order:
 
-1. **IRF UPDATE** — Move completed items to ## Completed (physically move rows, don't just change status column). Add new items discovered during the session. Update statistics.
+0. **TRIANGLE PASS** — For every item moving toward CLOSED, render the (A=Ideal, B=Reduction, C=Artifact) triple per `feedback_triangulation_protocol.md`. Missing edge evidence makes the item PROVISIONAL not CLOSED. All-three-disagree triggers one rotation cycle (single concrete next action, never a menu). Triangle outcome states drive what gets moved in Step 1.
+
+1. **IRF UPDATE** — Move completed items to ## Completed (physically move rows, don't just change status column). Add new items discovered during the session. Update statistics. Items in PROVISIONAL/DRIFT/REGRESSED states stay in the open section with their triangle_state field set, even if previously claimed CLOSED.
 
 2. **10-INDEX PROPAGATION** — Check ALL ten indices and propagate completions:
    - IRF (universal work registry)

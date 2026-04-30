@@ -8,6 +8,8 @@
 - [Core identity](user_core_identity.md) — Humanities creator; ORGANVM = carrier wave for zeitgeist thesis
 
 ## Active Artifacts
+- [Origin unity follow-up 2026-04-30](project_artifact_origin_unity_2026_04_30.md) — PR #21 on organvm-iii-ergon/content-engine--asset-amplifier (vacuum closures: CANDIDATE promo + README dual-runtime + .gitignore); IRF-OPS-023 added (commit d6f4968); no deletions; ~118-repo systemic split-origin pattern surfaced
+- [Codex export finding 2026-04-30](project_artifact_codex_export_finding.md) — No CLI flag; ~/.codex/history.jsonl = prompts-only (145k entries), ~/.codex/sessions/**/rollout-*.jsonl = full typed envelope (filter response_item + role==user|assistant)
 - [/init audit-workflow design 2026-04-30](project_session_2026-04-30_init_workflow_design.md) — Workflows A/B/C; bounded Apply/Defer/Dismiss forcing function eliminates hung-proposal failure mode; IRF-OPS-018/019/020/021 added; plan mirrored to chezmoi source
 - [/init Workflow A dry-run 2026-04-30](project_session_2026-04-30_init_workflow_A_dryrun.md) — Validated A on organvm-corpvs-testamentvm; closed IRF-OPS-019, opened OPS-022 (dirty data files); commit `d6c6bf7`; no hung proposal
 - [Insights snapshot system 2026-04-30](project_artifact_insights_snapshot_system_2026_04_30.md) — CLI tooling + SessionEnd hook archives /insights report.html before rolling-window overwrite; commit `d6aeb8e4` pushed; IRF-MON-013 + DONE-522 queued
@@ -198,6 +200,7 @@
 - [Atoms permanent](feedback_atoms_are_permanent.md) — Never batch-close; stale ≠ dead
 - [Every frame a painting](feedback_every_frame_a_painting.md) — Spatial + temporal; session = sculpture
 - [Do what is asked](feedback_priority_hierarchy.md) — Never preempt user priorities
+- [Laziness vs energy expense](feedback_laziness_against_illogical.md) — Channel laziness against illogical structural friction only, never against effort I should bear myself; blocked tools = forking points, not deferral excuses
 - [Overreach Incident — acolyte-deferred = hard gate](feedback_overreach_incident_acolyte_deferred.md) — When acolyte defers a decision to user, do NOT execute it; 2026-04-29 incident: 17 commits pushed to hokage main without authorization
 - [System IS product](feedback_system_is_the_product.md) — ORGANVM visible = acquisition
 - [Lane parsing](feedback_cross_session_lane_parsing.md) — "X active" = active elsewhere

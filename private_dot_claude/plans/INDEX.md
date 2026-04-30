@@ -7,6 +7,7 @@ Sorted by date (newest first). Date prefix from filename when available, otherwi
 | Date | File | Title |
 |------|------|-------|
 | 2026-04-30 | [`2026-04-30-init-claude-md-audit-workflows.md`](2026-04-30-init-claude-md-audit-workflows.md) | /init Audit Workflows — A/B/C Design (closes hung-proposal failure mode) |
+| 2026-04-30 | [`we-re-going-to-design-snug-cocoa.md`](we-re-going-to-design-snug-cocoa.md) | Plan-mode tombstone of the workflow design (auto-named by harness; renamed copy above) |
 | 2026-04-27 | [`what-s-logically-next-extensibly-eager-giraffe.md`](what-s-logically-next-extensibly-eager-giraffe.md) | What's Logically Next — Forward Propulsion Plan |
 | 2026-04-27 | [`these-projects-are-getting-shimmying-lerdorf.md`](these-projects-are-getting-shimmying-lerdorf.md) | Case-Wide Deep Dive — 2026-04-27 |
 | 2026-04-27 | [`last-session-left-keen-frog.md`](last-session-left-keen-frog.md) | Last Session Left — Closure Plan |

@@ -11,7 +11,7 @@ Comprehensive sweep of open-source contributions on 2026-04-21.
 - 11 stale PRs bumped with follow-up comments — STAGGER VIOLATION (11 comments in 3 minutes across 11 repos, permanent timestamp damage)
 - openai-agents#2802 closed gracefully (upstream unresponsive)
 - voidborne-d re-engaged via agentic-titan #81 + #82
-- aden-hive #6613 assignment requested (follow up in 7 days)
+- aden-hive #6613 assignment requested (follow up in 7 days) — **VERIFIED PHANTOM 2026-04-27**: no matching issue/PR exists in any aden-hive repo under `gh search issues --author @me`; reference is incorrect. Drop from active follow-up list.
 - 3 LinkedIn posts drafted but NOT posted (IRF-OSS-054)
 - contribution-merged announcement template created
 

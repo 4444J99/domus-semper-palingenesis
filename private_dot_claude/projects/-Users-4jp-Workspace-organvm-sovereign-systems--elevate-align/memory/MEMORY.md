@@ -1,0 +1,6 @@
+- [Sovereign Spiral artifact (chakra-aligned)](project_artifact_sovereign_spiral.md) — 4-pillar + 13-node chakra palette shipped 2026-04-30; hybrid vessel default
+- [Cross-client IP isolation convention](feedback_private_directory.md) — `.private/` directory pattern for local-only artifacts touching multi-client IP
+- [Stream-to-repo alignment for transcripts](feedback_stream_repo_alignment.md) — Maddie→sovereign-systems, Rob→hokage-chess, workspace-meta→~/.claude/sessions+meta-organvm mirror
+- [Session close-out 2026-04-30](project_session_2026_04_30_closeout.md) — hall-monitor audit + 6-commit close; main = origin/main = 6ed37dd
+- [Session 2026-04-30 sort streams](project_session_2026_04_30_sort_streams.md) — 6 temp transcripts sorted; parity verified via SHA + diff guards; auto-commit pipeline observed
+- [Don't defer obvious operational decisions](feedback_no_deferring_obvious_decisions.md) — Execute cleanup/commit/push when safety preconditions are met; the human directs vision, not Y/N gates
