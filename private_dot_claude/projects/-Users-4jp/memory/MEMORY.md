@@ -201,6 +201,7 @@
 - [Trinity dispatch](feedback_trinity_dispatch.md) — 3 agents parallel on non-arch tasks
 - [Email priority](feedback_email_priority_calibration.md) — Most emails MEDIUM at best
 - [Density compression](feedback_density_compression.md) — When corpus exceeds working memory, compress; never ship menus to user; ship judgment with the artifact
+- [chezmoi add collision](feedback_chezmoi_add_collision.md) — `chezmoi add` is destructive when source path is occupied; verify `chezmoi managed \| grep` + `ls $(chezmoi source-path)` BEFORE add
 - [Triple verification](feedback_nothing_closed_without_triple_verification.md) — Agents report; human decides
 - [Atoms ARE the work](feedback_atoms_are_the_work.md) — Atom backlog IS the work
 - [Atoms permanent](feedback_atoms_are_permanent.md) — Never batch-close; stale ≠ dead
