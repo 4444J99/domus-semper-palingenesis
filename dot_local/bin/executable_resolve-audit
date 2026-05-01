@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# resolve-audit — Find configs that bypass the resolver.
-# Single-pass grep with combined pattern. Fast (<2s).
+# resolve-audit — Find deployed config paths that bypass the resolver.
 #
 # Usage:
 #   resolve-audit              # full report
@@ -13,20 +12,65 @@ MODE="full"
 [[ "${1:-}" == "--count" ]] && MODE="count"
 [[ "${1:-}" == "--hook" ]] && MODE="hook"
 
-# Combined pattern — single grep call, not a loop
-PATTERN='(/Users/[^/]*/Workspace/[a-z]|organvm-iv-taxis|organvm-i-theoria|organvm-ii-poiesis|organvm-iii-ergon|organvm-v-logos|organvm-vi-koinonia|organvm-vii-kerygma)'
+# The tools legitimately store absolute paths in project trust maps and
+# GitHub repo lookup caches. Those are not executable bypasses. This audit
+# reports executable/config fields that should route through bootstrap launchers.
+DEPLOYED_HITS="$(python3 - <<'PY'
+import json
+import re
+from pathlib import Path
 
-# ── Scan deployed configs only (fast — no source tree traversal) ──
-DEPLOYED_HITS=""
-for cfg in "${HOME}/.claude.json" "${HOME}/.claude/settings.json" "${HOME}/.local/share/codex/config.toml"; do
-  [[ -f "$cfg" ]] || continue
-  hits=$(grep -nE "$PATTERN" "$cfg" 2>/dev/null | head -10) || true
-  if [[ -n "$hits" ]]; then
-    while IFS= read -r line; do
-      DEPLOYED_HITS="${DEPLOYED_HITS}${cfg#"$HOME/"}:${line}"$'\n'
-    done <<<"$hits"
-  fi
-done
+home = Path.home()
+pattern = re.compile(
+    r"(/Users/[^/]*/Workspace/[a-z]|organvm-iv-taxis|organvm-i-theoria|"
+    r"organvm-ii-poiesis|organvm-iii-ergon|organvm-v-logos|"
+    r"organvm-vi-koinonia|organvm-vii-kerygma)"
+)
+
+
+def rel(path: Path) -> str:
+    try:
+        return str(path.relative_to(home))
+    except ValueError:
+        return str(path)
+
+
+def emit_text_hits(path: Path, *, skip_codex_projects: bool = False) -> None:
+    if not path.exists():
+        return
+    in_codex_projects = False
+    for line_no, line in enumerate(path.read_text(errors="replace").splitlines(), 1):
+        stripped = line.strip()
+        if skip_codex_projects and stripped.startswith("[projects"):
+            in_codex_projects = True
+        elif skip_codex_projects and stripped.startswith("[") and not stripped.startswith("[projects"):
+            in_codex_projects = False
+        if in_codex_projects:
+            continue
+        if pattern.search(line):
+            print(f"{rel(path)}:{line_no}:{line}")
+
+
+def walk_mcp(value, path: tuple[str, ...] = ()) -> None:
+    if isinstance(value, dict):
+        for key, child in value.items():
+            walk_mcp(child, path + (str(key),))
+    elif isinstance(value, list):
+        for idx, child in enumerate(value):
+            walk_mcp(child, path + (str(idx),))
+    elif isinstance(value, str) and pattern.search(value):
+        print(f".claude.json:mcpServers.{'.'.join(path)}:{value}")
+
+
+claude_json = home / ".claude.json"
+if claude_json.exists():
+    data = json.loads(claude_json.read_text())
+    walk_mcp(data.get("mcpServers", {}))
+
+emit_text_hits(home / ".claude" / "settings.json")
+emit_text_hits(home / ".local" / "share" / "codex" / "config.toml", skip_codex_projects=True)
+PY
+)"
 
 # ── Count ──
 ALL_HITS="${DEPLOYED_HITS}"

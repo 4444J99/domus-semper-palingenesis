@@ -11,9 +11,13 @@ args = ['stdio']
 startup_timeout_sec = 30
 
 [mcp_servers.conductor]
-command = '{{ .chezmoi.homeDir }}/Workspace/{{ .organvm_dir }}/tool-interaction-design/.venv/bin/python3'
-args = ['{{ .chezmoi.homeDir }}/Workspace/{{ .organvm_dir }}/tool-interaction-design/mcp_server.py']
+command = '{{ .chezmoi.homeDir }}/.local/bin/organvm-conductor-mcp'
+args = []
 startup_timeout_sec = 30
+
+[mcp_servers.voice-scorer]
+command = '{{ .chezmoi.homeDir }}/.local/bin/organvm-voice-scorer-mcp'
+args = []
 
 [notice]
 hide_full_access_warning = true

@@ -23,20 +23,14 @@ if not os.environ.get("CHEZMOI_MODIFY_TEST"):
     # Remove stale/deprecated entries
     config["mcpServers"].pop("MCP_DOCKER", None)
 
-    # Conductor MCP server
-    CONDUCTOR_BASE = f"{HOME}/Workspace/{{ .organvm_dir }}/tool-interaction-design"
     config["mcpServers"]["conductor"] = {
-        "command": f"{CONDUCTOR_BASE}/.venv/bin/python3",
-        "args": [f"{CONDUCTOR_BASE}/mcp_server.py"],
-        "cwd": CONDUCTOR_BASE,
+        "command": f"{HOME}/.local/bin/organvm-conductor-mcp",
+        "args": [],
     }
 
-    # Voice Scorer MCP server
-    VOX_BASE = f"{HOME}/Workspace/{{ .organvm_dir }}/vox--architectura-gubernatio"
     config["mcpServers"]["voice-scorer"] = {
-        "command": f"{VOX_BASE}/.venv/bin/python3",
-        "args": [f"{VOX_BASE}/src/vox/mcp_server.py"],
-        "cwd": VOX_BASE,
+        "command": f"{HOME}/.local/bin/organvm-voice-scorer-mcp",
+        "args": [],
     }
 
     # GitHub MCP server — token from env (set by secrets.zsh)

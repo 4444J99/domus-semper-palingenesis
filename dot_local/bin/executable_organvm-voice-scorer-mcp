@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+repo="$(organvm-resolve-bootstrap vox)"
+python_bin="python3"
+if [[ -x "$repo/.venv/bin/python3" ]]; then
+  python_bin="$repo/.venv/bin/python3"
+fi
+
+cd "$repo"
+exec "$python_bin" "$repo/src/vox/mcp_server.py" "$@"
