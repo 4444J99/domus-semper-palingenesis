@@ -3,8 +3,8 @@
 # sync-skills.sh hash: {{ include "dot_config/ai-skills/.keep" | sha256sum }}
 set -euo pipefail
 
-SKILLS_DIR="${HOME}/Workspace/a-i--skills"
-SKILLS_REPO="https://github.com/4444J99/a-i--skills.git"
+SKILLS_DIR="${HOME}/Workspace/{{ .organvm_dir }}/{{ .skills_dir }}"
+SKILLS_REPO="git@github.com:a-organvm/{{ .skills_dir }}.git"
 
 echo "Syncing AI skills..."
 

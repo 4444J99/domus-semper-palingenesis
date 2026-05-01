@@ -1,7 +1,18 @@
+{{/* Available Skills — generated at chezmoi-render time from the canonical
+     skills-registry.json in the local a-i--skills clone. Single source of truth:
+     ~/Workspace/<organvm_dir>/<skills_dir>/distributions/skills-registry.json
+     If the registry isn't present (skill repo not synced yet), falls back to
+     a minimal placeholder so chezmoi apply doesn't fail.
+*/ -}}
+{{- $registryPath := printf "%s/Workspace/%s/%s/distributions/skills-registry.json" .chezmoi.homeDir .organvm_dir .skills_dir -}}
+{{- $registryRaw := "" -}}
+{{- if stat $registryPath -}}
+{{-   $registryRaw = output "cat" $registryPath -}}
+{{- end -}}
 ## Available Skills
 
 Skills extend capabilities with specialized knowledge and workflows.
-Location: `~/Workspace/a-i--skills/skills/{category}/{skill-name}/`
+Location: `~/Workspace/{{ .organvm_dir }}/{{ .skills_dir }}/skills/{category}/{skill-name}/`
 Runtime: `~/.claude/skills/` (symlinked from `distributions/claude/skills/`)
 
 Each skill contains:
@@ -10,15 +21,32 @@ Each skill contains:
 - `references/` - Detailed docs (optional)
 - `assets/` - Templates/resources (optional)
 
-**Creative**: algorithmic-art, audio-engineering-patterns, canvas-design, creative-writing-craft, generative-art-algorithms, generative-music-composer, interactive-theatre-designer, modular-synthesis-philosophy, movement-notation-systems, narratological-algorithms, reality-tv-narrative-analyzer, theme-factory, three-js-interactive-builder
-**Data**: data-pipeline-architect, data-storytelling-analyst, ml-experiment-tracker, sql-query-optimizer, systemic-product-analyst, time-series-analyst
-**Development**: accessibility-patterns, api-design-patterns, artifacts-builder, backend-implementation-patterns, code-refactoring-patterns, coding-standards-enforcer, continuous-learning-agent, deployment-cicd, dotfile-systems-architect, feature-workflow-orchestrator, frontend-design-systems, fullstack-starter-pack, gcp-resource-optimizer, iterative-code-exploration, mcp-builder, mcp-server-orchestrator, mobile-platform-architect, nextjs-fullstack-patterns, postgres-advanced-patterns, responsive-design-patterns, rust-systems-design, tdd-workflow, testing-patterns, verification-loop, web-artifacts-builder, webapp-testing
-**Documentation**: doc-coauthoring, github-profile-architect, github-repo-curator, github-repository-standards
-**Education**: enc1101-curriculum-designer, evaluation-to-growth, feedback-pedagogy, socratic-tutor
-**Integrations**: mcp-integration-patterns, oauth-flow-architect, specstory-guard, specstory-link-trail, specstory-organize, specstory-project-stats, specstory-session-summary, specstory-yak, webhook-integration-patterns
-**Knowledge**: claude-project-manifest, knowledge-architecture, knowledge-graph-builder, recursive-systems-architect, research-synthesis-workflow, second-brain-librarian
-**Professional**: brand-guidelines, content-distribution, cv-resume-builder, freelance-client-ops, grant-proposal-writer, internal-comms, interview-preparation, networking-outreach, portfolio-presentation, slack-gif-creator, workshop-presentation-design
-**Project Management**: github-roadmap-strategist, product-requirements-designer, project-alchemy-orchestrator, project-orchestration
-**Security**: contract-risk-analyzer, gdpr-compliance-check, incident-response-commander, security-essentials-pack, security-implementation-guide, security-threat-modeler
-**Specialized**: blockchain-integration-builder, defi-trading-systems, game-mechanics-designer, interfaith-sacred-geometry, local-llm-fine-tuning, location-ar-experience
-**Tools**: agent-swarm-orchestrator, multi-agent-workforce-planner, ontological-renamer, skill-chain-prompts, skill-creator, speckit
+{{ if $registryRaw -}}
+{{- $registry := $registryRaw | fromJson -}}
+{{- $skills := list -}}
+{{- if kindIs "map" $registry -}}
+{{-   if hasKey $registry "skills" -}}
+{{-     $skills = $registry.skills -}}
+{{-   else -}}
+{{-     $skills = values $registry -}}
+{{-   end -}}
+{{- else -}}
+{{-   $skills = $registry -}}
+{{- end -}}
+{{- $byCategory := dict -}}
+{{- range $skills -}}
+{{-   $cat := .category | default "uncategorized" -}}
+{{-   $list := index $byCategory $cat | default (list) -}}
+{{-   $name := .name | default (.id | default "unknown") -}}
+{{-   $list = append $list $name -}}
+{{-   $_ := set $byCategory $cat $list -}}
+{{- end -}}
+{{- $totalCount := len $skills -}}
+**Total registered skills:** {{ $totalCount }} (generated from `distributions/skills-registry.json`)
+
+{{ range $cat, $names := $byCategory -}}
+**{{ $cat | title }}**: {{ join ", " (sortAlpha $names) }}
+{{ end }}
+{{- else -}}
+*Skills registry not yet synced. Run `chezmoi apply` after `git clone` of `a-organvm/{{ .skills_dir }}` completes, or check `~/Workspace/{{ .organvm_dir }}/{{ .skills_dir }}/distributions/skills-registry.json` exists.*
+{{ end -}}
