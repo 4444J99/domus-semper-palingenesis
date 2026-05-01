@@ -1,513 +1,97 @@
 # CLAUDE.md
 
-Guidance for Claude Code when working in this repository.
-
-## What This Is
-
-**Domus Semper Palingenesis** — "The House of Perpetual Rebirth." Personal dotfiles and environment
-configuration managed by [chezmoi](https://chezmoi.io). This is the single source of truth for shell
-environment, tool configuration, and secrets management across all machines.
-
-- GitHub: `4444J99/domus-semper-palingenesis`
-- Board: [`Project #3`](https://github.com/users/4444J99/projects/3)
-- Organ: LIMINAL (personal, `4444j99`)
-- `autoCommit` + `autoPush` enabled — every `chezmoi apply` auto-commits and pushes to remote
-
-## How Chezmoi Works
-
-This directory **is** the chezmoi source. Files deploy to `$HOME/` via `chezmoi apply`.
-
-| Prefix | Meaning |
-|--------|---------|
-| `dot_` | Becomes `.` in `$HOME` (e.g. `dot_zshenv` → `~/.zshenv`) |
-| `private_` | Deployed with restricted permissions (600/700) |
-| `executable_` | Deployed with +x bit set |
-| `symlink_` | Creates a symlink rather than copying content |
-| `run_` | Script executed on every apply |
-| `run_once_` | Script executed once (hash-tracked) |
-| `run_onchange_` | Script executed when content changes |
-| `.tmpl` suffix | Template rendered with chezmoi data before deploy |
-
-**Template data** (`~/.config/chezmoi/chezmoi.toml`) supplies variables like `.email`, `.name`,
-`.ssh_signing_key`, `.domus_auto_enabled`, `.is_work`, `.has_aws_credentials`.
-
-## Repository Structure
-
-```
-domus-semper-palingenesis/
-├── dot_zshenv.tmpl             # ~/.zshenv — XDG dirs, ORGANVM vars, identity from chezmoi.toml
-├── dot_config/
-│   ├── zsh/                    # ~/.config/zsh/ — zsh config (ZDOTDIR)
-│   │   ├── _cache.zsh          # Cache helper — DRY primitive for tool init caching
-│   │   ├── 00-init.zsh         # Shell startup timing (native zsh/datetime), root guard
-│   │   ├── 10-path.zsh.tmpl    # PATH (OS/arch-aware via template, dedup at top)
-│   │   ├── 15-env.zsh.tmpl     # XDG compliance env vars, agent workspace env (DOMUS_ROOT from chezmoi.sourceDir)
-│   │   ├── 20-tools.zsh        # Tool initializations (1Password, starship, zoxide, fzf, …)
-│   │   ├── 30-aliases.zsh      # Aliases (chezmoi, git, domus, modern CLI tools)
-│   │   ├── 40-functions.zsh    # Shell functions (op-refresh, kitty themes, cleaners)
-│   │   ├── 50-completions.zsh  # Completion setup
-│   │   ├── 85-plugins.zsh      # ZSH plugins + shell integrations (autosuggestions, syntax-highlighting, iTerm2)
-│   │   ├── 90-telemetry.zsh    # Shell startup timing report (Domus telemetry)
-│   │   ├── 99-local.zsh.tmpl   # Machine-local overrides (template)
-│   │   ├── dot_zshenv          # ~/.config/zsh/.zshenv (re-source bridge)
-│   │   └── dot_zshrc           # ~/.zshrc entry point (glob loader)
-│   ├── git/config.tmpl         # Git config (email/name from chezmoi data, SSH signing via 1Password)
-│   ├── private_op/secrets.zsh  # 1Password secrets — sourced early in 20-tools.zsh
-│   ├── nvim/                   # Neovim config (init.lua + lua/)
-│   ├── tmux/tmux.conf          # Tmux config
-│   ├── starship.toml           # Starship prompt theme
-│   ├── gh/                     # GitHub CLI config
-│   ├── homebrew/               # ~/.config/homebrew/ — Homebrew bundle config
-│   │   └── Brewfile            # Declarative package manifest (brew bundle)
-│   ├── chezmoi-daemon/         # Chezmoi self-heal daemon config
-│   └── … (alacritty, bat, kitty, lazygit, wezterm, zed, …)
-├── dot_local/
-│   ├── bin/                    # ~/.local/bin/ — user scripts and domus tools
-│   │   ├── executable_domus    # Main domus CLI
-│   │   ├── executable_chezmoi-health.tmpl
-│   │   ├── executable_chezmoi-daemon.tmpl
-│   │   ├── executable_domus-maintain
-│   │   ├── executable_domus-packages
-│   │   ├── executable_domus-sort.tmpl
-│   │   └── … (agent-run, agent-tmux, normalize-names, photo-sort, theme-switch, …)
-│   ├── share/                  # XDG_DATA_HOME overrides
-│   └── state/                  # XDG_STATE_HOME
-├── private_dot_claude/         # ~/.claude/ — Claude Code config, hooks, plans, projects (memory)
-│   ├── CLAUDE.md.tmpl          # Global Claude instructions
-│   ├── settings.json.tmpl      # Hooks, plugins, statusLine
-│   ├── executable_statusline-command.sh
-│   ├── symlink_skills.tmpl     # ~/.claude/skills → workspace skills dir
-│   ├── hooks/                  # PreToolUse / SessionStart guards
-│   ├── plans/                  # Plan files (additive, never overwritten — Universal Rule #5)
-│   ├── projects/               # Per-project memory (auto memory system)
-│   ├── scripts/                # Helper scripts
-│   └── templates/              # CONTRIBUTING/CODE_OF_CONDUCT/SECURITY templates
-├── private_dot_ssh/            # ~/.ssh/ — SSH config (private)
-├── private_Library/
-│   ├── LaunchAgents/           # EMPTY — all plists removed 2026-04-22 (see "LaunchAgents (macOS)" below)
-│   └── private_Application Support/
-├── private_Documents/          # Personal documents (private perms)
-├── symlink_dot_gemini          # ~/.gemini → ~/.local/share/gemini
-├── .chezmoiscripts/            # Apply-time scripts (run_*, run_once_*, run_onchange_*)
-├── .chezmoiignore              # Conditional ignore rules (OS, flags, work context)
-├── .chezmoiremove              # Files to remove from target
-├── modify_dot_claude.json.tmpl # Merges into ~/.claude.json without overwriting
-├── AGENTS.md.tmpl              # ~/.AGENTS.md — context for AI agents
-├── justfile                    # Task runner (just apply, diff, lint, test, …)
-└── tests/                      # Shell tests (bats + pytest + template validation)
-```
-
-## Key Files and What They Configure
-
-| Source file | Deployed to | Purpose |
-|-------------|-------------|---------|
-| `dot_zshenv.tmpl` | `~/.zshenv` | XDG dirs, ORGANVM vars, identity from chezmoi.toml, `PAGER=cat`, `CLAUDE_INTERACTIVE=0` |
-| `dot_config/zsh/10-path.zsh.tmpl` | `~/.config/zsh/10-path.zsh` | PATH for Homebrew (ARM64/Intel), Ruby, Go, Rust, pipx, Python |
-| `dot_config/zsh/15-env.zsh.tmpl` | `~/.config/zsh/15-env.zsh` | XDG compliance for all tools, agent workspace vars (`DOMUS_ROOT` from `chezmoi.sourceDir`, `AGENTS_ROOT`) |
-| `dot_config/zsh/20-tools.zsh` | `~/.config/zsh/20-tools.zsh` | Sources 1Password secrets, inits starship/zoxide/fzf/atuin |
-| `dot_config/zsh/30-aliases.zsh` | `~/.config/zsh/30-aliases.zsh` | chezmoi (`cm*`), git (`g*`), domus (`dm*`), modern CLI replacements |
-| `dot_config/homebrew/Brewfile` | `~/.config/homebrew/Brewfile` | Declarative Homebrew formulae and casks for `brew bundle` |
-| `dot_config/git/config.tmpl` | `~/.config/git/config` | Git identity, SSH commit signing (1Password), delta pager, aliases |
-| `dot_config/private_op/secrets.zsh` | `~/.config/op/secrets.zsh` | API keys and secrets via 1Password CLI |
-| `modify_dot_claude.json.tmpl` | `~/.claude.json` | Claude Code config — uses modify mode to merge, not overwrite |
-| `private_dot_claude/CLAUDE.md.tmpl` | `~/.claude/CLAUDE.md` | Global Claude instructions (rendered from template) |
-| `private_dot_claude/settings.json.tmpl` | `~/.claude/settings.json` | Claude Code hooks (PreToolUse outbound guards), plugins, statusLine — **WARNING:** JSON linters/formatters strip unknown `if` fields; always verify hook conditionals after any formatting pass |
-| `symlink_dot_gemini` | `~/.gemini` | Symlink to `~/.local/share/gemini` |
-
-## Secrets Management
-
-`dot_config/private_op/secrets.zsh` is sourced early in shell startup (20-tools.zsh). It loads secrets
-via the 1Password CLI (`op`). **Never commit plaintext secrets.** Secrets stay in 1Password; this file
-contains `op read` calls only.
-
-AWS credentials are conditionally deployed via `.chezmoiignore` — requires `has_aws_credentials = true`
-in `~/.config/chezmoi/chezmoi.toml`.
-
-See `1PASSWORD_SETUP.md` for first-time setup.
-
-## Environment Variables Set by This Repo
-
-Key vars set in `dot_zshenv.tmpl` (loaded universally, identity from chezmoi.toml):
-
-```zsh
-XDG_CONFIG_HOME, XDG_DATA_HOME, XDG_STATE_HOME, XDG_CACHE_HOME  # XDG base dirs
-ZDOTDIR="$HOME/.config/zsh"       # Redirects zsh config to XDG
-HISTFILE, HISTSIZE, SAVEHIST       # Zsh history config
-SHELL_SESSIONS_DISABLE=1           # Suppress macOS per-session history files
-ORGANVM_WORKSPACE_DIR, ORGANVM_CORPUS_DIR
-ORG_I … ORG_META                   # ORGANVM organ → GitHub org mapping
-ORG_LIMINAL                        # From chezmoi.toml (.org_liminal)
-GITHUB_PRIMARY                     # From chezmoi.toml (.github_primary)
-CLAUDE_INTERACTIVE=0
-CLAUDE_CODE_MAX_OUTPUT_TOKENS=128000
-PAGER=cat
-```
-
-Key vars set in `dot_config/zsh/15-env.zsh.tmpl` (rendered at apply time):
-
-```zsh
-EDITOR=nvim, VISUAL=nvim
-DOMUS_ROOT="{{ .chezmoi.sourceDir }}"  # Dynamic — resolves to actual chezmoi repo location
-AGENTS_ROOT, AGENTS_BIN, AGENTS_CACHE, AGENTS_STATE, AGENTS_LOG
-WORKSPACE_ROOT="$DOMUS_ROOT/projects"
-GOPATH, CARGO_HOME, RUSTUP_HOME, NVM_DIR, BUN_INSTALL   # Toolchain XDG compliance
-UV_PYTHON="python3.11", UV_CACHE_DIR                     # uv / pipx config
-```
-
-## The `domus` CLI
-
-`domus` (`dot_local/bin/executable_domus`) is the main system management tool:
-
-```bash
-domus status            # System health overview
-domus apply             # Run chezmoi apply
-domus maintain          # Full maintenance pass
-domus maintain quick    # Quick maintenance
-domus packages          # Package management
-domus packages diff     # Show package drift from manifest.yaml
-domus perf shell        # Shell startup timing
-domus doctor            # Full system check
-```
-
-Aliases: `dm`, `dms`, `dma`, `dmp`, `dmpd`, `dmm`, `dmmq`
-
-## LaunchAgents (macOS) — REMOVED
-
-All plist templates were deleted from `private_Library/LaunchAgents/` on 2026-04-22 after
-repeated system freezes and resource contention incidents. Operational model shifted to
-on-demand CLI invocation only — the underlying scripts remain in `dot_local/bin/` and run
-manually. Full rationale: `feedback_no_launchagents.md` (memory).
-
-### CI Troubleshooting
-If `macOS Integration` or `Doctor Check` jobs fail with "map has no entry for key", ensure the
-`Setup CI chezmoi config` step in `.github/workflows/lint.yml` includes all required keys
-(e.g., `organvm_dir`, `skills_dir`).
-
-## Apply-Time Scripts (`.chezmoiscripts/`)
-
-`ls .chezmoiscripts/` is the canonical list. Operationally important categories:
-
-| Phase | Script | Purpose |
-|-------|--------|---------|
-| **before** | `run_before_validate-no-hardcoded-paths.sh.tmpl` | Pre-apply path-drift guard — can BLOCK `chezmoi apply` if violations found |
-| **before** | `run_onchange_before_install-packages.sh.tmpl` | `brew bundle` from `~/.config/homebrew/Brewfile` on Brewfile hash change |
-| **once / setup** | `run_once_after_setup-directories.sh.tmpl` | Create XDG dirs, Projects/, etc. |
-| **once / setup** | `run_once_after_create-agents-dirs.sh.tmpl` | Create `~/.local/share/agents/` workspace tree |
-| **once / migrations** | `run_once_after_migrate-zsh-xdg.sh.tmpl` | Migrate zsh config to XDG locations |
-| **once / migrations** | `run_once_after_migrate-home-xdg-phase2.sh.tmpl`, `…-phase3.sh.tmpl` | Multi-phase $HOME → XDG migration |
-| **once / cleanup** | `run_once_after_cleanup-{home-clutter,stale-dotfiles,dead-xdg-symlinks}.sh.tmpl` | Idempotent legacy-state cleanup |
-| **once / system** | `run_once_macos-defaults.sh.tmpl`, `run_once_after_spotlight-exclusions.sh.tmpl` | macOS preferences |
-| **once / tools** | `run_once_after_install-gh-extensions.sh.tmpl`, `run_once_after_seed-zoxide.sh.tmpl`, `run_once_after_docker-xdg-bridge.sh.tmpl` | One-time tool provisioning |
-| **onchange** | `run_onchange_after_link-skills.sh.tmpl`, `run_onchange_after_sync-skills.sh.tmpl` | Symlink + sync skills into `~/.claude/skills/` |
-| **onchange** | `run_onchange_after_ensure-xdg-symlinks.sh.tmpl` | Maintain XDG symlinks |
-| **onchange** | `run_onchange_after_check-claude-extensions.sh.tmpl`, `run_onchange_after_install-gemini-extensions.sh.tmpl` | Claude / Gemini extension management |
-| **onchange** | `run_onchange_after_setup-vscode-mcp.sh.tmpl` | Configure VSCode MCP |
-| **onchange** | `run_onchange_after_load-launchagent.sh.tmpl` | Vestigial — no-op since plists were removed 2026-04-22; kept for safety |
-
-## Commands
-
-```bash
-# Apply dotfiles
-chezmoi apply           # Deploy all dotfiles
-chezmoi diff            # Preview changes without applying
-chezmoi apply --dry-run # Dry run
-
-# Edit
-chezmoi edit <file>     # Edit in source directory with $EDITOR
-chezmoi add <file>      # Start tracking a new file
-
-# Update
-chezmoi update          # Pull remote + apply
-
-# Via just (aliases: j <recipe>)
-just apply              # chezmoi apply
-just diff               # chezmoi diff
-just lint               # ShellCheck + yamllint + JSON validation
-just test               # Template validation + bats + pytest
-just fmt                # shfmt on shell scripts
-just security           # gitleaks + permission checks
-just check-all          # lint + test + fmt + security
-just ci-local           # Full local CI suite
-just health             # chezmoi-health
-just doctor             # domus doctor
-just perf               # Shell startup timing
-just cache-clear        # Clear shell init caches
-just bump <version>     # Bump DOMUS_VERSION + CHANGELOG
-
-# Chezmoi shell aliases
-cma                     # chezmoi apply
-cmd                     # chezmoi diff
-cme                     # chezmoi edit
-cmu                     # chezmoi update
-cms                     # chezmoi status
-cmcd                    # cd $DOMUS_ROOT
-cmh                     # chezmoi-health
-cmr                     # chezmoi-recover
-```
-
-## Bootstrap (New Machine)
-
-```bash
-sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply 4444J99/domus-semper-palingenesis
-```
-
-See `BOOTSTRAP.md` for the full guide including 1Password setup, external drive, and Linux specifics.
-
-## Important Constraints
-
-- **autoCommit + autoPush enabled** — every `chezmoi apply` commits and pushes. Keep the source
-  directory clean before running apply if you don't want intermediate states committed.
-- **`~/.gemini` is a symlink** → `~/.local/share/gemini` (managed via `symlink_dot_gemini`)
-- **`status` is a read-only variable in zsh** — never use it as a variable name in any shell script
-- **`modify_dot_claude.json.tmpl` uses chezmoi modify mode** — it merges MCP server entries into
-  `~/.claude.json` rather than overwriting the entire file. Do not convert it to a plain template.
-- **XDG compliance is intentional** — all tools are redirected away from `$HOME` dotfile clutter.
-  Before adding new tool configs, check if an XDG path is available and add the env var to `15-env.zsh.tmpl`.
-- **`$DOMUS_ROOT`** is set dynamically from `{{ .chezmoi.sourceDir }}` at apply time — it always
-  resolves to the actual chezmoi source directory. Agents and tools reference `$DOMUS_ROOT`, not a
-  hardcoded path.
-
-## Testing
-
-```bash
-just test               # All: template validation + bats + pytest
-bash tests/test-templates.sh   # Template rendering only
-bats tests/*.bats       # Shell behavior tests
-python3 -m pytest tests/ -q    # Python tests
-```
-
-## Linting and Security
-
-```bash
-just lint               # ShellCheck + yamllint + JSON
-just security           # gitleaks (config: .gitleaks.toml) + executable permissions
-just fmt                # shfmt (2-space indent, case-indent)
-```
-
-Pre-commit hooks configured in `.pre-commit-config.yaml`.
-
-<!-- ORGANVM:AUTO:START -->
-## System Context (auto-generated — do not edit)
-
-**Organ:** PERSONAL (Personal / Liminal) | **Tier:** infrastructure | **Status:** GRADUATED
-**Org:** `4444j99` | **Repo:** `domus-semper-palingenesis`
-
-### Edges
-- *No inter-repo edges declared in seed.yaml*
-
-### Siblings in Personal / Liminal
-`portfolio`
-
-### Governance
-- *Standard ORGANVM governance applies*
-
-*Last synced: 2026-04-14T21:32:18Z*
-
-## Active Handoff Protocol
-
-If `.conductor/active-handoff.md` exists, **READ IT FIRST** before doing any work.
-It contains constraints, locked files, conventions, and completed work from the
-originating agent. You MUST honor all constraints listed there.
-
-If the handoff says "CROSS-VERIFICATION REQUIRED", your self-assessment will
-NOT be trusted. A different agent will verify your output against these constraints.
-
-## Working State Capture (Session Close-Out)
-
-Before the 10-index close-out, capture working state so the next session starts warm:
-
-### Artifacts
-For every deliverable built or modified during the session, save a project-type memory
-(`project_artifact_*.md`) with:
-- **What**: one-line description
-- **Where**: file path(s) — absolute or repo-relative
-- **Project**: which repo it lives in
-- **For whom**: collaborator name if applicable
-- **State**: draft / in-review / feedback-pending / shipped
-- **Pending feedback**: verbatim quotes from collaborators
-- **Next action**: what needs to happen next
-
-File paths for active deliverables MUST be saved. The "don't save file paths" heuristic
-does not apply to artifacts under active development — you cannot "derive" that a spiral
-was built for Maddie by searching the filesystem. Save the path.
-
-### People
-For every person mentioned in a session who is not already in memory, save a user-type
-memory (`collaborator_*.md`) with:
-- **Who**: name and relationship
-- **Context**: what we're working on together
-- **Last interaction**: date and what happened
-- **Open threads**: what's pending
-
-### Session Memory Format
-Session memories MUST include an Artifacts section BEFORE summary stats:
-
-```
-**Artifacts (working state):**
-- [name] — `path/to/file` — [state] — [pending feedback]
-
-**Completed:**
-- [summary stats]
-```
-
-Working state is what matters for continuity. Volume metrics are secondary.
-
-## Session Review Protocol
-
-At the end of each session that produces or modifies files:
-1. Run `organvm session review --latest` to get a session summary
-2. Check for unimplemented plans: `organvm session plans --project .`
-3. Export significant sessions: `organvm session export <id> --slug <slug>`
-4. Run `organvm prompts distill --dry-run` to detect uncovered operational patterns
-
-Transcripts are on-demand (never committed):
-- `organvm session transcript <id>` — conversation summary
-- `organvm session transcript <id> --unabridged` — full audit trail
-- `organvm session prompts <id>` — human prompts only
-
-
-## System Library
-
-Plans: 269 indexed | Chains: 5 available | SOPs: 121 active
-Discover: `organvm plans search <query>` | `organvm chains list` | `organvm sop lifecycle`
-Library: `meta-organvm/praxis-perpetua/library/`
-
-
-## Active Directives
-
-| Scope | Phase | Name | Description |
-|-------|-------|------|-------------|
-| system | any | atomic-clock | The Atomic Clock |
-| system | any | execution-sequence | Execution Sequence |
-| system | any | multi-agent-dispatch | Multi-Agent Dispatch |
-| system | any | session-handoff-avalanche | Session Handoff Avalanche |
-| system | any | system-loops | System Loops |
-| system | any | prompting-standards | Prompting Standards |
-| system | any | research-standards-bibliography | APPENDIX: Research Standards Bibliography |
-| system | any | phase-closing-and-forward-plan | METADOC: Phase-Closing Commemoration & Forward Attack Plan |
-| system | any | research-standards | METADOC: Architectural Typology & Research Standards |
-| system | any | sop-ecosystem | METADOC: SOP Ecosystem — Taxonomy, Inventory & Coverage |
-| system | any | autonomous-content-syndication | SOP: Autonomous Content Syndication (The Broadcast Protocol) |
-| system | any | autopoietic-systems-diagnostics | SOP: Autopoietic Systems Diagnostics (The Mirror of Eternity) |
-| system | any | background-task-resilience | background-task-resilience |
-| system | any | cicd-resilience-and-recovery | SOP: CI/CD Pipeline Resilience & Recovery |
-| system | any | community-event-facilitation | SOP: Community Event Facilitation (The Dialectic Crucible) |
-| system | any | context-window-conservation | context-window-conservation |
-| system | any | conversation-to-content-pipeline | SOP — Conversation-to-Content Pipeline |
-| system | any | cross-agent-handoff | SOP: Cross-Agent Session Handoff |
-| system | any | cross-channel-publishing-metrics | SOP: Cross-Channel Publishing Metrics (The Echo Protocol) |
-| system | any | data-migration-and-backup | SOP: Data Migration and Backup Protocol (The Memory Vault) |
-| system | any | document-audit-feature-extraction | SOP: Document Audit & Feature Extraction |
-| system | any | dynamic-lens-assembly | SOP: Dynamic Lens Assembly |
-| system | any | essay-publishing-and-distribution | SOP: Essay Publishing & Distribution |
-| system | any | formal-methods-applied-protocols | SOP: Formal Methods Applied Protocols |
-| system | any | formal-methods-master-taxonomy | SOP: Formal Methods Master Taxonomy (The Blueprint of Proof) |
-| system | any | formal-methods-tla-pluscal | SOP: Formal Methods — TLA+ and PlusCal Verification (The Blueprint Verifier) |
-| system | any | generative-art-deployment | SOP: Generative Art Deployment (The Gallery Protocol) |
-| system | any | market-gap-analysis | SOP: Full-Breath Market-Gap Analysis & Defensive Parrying |
-| system | any | mcp-server-fleet-management | SOP: MCP Server Fleet Management (The Server Protocol) |
-| system | any | multi-agent-swarm-orchestration | SOP: Multi-Agent Swarm Orchestration (The Polymorphic Swarm) |
-| system | any | network-testament-protocol | SOP: Network Testament Protocol (The Mirror Protocol) |
-| system | any | open-source-licensing-and-ip | SOP: Open Source Licensing and IP (The Commons Protocol) |
-| system | any | performance-interface-design | SOP: Performance Interface Design (The Stage Protocol) |
-| system | any | pitch-deck-rollout | SOP: Pitch Deck Generation & Rollout |
-| system | any | polymorphic-agent-testing | SOP: Polymorphic Agent Testing (The Adversarial Protocol) |
-| system | any | promotion-and-state-transitions | SOP: Promotion & State Transitions |
-| system | any | recursive-study-feedback | SOP: Recursive Study & Feedback Loop (The Ouroboros) |
-| system | any | repo-onboarding-and-habitat-creation | SOP: Repo Onboarding & Habitat Creation |
-| system | any | research-to-implementation-pipeline | SOP: Research-to-Implementation Pipeline (The Gold Path) |
-| system | any | security-and-accessibility-audit | SOP: Security & Accessibility Audit |
-| system | any | session-self-critique | session-self-critique |
-| system | any | smart-contract-audit-and-legal-wrap | SOP: Smart Contract Audit and Legal Wrap (The Ledger Protocol) |
-| system | any | source-evaluation-and-bibliography | SOP: Source Evaluation & Annotated Bibliography (The Refinery) |
-| system | any | stranger-test-protocol | SOP: Stranger Test Protocol |
-| system | any | strategic-foresight-and-futures | SOP: Strategic Foresight & Futures (The Telescope) |
-| system | any | styx-pipeline-traversal | SOP: Styx Pipeline Traversal (The 7-Organ Transmutation) |
-| system | any | system-dashboard-telemetry | SOP: System Dashboard Telemetry (The Panopticon Protocol) |
-| system | any | the-descent-protocol | the-descent-protocol |
-| system | any | the-membrane-protocol | the-membrane-protocol |
-| system | any | theoretical-concept-versioning | SOP: Theoretical Concept Versioning (The Epistemic Protocol) |
-| system | any | theory-to-concrete-gate | theory-to-concrete-gate |
-| system | any | typological-hermeneutic-analysis | SOP: Typological & Hermeneutic Analysis (The Archaeology) |
-| unknown | any | SOP-application-genesis | SOP: Application Submission Genesis (Pilot implementation of SPEC-023) |
-| unknown | any | diagnostic-inter-rater-agreement | SOP: Diagnostic Inter-Rater Agreement (IRA) Grade Norming |
-
-Linked skills: cicd-resilience-and-recovery, continuous-learning-agent, evaluation-to-growth, genesis-dna, multi-agent-workforce-planner, promotion-and-state-transitions, quality-gate-baseline-calibration, repo-onboarding-and-habitat-creation, structural-integrity-audit
-
-
-**Prompting (Anthropic)**: context 200K tokens, format: XML tags, thinking: extended thinking (budget_tokens)
-
-
-## Task Queue (from pipeline)
-
-**63** pending tasks | Last pipeline: unknown | Last update: 2026-04-23
-
-### Completed (this cycle)
-- ~~`67e5eb6df8e5`~~ XDG symlink array — 6 dead apps removed, npm added (2026-04-21)
-- ~~`29334fd078f9`~~ 6 env vars in 15-env.zsh.tmpl — DONE (pre-existing)
-- ~~`913fa1071b92`~~ tmux plugin paths — DONE (pre-existing)
-- ~~`65c062d51089`~~ npm prefix in npmrc — DONE (pre-existing)
-- ~~`370417c69874`~~ _agents/ deleted from source tree + 14GB reclaimed (2026-04-21)
-- ~~`c0870ae16879`~~ DELETE — symlink_dot_codex + symlink_dot_docker removed (2026-04-23)
-- ~~`6d06adde52af`~~ NATIVE_XDG — Docker env vars removed, KUBECONFIG kept for k9s (2026-04-23)
-- ~~`5549abfa3f5d`~~ SYMLINK_KEEP — Resolved: no bash/kubernetes symlinks existed (2026-04-23)
-
-### Open
-- ... 63 remaining tasks
-
-Cross-organ links: 600 | Top tags: `python`, `pytest`, `bash`, `node`, `mcp`
-
-Run: `organvm atoms pipeline --write && organvm atoms fanout --write`
-
-
-## Live System Variables (Ontologia)
-
-| Variable | Value | Scope | Updated |
-|----------|-------|-------|---------|
-| `active_repos` | 89 | global | 2026-04-14 |
-| `archived_repos` | 54 | global | 2026-04-14 |
-| `ci_workflows` | 107 | global | 2026-04-14 |
-| `code_files` | 0 | global | 2026-04-14 |
-| `dependency_edges` | 60 | global | 2026-04-14 |
-| `operational_organs` | 10 | global | 2026-04-14 |
-| `published_essays` | 29 | global | 2026-04-14 |
-| `repos_with_tests` | 0 | global | 2026-04-14 |
-| `sprints_completed` | 33 | global | 2026-04-14 |
-| `test_files` | 0 | global | 2026-04-14 |
-| `total_organs` | 10 | global | 2026-04-14 |
-| `total_repos` | 145 | global | 2026-04-14 |
-| `total_words_formatted` | 0 | global | 2026-04-14 |
-| `total_words_numeric` | 0 | global | 2026-04-14 |
-| `total_words_short` | 0K+ | global | 2026-04-14 |
-
-Metrics: 9 registered | Observations: 32128 recorded
-Resolve: `organvm ontologia status` | Refresh: `organvm refresh`
-
-
-## System Density (auto-generated)
-
-AMMOI: 58% | Edges: 42 | Tensions: 33 | Clusters: 5 | Adv: 23 | Events(24h): 32336
-Structure: 8 organs / 145 repos / 1654 components (depth 17) | Inference: 98% | Organs: META-ORGANVM:65%, ORGAN-I:53%, ORGAN-II:48%, ORGAN-III:54% +5 more
-Last pulse: 2026-04-14T21:31:36 | Δ24h: -1.0% | Δ7d: n/a
-
-
-## Logos Documentation Layer
-
-**Status:** MISSING | **Symmetry:** 0.0 (VACUUM)
-
-Nature demands a documentation counterpart. This formation maintains its narrative record in `docs/logos/`.
-
-### The Tetradic Counterpart
-- **[Telos (Idealized Form)](../docs/logos/telos.md)** — The dream and theoretical grounding.
-- **[Pragma (Concrete State)](../docs/logos/pragma.md)** — The honest account of what exists.
-- **[Praxis (Remediation Plan)](../docs/logos/praxis.md)** — The attack vectors for evolution.
-- **[Receptio (Reception)](../docs/logos/receptio.md)** — The account of the constructed polis.
-
-### Alchemical I/O
-- **[Source & Transmutation](../docs/logos/alchemical-io.md)** — Narrative of inputs, process, and returns.
-
-
-
-*Compliance: Formation is currently void.*
-
-<!-- ORGANVM:AUTO:END -->
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## What this directory is
+
+`/Users/4jp` is the **home directory** — not a git repository. There is no build, no test suite, no lint pipeline at this level. Real work happens in child directories that are themselves git repos. This file exists to route future Claude Code sessions to the correct authority and to surface the system-wide apparatus that doesn't fit inside any single child repo.
+
+If you find yourself wanting to commit at this level: stop. Move to the relevant child repo first.
+
+## Authority map (which CLAUDE.md governs which scope)
+
+Read the most-specific file first, then walk outward. Each layer adds context; none replaces the inner.
+
+| Scope | CLAUDE.md path | Loaded automatically? | What it governs |
+|---|---|---|---|
+| Per-repo | `<repo>/CLAUDE.md` (where present) | Yes when in repo | Repo-specific build/test/lint commands, conventions, architecture |
+| Per-organ (META, ORGAN-I…VII, 4444J99) | `~/Workspace/<organ>/CLAUDE.md` | Yes when in organ | Organ membership, dependency edges, organ-aesthetic, stack patterns |
+| Multi-repo workspace | `~/Workspace/CLAUDE.md` | Yes when in workspace | Eight-organ map, navigation protocol, MCP servers, conductor session lifecycle, data-integrity rules for `registry-v2.json` and other protected files |
+| Home / global | **this file** + `~/.claude/CLAUDE.md` | Yes always | Universal rules, voice governance, plan discipline, accumulated rules (61 distilled), four-registry architecture |
+| Chezmoi source for `~/.claude/CLAUDE.md` | `~/Workspace/4444J99/domus-semper-palingenesis/private_dot_claude/CLAUDE.md.tmpl` (+ includes from `dot_config/ai-context/*.md.tmpl`) | No (template only) | The deployed `~/.claude/CLAUDE.md` is rendered. Edit the source, never the deployed file. |
+
+**Hard rule**: editing the deployed `~/.claude/CLAUDE.md` is futile — `chezmoi apply` overwrites. Edits go to the chezmoi source. Same applies to any deployed dotfile. (Universal Rule #6: fix bases, not outputs.)
+
+## The four parallel work registries
+
+Future sessions ask "what needs doing?" There are four answers, and they are not cross-referenced by foreign key:
+
+| Registry | Path | Identity scheme | Purpose |
+|---|---|---|---|
+| **Atom registry** | `~/Workspace/organvm/organvm-corpvs-testamentvm/data/prompt-registry/prompt-atoms.json` (gitignored, ~73 MB, 24,599 atoms) | `ATM-XXXXXX` | Every prompt the user has ever issued, atomized into directives/constraints/questions/governance-rules. Source of truth for "what was asked." |
+| **Plans** | `~/.claude/plans/*.md` (390+ as of 2026-05-01) + `<repo>/.claude/plans/*.md` (~1,000+ project-scoped) | filename slug, dated `YYYY-MM-DD-{slug}.md` | Per-task implementation plans. Plans are **never overwritten**; revisions get `-v2`, `-v3` suffixes. Per-repo plans live in their repo for the project's history. |
+| **IRF** (Index Rerum Faciendarum) | `~/Workspace/organvm/organvm-corpvs-testamentvm/INST-INDEX-RERUM-FACIENDARUM.md` (~957 items, 21 domains) | `IRF-XXX-NNN` | Universal work registry — the canonical gap between what the system IS and what it NEEDS TO BE. The hall-monitor of "things to be done." Per workspace CLAUDE.md, this is the authoritative answer when the user asks "what needs doing?" |
+| **Pipeline task queue** | exposed via `organvm atoms pipeline --write && organvm atoms fanout --write` | hash IDs | Computed routing of atoms to organs and repos. Visible in corpvs CLAUDE.md auto-generated section. |
+
+When the user invokes a drainage / triage / overview activity, ask which registry they mean. The compressed view at `~/Workspace/organvm/organvm-corpvs-testamentvm/data/prompt-registry/BACKLOG-AT-A-GLANCE-2026-05-01.md` is the most recent attempt to compose a single graspable surface across all four.
+
+## System-wide CLIs and where to find them
+
+These are on `PATH` and operate at the home / workspace level rather than inside any one repo.
+
+| Binary | Location | Purpose |
+|---|---|---|
+| `chezmoi` | Homebrew | Dotfile manager. Source: `~/Workspace/4444J99/domus-semper-palingenesis`. Auto-commits + auto-pushes on `apply`. |
+| `domus-memory-sync` | `~/.local/bin` | Persists changes to `~/.claude/` files (memory + plans) to chezmoi source. Skips when interactive `chezmoi apply/diff/edit/update/doctor` is running. Honors lock file. |
+| `organvm` | (organvm-engine editable install) | The omni-CLI for the eight-organ system. Subcommands: `omega status`, `concordance`, `irf list/stats`, `atoms pipeline/fanout`, `prompts distill`, `session review/plans/transcript/prompts`, `ontologia resolve`, `trivium scan/matrix`, `refresh`, `ecosystem show`, `plans search`, `chains list`, `sop lifecycle`. Run `organvm <subcommand> --help` for surface. |
+| `build-contract` | `~/.local/bin` | Universal build contract: naming, spec-to-build ratio, drift, hook-noise checks. Run `--check <artifact_path>`, `--enforce`, `--ratio`, or `--test`. |
+| `wip-limit-enforcer` | `~/.local/bin` | Hard limit on spec-to-build ratio (≤3:1). Prevents unbounded specification without proportional implementation. |
+| `insights-snapshot`, `insights-list`, `insights-diff`, `insights-drift` | `~/.local/bin` | Archive and compare the rolling `/insights report.html`. SessionEnd hook auto-archives before the rolling overwrite. |
+| `voice-scorer` | (project install) | Scores prose-heavy docs against the Orchestrator Voice Constitution. CLI: `voice-scorer score <file>`, `check <dir>`, `diff <file>`. MCP equivalents available. |
+
+## Universal rules that apply at every scope
+
+These are restated here for fast reference. The full apparatus (61 accumulated rules from 227 feedback memories, plus 9 universal rules with mechanical enforcement) lives in `~/.claude/CLAUDE.md`.
+
+1. **N/A is a vacuum** — every N/A must become a named IRF item. Never a resting state.
+2. **Nothing local only** — every artifact: git-tracked AND pushed. `(local):(remote)={1:1}`.
+3. **Rules are additive** — new rules amend, never overwrite. Every rule accumulates.
+4. **Conductor principle** — the human directs vision; the system does everything else. Don't bounce density questions back to the user; compression IS the system's job.
+5. **Plans are artifacts** — commit and push after writing. Never overwrite — version with `-v2`/`-v3`.
+6. **Fix bases, not outputs** — modify the template/source/pipeline, never the rendered output.
+7. **Audit before building** — check existing tooling before creating new structure (memory rule #41). Before any drainage/cleanup activity, enumerate what's already on disk.
+8. **Atoms are permanent** — never batch-close. Only the human closes (memory rule #53). Proposals are fine; execution requires explicit go.
+9. **No LaunchAgents** — every prior incident froze or broke the machine. On-demand CLI only. **HARD RULE.**
+
+The hooks in `~/.claude/settings.json` enforce some of these mechanically (16 PreToolUse, 5 SessionStart, 5 SessionEnd, 3 UserPromptSubmit, 3 PostToolUse, 1 Stop as of 2026-04-30 census). When a Write hook fires with `HARD BLOCK — LaunchAgent creation is forbidden`, treat it as informational unless the artifact actually proposes a LaunchAgent.
+
+## Plan file discipline at the home scope
+
+When invoked outside any specific project, plans land at `~/.claude/plans/YYYY-MM-DD-{descriptive-slug}.md`. The `INDEX.md` at that path is auto-regeneratable from disk; treat it as a generated artifact. Most-recent project-relevant plan as of session 2026-05-01: `~/.claude/plans/canonical-source-of-all-ancient-kurzweil.md` (canonical drainage activity; outcomes IRF-CRP-007/008/009/010).
+
+## Memory at the home scope
+
+The auto-memory system at `~/.claude/projects/-Users-4jp/memory/` is managed by chezmoi. The index is `MEMORY.md` (kept under ~200 lines per system rules). Each memory file is one of: `user_*`, `feedback_*`, `project_*`, `reference_*`, `collaborator_*`, `project_artifact_*`, `project_session_*`. Detail in topic files; pointers in `MEMORY.md`.
+
+When the user references a prior session's work, check memory first. Memory is hypothesis — verify against current disk state before acting on file paths or claims (memory rule #12).
+
+## What you should NOT do at this scope
+
+- **Do not commit at `/Users/4jp`** — there is no `.git` here. Move to the appropriate child repo.
+- **Do not create LaunchAgents** anywhere on this machine (Universal Rule #9). On-demand CLI invocations only.
+- **Do not edit deployed dotfiles directly** — edit the chezmoi source and run `chezmoi apply`.
+- **Do not push to main on a public ORGANVM repo without explicit per-session authorization.** The workspace CLAUDE.md is explicit on this; the conductor session lifecycle (`FRAME → SHAPE → BUILD → PROVE → DONE`) gates push.
+- **Do not modify production data files wholesale** — `registry-v2.json`, `governance-rules.json`, `system-metrics.json`, any `seed.yaml`, and `prompt-atoms.json` are protected. Read before write; targeted edits only.
+- **Do not bypass `wip-limit-enforcer` or `build-contract`** — these are installed gates the user shipped 2026-04-27 to prevent unbounded spec generation. Spec-to-build ratio ≤3:1 is non-negotiable.
+
+## Most recent session context (2026-05-01)
+
+Drainage activity completed for the canonical `/batch ... full total build of all suggested` invocation. Key outcomes:
+
+- Empirical reduction: 14,898 OPEN atoms → 3 macro-themes already encoded as Universal Rules in `~/.claude/CLAUDE.md`
+- Stage A diagnostic + Stage B atom-plan reverse index shipped (read-only)
+- Stage C closures (~1,082 atoms via doctrine-mark + 135 via cluster-sweep) PROPOSAL-READY, gated on user OK per memory rule #53
+- IRF entries CRP-007/008/009/010 added to track follow-through
+- Local:remote = 1:1 verified across both affected repos (corpvs `45c3c53`, domus `3d71745`)
+
+Compressed view (start here on continuation): `~/Workspace/organvm/organvm-corpvs-testamentvm/data/prompt-registry/BACKLOG-AT-A-GLANCE-2026-05-01.md`.
