@@ -8,6 +8,9 @@
 - [Core identity](user_core_identity.md) — Humanities creator; ORGANVM = carrier wave for zeitgeist thesis
 
 ## Active Artifacts
+- [Skills universe restoration 2026-05-01](project_artifact_skills_restoration_2026_05_01.md) — Phase A done: a-i--skills cloned fresh (49→150 SKILL.md visible); PR #12 elevates 3 orphan skills; chezmoi `248e81b` fixes sync-URL + 19 plugins + dynamic skill-index; chezmoi apply deferred pending backlog decision
+- [Plugin enablement audit 2026-05-01](project_artifact_plugin_enablement_audit_2026_05_01.md) — 13-plugin cut recommended (vercel/figma/stripe/github STRONG; playwright/slack/linear/typescript-lsp ENABLE; +5 LEAN ENABLE); committed to chezmoi template, awaiting apply
+- [Substrate vacuums V-A..V-F closed 2026-04-30 evening](project_artifact_substrate_vacuums_closed_2026_04_30.md) — Hokage #47-#52 created; HANDOFF.md namespace index added (commit `6dc481b`); agent-fix backlog now 11 issues; drafts checklist at `~/.claude/plans/2026-04-30-drafts-ready-to-send.md`
 - [Content-engine unification 2026-04-30](project_artifact_content_engine_unification_2026_04_30.md) — PR #21 squash-merged (`4abab4a`); legacy `a-organvm/content-engine--asset-amplifier` archived on GitHub; archive tag preserves SHA on canonical; canonical-only state; first OPS-023 proof-case closed; L1-L5 verification protocol established for remaining ~117 repos
 - [Origin unity follow-up 2026-04-30](project_artifact_origin_unity_2026_04_30.md) — PR #21 on organvm-iii-ergon/content-engine--asset-amplifier (vacuum closures: CANDIDATE promo + README dual-runtime + .gitignore); IRF-OPS-023 added (commit d6f4968); no deletions; ~118-repo systemic split-origin pattern surfaced
 - [Codex export finding 2026-04-30](project_artifact_codex_export_finding.md) — No CLI flag; ~/.codex/history.jsonl = prompts-only (145k entries), ~/.codex/sessions/**/rollout-*.jsonl = full typed envelope (filter response_item + role==user|assistant)
@@ -197,6 +200,7 @@
 - [Survey all weapons](feedback_survey_before_choosing.md) — Evaluate all tools first
 - [Trinity dispatch](feedback_trinity_dispatch.md) — 3 agents parallel on non-arch tasks
 - [Email priority](feedback_email_priority_calibration.md) — Most emails MEDIUM at best
+- [Density compression](feedback_density_compression.md) — When corpus exceeds working memory, compress; never ship menus to user; ship judgment with the artifact
 - [Triple verification](feedback_nothing_closed_without_triple_verification.md) — Agents report; human decides
 - [Atoms ARE the work](feedback_atoms_are_the_work.md) — Atom backlog IS the work
 - [Atoms permanent](feedback_atoms_are_permanent.md) — Never batch-close; stale ≠ dead
