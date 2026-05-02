@@ -28,6 +28,8 @@ originSessionId: 5d56ef6f-708e-4ecb-836b-37280e1993d0
 
 **Pending feedback:** Maddie has not yet seen the chakra realignment merged to main. Her prior approvals were on the lightened spiral (2026-04-23: bg, lights, exposure, emissive, particles). Visual approval needed for: (a) chakra palette as default, (b) hybrid vessel as default. Override via `?vessel=invisible` or `?vessel=visible` if she wants prior look.
 
+**Render-bug history (2026-05-02, commits `aafb0eb` + `fc75bbe`):** The spiral was non-rendering on `sovereign-systems-spiral.pages.dev` — fallback card list was showing because `initSpiral` threw `ReferenceError: Can't find variable: PRIMITIVES` at line 1181 (used without import; `primitiveFor` was the right call). Fixing that exposed a latent NaN at line 1194 (`modulated.scaleMul` — property doesn't exist on `MathPrimitive`; lives only on `LensModulation`). Both ts errors had been shipping silently because `astro build` (Vite) only transpiles. Added `npm run check` (`tsc --noEmit`) to `test:all` so this class of bug fails the gate. Cloudflare worker types and Keystatic config drift fixed in same commit to enable the gate.
+
 **Next action:** Surface live preview to Maddie via `npm run dev` (deploy is broken pending GH#52 — Cloudflare API token expired April 19, manual `npm run deploy` works as fallback).
 
 **Closure trail:**

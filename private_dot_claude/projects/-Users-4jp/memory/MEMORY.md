@@ -8,7 +8,10 @@
 - [Core identity](user_core_identity.md) — Humanities creator; ORGANVM = carrier wave for zeitgeist thesis
 
 ## Active Artifacts
-- [Skills universe restoration 2026-05-01](project_artifact_skills_restoration_2026_05_01.md) — Phase A done: a-i--skills cloned fresh (49→150 SKILL.md visible); PR #12 elevates 3 orphan skills; chezmoi `248e81b` fixes sync-URL + 19 plugins + dynamic skill-index; chezmoi apply deferred pending backlog decision
+- [Recursive substrate ops plan 2026-05-02](../../../plans/fluttering-exploring-token.md) — 9-stage plan; notebook practice as locus of self-reference; SVSE/AMMOI/mesh/Tetradic Counterpart/σ-axis vocabulary surfaced; passed Theory-to-Concrete Gate at Level 3
+- [prisma-zetesis polynoia fabrica 2026-05-02](project_artifact_prisma_zetesis_polynoia_fabrica_2026_05_02.md) — Divergence method; 6 phases, 15 axes, depth-2 termination; placement decision pending
+- [Parity cascade 2026-05-01/02](project_artifact_parity_cascade_2026_05_01.md) — 367-repo dry-run, 19 stale-origin migrations repaired, 5 new GitHub repos, 28+ pushes, SAFE-TO-REMOVE 166→186, 0 deletions; three constructive gates designed at `~/.claude/plans/2026-05-01-*.md`; constitutional-derivation method discovered (memory rules → policy answers without asking user)
+- [Skills universe restoration 2026-05-01/02](project_artifact_skills_restoration_2026_05_01.md) — All phases done. PR #12 elevates 4 orphan skills (added qa-audit + fixed broken-link in cd15e66). PR #13 docs cleanup (organvm-iv-taxis→a-organvm rename + ecosystem.yaml 130+→150). chezmoi `248e81b`+`9a3859e` deployed; settings.json now has 19 enabled plugins; CLAUDE.md renders 150 skills dynamically from skills-registry.json. .git loss postmortem inconclusive — sync-skills URL fix is preventive measure.
 - [Plugin enablement audit 2026-05-01](project_artifact_plugin_enablement_audit_2026_05_01.md) — 13-plugin cut recommended (vercel/figma/stripe/github STRONG; playwright/slack/linear/typescript-lsp ENABLE; +5 LEAN ENABLE); committed to chezmoi template, awaiting apply
 - [Substrate vacuums V-A..V-F closed 2026-04-30 evening](project_artifact_substrate_vacuums_closed_2026_04_30.md) — Hokage #47-#52 created; HANDOFF.md namespace index added (commit `6dc481b`); agent-fix backlog now 11 issues; drafts checklist at `~/.claude/plans/2026-04-30-drafts-ready-to-send.md`
 - [Content-engine unification 2026-04-30](project_artifact_content_engine_unification_2026_04_30.md) — PR #21 squash-merged (`4abab4a`); legacy `a-organvm/content-engine--asset-amplifier` archived on GitHub; archive tag preserves SHA on canonical; canonical-only state; first OPS-023 proof-case closed; L1-L5 verification protocol established for remaining ~117 repos
@@ -160,6 +163,11 @@
 - [Prompt triage](project_prompt_triage_complete.md) — 24,599 triaged; pipeline built
 
 ## Feedback
+- [Protocols dictate actions](feedback_protocols_dictate_actions.md) — Survey SOP library before enumerating any action sequence; reuse+reinvent
+- [Substrate vocabulary priority](feedback_substrate_vocabulary_priority.md) — Use SVSE/AMMOI/mesh/piece/etc. before coining English terms
+- [Recursive systems safeguards](feedback_recursive_systems_safeguards.md) — Termination/coherence/observability mandatory for any new recursive op
+- [Rule corpus re-examination](feedback_rule_corpus_re_examination.md) — New tools surface rules-composed-in-their-absence; re-examine, never silently relax
+- [Tetradic counterpart for plans](feedback_tetradic_counterpart_for_plans.md) — Substantial plans need their own telos/pragma/praxis/receptio + alchemical I/O
 - [One-shot vs recurring](feedback_one_shot_vs_recurring_fractal.md) — Classify work at every scale; cadences need forcing functions
 - [Intake = alchemy](feedback_intake_alchemical_decomposition.md) — Back-end rule-generated, never transcribed
 - [Rules first](feedback_rules_first.md) — Build the routing law; implementations self-place

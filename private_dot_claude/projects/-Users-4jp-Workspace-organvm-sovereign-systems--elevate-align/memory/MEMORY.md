@@ -4,3 +4,15 @@
 - [Session close-out 2026-04-30](project_session_2026_04_30_closeout.md) — hall-monitor audit + 6-commit close; main = origin/main = 6ed37dd
 - [Session 2026-04-30 sort streams](project_session_2026_04_30_sort_streams.md) — 6 temp transcripts sorted; parity verified via SHA + diff guards; auto-commit pipeline observed
 - [Don't defer obvious operational decisions](feedback_no_deferring_obvious_decisions.md) — Execute cleanup/commit/push when safety preconditions are met; the human directs vision, not Y/N gates
+- [Vacuum Gate (Axiom #1 enforcer)](project_artifact_vacuum_gate.md) — `scripts/vacuum-gate.mjs` fails build on UNTRACKED empty config; allow-list keyed to GH issues
+- [Business waitlist CTA](project_artifact_business_waitlist.md) — replaced dead-end div with `/capture` form, `source=business-application-waitlist`
+- [Quiz copy externalized](project_artifact_quiz_config_externalized.md) — single source at `src/data/quiz.config.ts`; `{token}` substitution preserves serialization across data-attrs
+- [Session 2026-04-30 hall-monitor close-out](project_session_2026_04_30_hall_monitor.md) — caught 4 blockers in prior-session work before commit (blank quiz, TypeError, broken gate, plan typo)
+- [Multi-citation mandate](feedback_multi_citation_mandate.md) — Universal: every assertion needs ≥2 independent citations; single-source = unfit-to-ship
+- [No hardcoded dynamic data](feedback_no_hardcoded_dynamic_data.md) — Universal: names/links/stats/costs/affiliate URLs/contaminant thresholds → env vars or external config, never inline
+- [Macro-to-atom decomposition + iteration tracking](feedback_macro_to_atom_tracking.md) — Maddie's asks AND 4jp's prompts each live in canonical sources, recursive macro→atom trees, mapped to commits, with continuous diff/spread + per-audience visual surfaces
+- [Session 2026-05-01 — Maddie tracks translation + substrate grammar seed](project_session_2026_05_01_maddie_tracks_translation.md) — 5 commits pushed across 2 repos; Track A1 + Track D defensive shipped; M1/M2/M3 mandates received; GRAMMAR.md seeded at workspace-meta paired with existing auto-registry
+- [Session 2026-05-02 — Spiral review + scaleMul fix + tsc gate](project_session_2026_05_02_spiral_review_fix.md) — found latent NaN bug masked by PRIMITIVES error; added `npm run check` to test:all; commits aafb0eb + fc75bbe pushed
+- [Session 2026-05-02 — astro check cleanup + gate upgrade](project_session_2026_05_02_astro_check_cleanup.md) — 34 .astro errors → 0 across quiz/Base/HydrationNode; gate promoted tsc → astro check; cdc669b + a8c8dc2 pushed; tooltip eyeball-verified on /water/
+- [No repo-level git hooks](feedback_no_git_hooks.md) — CI completion is the durable enforcement layer; hook proposals rejected (precedent: .trunk/trunk.yaml disables trunk-check-pre-push + trunk-fmt-pre-commit)
+- [Session 2026-05-02 — triadic review + CI completion](project_session_2026_05_02_triadic_review_ci_completion.md) — orthogonal angle caught single-pass blind spot; CI now runs test:all in build+deploy jobs; npm run deploy gated; commit af3ba65 pending push

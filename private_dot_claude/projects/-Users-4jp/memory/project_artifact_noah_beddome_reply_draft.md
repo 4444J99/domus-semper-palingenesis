@@ -16,11 +16,14 @@ originSessionId: b1847197-c0be-4f8b-b6fc-6dfeb49cb34f
 
 **Channel:** LinkedIn DM
 
-**State:** DRAFT-READY-TO-SEND — body-in-seat user action required
+**State:** DRAFT-NEEDS-SLOT-REVISION — body still sound, but originally-offered slots are dead as of 2026-04-30 evening (audit captured in `~/.claude/plans/2026-04-30-drafts-ready-to-send.md`)
 
-**Slots offered:**
-- Tue 2026-04-28, 3:00–3:30 PM ET
-- Thu 2026-04-30, 11:00–11:30 AM ET
+**Slots offered (DEAD, both passed):**
+- Tue 2026-04-28, 3:00–3:30 PM ET — passed
+- Thu 2026-04-30, 11:00–11:30 AM ET — passed (today, 11 AM was hours ago)
+
+**Recommended replacement slots (per drafts audit 2026-04-30 evening):**
+- Mon 2026-05-04 + Wed 2026-05-06 (gives Noah weekend buffer; both still business-week-fresh)
 
 **Why this is the priority:**
 - §XI forced single choice from `these-projects-are-getting-shimmying-lerdorf.md` (2026-04-27 deep dive)
