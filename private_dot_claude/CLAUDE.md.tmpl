@@ -45,8 +45,54 @@ any formatting pass.
 {{- $dispatchProtocol := include "dot_config/ai-context/dispatch-protocol.md.tmpl" }}
 {{ $dispatchProtocol }}
 
-{{- $skillIndex := include "dot_config/ai-skills/skill-index.md.tmpl" }}
-{{ $skillIndex }}
+{{/* Available Skills — generated at chezmoi-render time from canonical skills-registry.json
+     in the local a-i--skills clone. Inlined here (not via include) because chezmoi's `include`
+     reads files as raw text — it doesn't recursively process them as templates. */ -}}
+{{- $registryPath := printf "%s/Workspace/%s/%s/distributions/skills-registry.json" .chezmoi.homeDir .organvm_dir .skills_dir -}}
+{{- $registryRaw := "" -}}
+{{- if stat $registryPath -}}
+{{-   $registryRaw = output "cat" $registryPath -}}
+{{- end }}
+## Available Skills
+
+Skills extend capabilities with specialized knowledge and workflows.
+Location: `~/Workspace/{{ .organvm_dir }}/{{ .skills_dir }}/skills/{category}/{skill-name}/`
+Runtime: `~/.claude/skills/` (symlinked from `distributions/claude/skills/`)
+
+Each skill contains:
+- `SKILL.md` - Main instructions (read first)
+- `scripts/` - Executable utilities (optional)
+- `references/` - Detailed docs (optional)
+- `assets/` - Templates/resources (optional)
+
+{{ if $registryRaw -}}
+{{- $registry := $registryRaw | fromJson -}}
+{{- $skills := list -}}
+{{- if kindIs "map" $registry -}}
+{{-   if hasKey $registry "skills" -}}
+{{-     $skills = $registry.skills -}}
+{{-   else -}}
+{{-     $skills = values $registry -}}
+{{-   end -}}
+{{- else -}}
+{{-   $skills = $registry -}}
+{{- end -}}
+{{- $byCategory := dict -}}
+{{- range $skills -}}
+{{-   $cat := .category | default "uncategorized" -}}
+{{-   $list := index $byCategory $cat | default (list) -}}
+{{-   $name := .name | default "unknown" -}}
+{{-   $list = append $list $name -}}
+{{-   $_ := set $byCategory $cat $list -}}
+{{- end -}}
+**Total registered skills:** {{ len $skills }} (generated from `distributions/skills-registry.json`)
+
+{{ range $cat, $names := $byCategory -}}
+**{{ $cat | title }}**: {{ join ", " (sortAlpha $names) }}
+{{ end }}
+{{- else -}}
+*Skills registry not yet synced. Run `chezmoi apply` after the canonical clone of `a-organvm/{{ .skills_dir }}` completes — registry path: `~/Workspace/{{ .organvm_dir }}/{{ .skills_dir }}/distributions/skills-registry.json`*
+{{ end }}
 {{ $voicePolicy }}
 {{- $universalRules := include "dot_config/ai-context/universal-rules.md.tmpl" }}
 {{ $universalRules }}

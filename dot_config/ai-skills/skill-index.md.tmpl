@@ -1,52 +1,12 @@
-{{/* Available Skills — generated at chezmoi-render time from the canonical
-     skills-registry.json in the local a-i--skills clone. Single source of truth:
-     ~/Workspace/<organvm_dir>/<skills_dir>/distributions/skills-registry.json
-     If the registry isn't present (skill repo not synced yet), falls back to
-     a minimal placeholder so chezmoi apply doesn't fail.
-*/ -}}
-{{- $registryPath := printf "%s/Workspace/%s/%s/distributions/skills-registry.json" .chezmoi.homeDir .organvm_dir .skills_dir -}}
-{{- $registryRaw := "" -}}
-{{- if stat $registryPath -}}
-{{-   $registryRaw = output "cat" $registryPath -}}
-{{- end -}}
 ## Available Skills
 
-Skills extend capabilities with specialized knowledge and workflows.
-Location: `~/Workspace/{{ .organvm_dir }}/{{ .skills_dir }}/skills/{category}/{skill-name}/`
-Runtime: `~/.claude/skills/` (symlinked from `distributions/claude/skills/`)
+> **This file is intentionally a stub.** The active skill index renders directly inside
+> `~/.claude/CLAUDE.md` (and any other consumer) by reading `distributions/skills-registry.json`
+> from the local `a-i--skills` clone at chezmoi-render time. See
+> `private_dot_claude/CLAUDE.md.tmpl` for the inlined template logic.
+>
+> Earlier attempt to host the dynamic logic in this file failed because chezmoi's `include`
+> function reads file contents as raw text — it does not recursively process included files
+> as templates. The logic now lives at the call site instead.
 
-Each skill contains:
-- `SKILL.md` - Main instructions (read first)
-- `scripts/` - Executable utilities (optional)
-- `references/` - Detailed docs (optional)
-- `assets/` - Templates/resources (optional)
-
-{{ if $registryRaw -}}
-{{- $registry := $registryRaw | fromJson -}}
-{{- $skills := list -}}
-{{- if kindIs "map" $registry -}}
-{{-   if hasKey $registry "skills" -}}
-{{-     $skills = $registry.skills -}}
-{{-   else -}}
-{{-     $skills = values $registry -}}
-{{-   end -}}
-{{- else -}}
-{{-   $skills = $registry -}}
-{{- end -}}
-{{- $byCategory := dict -}}
-{{- range $skills -}}
-{{-   $cat := .category | default "uncategorized" -}}
-{{-   $list := index $byCategory $cat | default (list) -}}
-{{-   $name := .name | default (.id | default "unknown") -}}
-{{-   $list = append $list $name -}}
-{{-   $_ := set $byCategory $cat $list -}}
-{{- end -}}
-{{- $totalCount := len $skills -}}
-**Total registered skills:** {{ $totalCount }} (generated from `distributions/skills-registry.json`)
-
-{{ range $cat, $names := $byCategory -}}
-**{{ $cat | title }}**: {{ join ", " (sortAlpha $names) }}
-{{ end }}
-{{- else -}}
-*Skills registry not yet synced. Run `chezmoi apply` after `git clone` of `a-organvm/{{ .skills_dir }}` completes, or check `~/Workspace/{{ .organvm_dir }}/{{ .skills_dir }}/distributions/skills-registry.json` exists.*
-{{ end -}}
+Canonical source of truth: `~/Workspace/{{ .organvm_dir }}/{{ .skills_dir }}/distributions/skills-registry.json`.
