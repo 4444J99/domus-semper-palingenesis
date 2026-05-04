@@ -168,6 +168,7 @@
 - [domus-memory-sync silent no-arg fail](feedback_domus_memory_sync_silent_noop.md) — Always use --all or filepath args; bare invocation logs USAGE + exits 1 silently with no chezmoi commit
 - [No recovery telemetry available](feedback_no_recovery_telemetry_2026_05_03.md) — Time Machine unconfigured + Backblaze 30-day rolling; .git losses recoverable via remote alone, not snapshots
 - [Protocols dictate actions](feedback_protocols_dictate_actions.md) — Survey SOP library before enumerating any action sequence; reuse+reinvent
+- [Protocol → Precedent → Constitutional decision framework](feedback_protocol_precedent_layered_framework.md) — 5-layer hierarchy; L3 search to "impossible certainty"; n=1 exact-match exception; memory rules as L3.5 axioms
 - [Substrate vocabulary priority](feedback_substrate_vocabulary_priority.md) — Use SVSE/AMMOI/mesh/piece/etc. before coining English terms
 - [Recursive systems safeguards](feedback_recursive_systems_safeguards.md) — Termination/coherence/observability mandatory for any new recursive op
 - [Rule corpus re-examination](feedback_rule_corpus_re_examination.md) — New tools surface rules-composed-in-their-absence; re-examine, never silently relax
