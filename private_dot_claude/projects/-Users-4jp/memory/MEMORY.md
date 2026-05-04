@@ -8,6 +8,7 @@
 - [Core identity](user_core_identity.md) — Humanities creator; ORGANVM = carrier wave for zeitgeist thesis
 
 ## Active Artifacts
+- [Lane J — precedent-search CLI atom 2026-05-04](project_artifact_lane_j_precedent_search_cli_2026_05_04.md) — Future-session work: `organvm precedent search --verb V --target T` wraps action_ledger + feedback grep + gh + plan lookup; returns 3-of-4 rubric verdict + recency. Mechanizes L3 search. ATOM only; ~2-3hr scope.
 - [C4 org-rename sweep targets 2026-05-03](project_artifact_c4_org_rename_sweep_2026_05_03.md) — Atomization of handoff-1 followup #5; 67 repos found with stale organvm-iv-taxis refs (4 buckets: 50 active, 11 contrib forks, 6 special, 61 ecosystem.yaml siblings of which only 1 has hardcoded skill count); first-tier batch identified
 - [Skill+deletion handoff integration 2026-05-03](../../../plans/2026-05-03-skill-and-deletion-handoff-integration.md) — Plan integrating two prior handoffs (skill restoration + deletion-tier framework); 9 lanes A–I, 5 user-input gates, blast-radius gradient
 - [Recursive substrate ops plan 2026-05-02](../../../plans/fluttering-exploring-token.md) — 9-stage plan; notebook practice as locus of self-reference; SVSE/AMMOI/mesh/Tetradic Counterpart/σ-axis vocabulary surfaced; passed Theory-to-Concrete Gate at Level 3
