@@ -8,6 +8,8 @@
 - [Core identity](user_core_identity.md) — Humanities creator; ORGANVM = carrier wave for zeitgeist thesis
 
 ## Active Artifacts
+- [C4 org-rename sweep targets 2026-05-03](project_artifact_c4_org_rename_sweep_2026_05_03.md) — Atomization of handoff-1 followup #5; 67 repos found with stale organvm-iv-taxis refs (4 buckets: 50 active, 11 contrib forks, 6 special, 61 ecosystem.yaml siblings of which only 1 has hardcoded skill count); first-tier batch identified
+- [Skill+deletion handoff integration 2026-05-03](../../../plans/2026-05-03-skill-and-deletion-handoff-integration.md) — Plan integrating two prior handoffs (skill restoration + deletion-tier framework); 9 lanes A–I, 5 user-input gates, blast-radius gradient
 - [Recursive substrate ops plan 2026-05-02](../../../plans/fluttering-exploring-token.md) — 9-stage plan; notebook practice as locus of self-reference; SVSE/AMMOI/mesh/Tetradic Counterpart/σ-axis vocabulary surfaced; passed Theory-to-Concrete Gate at Level 3
 - [prisma-zetesis polynoia fabrica 2026-05-02](project_artifact_prisma_zetesis_polynoia_fabrica_2026_05_02.md) — Divergence method; 6 phases, 15 axes, depth-2 termination; placement decision pending
 - [Parity cascade 2026-05-01/02](project_artifact_parity_cascade_2026_05_01.md) — 367-repo dry-run, 19 stale-origin migrations repaired, 5 new GitHub repos, 28+ pushes, SAFE-TO-REMOVE 166→186, 0 deletions; three constructive gates designed at `~/.claude/plans/2026-05-01-*.md`; constitutional-derivation method discovered (memory rules → policy answers without asking user)
@@ -163,6 +165,8 @@
 - [Prompt triage](project_prompt_triage_complete.md) — 24,599 triaged; pipeline built
 
 ## Feedback
+- [domus-memory-sync silent no-arg fail](feedback_domus_memory_sync_silent_noop.md) — Always use --all or filepath args; bare invocation logs USAGE + exits 1 silently with no chezmoi commit
+- [No recovery telemetry available](feedback_no_recovery_telemetry_2026_05_03.md) — Time Machine unconfigured + Backblaze 30-day rolling; .git losses recoverable via remote alone, not snapshots
 - [Protocols dictate actions](feedback_protocols_dictate_actions.md) — Survey SOP library before enumerating any action sequence; reuse+reinvent
 - [Substrate vocabulary priority](feedback_substrate_vocabulary_priority.md) — Use SVSE/AMMOI/mesh/piece/etc. before coining English terms
 - [Recursive systems safeguards](feedback_recursive_systems_safeguards.md) — Termination/coherence/observability mandatory for any new recursive op

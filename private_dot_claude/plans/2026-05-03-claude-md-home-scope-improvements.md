@@ -28,7 +28,7 @@ New material that should be anchored:
 
 ## Proposed edits (10 changes, all to `/Users/4jp/CLAUDE.md`)
 
-### ▼▼Subtractive / decay-removal
+### ▼▼▼Subtractive / decay-removal
 
 **Edit 1 — Remove "Most recent session context (2026-05-01)" section (lines 89–99)**.Constitutional files should not carry session-specific dated content. The latest session is already discoverable via memory (`MEMORY.md` → "Session Logs" section). Replace the section with a single line: *"Latest session context lives in MEMORY.md under* `## Session Logs`*."*
 
@@ -40,13 +40,13 @@ New material that should be anchored:
 
 **Edit 5 — Drop the dated** `canonical-source-of-all-ancient-kurzweil.md` **mention (line 72)**.Replace with: *"See* `INDEX.md` *(auto-regeneratable from disk) for the full plan inventory."*
 
-### ▼▼Structural
+### ▼▼▼Structural
 
 **Edit 6 — Move the local-only status note (line 11) to a "Known constitutional gaps" appendix at the end**.The note is important context but interrupts the flow at the top. Constitutional files should open with navigational primer, not unresolved gaps.
 
 **Edit 7 — Add a "When in doubt" navigational primer near the top (after line 9)**.Single sentence: *"When in doubt: read MEMORY.md → consult the four-registry table → read the relevant per-organ or per-repo CLAUDE.md → only then act."*
 
-### ▼▼Anchoring (additive but minimal)
+### ▼▼▼Anchoring (additive but minimal)
 
 **Edit 8 — Add a "Slash commands at this scope" subsection**.Brief table covering `/export`, `/init`, `/loop`, `/schedule`, `/clear`, `/config`, `/help`, `/fast`, `/insights`, `/voice-enforcement`, `/ultrareview`. These operate at home/global scope and are currently undocumented in any CLAUDE.md.
 
