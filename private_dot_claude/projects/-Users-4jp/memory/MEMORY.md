@@ -120,6 +120,7 @@
 - [Rob/BODI funnel call](project_rob_bodi_funnel_call_20260425.md) — Rob homework: links + constellation
 
 ## Session Logs
+- [2026-05-04 protocol-precedent-framework](project_session_2026-05-04_protocol_precedent_framework.md) — Codified 5-layer decision framework (L1 prompt → L2 protocol → L3 precedent → L3.5 constitutional derivation → L4 first-principles → L5 ask); 3-of-4 rubric with n=1-exact-match exception; impossible-certainty search depth. Plan v2 + feedback memory + Lane J atom + D1 audit (136 rows, 4 deviations from spec accepted). Action_ledger broken (pydantic-core mismatch) → search-trail logged in this session memory as substitute.
 - [2026-04-30 codex-export-routing](project_session_2026-04-30_codex_export_routing.md) — Routed Codex finding (no flag) → memory + IRF-SYS-056 amendment + GH#28 (CCE converter); hall-monitor caught + recovered parity violation via domus-memory-sync; chezmoi commits `fd5e0f2`+`7c54620`; testamentvm `78d36f7`
 - [2026-04-28 lawsuit-substrate-CURIA](project_session_2026-04-28_lawsuit_curia.md) — 5 deliverables shipped: privilege firewall + CURIA Phase 0 spec + Micah dossier (sealed) + legal-domain skill stub (gated) + plan-as-artifact
 - [2026-04-28 typed-hejlsberg](project_session_2026-04-28_typed_hejlsberg.md) — Encompass+surpass: routed 4 stranded items, 7 commits across 4 repos, fixed global pre-commit hook, composed Gemini envelope (closes dispatch loop)
