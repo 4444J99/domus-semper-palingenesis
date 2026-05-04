@@ -23,18 +23,10 @@ originSessionId: 41bab679-fa30-4889-83aa-ee0e48f039e8
 **Lanes blocked / deferred:**
 - **Lane B3** — language-formatters already fixed upstream; nodeenv claim needs user verification before filing
 - **Lane B4** — awaits PR #15 merge (then PRs #12, #13 can re-CI green)
+- **Lane D1** — 136-candidate classifier (~30-60 min compute), deferred for separate session
 - **Lane H1** — refresh_skill_collections.py extension, awaits PR #15 merge
 - **Lane I** — `.bak` deletion, awaits PR #12 merge + 24h cooldown
 - **Lanes E/F/G** — content-deletion gates require user authorization (E1, F2 dest, G PR cap, I timing)
-
-**Lane D1 completed:** classifier output at `~/.claude/plans/2026-05-02-cascade-artifacts/tier-classification.tsv` (136 candidates):
-- **T1** (public + forks/archived, durably-replicated): 3 — `a-i--skills`, `system-governance-framework`, `agentic-titan`
-- **T2** (public + SPOF, needs Backblaze bundle): 43
-- **T3** (private + SPOF, needs Backblaze bundle + off-host): 63
-- **T-HOLD** (working state issues, agent refs, unique data): 9
-- **T-UNKNOWN-ORG** (outside a-organvm + organvm-iv-taxis metadata): 18
-
-**CRITICAL framing for Lane E**: this is an *ELIGIBILITY MAP*, not a delete list. "SAFE-TO-REMOVE" in the parity TSV is purely mechanical (git-state clean, no orphans); the tier classification adds remote-durability. Both are *necessary* conditions for safe deletion, not *sufficient*. `a-i--skills` is mechanically T1-eligible but is the active project — obvious-no. The user's per-repo decision in Lane E is THE deletion gate per memory rule #53 ("only the human closes"). D1 produces the surface; user picks the subset.
 
 **Session artifacts:**
 - 3 new memory files: `project_artifact_c4_org_rename_sweep_2026_05_03.md`, `feedback_no_recovery_telemetry_2026_05_03.md`, `feedback_domus_memory_sync_silent_noop.md`

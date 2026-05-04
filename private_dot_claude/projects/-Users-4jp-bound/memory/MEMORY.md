@@ -11,6 +11,8 @@
 - [Scientist-mode before builder-mode](feedback_scientist_before_builder.md) — for revenue/new initiatives: hypothesize a missed gap, falsify (try to prove WRONG), then build the MPOV. Never pick channels and execute first.
 - [Money-source taxonomy beats market-lens taxonomy](feedback_money_source_not_market_lens.md) — for revenue plays: group by where money comes from (already-owed, abandoned, infra-as-product, etc.), not by market lens. Category A (money already owed) is the most under-extracted.
 - [Kin systems, not participants in others' systems](feedback_kin_not_participant.md) — reject extractive plays (SEO, bounty queue, marketplace selling, claim mills, royalty distribution). Propose protocols/specs/benchmarks/corpora that other systems engage with as kin. Operator already has the materials; the move is formalize and publish.
+- [Capital-friendly above personal/kin](feedback_capital_friendly_above_personal.md) — capital-friendly shape (legible to VCs/strategics) trumps personal-methodology kin publications. Default: open-source-with-cloud-tier B2B AI infra with $1B+ TAM and recognizable comp set.
+- [Superintelligence-shape, not human-product-shape](feedback_superintelligence_shape_not_human_product.md) — final cut. Claude with terminal + agent fleet + universal API reach should not propose human-shaped products (SaaS, OSS dev tools). Default to direct algorithmic market participation — Wall Street pattern. Track records ARE capital.
 
 ## Project
 (none yet)
