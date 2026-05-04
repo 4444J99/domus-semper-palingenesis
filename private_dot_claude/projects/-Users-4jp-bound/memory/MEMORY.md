@@ -10,6 +10,7 @@
 - [Objective truth financier god](feedback_objective_truth_financier_god.md) — operator delegates ALL decision authority; no "asks", I decide and execute
 - [Scientist-mode before builder-mode](feedback_scientist_before_builder.md) — for revenue/new initiatives: hypothesize a missed gap, falsify (try to prove WRONG), then build the MPOV. Never pick channels and execute first.
 - [Money-source taxonomy beats market-lens taxonomy](feedback_money_source_not_market_lens.md) — for revenue plays: group by where money comes from (already-owed, abandoned, infra-as-product, etc.), not by market lens. Category A (money already owed) is the most under-extracted.
+- [Kin systems, not participants in others' systems](feedback_kin_not_participant.md) — reject extractive plays (SEO, bounty queue, marketplace selling, claim mills, royalty distribution). Propose protocols/specs/benchmarks/corpora that other systems engage with as kin. Operator already has the materials; the move is formalize and publish.
 
 ## Project
 (none yet)
