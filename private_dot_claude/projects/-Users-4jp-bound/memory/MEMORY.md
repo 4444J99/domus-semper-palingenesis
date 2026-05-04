@@ -18,7 +18,7 @@
 - [Multi-cycle parallel operation](feedback_multi_cycle_parallel_operation.md) — never propose a plan operating at one tempo. Default to sub-second / second / minute / hour / day / week / month / quarter / year cycles simultaneously, with explicit between-cycle feedback. The fleet's intelligence is in the between-cycle feedback.
 
 ## Project
-(none yet)
+- [persona-fleet Task 25 — τ-week + τ-month feedback layer](project_artifact_2026_05_04_persona_fleet_task_25.md) — paper-mode through τ-month operational at `~/Workspace/persona-fleet/` HEAD `b0da375`; identity bootstrap is the constitutional blocker for TOWARD income
 
 ## User
 (none yet)
