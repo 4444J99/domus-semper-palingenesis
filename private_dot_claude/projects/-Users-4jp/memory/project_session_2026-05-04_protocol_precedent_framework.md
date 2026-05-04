@@ -47,3 +47,19 @@ Three Explore agents dispatched in parallel; each searched specific precedent st
 - Action_ledger CLI repair — pydantic-core pin
 
 **Next session entry points:** Re-load `feedback_protocol_precedent_layered_framework.md` + `if-protocol-doesn-t-dictate-expressive-cat.md` to inherit the framework. The 5 Decisions + PR #15 go-signal are the complete user-input surface; user can resolve them in one batch when ready.
+
+---
+
+## Post-merge discovery (2026-05-04 ~21:15Z)
+
+After cascade-merging PR #15 + PR #16 via admin-merge per session-scope precedent, branched `chore/2026-05-04-refresh-stale-distributions` off main and ran `python3 scripts/refresh_skill_collections.py` to capture the stashed drift fix as a durable PR. **The script produced ZERO diff.**
+
+Root cause: **PR #15's squash-merge silently bundled 144 files** beyond what its title described. Title: *"fix(ci): unblock validate gate — anchor secret-scan regex + fix two skill frontmatters."* Actual: regex fix + two skill frontmatters + the full distributions/registry/lockfile/marketplace refresh for `domain-ideal-whole-substrate` v2.2 and `personalized-storefront-render`. The fix branch (`fix/2026-05-04-secret-scan-regex-anchor`) had been the workspace where the prior session ran the refresh script before committing the regex fix.
+
+Verification: `git show 01fcea4 --name-only --format="" | wc -l` → 144.
+
+Implication: the drift was already on main when I tried to PR-ize the stash. Stash@{0} (9 modified + ~50 untracked) was a duplicate of changes already shipped via PR #15. Dropped cleanly (`git stash drop` returned object `4994ac8`). Branch `chore/2026-05-04-refresh-stale-distributions` deleted (was at the unchanged `961206a`).
+
+**Archive-integrity warning logged:** PR #15's commit-title-vs-actual-diff mismatch is a precedent-stale risk. A future session asking "when did the drift get fixed?" would expect a `chore: refresh distributions` commit and not find one — the answer is hidden in PR #15's merge. This memory entry IS the archive breadcrumb so the next reader doesn't re-derive.
+
+**Lesson for future PRs:** when a fix branch carries unrelated drift fixes alongside the named change, either (a) split into separate PRs, or (b) update the PR title/description to reflect the actual scope. The "preserves while evolving" archivist instinct says: every commit message should be a faithful record of what changed. PR #15 wasn't.
