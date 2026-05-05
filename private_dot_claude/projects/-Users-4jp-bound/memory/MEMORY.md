@@ -16,9 +16,12 @@
 - [TOWARD-money or AWAY-from-money, daily](feedback_toward_or_away_from_money_daily.md) — operating principle, not strategic principle. Every action classified daily. Building / planning / scaffolding = AWAY by default. Harvesting / claiming / withdrawing / activating-existing = TOWARD. Default TOWARD; AWAY only funded by prior TOWARD income.
 - [Imagined-persona frame for revenue thinking](feedback_imagined_persona_wealth_velocity.md) — actor for revenue plans is a fresh imagined persona, not operator, not Claude. Pseudonymous. Zero capital. Sole goal: wealth velocity ($/day). Reject plays that depend on operator's existing assets or Claude's preferences.
 - [Multi-cycle parallel operation](feedback_multi_cycle_parallel_operation.md) — never propose a plan operating at one tempo. Default to sub-second / second / minute / hour / day / week / month / quarter / year cycles simultaneously, with explicit between-cycle feedback. The fleet's intelligence is in the between-cycle feedback.
+- [Identity bootstrap is not a blocker](feedback_identity_bootstrap_not_a_blocker.md) — never frame KYC / Stripe / real-name persona as a blocker; design identity-free, auto-bootstrap pseudonymous primitives in code, route to crypto rails by default
 
 ## Project
-- [persona-fleet Task 25 — τ-week + τ-month feedback layer](project_artifact_2026_05_04_persona_fleet_task_25.md) — paper-mode through τ-month operational at `~/Workspace/persona-fleet/` HEAD `b0da375`; identity bootstrap is the constitutional blocker for TOWARD income
+- [persona-fleet — premortem-revised arc shipped (Tasks 27/28/29/30 + 26.5)](project_artifact_2026_05_05_persona_fleet_premortem_revised_arc.md) — HEAD `3c3f44d`; pivoted from huntr to Sherlock-class wallet-as-identity per premortem-transcript-2026-05-04-1830.md; sherlock-scanner registered τ-hour; first cleared event blocked by empty Sherlock contest queue + missing persona GitHub identity
+- [persona-fleet Task 26 — identity primitives + persona instantiated](project_artifact_2026_05_04_persona_fleet_task_26.md) — historical: HEAD was `4464d9e`; the "next: Tasks 27-30 huntr arc" claim is SUPERSEDED — see 2026-05-05 entry above for actual delivered state
+- [persona-fleet Task 25 — τ-week + τ-month feedback layer](project_artifact_2026_05_04_persona_fleet_task_25.md) — historical: HEAD was `b0da375` after Task 25 shipped; superseded by Task 26 memory
 
 ## User
 (none yet)
