@@ -120,6 +120,7 @@
 - [Rob/BODI funnel call](project_rob_bodi_funnel_call_20260425.md) — Rob homework: links + constellation
 
 ## Session Logs
+- [2026-05-05 proceed-w-all](project_session_2026-05-05_proceed_w_all.md) — Cleared 6-item handoff list in 12min: PR #12 closed, pydantic runtime fixed via venv, Lane I gated CLI shipped (cooldown till 21:25Z), README drift closed via auto-derive extension (SAD-001 Phase 3), SOP-IV-PPC-001 promoted REP→ABSORB, precedent_engine `--json` added. 4 commits across 2 repos.
 - [2026-05-04 protocol-precedent-framework](project_session_2026-05-04_protocol_precedent_framework.md) — Codified 5-layer decision framework (L1 prompt → L2 protocol → L3 precedent → L3.5 constitutional derivation → L4 first-principles → L5 ask); 3-of-4 rubric with n=1-exact-match exception; impossible-certainty search depth. Plan v2 + feedback memory + Lane J atom + D1 audit (136 rows, 4 deviations from spec accepted). Action_ledger broken (pydantic-core mismatch) → search-trail logged in this session memory as substitute.
 - [2026-04-30 codex-export-routing](project_session_2026-04-30_codex_export_routing.md) — Routed Codex finding (no flag) → memory + IRF-SYS-056 amendment + GH#28 (CCE converter); hall-monitor caught + recovered parity violation via domus-memory-sync; chezmoi commits `fd5e0f2`+`7c54620`; testamentvm `78d36f7`
 - [2026-04-28 lawsuit-substrate-CURIA](project_session_2026-04-28_lawsuit_curia.md) — 5 deliverables shipped: privilege firewall + CURIA Phase 0 spec + Micah dossier (sealed) + legal-domain skill stub (gated) + plan-as-artifact
