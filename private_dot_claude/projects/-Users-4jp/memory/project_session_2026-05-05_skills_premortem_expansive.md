@@ -41,7 +41,9 @@ originSessionId: f917aea4-adb7-41e9-b9d6-1a1c109c708f
 
 ## What next session needs to know
 
-1. **PR #18 awaits review/merge.** No further action needed unless CI flags an issue or reviewer requests changes.
+1. **PR #18 awaits review/merge.** No further action needed unless CI flags an issue or reviewer requests changes. All 4 CI checks SUCCESS at session-end.
 2. **Lane I .bak deletion still gated.** `~/.local/bin/lane-i-delete-bak` self-gates until 2026-05-05T21:25:00Z. Run after that to clear the 11 MB sibling backup dir.
-3. **Hook-noise IRF candidate.** PreToolUse Write guard is over-broad; firing on substring "agent" is a false positive. Worth atomizing as IRF-OPS-NNN.
+3. **IRF-OPS-024 logged** (was "hook-noise IRF candidate"). PreToolUse Write guard is over-broad; firing on substring "agent" is a false positive. Now in IRF as P2 with proposed fix (anchor on `~/Library/LaunchAgents/` path, `.plist` extension, or plist-XML doctype). DONE-524/525 closed in same closeout commit `df7c910` on `a-organvm/organvm-corpvs-testamentvm:main`.
 4. **Both skills now in runtime registry.** Future sessions can invoke `/premortem` and `/expansive-inquiry` (once PR merges and chezmoi pulls).
+5. **Orphan distribution: `closeout` skill.** Found at `~/Workspace/organvm/a-i--skills/distributions/claude/skills/closeout/SKILL.md` with NO source in `skills/`. References a non-existent doc (`docs/evaluation/self-review-2026-05-05/stale-plans-and-orphan-commits.md`). Created at 22:26 by another session/agent — NOT mine. Not pushing or deleting; needs owner adjudication. The next `refresh_skill_collections.py` run will delete it (script regenerates distributions from sources).
+6. **Pre-existing dirty state in `organvm-corpvs-testamentvm`.** 60+ untracked prompt-registry session files + 1 modified `data/fossil/fossil-record.jsonl` + 2 stashes (`stash@{0}` autostash from this closeout's rebase + `stash@{1}` pre-existing "WIP on main: ef428a3 docs: update fossil record"). NOT mine — preserved untouched. Owner needs to reconcile.
